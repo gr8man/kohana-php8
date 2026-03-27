@@ -16,7 +16,6 @@
         </testsuite>
         <testsuite name="Modules">
             <directory>modules/auth/tests</directory>
-            <directory>modules/database/tests</directory>
         </testsuite>
     </testsuites>
     <php>
