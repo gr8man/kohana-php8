@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd"
+         bootstrap="modules/unittest/bootstrap.php"
+         cacheResult="false">
+    <testsuites>
+        <testsuite name="Migration">
+            <file>application/tests/Migration/RoutingTest.php</file>
+            <file>application/tests/Migration/RequestResponseTest.php</file>
+            <file>application/tests/Migration/DatabaseTest.php</file>
+            <file>application/tests/Migration/ExternalRequestTest.php</file>
+        </testsuite>
+        <testsuite name="System">
+            <directory>system/tests/kohana</directory>
+            <exclude>system/tests/kohana/ApacheSimulationTest.php</exclude>
+        </testsuite>
+        <testsuite name="Modules">
+            <directory>modules/auth/tests</directory>
+            <directory>modules/database/tests</directory>
+        </testsuite>
+    </testsuites>
+    <php>
+        <env name="KOHANA_ENV" value="testing"/>
+    </php>
+</phpunit>
