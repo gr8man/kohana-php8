@@ -1,4 +1,6 @@
-<?php if (is_array($array)): ?>
+<?php
+
+declare(strict_types=1); if (is_array($array)): ?>
 <div class="page-toc">
 	<?php foreach ($array as $item): ?>
 		<?php if ($item['level'] > 1): ?>

@@ -33,6 +33,11 @@ class Kohana_Arr {
 	 */
 	public static function is_assoc(array $array)
 	{
+		if (function_exists('array_is_list'))
+		{
+			return ! array_is_list($array);
+		}
+
 		// Keys of the array
 		$keys = array_keys($array);
 
@@ -58,16 +63,7 @@ class Kohana_Arr {
 	 */
 	public static function is_array($value)
 	{
-		if (is_array($value))
-		{
-			// Definitely an array
-			return TRUE;
-		}
-		else
-		{
-			// Possibly a Traversable object, functionally the same as an array
-			return (is_object($value) AND $value instanceof Traversable);
-		}
+		return is_array($value) OR (is_object($value) AND $value instanceof Traversable);
 	}
 
 	/**

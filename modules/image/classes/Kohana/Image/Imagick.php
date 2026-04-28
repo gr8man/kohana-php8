@@ -1,4 +1,6 @@
-<?php defined('SYSPATH') OR die('No direct script access.');
+<?php
+
+declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
 /**
  * Support for image manipulation using [Imagick](http://php.net/Imagick).
  *

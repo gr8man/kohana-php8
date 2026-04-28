@@ -1,4 +1,6 @@
-<?php defined('SYSPATH') OR die('No direct script access.');
+<?php
+
+declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
 /**
  * Native PHP session class.
  *
@@ -51,7 +53,7 @@ class Kohana_Session_Native extends Session {
 		);
 
 		// Do not allow PHP to send Cache-Control headers
-		session_cache_limiter(FALSE);
+		session_cache_limiter('');
 
 		// Set the session cookie name
 		session_name($this->_name);

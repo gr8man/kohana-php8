@@ -1,4 +1,6 @@
-<?php defined('SYSPATH') or die('No direct access allowed.');
+<?php
+
+declare(strict_types=1); defined('SYSPATH') or die('No direct access allowed.');
 /**
  * Codebench — A benchmarking module.
  *

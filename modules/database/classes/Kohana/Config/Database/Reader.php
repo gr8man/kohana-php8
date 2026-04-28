@@ -1,4 +1,6 @@
-<?php defined('SYSPATH') OR die('No direct script access.');
+<?php
+
+declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
 
 /**
  * Database reader for the kohana config system
@@ -61,6 +63,6 @@ class Kohana_Config_Database_Reader implements Kohana_Config_Reader
 			->where('group_name', '=', $group)
 			->execute($this->_db_instance);
 
-		return count($query) ? array_map('unserialize', $query->as_array('config_key', 'config_value')) : FALSE;
+		return count($query) ? array_map(fn($v) => unserialize($v, ['allowed_classes' => FALSE]), $query->as_array('config_key', 'config_value')) : FALSE;
 	}
 }

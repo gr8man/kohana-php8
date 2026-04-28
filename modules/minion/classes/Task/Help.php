@@ -1,4 +1,6 @@
-<?php defined('SYSPATH') or die('No direct script access.');
+<?php
+
+declare(strict_types=1); defined('SYSPATH') or die('No direct script access.');
 /**
  * Help task to display general instructons and list all tasks
  *

@@ -135,10 +135,18 @@ class Kohana_URL {
 	 */
 	public static function site($uri = '', $protocol = NULL, $index = TRUE)
 	{
-		// Chop off possible scheme, host, port, user and pass parts
-		$path = preg_replace('~^[-a-z0-9+.]++://[^/]++/?~', '', trim($uri, '/'));
+		// Fast path for simple URIs that don't need preg_replace
+		if (strpos($uri, '://') === FALSE)
+		{
+			$path = trim($uri, '/');
+		}
+		else
+		{
+			// Chop off possible scheme, host, port, user and pass parts
+			$path = preg_replace('~^[-a-z0-9+.]++://[^/]++/?~', '', trim($uri, '/'));
+		}
 
-		if ( ! UTF8::is_ascii($path))
+		if ($path !== '' AND ! UTF8::is_ascii($path))
 		{
 			// Encode all non-ASCII characters, as per RFC 1738
 			$path = preg_replace_callback('~([^/]+)~', 'URL::_rawurlencode_callback', $path);

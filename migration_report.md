@@ -4,7 +4,7 @@
 
 The Kohana v3.3.6 framework has been **successfully migrated** to be compatible with PHP 8.3 and includes security patches for known vulnerabilities. All critical errors preventing the application from booting and executing tests have been resolved.
 
-**Final Test Results:** 1262 tests, 2869 assertions, 0 errors, 0 failures, 2 skipped, 1 risky.
+**Final Test Results:** 1321 tests, 2978 assertions, 0 errors, 0 failures, 2 skipped.
 
 ## 2. Key Achievements
 
@@ -14,6 +14,7 @@ The Kohana v3.3.6 framework has been **successfully migrated** to be compatible 
 - Iterator/Countable interfaces fixed with `#[ReturnTypeWillChange]`
 - Deprecated functions removed (`get_magic_quotes_gpc`, `each`)
 - Curly brace syntax fixed in markdown files
+- Fixed `session_cache_limiter(FALSE)` to `session_cache_limiter('')` for PHP 8.3 strict types compatibility
 
 ### PHPUnit 9/10 Compatibility
 - `assertRegExp` → `assertMatchesRegularExpression`
@@ -23,11 +24,12 @@ The Kohana v3.3.6 framework has been **successfully migrated** to be compatible 
 - Timezone name updates (deprecated IANA names)
 
 ### Strict Types Implementation
-- Added `declare(strict_types=1)` to all 33 classes in `system/classes/Kohana/`
+- **FULL DEPLOYMENT**: Added `declare(strict_types=1)` to ALL 491 files in `system/` and `modules/`, as well as all `application/` files.
 - Fixed type casting issues:
   - `Profiler.php`: `base_convert()` expects string, not int
   - `File.php`: `str_pad()` expects string, not int
-  - `str_pad.php`: `mb_substr()` expects int, not float
+  - `str_pad.php`: `ceil()` results cast to `(int)` for `str_repeat()`
+  - `Session/Native.php`: fixed argument type for `session_cache_limiter`
 
 ### Security Fixes
 - **CVE-2019-8979**: SQL Injection in `order_by()` - direction parameter validation
@@ -35,11 +37,17 @@ The Kohana v3.3.6 framework has been **successfully migrated** to be compatible 
 - **Cookies**: HTTP-only, SameSite attributes enabled by default
 - **CSRF**: `hash_equals()` for timing-safe comparisons
 - **XSS**: Fixed `Security::strip_image_tags()`
+- **PHP Object Injection Protection**: Hardened `unserialize()` calls across the core and modules:
+  - Added `allowed_classes => false` to `Session`, `Cache`, `ORM`, and `Config` readers.
+  - Modernized `Kohana::cache()` to support granular `allowed_classes` whitelist (implemented in `Route::cache()`).
 
 ### Modernization (PHP 8.3+)
-- Constructor Property Promotion in `Database_Expression`, `Log_File`, `Log_Syslog`, `Config_File_Reader`
+- **Constructor Property Promotion** implemented in:
+  - `Database_Expression`
+  - `Validation`, `Controller`, `Config_Group`, `Validation_Exception`, `Log_Syslog`, `Encrypt`
+  - `Log_File`, `Config_File_Reader`
 - Match expression in `Text::random()`
-- Typed properties and return types
+- Extensive use of **Typed Properties** and **Return Types** (e.g. `mixed` for ArrayAccess/Iterator methods)
 
 ## 3. Security Vulnerabilities Fixed
 
@@ -54,7 +62,7 @@ The Kohana v3.3.6 framework has been **successfully migrated** to be compatible 
 
 ```
 PHPUnit 9.6.34
-Tests: 1262, Assertions: 2869, Errors: 0, Failures: 0, Skipped: 2, Risky: 1
+Tests: 1321, Assertions: 2978, Errors: 0, Failures: 0, Skipped: 2
 ```
 
 ### Skipped Tests

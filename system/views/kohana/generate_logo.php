@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 // Get the latest logo contents
 $data = base64_encode(file_get_contents('http://kohanaframework.org/media/img/kohana.png'));
 

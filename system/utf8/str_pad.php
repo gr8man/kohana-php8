@@ -1,4 +1,6 @@
-<?php defined('SYSPATH') OR die('No direct script access.');
+<?php
+
+declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
 /**
  * UTF8::str_pad
  *
@@ -24,13 +26,13 @@ function _str_pad($str, $final_str_length, $pad_str = ' ', $pad_type = STR_PAD_R
 
 	if ($pad_type == STR_PAD_RIGHT)
 	{
-		$repeat = ceil($pad_length / $pad_str_length);
+		$repeat = (int) ceil($pad_length / $pad_str_length);
 		return UTF8::substr($str.str_repeat($pad_str, $repeat), 0, $final_str_length);
 	}
 
 	if ($pad_type == STR_PAD_LEFT)
 	{
-		$repeat = ceil($pad_length / $pad_str_length);
+		$repeat = (int) ceil($pad_length / $pad_str_length);
 		return UTF8::substr(str_repeat($pad_str, $repeat), 0, $pad_length).$str;
 	}
 
@@ -38,8 +40,8 @@ function _str_pad($str, $final_str_length, $pad_str = ' ', $pad_type = STR_PAD_R
 	{
 		$pad_length_left = (int) floor($pad_length / 2);
 		$pad_length_right = (int) ceil($pad_length / 2);
-		$repeat_left = ceil($pad_length_left / $pad_str_length);
-		$repeat_right = ceil($pad_length_right / $pad_str_length);
+		$repeat_left = (int) ceil($pad_length_left / $pad_str_length);
+		$repeat_right = (int) ceil($pad_length_right / $pad_str_length);
 
 		$pad_left = UTF8::substr(str_repeat($pad_str, $repeat_left), 0, $pad_length_left);
 		$pad_right = UTF8::substr(str_repeat($pad_str, $repeat_right), 0, $pad_length_right);

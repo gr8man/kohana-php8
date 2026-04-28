@@ -1,4 +1,6 @@
-<?php defined('SYSPATH') OR die('No direct access allowed.');
+<?php
+
+declare(strict_types=1); defined('SYSPATH') OR die('No direct access allowed.');
 /**
  * User authorization library. Handles user login and logout, as well as secure
  * password hashing.

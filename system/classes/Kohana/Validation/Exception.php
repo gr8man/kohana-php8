@@ -1,4 +1,6 @@
-<?php defined('SYSPATH') OR die('No direct script access.');
+<?php
+
+declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
 /**
  * @package    Kohana
  * @category   Exceptions
@@ -9,20 +11,19 @@
 class Kohana_Validation_Exception extends Kohana_Exception {
 
 	/**
-	 * @var  object  Validation instance
+	 * @param  Validation      $array      Validation object
+	 * @param  string          $message    error message
+	 * @param  array|null      $values     translation variables
+	 * @param  integer|string  $code       the exception code
+	 * @param  Throwable|null  $previous   previous exception
 	 */
-	public $array;
-
-	/**
-	 * @param  Validation   $array      Validation object
-	 * @param  string       $message    error message
-	 * @param  array        $values     translation variables
-	 * @param  int          $code       the exception code
-	 */
-	public function __construct(Validation $array, $message = 'Failed to validate array', array $values = NULL, $code = 0, Exception $previous = NULL)
-	{
-		$this->array = $array;
-
+	public function __construct(
+		public Validation $array,
+		string $message = 'Failed to validate array',
+		array $values = NULL,
+		$code = 0,
+		Throwable $previous = NULL
+	) {
 		parent::__construct($message, $values, $code, $previous);
 	}
 

@@ -1,4 +1,6 @@
-<?php defined('SYSPATH') or die('No direct script access.');
+<?php
+
+declare(strict_types=1); defined('SYSPATH') or die('No direct script access.');
 /**
  * Kohana Cache Sqlite Driver
  *
@@ -107,7 +109,7 @@ class Kohana_Cache_Sqlite extends Cache implements Cache_Tagging, Cache_GarbageC
 			$ER = error_reporting(~E_NOTICE);
 
 			// Return the valid cache data
-			$data = unserialize($result->cache);
+			$data = unserialize($result->cache, ['allowed_classes' => FALSE]);
 
 			// Turn notices back on
 			error_reporting($ER);
@@ -280,7 +282,7 @@ class Kohana_Cache_Sqlite extends Cache implements Cache_Tagging, Cache_GarbageC
 			// Disable notices for unserializing
 			$ER = error_reporting(~E_NOTICE);
 
-			$result[$row->id] = unserialize($row->cache);
+			$result[$row->id] = unserialize($row->cache, ['allowed_classes' => FALSE]);
 
 			// Turn notices back on
 			error_reporting($ER);

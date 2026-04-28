@@ -178,7 +178,7 @@ class Kohana_Route {
 		}
 		else
 		{
-			if ($routes = Kohana::cache('Route::cache()'))
+			if ($routes = Kohana::cache('Route::cache()', NULL, NULL, ['Route']))
 			{
 				if ($append)
 				{

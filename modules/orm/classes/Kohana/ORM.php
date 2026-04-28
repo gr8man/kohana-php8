@@ -1,4 +1,6 @@
-<?php defined('SYSPATH') OR die('No direct script access.');
+<?php
+
+declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
 /**
  * [Object Relational Mapping][ref-orm] (ORM) is a method of abstracting database
  * access to standard PHP calls. All table rows are represented as model objects,
@@ -579,7 +581,7 @@ class Kohana_ORM extends Model implements serializable {
 		// Initialize model
 		$this->_initialize();
 
-		foreach (unserialize($data) as $name => $var)
+		foreach (unserialize($data, ['allowed_classes' => FALSE]) as $name => $var)
 		{
 			$this->{$name} = $var;
 		}

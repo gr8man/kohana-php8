@@ -1,3 +1,7 @@
+<?php
+
+declare(strict_types=1);
+
 <h1>User Guide</h1>
 
 <p>The following modules have userguide pages:</p>

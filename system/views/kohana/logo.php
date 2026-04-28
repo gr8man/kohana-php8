@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Kohana Logo, base64_encoded PNG
  * 

@@ -1,4 +1,6 @@
-<?php defined('SYSPATH') or die('No direct script access.');
+<?php
+
+declare(strict_types=1); defined('SYSPATH') or die('No direct script access.');
 /**
  * [Kohana Cache](api/Kohana_Cache) File driver. Provides a file based
  * driver for the Kohana Cache library. This is one of the slowest
@@ -162,7 +164,7 @@ class Kohana_Cache_File extends Cache implements Cache_GarbageCollect {
 					$cache .= $data->fgets();
 				}
 
-				return unserialize($cache);
+				return unserialize($cache, ['allowed_classes' => FALSE]);
 			}
 
 		}

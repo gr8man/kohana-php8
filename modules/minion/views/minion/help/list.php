@@ -1,3 +1,7 @@
+<?php
+
+declare(strict_types=1);
+
 Minion is a cli tool for performing tasks
 
 Usage 

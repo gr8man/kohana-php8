@@ -1,3 +1,7 @@
+<?php
+
+declare(strict_types=1);
+
 
 <h2>Modules</h2>
 <ol class="menu">

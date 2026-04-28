@@ -1,4 +1,6 @@
-<?php defined('SYSPATH') OR die('No direct script access.');
+<?php
+
+declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
 /**
  * Syslog log writer.
  *
@@ -10,8 +12,6 @@
  */
 class Kohana_Log_Syslog extends Log_Writer {
 
-	protected string $_ident;
-
 	/**
 	 * Creates a new syslog logger.
 	 *
@@ -20,10 +20,10 @@ class Kohana_Log_Syslog extends Log_Writer {
 	 * @param   string  $ident      syslog identifier
 	 * @param   int     $facility   facility to log to
 	 */
-	public function __construct(string $ident = 'KohanaPHP', int $facility = LOG_USER)
-	{
-		$this->_ident = $ident;
-
+	public function __construct(
+		protected string $_ident = 'KohanaPHP',
+		int $facility = LOG_USER
+	) {
 		openlog($this->_ident, LOG_CONS, $facility);
 	}
 

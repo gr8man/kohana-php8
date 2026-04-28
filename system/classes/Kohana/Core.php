@@ -853,7 +853,7 @@ class Kohana_Core {
 	 * @return  mixed    for getting
 	 * @return  boolean  for setting
 	 */
-	public static function cache($name, $data = NULL, $lifetime = NULL)
+	public static function cache($name, $data = NULL, $lifetime = NULL, $allowed_classes = FALSE)
 	{
 		// Cache file is a hash of the name
 		$file = sha1($name).'.txt';
@@ -876,7 +876,7 @@ class Kohana_Core {
 					// Return the cache
 					try
 					{
-						return unserialize(file_get_contents($dir.$file));
+						return unserialize(file_get_contents($dir.$file), ['allowed_classes' => $allowed_classes]);
 					}
 					catch (Throwable $e)
 					{

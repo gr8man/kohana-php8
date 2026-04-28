@@ -22,33 +22,28 @@ class Kohana_Validation implements ArrayAccess {
 	}
 
 	// Bound values
-	protected $_bound = array();
+	protected array $_bound = array();
 
 	// Field rules
-	protected $_rules = array();
+	protected array $_rules = array();
 
 	// Field labels
-	protected $_labels = array();
+	protected array $_labels = array();
 
 	// Rules that are executed even when the value is empty
-	protected $_empty_rules = array('not_empty', 'matches');
+	protected array $_empty_rules = array('not_empty', 'matches');
 
 	// Error list, field => rule
-	protected $_errors = array();
-
-	// Array to validate
-	protected $_data = array();
+	protected array $_errors = array();
 
 	/**
 	 * Sets the unique "any field" key and creates an ArrayObject from the
 	 * passed array.
 	 *
 	 * @param   array   $array  array to validate
-	 * @return  void
 	 */
-	public function __construct(array $array)
+	public function __construct(protected array $_data)
 	{
-		$this->_data = $array;
 	}
 
 	/**

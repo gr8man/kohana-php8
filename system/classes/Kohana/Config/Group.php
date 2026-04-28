@@ -17,20 +17,6 @@
 class Kohana_Config_Group extends ArrayObject {
 
 	/**
-	 * Reference the config object that created this group
-	 * Used when updating config
-	 * @var Kohana_Config
-	 */
-	protected $_parent_instance = NULL;
-
-	/**
-	 * The group this config is for
-	 * Used when updating config items
-	 * @var string
-	 */
-	protected $_group_name = '';
-
-	/**
 	 * Constructs the group object.  Kohana_Config passes the config group
 	 * and its config items to the object here.
 	 *
@@ -38,11 +24,11 @@ class Kohana_Config_Group extends ArrayObject {
 	 * @param string         $group    The group name
 	 * @param array          $config   Group's config
 	 */
-	public function __construct(Kohana_Config $instance, $group, array $config = array())
-	{
-		$this->_parent_instance = $instance;
-		$this->_group_name      = $group;
-
+	public function __construct(
+		protected Kohana_Config $_parent_instance,
+		protected string $_group_name,
+		array $config = array()
+	) {
 		parent::__construct($config, ArrayObject::ARRAY_AS_PROPS);
 	}
 

@@ -1,4 +1,6 @@
-<?php defined('SYSPATH') OR die('No direct access allowed.');
+<?php
+
+declare(strict_types=1); defined('SYSPATH') OR die('No direct access allowed.');
 /**
  * Default auth role
  *

@@ -27,31 +27,16 @@ defined('SYSPATH') OR die('No direct script access.');
 abstract class Kohana_Controller {
 
 	/**
-	 * @var  Request  Request that created the controller
-	 */
-	public $request;
-
-	/**
-	 * @var  Response The response that will be returned from controller
-	 */
-	public $response;
-
-	/**
 	 * Creates a new controller instance. Each controller must be constructed
 	 * with the request object that created it.
 	 *
 	 * @param   Request   $request  Request that created the controller
 	 * @param   Response  $response The request's response
-	 * @return  void
 	 */
-	public function __construct(Request $request, Response $response)
-	{
-		// Assign the request to the controller
-		$this->request = $request;
-
-		// Assign a response to the controller
-		$this->response = $response;
-	}
+	public function __construct(
+		public Request $request,
+		public Response $response
+	) {}
 
 	/**
 	 * Executes the given action and calls the [Controller::before] and [Controller::after] methods.

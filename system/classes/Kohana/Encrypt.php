@@ -26,16 +26,6 @@ class Kohana_Encrypt {
 	public static $instances = array();
 
 	/**
-	 * @var string Encryption key
-	 */
-	protected $_key;
-
-	/**
-	 * @var string openssl method
-	 */
-	protected $_method;
-
-	/**
 	 * @var int the size of the Initialization Vector (IV) in bytes
 	 */
 	protected $_iv_size;
@@ -88,11 +78,10 @@ class Kohana_Encrypt {
 	 * @param   string  $key    encryption key
 	 * @param   string  $method openssl method
 	 */
-	public function __construct($key, $method)
-	{
-		$this->_key    = $key;
-		$this->_method = $method;
-
+	public function __construct(
+		protected string $_key,
+		protected string $_method
+	) {
 		// Store the IV size
 		$this->_iv_size = openssl_cipher_iv_length($this->_method);
 	}

@@ -445,7 +445,8 @@ abstract class Kohana_Session {
 	 */
 	protected function _unserialize($data)
 	{
-		return unserialize($data);
+		// SECURITY: Disable class instantiation during unserialization to prevent object injection attacks
+		return unserialize($data, ['allowed_classes' => FALSE]);
 	}
 
 	/**

@@ -1,4 +1,6 @@
-<?php echo $error; ?>
+<?php
+
+declare(strict_types=1); echo $error; ?>
 
 Run 
 
