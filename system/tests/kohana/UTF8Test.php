@@ -644,4 +644,418 @@ class Kohana_UTF8Test extends Unittest_TestCase
 	{
 		$this->assertSame($expected, UTF8::ord($input));
 	}
+
+	/**
+	 * Tests UTF8::strpos with empty string
+	 *
+	 * @test
+	 */
+	public function test_strpos_empty_needle()
+	{
+		$this->assertSame(0, UTF8::strpos('hello', ''));
+	}
+
+	/**
+	 * Tests UTF8::strpos with non-existent needle
+	 *
+	 * @test
+	 */
+	public function test_strpos_not_found()
+	{
+		$this->assertFalse(UTF8::strpos('hello', 'x'));
+	}
+
+	/**
+	 * Tests UTF8::strrpos with offset
+	 *
+	 * @test
+	 */
+	public function test_strrpos_with_offset()
+	{
+		$this->assertSame(7, UTF8::strrpos('hello world', 'o', 3));
+	}
+
+	/**
+	 * Tests UTF8::strrpos not found
+	 *
+	 * @test
+	 */
+	public function test_strrpos_not_found()
+	{
+		$this->assertFalse(UTF8::strrpos('hello', 'x'));
+	}
+
+	/**
+	 * Tests UTF8::substr with negative offset
+	 *
+	 * @test
+	 */
+	public function test_substr_negative_offset()
+	{
+		$this->assertSame('rld', UTF8::substr('hello world', -3));
+	}
+
+	/**
+	 * Tests UTF8::substr with negative length
+	 *
+	 * @test
+	 */
+	public function test_substr_negative_length()
+	{
+		$this->assertSame('worl', UTF8::substr('hello world', 6, -1));
+	}
+
+	/**
+	 * Tests UTF8::substr empty result
+	 *
+	 * @test
+	 */
+	public function test_substr_empty_result()
+	{
+		$this->assertSame('', UTF8::substr('hi', 5));
+	}
+
+	/**
+	 * Tests UTF8::substr whole string when offset is 0
+	 *
+	 * @test
+	 */
+	public function test_substr_whole_string()
+	{
+		$this->assertSame('hello', UTF8::substr('hello', 0));
+	}
+
+	/**
+	 * Tests UTF8::str_split with multi-byte characters
+	 *
+	 * @test
+	 */
+	public function test_str_split_multi_byte()
+	{
+		$result = UTF8::str_split('ñoño');
+		$this->assertCount(4, $result);
+		$this->assertSame('ñ', $result[0]);
+	}
+
+	/**
+	 * Tests UTF8::str_split with custom split length
+	 *
+	 * @test
+	 */
+	public function test_str_split_custom_length()
+	{
+		$result = UTF8::str_split('hello', 2);
+		$this->assertCount(3, $result);
+		$this->assertSame('he', $result[0]);
+	}
+
+	/**
+	 * Tests UTF8::strrev with multibyte
+	 *
+	 * @test
+	 */
+	public function test_strrev_multi_byte()
+	{
+		$this->assertSame('óññó', UTF8::strrev('óññó'));
+	}
+
+	/**
+	 * Tests UTF8::strrev with empty string
+	 *
+	 * @test
+	 */
+	public function test_strrev_empty()
+	{
+		$this->assertSame('', UTF8::strrev(''));
+	}
+
+	/**
+	 * Tests UTF8::str_pad with UTF-8 string
+	 *
+	 * @test
+	 */
+	public function test_str_pad_utf8()
+	{
+		$result = UTF8::str_pad('ñ', 5, '_');
+		$this->assertSame('ñ____', $result);
+	}
+
+	/**
+	 * Tests UTF8::str_pad STR_PAD_BOTH
+	 *
+	 * @test
+	 */
+	public function test_str_pad_both()
+	{
+		$result = UTF8::str_pad('hello', 9, '-', STR_PAD_BOTH);
+		$this->assertSame('--hello--', $result);
+	}
+
+	/**
+	 * Tests UTF8::str_pad with invalid type throws exception
+	 *
+	 * @test
+	 */
+	public function test_str_pad_invalid_type()
+	{
+		$this->expectException('ValueError');
+		UTF8::str_pad('test', 10, ' ', 999);
+	}
+
+	/**
+	 * Tests UTF8::str_pad when string is longer than target
+	 *
+	 * @test
+	 */
+	public function test_str_pad_shorter_than_string()
+	{
+		$this->assertSame('hello', UTF8::str_pad('hello', 3));
+	}
+
+	/**
+	 * Tests UTF8::strlen with empty string
+	 *
+	 * @test
+	 */
+	public function test_strlen_empty()
+	{
+		$this->assertSame(0, UTF8::strlen(''));
+	}
+
+	/**
+	 * Tests UTF8::strlen with multi-byte
+	 *
+	 * @test
+	 */
+	public function test_strlen_multibyte()
+	{
+		$this->assertSame(4, UTF8::strlen('ñoña'));
+	}
+
+	/**
+	 * Tests UTF8::str_ireplace
+	 *
+	 * @test
+	 */
+	public function test_str_ireplace_multibyte()
+	{
+		$result = UTF8::str_ireplace('ÑO', 'SI', 'HOLA ÑO');
+		$this->assertSame('HOLA SI', $result);
+	}
+
+	/**
+	 * Tests UTF8::stristr with multibyte
+	 *
+	 * @test
+	 */
+	public function test_stristr_multibyte()
+	{
+		$result = UTF8::stristr('HOLA ño', 'ÑO');
+		$this->assertSame('ño', $result);
+	}
+
+	/**
+	 * Tests UTF8::stristr not found
+	 *
+	 * @test
+	 */
+	public function test_stristr_not_found()
+	{
+		$this->assertFalse(UTF8::stristr('hello', 'x'));
+	}
+
+	/**
+	 * Tests UTF8::strspn
+	 *
+	 * @test
+	 */
+	public function test_strspn_basic()
+	{
+		$this->assertSame(3, UTF8::strspn('aaabc', 'a'));
+	}
+
+	/**
+	 * Tests UTF8::strcspn
+	 *
+	 * @test
+	 */
+	public function test_strcspn_basic()
+	{
+		$this->assertSame(2, UTF8::strcspn('abcde', 'c'));
+	}
+
+	/**
+	 * Tests UTF8::substr_replace
+	 *
+	 * @test
+	 */
+	public function test_substr_replace_basic()
+	{
+		$this->assertSame('hilo world', UTF8::substr_replace('hello world', 'hi', 0, 3));
+	}
+
+	/**
+	 * Tests UTF8::ucfirst
+	 *
+	 * @test
+	 */
+	public function test_ucfirst_multibyte()
+	{
+		$this->assertSame('Ñoña', UTF8::ucfirst('ñoña'));
+	}
+
+	/**
+	 * Tests UTF8::ucwords
+	 *
+	 * @test
+	 */
+	public function test_ucwords_multibyte()
+	{
+		$this->assertSame('Ño Ño', UTF8::ucwords('ño ño'));
+	}
+
+	/**
+	 * Tests UTF8::clean with valid UTF-8
+	 *
+	 * @test
+	 */
+	public function test_clean_valid_utf8()
+	{
+		$this->assertSame('ñoño', UTF8::clean('ñoño'));
+	}
+
+	/**
+	 * Tests UTF8::clean with invalid UTF-8
+	 *
+	 * @test
+	 */
+	public function test_clean_invalid_utf8()
+	{
+		$invalid = "abc\x80\xFE\xFFdef";
+		$result = UTF8::clean($invalid);
+		$this->assertStringNotContainsString("\x80", $result);
+	}
+
+	/**
+	 * Tests UTF8::is_ascii with ascii string
+	 *
+	 * @test
+	 */
+	public function test_is_ascii_true()
+	{
+		$this->assertTrue(UTF8::is_ascii('hello'));
+	}
+
+	/**
+	 * Tests UTF8::is_ascii with non-ascii string
+	 *
+	 * @test
+	 */
+	public function test_is_ascii_false()
+	{
+		$this->assertFalse(UTF8::is_ascii('ño'));
+	}
+
+	/**
+	 * Tests UTF8::is_ascii with empty string
+	 *
+	 * @test
+	 */
+	public function test_is_ascii_empty()
+	{
+		$this->assertTrue(UTF8::is_ascii(''));
+	}
+
+	/**
+	 * Tests UTF8::strcasecmp multi-byte
+	 *
+	 * @test
+	 */
+	public function test_strcasecmp_multibyte()
+	{
+		$this->assertEquals(0, UTF8::strcasecmp('ñ', 'Ñ'));
+	}
+
+	/**
+	 * Tests UTF8::strtolower with multi-byte
+	 *
+	 * @test
+	 */
+	public function test_strtolower_multibyte()
+	{
+		$this->assertSame('ño', UTF8::strtolower('ÑO'));
+	}
+
+	/**
+	 * Tests UTF8::strtoupper with multi-byte
+	 *
+	 * @test
+	 */
+	public function test_strtoupper_multibyte()
+	{
+		$this->assertSame('ÑO', UTF8::strtoupper('ño'));
+	}
+
+	/**
+	 * Tests UTF8::trim
+	 *
+	 * @test
+	 */
+	public function test_trim_multibyte()
+	{
+		$this->assertSame('ño', UTF8::trim(' ño '));
+	}
+
+	/**
+	 * Tests UTF8::ltrim
+	 *
+	 * @test
+	 */
+	public function test_ltrim_multibyte()
+	{
+		$this->assertSame('ño ', UTF8::ltrim(' ño '));
+	}
+
+	/**
+	 * Tests UTF8::rtrim
+	 *
+	 * @test
+	 */
+	public function test_rtrim_multibyte()
+	{
+		$this->assertSame(' ño', UTF8::rtrim(' ño '));
+	}
+
+	/**
+	 * Tests UTF8::transliterate_to_ascii
+	 *
+	 * @test
+	 */
+	public function test_transliterate_to_ascii_simple()
+	{
+		$result = UTF8::transliterate_to_ascii('ñöü');
+		$this->assertSame('nou', $result);
+	}
+
+	/**
+	 * Tests UTF8::strip_ascii_ctrl
+	 *
+	 * @test
+	 */
+	public function test_strip_ascii_ctrl_simple()
+	{
+		$result = UTF8::strip_ascii_ctrl("Hello\x00World\x1F");
+		$this->assertSame('HelloWorld', $result);
+	}
+
+	/**
+	 * Tests UTF8::strip_non_ascii
+	 *
+	 * @test
+	 */
+	public function test_strip_non_ascii_simple()
+	{
+		$result = UTF8::strip_non_ascii('I ♥ cocoñùт');
+		$this->assertSame('I  coco', $result);
+	}
 }

@@ -383,5 +383,155 @@ class Kohana_CoreTest extends Unittest_TestCase
 			$this->assertContains($module, $include_paths);
 		}
 	}
+
+	/**
+	 * Tests Kohana::version() returns a string
+	 *
+	 * @test
+	 * @covers Kohana::version
+	 */
+	public function test_version_returns_string()
+	{
+		$version = Kohana::version();
+		$this->assertInternalType('string', $version);
+		$this->assertNotEmpty($version);
+	}
+
+	/**
+	 * Tests Kohana::$config->load() returns values for existing config group
+	 *
+	 * @test
+	 */
+	public function test_config_loads_values()
+	{
+		$result = Kohana::$config->load('cookie');
+		$this->assertNotNull($result);
+	}
+
+	/**
+	 * Tests Kohana::$config->load() returns a config group object
+	 *
+	 * @test
+	 */
+	public function test_config_returns_config_group()
+	{
+		$result = Kohana::$config->load('cookie');
+		$this->assertInstanceOf(Kohana_Config_Group::class, $result);
+	}
+
+	/**
+	 * Tests Kohana::auto_load() returns FALSE for non-existent class
+	 *
+	 * @test
+	 * @covers Kohana::auto_load
+	 */
+	public function test_auto_load_nonexistent_class()
+	{
+		$result = Kohana::auto_load('ClassThatDoesNotExistXYZ');
+		$this->assertFalse($result);
+	}
+
+	/**
+	 * Tests Kohana::sanitize() with array input
+	 *
+	 * @test
+	 * @covers Kohana::sanitize
+	 */
+	public function test_sanitize_array()
+	{
+		$input = array("foo\r\nbar" => "baz\r\nqux");
+		$result = Kohana::sanitize($input);
+		$this->assertSame(array("foo\r\nbar" => "baz\nqux"), $result);
+	}
+
+	/**
+	 * Tests Kohana::sanitize() with nested array
+	 *
+	 * @test
+	 * @covers Kohana::sanitize
+	 */
+	public function test_sanitize_nested_array()
+	{
+		$input = array(
+			'nested' => array(
+				'text' => "line1\r\nline2"
+			)
+		);
+		$result = Kohana::sanitize($input);
+		$this->assertSame("line1\nline2", $result['nested']['text']);
+	}
+
+	/**
+	 * Tests Kohana::sanitize() with integer input
+	 *
+	 * @test
+	 * @covers Kohana::sanitize
+	 */
+	public function test_sanitize_integer()
+	{
+		$this->assertSame(42, Kohana::sanitize(42));
+	}
+
+	/**
+	 * Tests Kohana::cache() delete by NULL lifetime
+	 *
+	 * @test
+	 * @covers Kohana::cache
+	 */
+	public function test_cache_delete()
+	{
+		Kohana::cache('delete_test_key', 'value', 10);
+		$result = Kohana::cache('delete_test_key', NULL, -1);
+		$this->assertNull(Kohana::cache('delete_test_key'));
+	}
+
+	/**
+	 * Tests Kohana::modules() returns array after set
+	 *
+	 * @test
+	 * @covers Kohana::modules
+	 */
+	public function test_modules_returns_empty_array_when_no_modules()
+	{
+		$original = Kohana::modules();
+		Kohana::modules(array());
+		$this->assertSame(array(), Kohana::modules());
+		Kohana::modules($original);
+	}
+
+	/**
+	 * Tests Kohana::find_file() returns FALSE for non-existent dir
+	 *
+	 * @test
+	 * @covers Kohana::find_file
+	 */
+	public function test_find_file_invalid_dir()
+	{
+		$this->assertFalse(Kohana::find_file('nonexistent_dir', 'test'));
+	}
+
+	/**
+	 * Tests Kohana::find_file() finds existing class file
+	 *
+	 * @test
+	 * @covers Kohana::find_file
+	 */
+	public function test_find_file_finds_existing_file()
+	{
+		$path = Kohana::find_file('classes', 'Kohana');
+		$this->assertInternalType('string', $path);
+		$this->assertFileExists($path);
+	}
+
+	/**
+	 * Tests Kohana::list_files() returns empty array for invalid dir
+	 *
+	 * @test
+	 * @covers Kohana::list_files
+	 */
+	public function test_list_files_invalid_directory()
+	{
+		$this->assertSame(array(), Kohana::list_files('invalid_dir_name'));
+	}
 }
 

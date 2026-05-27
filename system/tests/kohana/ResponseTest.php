@@ -187,4 +187,181 @@ class Kohana_ResponseTest extends Unittest_TestCase
 		$headers  = $response->send_headers()->headers();
 		$this->assertSame($content_type, (string) $headers['content-type']);
 	}
+
+	/**
+	 * Tests Response::status() sets and gets status code
+	 *
+	 * @test
+	 */
+	public function test_status_code()
+	{
+		$response = new Response;
+		$response->status(200);
+		$this->assertSame(200, $response->status());
+	}
+
+	/**
+	 * Tests Response::status() throws exception for invalid code
+	 *
+	 * @test
+	 */
+	public function test_status_invalid_code()
+	{
+		$this->expectException(\Kohana_Exception::class);
+		$response = new Response;
+		$response->status(99999);
+	}
+
+	/**
+	 * Tests Response::protocol() sets and gets protocol
+	 *
+	 * @test
+	 */
+	public function test_protocol()
+	{
+		$response = new Response;
+		$response->protocol('HTTP/1.0');
+		$this->assertSame('HTTP/1.0', $response->protocol());
+
+		$response->protocol('HTTP/1.1');
+		$this->assertSame('HTTP/1.1', $response->protocol());
+	}
+
+	/**
+	 * Tests Response::headers() returns HTTP_Header object
+	 *
+	 * @test
+	 */
+	public function test_headers_object()
+	{
+		$response = new Response;
+		$this->assertInstanceOf('HTTP_Header', $response->headers());
+	}
+
+	/**
+	 * Tests Response::headers() sets multiple headers at once
+	 *
+	 * @test
+	 */
+	public function test_headers_set_multiple()
+	{
+		$response = new Response;
+		$response->headers(array(
+			'X-Custom' => 'value1',
+			'X-Other' => 'value2',
+		));
+		$this->assertSame('value1', (string) $response->headers('X-Custom'));
+		$this->assertSame('value2', (string) $response->headers('X-Other'));
+	}
+
+	/**
+	 * Tests Response::headers() returns NULL for unknown header
+	 *
+	 * @test
+	 */
+	public function test_headers_unknown()
+	{
+		$response = new Response;
+		$this->assertNull($response->headers('X-Nonexistent'));
+	}
+
+	/**
+	 * Tests Response::cookie() returns all cookies when called without args
+	 *
+	 * @test
+	 */
+	public function test_cookie_get_all()
+	{
+		$response = new Response;
+		$response->cookie('a', '1');
+		$response->cookie('b', '2');
+		$cookies = $response->cookie();
+		$this->assertCount(2, $cookies);
+		$this->assertArrayHasKey('a', $cookies);
+		$this->assertArrayHasKey('b', $cookies);
+	}
+
+	/**
+	 * Tests Response::delete_cookie() removes a cookie
+	 *
+	 * @test
+	 */
+	public function test_cookie_delete()
+	{
+		$response = new Response;
+		$response->cookie('test', 'value');
+		$response->delete_cookie('test');
+		$this->assertNull($response->cookie('test'));
+	}
+
+	/**
+	 * Tests Response::body() with new Response returns empty string
+	 *
+	 * @test
+	 */
+	public function test_body_default_empty()
+	{
+		$response = new Response;
+		$this->assertSame('', $response->body());
+	}
+
+	/**
+	 * Tests Response::body() chainability
+	 *
+	 * @test
+	 */
+	public function test_body_chain()
+	{
+		$response = new Response;
+		$result = $response->body('content');
+		$this->assertSame($response, $result);
+	}
+
+	/**
+	 * Tests Response::status() chainability
+	 *
+	 * @test
+	 */
+	public function test_status_chain()
+	{
+		$response = new Response;
+		$result = $response->status(200);
+		$this->assertSame($response, $result);
+	}
+
+	/**
+	 * Tests Response::headers() chainability
+	 *
+	 * @test
+	 */
+	public function test_headers_chain()
+	{
+		$response = new Response;
+		$result = $response->headers('X-Test', 'value');
+		$this->assertSame($response, $result);
+	}
+
+	/**
+	 * Tests Response::send_headers() returns response
+	 *
+	 * @test
+	 */
+	public function test_send_headers_returns_response()
+	{
+		$response = new Response;
+		$result = $response->send_headers();
+		$this->assertSame($response, $result);
+	}
+
+	/**
+	 * Tests Response::body() with zero integer
+	 *
+	 * @test
+	 */
+	public function test_body_zero_integer()
+	{
+		$response = new Response;
+		$response->body(0);
+		$this->assertSame('0', $response->body());
+	}
 }

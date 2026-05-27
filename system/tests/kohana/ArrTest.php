@@ -714,4 +714,219 @@ class Kohana_ArrTest extends Unittest_TestCase
 			Arr::flatten($source)
 		);
 	}
+
+	/**
+	 * Tests Arr::callback() with escaped comma in parameter
+	 *
+	 * @test
+	 * @covers Arr::callback
+	 */
+	public function test_callback_escaped_comma()
+	{
+		$result = Arr::callback('func(param1\,with\,commas,param2)');
+		$this->assertCount(2, $result);
+		$this->assertSame('func', $result[0]);
+		$this->assertSame(array('param1,with,commas', 'param2'), $result[1]);
+	}
+
+	/**
+	 * Tests Arr::callback() with no parameters
+	 *
+	 * @test
+	 * @covers Arr::callback
+	 */
+	public function test_callback_no_params()
+	{
+		$result = Arr::callback('someFunction()');
+		$this->assertCount(2, $result);
+		$this->assertSame('someFunction', $result[0]);
+		$this->assertNull($result[1]);
+	}
+
+	/**
+	 * Tests Arr::get() with ArrayObject
+	 *
+	 * @test
+	 * @covers Arr::get
+	 */
+	public function test_get_with_array_object()
+	{
+		$array = new ArrayObject(array('key' => 'value'));
+		$this->assertSame('value', Arr::get($array, 'key'));
+		$this->assertNull(Arr::get($array, 'nonexistent'));
+		$this->assertSame('default', Arr::get($array, 'nonexistent', 'default'));
+	}
+
+	/**
+	 * Tests Arr::get() with NULL key in array
+	 *
+	 * @test
+	 * @covers Arr::get
+	 */
+	public function test_get_null_value()
+	{
+		$array = array('key' => NULL);
+		$this->assertNull(Arr::get($array, 'key'));
+	}
+
+	/**
+	 * Tests Arr::is_assoc() with mixed array
+	 *
+	 * @test
+	 * @covers Arr::is_assoc
+	 */
+	public function test_is_assoc_mixed()
+	{
+		$this->assertTrue(Arr::is_assoc(array('a' => 1, 'b' => 2)));
+		$this->assertFalse(Arr::is_assoc(array(1, 2, 3)));
+		$this->assertFalse(Arr::is_assoc(array(0 => 'a', 1 => 'b', 2 => 'c')));
+	}
+
+	/**
+	 * Tests Arr::is_array() with Traversable object
+	 *
+	 * @test
+	 * @covers Arr::is_array
+	 */
+	public function test_is_array_traversable()
+	{
+		$traversable = new ArrayIterator(array(1, 2, 3));
+		$this->assertTrue(Arr::is_array($traversable));
+	}
+
+	/**
+	 * Tests Arr::merge() with more than 2 arrays
+	 *
+	 * @test
+	 * @covers Arr::merge
+	 */
+	public function test_merge_multi()
+	{
+		$result = Arr::merge(
+			array('a' => 1, 'b' => 2),
+			array('c' => 3),
+			array('d' => 4, 'e' => 5)
+		);
+		$expected = array('a' => 1, 'b' => 2, 'c' => 3, 'd' => 4, 'e' => 5);
+		$this->assertSame($expected, $result);
+	}
+
+	/**
+	 * Tests Arr::path() with non-array input
+	 *
+	 * @test
+	 * @covers Arr::path
+	 */
+	public function test_path_non_array()
+	{
+		$this->assertSame('default', Arr::path('string', 'path', 'default'));
+	}
+
+	/**
+	 * Tests Arr::path() with wildcard returning empty values
+	 *
+	 * @test
+	 * @covers Arr::path
+	 */
+	public function test_path_wildcard_empty()
+	{
+		$array = array('items' => array());
+		$this->assertNull(Arr::path($array, 'items.*.name'));
+	}
+
+	/**
+	 * Tests Arr::path() with non-existent deep path
+	 *
+	 * @test
+	 * @covers Arr::path
+	 */
+	public function test_path_deep_missing()
+	{
+		$array = array('level1' => array('level2' => 'value'));
+		$this->assertSame('default', Arr::path($array, 'level1.level2.level3', 'default'));
+	}
+
+	/**
+	 * Tests Arr::overwrite() with single extra array
+	 *
+	 * @test
+	 * @covers Arr::overwrite
+	 */
+	public function test_overwrite_single()
+	{
+		$base = array('a' => 1, 'b' => 2, 'c' => 3);
+		$over = array('b' => 99);
+		$result = Arr::overwrite($base, $over);
+		$this->assertSame(array('a' => 1, 'b' => 99, 'c' => 3), $result);
+	}
+
+	/**
+	 * Tests Arr::overwrite() only overwrites existing keys
+	 *
+	 * @test
+	 * @covers Arr::overwrite
+	 */
+	public function test_overwrite_no_new_keys()
+	{
+		$base = array('a' => 1);
+		$over = array('a' => 2, 'b' => 3);
+		$result = Arr::overwrite($base, $over);
+		$this->assertSame(array('a' => 2), $result);
+	}
+
+	/**
+	 * Tests Arr::flatten() with indexed array
+	 *
+	 * @test
+	 * @covers Arr::flatten
+	 */
+	public function test_flatten_indexed()
+	{
+		$input = array(array('a', 'b'), array('c'));
+		$expected = array('a', 'b', 'c');
+		$this->assertSame($expected, Arr::flatten($input));
+	}
+
+	/**
+	 * Tests Arr::flatten() with nested assoc arrays
+	 *
+	 * @test
+	 * @covers Arr::flatten
+	 */
+	public function test_flatten_nested_assoc()
+	{
+		$input = array('first' => array('nested' => 'value'), 'second' => 'direct');
+		$expected = array('nested' => 'value', 'second' => 'direct');
+		$this->assertSame($expected, Arr::flatten($input));
+	}
+
+	/**
+	 * Tests Arr::set_path() with non-empty base array
+	 *
+	 * @test
+	 * @covers Arr::set_path
+	 */
+	public function test_set_path_overwrites_existing()
+	{
+		$array = array('config' => array('host' => 'old'));
+		Arr::set_path($array, 'config.host', 'new');
+		$this->assertSame('new', $array['config']['host']);
+	}
+
+	/**
+	 * Tests Arr::pluck() when key is missing from some rows
+	 *
+	 * @test
+	 * @covers Arr::pluck
+	 */
+	public function test_pluck_missing_key()
+	{
+		$data = array(
+			array('id' => 1, 'name' => 'Alice'),
+			array('name' => 'Bob'),
+			array('id' => 3, 'name' => 'Charlie'),
+		);
+		$result = Arr::pluck($data, 'id');
+		$this->assertSame(array(1, 3), $result);
+	}
 }

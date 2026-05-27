@@ -287,6 +287,60 @@ class Kohana_CookieTest extends Unittest_TestCase
 			$_SERVER['HTTP_USER_AGENT'] = $user_agent;
 		}
 	}
+
+	/**
+	 * Tests Cookie::salt() produces different hash for different User-Agent
+	 *
+	 * @test
+	 */
+	public function test_salt_differs_with_user_agent()
+	{
+		$this->set_or_remove_http_user_agent('Mozilla/5.0');
+		$salt1 = Cookie::salt('test', 'value');
+
+		$this->set_or_remove_http_user_agent('DifferentBrowser/1.0');
+		$salt2 = Cookie::salt('test', 'value');
+
+		$this->assertNotSame($salt1, $salt2);
+	}
+
+	/**
+	 * Tests Cookie::salt() is deterministic for same inputs
+	 *
+	 * @test
+	 */
+	public function test_salt_is_deterministic()
+	{
+		$this->set_or_remove_http_user_agent('SameAgent/1.0');
+		$salt1 = Cookie::salt('key', 'val');
+		$salt2 = Cookie::salt('key', 'val');
+		$this->assertSame($salt1, $salt2);
+	}
+
+	/**
+	 * Tests Cookie::$httponly defaults to TRUE
+	 *
+	 * @test
+	 */
+	public function test_httponly_default_true()
+	{
+		$this->assertTrue(Cookie::$httponly);
+	}
+
+	/**
+	 * Tests Cookie::set() with custom path
+	 *
+	 * @test
+	 */
+	public function test_set_custom_path()
+	{
+		$old_path = Cookie::$path;
+		Cookie::$path = '/custom';
+		Kohana_CookieTest_TestableCookie::set('testcookie', 'testvalue');
+		$last = end(Kohana_CookieTest_TestableCookie::$_mock_cookies_set);
+		$this->assertEquals('/custom', $last['path']);
+		Cookie::$path = $old_path;
+	}
 }
 
 /**

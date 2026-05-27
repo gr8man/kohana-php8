@@ -99,4 +99,92 @@ class Kohana_ExceptionTest extends Unittest_TestCase
 	{
 		$this->assertEquals($expected, Kohana_Exception::text($exception));
 	}
+
+	/**
+	 * Tests Kohana_Exception::text() with ErrorException
+	 *
+	 * @test
+	 * @covers Kohana_Exception::text
+	 */
+	public function test_text_with_error_exception()
+	{
+		$exception = new ErrorException('warning', E_WARNING, 0, __FILE__, __LINE__);
+		$text = Kohana_Exception::text($exception);
+
+		$this->assertStringContainsString('ErrorException', $text);
+		$this->assertStringContainsString('warning', $text);
+	}
+
+	/**
+	 * Tests Kohana_Exception::log()
+	 *
+	 * @test
+	 * @covers Kohana_Exception::log
+	 */
+	public function test_log()
+	{
+		$exception = new Kohana_Exception('test message');
+		Kohana_Exception::log($exception, Log::ERROR);
+
+		// Should not throw, log is written to Kohana::$log
+		$this->assertTrue(TRUE);
+	}
+
+	/**
+	 * Tests Kohana_Exception::response() returns a Response object
+	 *
+	 * @test
+	 * @covers Kohana_Exception::response
+	 */
+	public function test_response_returns_response_object()
+	{
+		$exception = new Kohana_Exception('test error');
+		$response = Kohana_Exception::response($exception);
+
+		$this->assertInstanceOf('Response', $response);
+		$this->assertEquals(500, $response->status());
+	}
+
+	/**
+	 * Tests Kohana_Exception::response() with HTTP exception
+	 *
+	 * @test
+	 * @covers Kohana_Exception::response
+	 */
+	public function test_response_with_http_exception()
+	{
+		$exception = HTTP_Exception::factory(404, 'Page not found');
+		$response = Kohana_Exception::response($exception);
+
+		$this->assertInstanceOf('Response', $response);
+		$this->assertEquals(404, $response->status());
+	}
+
+	/**
+	 * Tests Kohana_Exception::_handler() returns response for Throwable
+	 *
+	 * @test
+	 * @covers Kohana_Exception::_handler
+	 */
+	public function test_handler_internal()
+	{
+		$response = Kohana_Exception::_handler(new RuntimeException('internal test'));
+
+		$this->assertInstanceOf('Response', $response);
+		$this->assertEquals(500, $response->status());
+	}
+
+	/**
+	 * Tests Kohana_Exception::text() handles exception with no message
+	 *
+	 * @test
+	 * @covers Kohana_Exception::text
+	 */
+	public function test_text_no_message()
+	{
+		$exception = new Kohana_Exception('');
+		$text = Kohana_Exception::text($exception);
+
+		$this->assertStringContainsString('Kohana_Exception', $text);
+	}
 }

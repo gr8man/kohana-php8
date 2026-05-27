@@ -126,4 +126,271 @@ class Kohana_DebugTest extends Unittest_TestCase
 	{
 		$this->assertEquals($expected, Debug::dump($input, $length, $limit));
 	}
+
+	/**
+	 * Tests Debug::trace() returns array
+	 *
+	 * @test
+	 * @covers Debug::trace
+	 */
+	public function test_trace_returns_array()
+	{
+		$trace = Debug::trace();
+		$this->assertInternalType('array', $trace);
+		$this->assertGreaterThan(0, count($trace));
+	}
+
+	/**
+	 * Tests Debug::trace() with custom trace
+	 *
+	 * @test
+	 * @covers Debug::trace
+	 */
+	public function test_trace_with_custom_trace()
+	{
+		$custom = array(
+			array('function' => 'test_func', 'file' => __FILE__, 'line' => __LINE__),
+		);
+		$trace = Debug::trace($custom);
+		$this->assertCount(1, $trace);
+		$this->assertEquals('test_func', $trace[0]['function']);
+	}
+
+	/**
+	 * Tests Debug::trace() with static method call
+	 *
+	 * @test
+	 * @covers Debug::trace
+	 */
+	public function test_trace_static_method()
+	{
+		$custom = array(
+			array(
+				'function' => 'TestMethod',
+				'class' => 'MyClass',
+				'type' => '::',
+				'args' => array('arg1'),
+				'file' => __FILE__,
+				'line' => __LINE__,
+			),
+		);
+		$trace = Debug::trace($custom);
+		$this->assertCount(1, $trace);
+		$this->assertEquals('MyClass::TestMethod', $trace[0]['function']);
+	}
+
+	/**
+	 * Tests Debug::trace() with closure
+	 *
+	 * @test
+	 * @covers Debug::trace
+	 */
+	public function test_trace_closure()
+	{
+		$custom = array(
+			array(
+				'function' => '{closure}',
+				'args' => array('data'),
+				'file' => __FILE__,
+				'line' => __LINE__,
+			),
+		);
+		$trace = Debug::trace($custom);
+		$this->assertCount(1, $trace);
+		$this->assertStringContainsString('{closure}', $trace[0]['function']);
+	}
+
+	/**
+	 * Tests Debug::trace() with include statement
+	 *
+	 * @test
+	 * @covers Debug::trace
+	 */
+	public function test_trace_include()
+	{
+		$custom = array(
+			array(
+				'function' => 'include',
+				'args' => array('/path/to/file.php'),
+			),
+		);
+		$trace = Debug::trace($custom);
+		$this->assertCount(1, $trace);
+		$this->assertEquals('include', $trace[0]['function']);
+	}
+
+	/**
+	 * Tests Debug::trace() with include_once statement
+	 *
+	 * @test
+	 * @covers Debug::trace
+	 */
+	public function test_trace_include_once()
+	{
+		$custom = array(
+			array(
+				'function' => 'include_once',
+				'args' => array(__FILE__),
+			),
+		);
+		$trace = Debug::trace($custom);
+		$this->assertCount(1, $trace);
+		$this->assertEquals('include_once', $trace[0]['function']);
+	}
+
+	/**
+	 * Tests Debug::trace() skips invalid steps
+	 *
+	 * @test
+	 * @covers Debug::trace
+	 */
+	public function test_trace_skips_invalid_steps()
+	{
+		$custom = array(
+			array(),
+			array('function' => 'valid_func', 'file' => __FILE__, 'line' => __LINE__),
+		);
+		$trace = Debug::trace($custom);
+		$this->assertCount(1, $trace);
+	}
+
+	/**
+	 * Tests Debug::dump() with float
+	 *
+	 * @test
+	 * @covers Debug::dump
+	 */
+	public function test_dump_float()
+	{
+		$result = Debug::dump(3.14);
+		$this->assertStringContainsString('float', $result);
+		$this->assertStringContainsString('3.14', $result);
+	}
+
+	/**
+	 * Tests Debug::dump() with integer zero
+	 *
+	 * @test
+	 * @covers Debug::dump
+	 */
+	public function test_dump_integer()
+	{
+		$result = Debug::dump(42);
+		$this->assertStringContainsString('integer', $result);
+		$this->assertStringContainsString('42', $result);
+	}
+
+	/**
+	 * Tests Debug::dump() with FALSE
+	 *
+	 * @test
+	 * @covers Debug::dump
+	 */
+	public function test_dump_false()
+	{
+		$result = Debug::dump(FALSE);
+		$this->assertStringContainsString('bool', $result);
+		$this->assertStringContainsString('FALSE', $result);
+	}
+
+	/**
+	 * Tests Debug::vars() with no arguments returns NULL
+	 *
+	 * @test
+	 * @covers Debug::vars
+	 */
+	public function test_vars_no_arguments()
+	{
+		$this->assertNull(Debug::vars());
+	}
+
+	/**
+	 * Tests Debug::vars() with multiple arguments
+	 *
+	 * @test
+	 * @covers Debug::vars
+	 */
+	public function test_vars_multiple_arguments()
+	{
+		$result = Debug::vars('hello', 42, NULL);
+		$this->assertStringContainsString('hello', $result);
+		$this->assertStringContainsString('42', $result);
+		$this->assertStringContainsString('NULL', $result);
+	}
+
+	/**
+	 * Tests Debug::dump() with resource
+	 *
+	 * @test
+	 * @covers Debug::dump
+	 */
+	public function test_dump_resource()
+	{
+		$resource = fopen(__FILE__, 'r');
+		$result = Debug::dump($resource);
+		$this->assertStringContainsString('resource', $result);
+		fclose($resource);
+	}
+
+	/**
+	 * Tests Debug::source() returns FALSE for unreadable file
+	 *
+	 * @test
+	 * @covers Debug::source
+	 */
+	public function test_source_unreadable()
+	{
+		$this->assertFalse(Debug::source('', 1));
+	}
+
+	/**
+	 * Tests Debug::source() returns formatted source
+	 *
+	 * @test
+	 * @covers Debug::source
+	 */
+	public function test_source_valid()
+	{
+		$result = Debug::source(__FILE__, 5);
+		$this->assertStringContainsString('<pre class="source">', $result);
+	}
+
+	/**
+	 * Tests Debug::path() with DOCROOT path
+	 *
+	 * @test
+	 * @covers Debug::path
+	 */
+	public function test_path_docroot()
+	{
+		$path = Debug::path(DOCROOT.'index.php');
+		$this->assertStringContainsString('DOCROOT', $path);
+	}
+
+	/**
+	 * Tests Debug::dump() with empty array
+	 *
+	 * @test
+	 * @covers Debug::dump
+	 */
+	public function test_dump_empty_array()
+	{
+		$result = Debug::dump(array());
+		$this->assertStringContainsString('array', $result);
+	}
+
+	/**
+	 * Tests Debug::dump() recursion detection in arrays
+	 *
+	 * @test
+	 * @covers Debug::dump
+	 */
+	public function test_dump_array_recursion()
+	{
+		$array = array('foo' => 'bar');
+		$array['self'] = &$array;
+
+		$result = Debug::dump($array);
+		$this->assertStringContainsString('RECURSION', $result);
+	}
 }
