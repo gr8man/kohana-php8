@@ -70,5 +70,5 @@ function _substr($str, $offset, $length = NULL)
 	}
 
 	preg_match('/'.$regex.'/us', $str, $matches);
-	return $matches[1];
+	return isset($matches[1]) ? $matches[1] : '';
 }

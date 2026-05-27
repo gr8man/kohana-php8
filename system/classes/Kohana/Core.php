@@ -449,12 +449,6 @@ class Kohana_Core {
 		}
 		elseif (is_string($value))
 		{
-			if (Kohana::$magic_quotes === TRUE)
-			{
-				// Remove slashes added by magic quotes
-				$value = stripslashes($value);
-			}
-
 			if (strpos($value, "\r") !== FALSE)
 			{
 				// Standardize newlines

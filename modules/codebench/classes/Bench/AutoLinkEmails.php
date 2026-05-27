@@ -35,12 +35,12 @@ class Bench_AutoLinkEmails extends Codebench {
 		return $subject;
 	}
 
-	// The "e" stands for "eval", hmm... Ugly and slow because it needs to reinterpret the PHP code upon each match.
+	// The "e" modifier was removed in PHP 7.0; replaced with preg_replace_callback.
 	public function bench_replace_e($subject)
 	{
-		return preg_replace(
-			'~\b(?<!href="mailto:|">|58;)(?!\.)[-+_a-z0-9.]++(?<!\.)@(?![-.])[-a-z0-9.]+(?<!\.)\.[a-z]{2,6}\b~ie',
-			'HTML::mailto("$0")', // Yuck!
+		return preg_replace_callback(
+			'~\b(?<!href="mailto:|">|58;)(?!\.)[-+_a-z0-9.]++(?<!\.)@(?![-.])[-a-z0-9.]+(?<!\.)\.[a-z]{2,6}\b~i',
+			fn($matches) => HTML::mailto($matches[0]),
 			$subject
 		);
 	}
@@ -64,7 +64,7 @@ class Bench_AutoLinkEmails extends Codebench {
 	{
 		return preg_replace_callback(
 			'~\b(?<!href="mailto:|">|58;)(?!\.)[-+_a-z0-9.]++(?<!\.)@(?![-.])[-a-z0-9.]+(?<!\.)\.[a-z]{2,6}\b~i',
-			create_function('$matches', 'return HTML::mailto($matches[0]);'), // Yuck!
+			fn($matches) => HTML::mailto($matches[0]),
 			$subject
 		);
 	}

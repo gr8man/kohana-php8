@@ -81,7 +81,8 @@ class Kohana_Request_Client_Stream extends Request_Client_External {
 		// Get the HTTP response code
 		$http_response = array_shift($meta_data['wrapper_data']);
 
-		if (preg_match_all('/(\w+\/\d\.\d) (\d{3})/', $http_response, $matches) !== FALSE)
+		if (preg_match_all('/(\w+\/\d\.\d) (\d{3})/', $http_response, $matches) !== FALSE
+			AND ! empty($matches[1]))
 		{
 			$protocol = $matches[1][0];
 			$status   = (int) $matches[2][0];

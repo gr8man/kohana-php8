@@ -121,7 +121,10 @@ class Kohana_Kohana_Exception extends Exception {
 			ob_get_level() AND ob_clean();
 
 			// Set the Status code to 500, and Content-Type to text/plain.
-			header('Content-Type: text/plain; charset='.Kohana::$charset, TRUE, 500);
+			if ( ! headers_sent())
+			{
+				header('Content-Type: text/plain; charset='.Kohana::$charset, TRUE, 500);
+			}
 
 			echo Kohana_Exception::text($e);
 
@@ -190,7 +193,7 @@ class Kohana_Kohana_Exception extends Exception {
 			 * method. We need to remove that entry from the trace and overwrite
 			 * the variables from above.
 			 */
-			if ($e instanceof HTTP_Exception AND $trace[0]['function'] == 'factory')
+			if ($e instanceof HTTP_Exception AND ! empty($trace) AND $trace[0]['function'] == 'factory')
 			{
 				extract(array_shift($trace));
 			}

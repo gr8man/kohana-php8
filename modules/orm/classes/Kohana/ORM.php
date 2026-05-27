@@ -15,7 +15,7 @@ declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
  * @copyright  (c) 2007-2012 Kohana Team
  * @license    http://kohanaframework.org/license
  */
-class Kohana_ORM extends Model implements serializable {
+class Kohana_ORM extends Model {
 
 	/**
 	 * Stores column information for ORM models
@@ -543,9 +543,9 @@ class Kohana_ORM extends Model implements serializable {
 	 * Allows serialization of only the object data and state, to prevent
 	 * "stale" objects being unserialized, which also requires less memory.
 	 *
-	 * @return string
+	 * @return array
 	 */
-	public function serialize()
+	public function __serialize()
 	{
 		// Store only information about the object
 		foreach (array('_primary_key_value', '_object', '_changed', '_loaded', '_saved', '_sorting', '_original_values') as $var)
@@ -553,7 +553,7 @@ class Kohana_ORM extends Model implements serializable {
 			$data[$var] = $this->{$var};
 		}
 
-		return serialize($data);
+		return $data;
 	}
 
 	/**
@@ -573,15 +573,15 @@ class Kohana_ORM extends Model implements serializable {
 	/**
 	 * Prepares the database connection and reloads the object.
 	 *
-	 * @param string $data String for unserialization
+	 * @param array $data Data for unserialization
 	 * @return  void
 	 */
-	public function unserialize($data)
+	public function __unserialize(array $data)
 	{
 		// Initialize model
 		$this->_initialize();
 
-		foreach (unserialize($data, ['allowed_classes' => FALSE]) as $name => $var)
+		foreach ($data as $name => $var)
 		{
 			$this->{$name} = $var;
 		}

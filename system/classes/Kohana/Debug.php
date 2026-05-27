@@ -83,8 +83,6 @@ class Kohana_Debug {
 		{
 			if (($type = get_resource_type($var)) === 'stream' AND $meta = stream_get_meta_data($var))
 			{
-				$meta = stream_get_meta_data($var);
-
 				if (isset($meta['uri']))
 				{
 					$file = $meta['uri'];
