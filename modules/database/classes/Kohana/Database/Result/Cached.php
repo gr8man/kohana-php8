@@ -30,24 +30,17 @@ class Kohana_Database_Result_Cached extends Database_Result {
 		return $this;
 	}
 
-	public function seek($offset)
+	public function seek(int $offset): void
 	{
 		if ($this->offsetExists($offset))
 		{
 			$this->_current_row = $offset;
-
-			return TRUE;
-		}
-		else
-		{
-			return FALSE;
 		}
 	}
 
-	public function current()
+	public function current(): mixed
 	{
-		// Return an array of the row
-		return $this->valid() ? $this->_result[$this->_current_row] : NULL;
+		return $this->_result[$this->_current_row];
 	}
 
 } // End Database_Result_Cached

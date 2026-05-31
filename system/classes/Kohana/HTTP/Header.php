@@ -257,47 +257,47 @@ class Kohana_HTTP_Header extends ArrayObject {
 		return $output;
 	}
 
-	/**
-	 * @var     array    Accept: (content) types
-	 */
-	protected $_accept_content;
+/**
+ * @var     array    Accept: (content) types
+ */
+protected $_accept_content;
 
-	/**
-	 * @var     array    Accept-Charset: parsed header
-	 */
-	protected $_accept_charset;
+/**
+ * @var     array    Accept-Charset: parsed header
+ */
+protected $_accept_charset;
 
-	/**
-	 * @var     array    Accept-Encoding: parsed header
-	 */
-	protected $_accept_encoding;
+/**
+ * @var     array    Accept-Encoding: parsed header
+ */
+protected $_accept_encoding;
 
-	/**
-	 * @var     array    Accept-Language: parsed header
-	 */
-	protected $_accept_language;
+/**
+ * @var     array    Accept-Language: parsed header
+ */
+protected $_accept_language;
 
+/**
+ * Constructor method for [Kohana_HTTP_Header]. Uses the standard constructor
+ * of the parent `ArrayObject` class.
+ *
+ *     $header_object = new HTTP_Header(array('x-powered-by' => 'Kohana 3.1.x', 'expires' => '...'));
+ *
+ * @param   mixed   $input          Input array
+ * @param   int     $flags          Flags
+ * @param   string  $iterator_class The iterator class to use
+ */
+public function __construct(array $input = array(), $flags = 0, $iterator_class = 'ArrayIterator')
+{
 	/**
-	 * Constructor method for [Kohana_HTTP_Header]. Uses the standard constructor
-	 * of the parent `ArrayObject` class.
+	 * @link http://www.w3.org/Protocols/rfc2616/rfc2616.html
 	 *
-	 *     $header_object = new HTTP_Header(array('x-powered-by' => 'Kohana 3.1.x', 'expires' => '...'));
-	 *
-	 * @param   mixed   $input          Input array
-	 * @param   int     $flags          Flags
-	 * @param   string  $iterator_class The iterator class to use
+	 * HTTP header declarations should be treated as case-insensitive
 	 */
-	public function __construct(array $input = array(), $flags = 0, $iterator_class = 'ArrayIterator')
-	{
-		/**
-		 * @link http://www.w3.org/Protocols/rfc2616/rfc2616.html
-		 *
-		 * HTTP header declarations should be treated as case-insensitive
-		 */
-		$input = array_change_key_case( (array) $input, CASE_LOWER);
+	$input = array_change_key_case( (array) $input, CASE_LOWER);
 
-		parent::__construct($input, $flags, $iterator_class);
-	}
+	parent::__construct($input, $flags, $iterator_class);
+}
 
 	/**
 	 * Returns the header object as a string, including

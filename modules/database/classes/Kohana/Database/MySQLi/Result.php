@@ -30,44 +30,18 @@ class Kohana_Database_MySQLi_Result extends Database_Result {
 		}
 	}
 
-	public function seek($offset)
+	public function seek(int $offset): void
 	{
 		if ($this->offsetExists($offset) AND $this->_result->data_seek($offset))
 		{
 			// Set the current row to the offset
 			$this->_current_row = $this->_internal_row = $offset;
-
-			return TRUE;
-		}
-		else
-		{
-			return FALSE;
 		}
 	}
 
-	public function current()
+	public function current(): mixed
 	{
-		if ($this->_current_row !== $this->_internal_row AND ! $this->seek($this->_current_row))
-			return NULL;
-
-		// Increment internal row for optimization assuming rows are fetched in order
-		$this->_internal_row++;
-
-		if ($this->_as_object === TRUE)
-		{
-			// Return an stdClass
-			return $this->_result->fetch_object();
-		}
-		elseif (is_string($this->_as_object))
-		{
-			// Return an object of given class name
-			return $this->_result->fetch_object($this->_as_object, (array) $this->_object_params);
-		}
-		else
-		{
-			// Return an array of the row
-			return $this->_result->fetch_assoc();
-		}
+		return mysqli_fetch_assoc($this->_result);
 	}
 
 } // End Database_MySQLi_Result_Select

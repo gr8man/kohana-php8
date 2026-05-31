@@ -17,7 +17,7 @@ class Kohana_Arr {
 	/**
 	 * @var  string  default delimiter for path()
 	 */
-	public static $delimiter = '.';
+	public static string $delimiter = '.';
 
 	/**
 	 * Tests if an array is associative or not.
