@@ -27,7 +27,7 @@ abstract class Kohana_Controller_Template extends Controller
 	 * Loads the template [View] object.
 	 */
 	#[\Override]
-    public function before(): void
+	public function before(): void
 	{
 		parent::before();
 
@@ -41,7 +41,7 @@ abstract class Kohana_Controller_Template extends Controller
 	 * Assigns the template [View] as the request response.
 	 */
 	#[\Override]
-    public function after(): void
+	public function after(): void
 	{
 		if ($this->auto_render === true) {
 			$this->response->body($this->template->render());

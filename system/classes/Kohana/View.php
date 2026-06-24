@@ -17,18 +17,18 @@ defined('SYSPATH') or die('No direct script access.');
 class Kohana_View implements \Stringable
 {
 	// Array of global variables
-	protected static $_global_data = [];
+	protected static $_global_data = array();
 
 	/**
-     * Returns a new View object. If you do not define the "file" parameter,
-     * you must call [View::set_filename].
-     *
-     *     $view = View::factory($file);
-     *
-     * @param   string  $file   view filename
-     * @param   array   $data   array of values
-     */
-    public static function factory($file = null, array $data = null): \View
+	 * Returns a new View object. If you do not define the "file" parameter,
+	 * you must call [View::set_filename].
+	 *
+	 *     $view = View::factory($file);
+	 *
+	 * @param   string  $file   view filename
+	 * @param   array   $data   array of values
+	 */
+	public static function factory($file = null, array $data = null): \View
 	{
 		return new View($file, $data);
 	}
@@ -74,23 +74,23 @@ class Kohana_View implements \Stringable
 	}
 
 	/**
-     * Sets a global variable, similar to [View::set], except that the
-     * variable will be accessible to all views.
-     *
-     *     View::set_global($name, $value);
-     *
-     * You can also use an array or Traversable object to set several values at once:
-     *
-     *     // Create the values $food and $beverage in the view
-     *     View::set_global(array('food' => 'bread', 'beverage' => 'water'));
-     *
-     * [!!] Note: When setting with using Traversable object we're not attaching the whole object to the view,
-     * i.e. the object's standard properties will not be available in the view context.
-     *
-     * @param   string|array|Traversable  $key    variable name or an array of variables
-     * @param   mixed                     $value  value
-     */
-    public static function set_global($key, $value = null): void
+	 * Sets a global variable, similar to [View::set], except that the
+	 * variable will be accessible to all views.
+	 *
+	 *     View::set_global($name, $value);
+	 *
+	 * You can also use an array or Traversable object to set several values at once:
+	 *
+	 *     // Create the values $food and $beverage in the view
+	 *     View::set_global(array('food' => 'bread', 'beverage' => 'water'));
+	 *
+	 * [!!] Note: When setting with using Traversable object we're not attaching the whole object to the view,
+	 * i.e. the object's standard properties will not be available in the view context.
+	 *
+	 * @param   string|array|Traversable  $key    variable name or an array of variables
+	 * @param   mixed                     $value  value
+	 */
+	public static function set_global($key, $value = null): void
 	{
 		if (is_array($key) or $key instanceof Traversable) {
 			foreach ($key as $name => $value) {
@@ -102,15 +102,15 @@ class Kohana_View implements \Stringable
 	}
 
 	/**
-     * Assigns a global variable by reference, similar to [View::bind], except
-     * that the variable will be accessible to all views.
-     *
-     *     View::bind_global($key, $value);
-     *
-     * @param   string  $key    variable name
-     * @param   mixed   $value  referenced variable
-     */
-    public static function bind_global($key, & $value): void
+	 * Assigns a global variable by reference, similar to [View::bind], except
+	 * that the variable will be accessible to all views.
+	 *
+	 *     View::bind_global($key, $value);
+	 *
+	 * @param   string  $key    variable name
+	 * @param   mixed   $value  referenced variable
+	 */
+	public static function bind_global($key, & $value): void
 	{
 		View::$_global_data[$key] = & $value;
 	}
@@ -119,7 +119,7 @@ class Kohana_View implements \Stringable
 	protected $_file;
 
 	// Array of local variables
-	protected array $_data = [];
+	protected array $_data = array();
 
 	/**
 	 * Sets the initial view filename and local data. Views should almost
@@ -144,17 +144,17 @@ class Kohana_View implements \Stringable
 	}
 
 	/**
-     * Magic method, searches for the given variable and returns its value.
-     * Local variables will be returned before global variables.
-     *
-     *     $value = $view->foo;
-     *
-     * [!!] If the variable has not yet been set, an exception will be thrown.
-     *
-     * @param   string  $key    variable name
-     * @throws  Kohana_Exception
-     */
-    public function & __get(string $key): mixed
+	 * Magic method, searches for the given variable and returns its value.
+	 * Local variables will be returned before global variables.
+	 *
+	 *     $value = $view->foo;
+	 *
+	 * [!!] If the variable has not yet been set, an exception will be thrown.
+	 *
+	 * @param   string  $key    variable name
+	 * @throws  Kohana_Exception
+	 */
+	public function & __get(string $key): mixed
 	{
 		if (array_key_exists($key, $this->_data)) {
 			return $this->_data[$key];
@@ -163,7 +163,7 @@ class Kohana_View implements \Stringable
 		} else {
 			throw new Kohana_Exception(
 				'View variable is not set: :var',
-				[':var' => $key]
+				array(':var' => $key)
 			);
 		}
 	}
@@ -211,11 +211,11 @@ class Kohana_View implements \Stringable
 	}
 
 	/**
-     * Magic method, returns the output of [View::render].
-     *
-     * @uses    View::render
-     */
-    public function __toString(): string
+	 * Magic method, returns the output of [View::render].
+	 *
+	 * @uses    View::render
+	 */
+	public function __toString(): string
 	{
 		try {
 			return $this->render();
@@ -244,9 +244,9 @@ class Kohana_View implements \Stringable
 	public function set_filename($file): static
 	{
 		if (($path = Kohana::find_file('views', $file)) === false) {
-			throw new View_Exception('The requested view :file could not be found', [
+			throw new View_Exception('The requested view :file could not be found', array(
 				':file' => $file,
-			]);
+			));
 		}
 
 		// Store the file path locally

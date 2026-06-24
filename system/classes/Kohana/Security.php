@@ -87,15 +87,15 @@ class Kohana_Security
 
 
 	/**
-     * Compare two hashes in a time-invariant manner.
-     * Prevents cryptographic side-channel attacks (timing attacks, specifically)
-     *
-     * SECURITY: Uses PHP's hash_equals() when available (PHP 5.6+)
-     *
-     * @param string $a cryptographic hash
-     * @param string $b cryptographic hash
-     */
-    public static function slow_equals($a, $b): bool
+	 * Compare two hashes in a time-invariant manner.
+	 * Prevents cryptographic side-channel attacks (timing attacks, specifically)
+	 *
+	 * SECURITY: Uses PHP's hash_equals() when available (PHP 5.6+)
+	 *
+	 * @param string $a cryptographic hash
+	 * @param string $b cryptographic hash
+	 */
+	public static function slow_equals($a, $b): bool
 	{
 		if (function_exists('hash_equals')) {
 			return hash_equals((string) $a, (string) $b);
@@ -147,15 +147,15 @@ class Kohana_Security
 	}
 
 	/**
-     * Encodes PHP tags in a string.
-     *
-     *     $str = Security::encode_php_tags($str);
-     *
-     * @param   string  $str    string to sanitize
-     */
-    public static function encode_php_tags($str): string
+	 * Encodes PHP tags in a string.
+	 *
+	 *     $str = Security::encode_php_tags($str);
+	 *
+	 * @param   string  $str    string to sanitize
+	 */
+	public static function encode_php_tags($str): string
 	{
-		return str_replace(['<?', '?>'], ['&lt;?', '?&gt;'], $str);
+		return str_replace(array('<?', '?>'), array('&lt;?', '?&gt;'), $str);
 	}
 
 }

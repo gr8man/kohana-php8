@@ -35,7 +35,7 @@ class Kohana_UTF8
 	/**
 	 * @var  array  List of called methods that have had their required file included.
 	 */
-	public static $called = [];
+	public static $called = array();
 
 	/**
 	 * Recursively cleans arrays, objects, and strings. Removes ASCII control
@@ -86,14 +86,14 @@ class Kohana_UTF8
 	}
 
 	/**
-     * Tests whether a string contains only 7-bit ASCII bytes. This is used to
-     * determine when to use native functions or UTF-8 functions.
-     *
-     *     $ascii = UTF8::is_ascii($str);
-     *
-     * @param   mixed   $str    string or array of strings to check
-     */
-    public static function is_ascii($str): bool
+	 * Tests whether a string contains only 7-bit ASCII bytes. This is used to
+	 * determine when to use native functions or UTF-8 functions.
+	 *
+	 *     $ascii = UTF8::is_ascii($str);
+	 *
+	 * @param   mixed   $str    string or array of strings to check
+	 */
+	public static function is_ascii($str): bool
 	{
 		if (is_array($str)) {
 			$str = implode('', $str);

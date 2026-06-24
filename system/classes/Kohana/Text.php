@@ -17,7 +17,7 @@ class Kohana_Text
 	/**
 	 * @var  array   number units and text equivalents
 	 */
-	public static $units = [
+	public static $units = array(
 		1000000000 => 'billion',
 		1000000    => 'million',
 		1000       => 'thousand',
@@ -49,7 +49,7 @@ class Kohana_Text
 		3  => 'three',
 		2  => 'two',
 		1  => 'one',
-	];
+	);
 
 	/**
 	 * Limits a phrase to a given number of words.
@@ -147,33 +147,33 @@ class Kohana_Text
 	}
 
 	/**
-     * Generates a random string of a given type and length.
-     *
-     *
-     *     $str = Text::random(); // 8 character random string
-     *
-     * The following types are supported:
-     *
-     * alnum
-     * :  Upper and lower case a-z, 0-9 (default)
-     *
-     * alpha
-     * :  Upper and lower case a-z
-     *
-     * hexdec
-     * :  Hexadecimal characters a-f, 0-9
-     *
-     * distinct
-     * :  Uppercase characters and numbers that cannot be confused
-     *
-     * You can also create a custom type by providing the "pool" of characters
-     * as the type.
-     *
-     * @param   string  $type   a type of pool, or a string of characters to use as the pool
-     * @param   integer $length length of string to return
-     * @uses    UTF8::split
-     */
-    public static function random($type = null, $length = 8): string
+	 * Generates a random string of a given type and length.
+	 *
+	 *
+	 *     $str = Text::random(); // 8 character random string
+	 *
+	 * The following types are supported:
+	 *
+	 * alnum
+	 * :  Upper and lower case a-z, 0-9 (default)
+	 *
+	 * alpha
+	 * :  Upper and lower case a-z
+	 *
+	 * hexdec
+	 * :  Hexadecimal characters a-f, 0-9
+	 *
+	 * distinct
+	 * :  Uppercase characters and numbers that cannot be confused
+	 *
+	 * You can also create a custom type by providing the "pool" of characters
+	 * as the type.
+	 *
+	 * @param   string  $type   a type of pool, or a string of characters to use as the pool
+	 * @param   integer $length length of string to return
+	 * @uses    UTF8::split
+	 */
+	public static function random($type = null, $length = 8): string
 	{
 		if ($type === null) {
 			// Default is to generate an alphanumeric string
@@ -224,16 +224,16 @@ class Kohana_Text
 	}
 
 	/**
-     * Uppercase words that are not separated by spaces, using a custom
-     * delimiter or the default.
-     *
-     *      $str = Text::ucfirst('content-type'); // returns "Content-Type"
-     *
-     * @param   string  $string     string to transform
-     * @param   string  $delimiter  delimiter to use
-     * @uses    UTF8::ucfirst
-     */
-    public static function ucfirst($string, $delimiter = '-'): string
+	 * Uppercase words that are not separated by spaces, using a custom
+	 * delimiter or the default.
+	 *
+	 *      $str = Text::ucfirst('content-type'); // returns "Content-Type"
+	 *
+	 * @param   string  $string     string to transform
+	 * @param   string  $delimiter  delimiter to use
+	 * @uses    UTF8::ucfirst
+	 */
+	public static function ucfirst($string, $delimiter = '-'): string
 	{
 		// Put the keys back the Case-Convention expected
 		return implode($delimiter, array_map(UTF8::ucfirst(...), explode($delimiter, $string)));
@@ -284,7 +284,7 @@ class Kohana_Text
 
 		// if $replacement is a single character: replace each of the characters of the badword with $replacement
 		if (UTF8::strlen($replacement) == 1) {
-			return preg_replace_callback($regex, fn($matches) => str_repeat($replacement, UTF8::strlen($matches[1])), $str);
+			return preg_replace_callback($regex, fn ($matches) => str_repeat($replacement, UTF8::strlen($matches[1])), $str);
 		}
 
 		// if $replacement is not a single character, fully replace the badword with $replacement
@@ -292,13 +292,13 @@ class Kohana_Text
 	}
 
 	/**
-     * Finds the text that is similar between a set of words.
-     *
-     *     $match = Text::similar(array('fred', 'fran', 'free'); // "fr"
-     *
-     * @param   array   $words  words to find similar text of
-     */
-    public static function similar(array $words): string
+	 * Finds the text that is similar between a set of words.
+	 *
+	 *     $match = Text::similar(array('fred', 'fran', 'free'); // "fr"
+	 *
+	 * @param   array   $words  words to find similar text of
+	 */
+	public static function similar(array $words): string
 	{
 		// First word is the word to match against
 		$word = current($words);
@@ -410,7 +410,7 @@ class Kohana_Text
 		}
 
 		// Standardize newlines
-		$str = str_replace(["\r\n", "\r"], "\n", $str);
+		$str = str_replace(array("\r\n", "\r"), "\n", $str);
 
 		// Trim whitespace on each line
 		$str = preg_replace('~^[ \t]+~m', '', $str);
@@ -446,30 +446,30 @@ class Kohana_Text
 	}
 
 	/**
-     * Returns human readable sizes. Based on original functions written by
-     * [Aidan Lister](http://aidanlister.com/repos/v/function.size_readable.php)
-     * and [Quentin Zervaas](http://www.phpriot.com/d/code/strings/filesize-format/).
-     *
-     *     echo Text::bytes(filesize($file));
-     *
-     * @param   integer $bytes      size in bytes
-     * @param   string  $force_unit a definitive unit
-     * @param   string  $format     the return string format
-     * @param   boolean $si         whether to use SI prefixes or IEC
-     */
-    public static function bytes($bytes, $force_unit = null, $format = null, $si = true): string
+	 * Returns human readable sizes. Based on original functions written by
+	 * [Aidan Lister](http://aidanlister.com/repos/v/function.size_readable.php)
+	 * and [Quentin Zervaas](http://www.phpriot.com/d/code/strings/filesize-format/).
+	 *
+	 *     echo Text::bytes(filesize($file));
+	 *
+	 * @param   integer $bytes      size in bytes
+	 * @param   string  $force_unit a definitive unit
+	 * @param   string  $format     the return string format
+	 * @param   boolean $si         whether to use SI prefixes or IEC
+	 */
+	public static function bytes($bytes, $force_unit = null, $format = null, $si = true): string
 	{
 		// Format string
 		$format = ($format === null) ? '%01.2f %s' : (string) $format;
 
 		// IEC prefixes (binary)
 		if ($si == false or str_contains((string) $force_unit, 'i')) {
-			$units = ['B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB'];
+			$units = array('B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB');
 			$mod   = 1024;
 		}
 		// SI prefixes (decimal)
 		else {
-			$units = ['B', 'kB', 'MB', 'GB', 'TB', 'PB'];
+			$units = array('B', 'kB', 'MB', 'GB', 'TB', 'PB');
 			$mod   = 1000;
 		}
 
@@ -482,24 +482,24 @@ class Kohana_Text
 	}
 
 	/**
-     * Format a number to human-readable text.
-     *
-     *     // Display: one thousand and twenty-four
-     *     echo Text::number(1024);
-     *
-     *     // Display: five million, six hundred and thirty-two
-     *     echo Text::number(5000632);
-     *
-     * @param   integer $number number to format
-     * @since   3.0.8
-     */
-    public static function number($number): string
+	 * Format a number to human-readable text.
+	 *
+	 *     // Display: one thousand and twenty-four
+	 *     echo Text::number(1024);
+	 *
+	 *     // Display: five million, six hundred and thirty-two
+	 *     echo Text::number(5000632);
+	 *
+	 * @param   integer $number number to format
+	 * @since   3.0.8
+	 */
+	public static function number($number): string
 	{
 		// The number must always be an integer
 		$number = (int) $number;
 
 		// Uncompiled text version
-		$text = [];
+		$text = array();
 
 		// Last matched unit within the loop
 		$last_unit = null;
@@ -597,7 +597,7 @@ class Kohana_Text
 	public static function user_agent($agent, $value)
 	{
 		if (is_array($value)) {
-			$data = [];
+			$data = array();
 			foreach ($value as $part) {
 				// Add each part to the set
 				$data[$part] = Text::user_agent($agent, $part);
@@ -608,7 +608,7 @@ class Kohana_Text
 
 		if ($value === 'browser' or $value == 'version') {
 			// Extra data will be captured
-			$info = [];
+			$info = array();
 
 			// Load browsers
 			$browsers = Kohana::$config->load('user_agents')->browser;

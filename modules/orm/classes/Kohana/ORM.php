@@ -22,13 +22,13 @@ class Kohana_ORM extends Model implements \Stringable
 	 * Stores column information for ORM models
 	 * @var array
 	 */
-	protected static $_column_cache = [];
+	protected static $_column_cache = array();
 
 	/**
 	 * Initialization storage for ORM models
 	 * @var array
 	 */
-	protected static $_init_cache = [];
+	protected static $_init_cache = array();
 
 	/**
 	 * Creates and returns a new model.
@@ -42,7 +42,7 @@ class Kohana_ORM extends Model implements \Stringable
 	 * @return  ORM
 	 */
 	#[\Override]
-    public static function factory($model, $id = null)
+	public static function factory($model, $id = null)
 	{
 		// Set class name
 		$model = 'Model_'.$model;
@@ -54,25 +54,25 @@ class Kohana_ORM extends Model implements \Stringable
 	 * "Has one" relationships
 	 * @var array
 	 */
-	protected $_has_one = [];
+	protected $_has_one = array();
 
 	/**
 	 * "Belongs to" relationships
 	 * @var array
 	 */
-	protected $_belongs_to = [];
+	protected $_belongs_to = array();
 
 	/**
 	 * "Has many" relationships
 	 * @var array
 	 */
-	protected $_has_many = [];
+	protected $_has_many = array();
 
 	/**
 	 * Relationships that should always be joined
 	 * @var array
 	 */
-	protected $_load_with = [];
+	protected $_load_with = array();
 
 	/**
 	 * Validation object created before saving/updating
@@ -84,22 +84,22 @@ class Kohana_ORM extends Model implements \Stringable
 	 * Current object
 	 * @var array
 	 */
-	protected $_object = [];
+	protected $_object = array();
 
 	/**
 	 * @var array
 	 */
-	protected $_changed = [];
+	protected $_changed = array();
 
 	/**
 	 * @var array
 	 */
-	protected $_original_values = [];
+	protected $_original_values = array();
 
 	/**
 	 * @var array
 	 */
-	protected $_related = [];
+	protected $_related = array();
 
 	/**
 	 * @var bool
@@ -167,7 +167,7 @@ class Kohana_ORM extends Model implements \Stringable
 	 * Auto-serialize and unserialize columns on get/set
 	 * @var array
 	 */
-	protected $_serialize_columns = [];
+	protected $_serialize_columns = array();
 
 	/**
 	 * Table primary key
@@ -209,13 +209,13 @@ class Kohana_ORM extends Model implements \Stringable
 	 * Database methods applied
 	 * @var array
 	 */
-	protected $_db_applied = [];
+	protected $_db_applied = array();
 
 	/**
 	 * Database methods pending
 	 * @var array
 	 */
-	protected $_db_pending = [];
+	protected $_db_pending = array();
 
 	/**
 	 * Reset builder
@@ -233,12 +233,12 @@ class Kohana_ORM extends Model implements \Stringable
 	 * With calls already applied
 	 * @var array
 	 */
-	protected $_with_applied = [];
+	protected $_with_applied = array();
 
 	/**
-     * Data to be loaded into the model from a database call cast
-     */
-    protected array $_cast_data = [];
+	 * Data to be loaded into the model from a database call cast
+	 */
+	protected array $_cast_data = array();
 
 	/**
 	 * The message filename used for validation errors.
@@ -272,7 +272,7 @@ class Kohana_ORM extends Model implements \Stringable
 			// Load preloaded data from a database call cast
 			$this->_load_values($this->_cast_data);
 
-			$this->_cast_data = [];
+			$this->_cast_data = array();
 		}
 	}
 
@@ -291,11 +291,11 @@ class Kohana_ORM extends Model implements \Stringable
 
 		// Check if this model has already been initialized
 		if (! $init = Arr::get(ORM::$_init_cache, $this->_object_name, false)) {
-			$init = [
-				'_belongs_to' => [],
-				'_has_one'    => [],
-				'_has_many'   => [],
-			];
+			$init = array(
+				'_belongs_to' => array(),
+				'_has_one'    => array(),
+				'_has_many'   => array(),
+			);
 
 			// Set the object plural name if none predefined
 			if (! isset($this->_object_plural)) {
@@ -321,7 +321,7 @@ class Kohana_ORM extends Model implements \Stringable
 				}
 			}
 
-			$defaults = [];
+			$defaults = array();
 
 			foreach ($this->_belongs_to as $alias => $details) {
 				if (! isset($details['model'])) {
@@ -438,7 +438,7 @@ class Kohana_ORM extends Model implements \Stringable
 		$values = array_combine(array_keys($this->_table_columns), array_fill(0, count($this->_table_columns), null));
 
 		// Replace the object and reset the object status
-		$this->_object = $this->_changed = $this->_related = $this->_original_values = [];
+		$this->_object = $this->_changed = $this->_related = $this->_original_values = array();
 
 		// Replace the current object with an empty one
 		$this->_load_values($values);
@@ -465,7 +465,7 @@ class Kohana_ORM extends Model implements \Stringable
 		$primary_key = $this->pk();
 
 		// Replace the object and reset the object status
-		$this->_object = $this->_changed = $this->_related = $this->_original_values = [];
+		$this->_object = $this->_changed = $this->_related = $this->_original_values = array();
 
 		// Only reload the object if we have one to reload
 		if ($this->_loaded) {
@@ -504,9 +504,9 @@ class Kohana_ORM extends Model implements \Stringable
 	}
 
 	/**
-     * Displays the primary key of a model when it is converted to a string.
-     */
-    public function __toString(): string
+	 * Displays the primary key of a model when it is converted to a string.
+	 */
+	public function __toString(): string
 	{
 		return (string) $this->pk();
 	}
@@ -520,7 +520,7 @@ class Kohana_ORM extends Model implements \Stringable
 	public function __serialize()
 	{
 		// Store only information about the object
-		foreach (['_primary_key_value', '_object', '_changed', '_loaded', '_saved', '_sorting', '_original_values'] as $var) {
+		foreach (array('_primary_key_value', '_object', '_changed', '_loaded', '_saved', '_sorting', '_original_values') as $var) {
 			$data[$var] = $this->{$var};
 		}
 
@@ -563,12 +563,12 @@ class Kohana_ORM extends Model implements \Stringable
 	}
 
 	/**
-     * Handles retrieval of all model values, relationships, and metadata.
-     * [!!] This should not be overridden.
-     *
-     * @param   string $column Column name
-     */
-    public function __get(string $column): mixed
+	 * Handles retrieval of all model values, relationships, and metadata.
+	 * [!!] This should not be overridden.
+	 *
+	 * @param   string $column Column name
+	 */
+	public function __get(string $column): mixed
 	{
 		return $this->get($column);
 	}
@@ -641,7 +641,7 @@ class Kohana_ORM extends Model implements \Stringable
 		} else {
 			throw new Kohana_Exception(
 				'The :property property does not exist in the :class class',
-				[':property' => $column, ':class' => static::class]
+				array(':property' => $column, ':class' => static::class)
 			);
 		}
 	}
@@ -708,7 +708,7 @@ class Kohana_ORM extends Model implements \Stringable
 		} else {
 			throw new Kohana_Exception(
 				'The :property: property does not exist in the :class: class',
-				[':property:' => $column, ':class:' => static::class]
+				array(':property:' => $column, ':class:' => static::class)
 			);
 		}
 
@@ -757,12 +757,12 @@ class Kohana_ORM extends Model implements \Stringable
 	}
 
 	/**
-     * Returns the values of this object as an array, including any related one-one
-     * models that have already been loaded using with()
-     */
-    public function as_array(): array
+	 * Returns the values of this object as an array, including any related one-one
+	 * models that have already been loaded using with()
+	 */
+	public function as_array(): array
 	{
-		$object = [];
+		$object = array();
 
 		foreach ($this->_object as $column => $value) {
 			// Call __get for any user processing
@@ -831,7 +831,7 @@ class Kohana_ORM extends Model implements \Stringable
 			$alias = $target_path.':'.$column;
 
 			// Add the prefix so that load_result can determine the relationship
-			$this->select([$name, $alias]);
+			$this->select(array($name, $alias));
 		}
 
 		if (isset($parent->_belongs_to[$target_alias])) {
@@ -845,7 +845,7 @@ class Kohana_ORM extends Model implements \Stringable
 		}
 
 		// Join the related object into the result
-		$this->join([$target->_table_name, $target_path], 'LEFT')->on($join_col1, '=', $join_col2);
+		$this->join(array($target->_table_name, $target_path), 'LEFT')->on($join_col1, '=', $join_col2);
 
 		return $this;
 	}
@@ -864,7 +864,7 @@ class Kohana_ORM extends Model implements \Stringable
 				$this->_db_builder = DB::select();
 				break;
 			case Database::UPDATE:
-				$this->_db_builder = DB::update([$this->_table_name, $this->_object_name]);
+				$this->_db_builder = DB::update(array($this->_table_name, $this->_object_name));
 				break;
 			case Database::DELETE:
 				// Cannot use an alias for DELETE queries
@@ -878,7 +878,7 @@ class Kohana_ORM extends Model implements \Stringable
 
 			$this->_db_applied[$name] = $name;
 
-			call_user_func_array([$this->_db_builder, $name], $args);
+			call_user_func_array(array($this->_db_builder, $name), $args);
 		}
 
 		return $this;
@@ -898,9 +898,9 @@ class Kohana_ORM extends Model implements \Stringable
 		}
 
 		foreach ($this->_load_with as $alias) {
-				// Bind auto relationships
-				$this->with($alias);
-			}
+			// Bind auto relationships
+			$this->with($alias);
+		}
 
 		$this->_build(Database::SELECT);
 
@@ -920,9 +920,9 @@ class Kohana_ORM extends Model implements \Stringable
 		}
 
 		foreach ($this->_load_with as $alias) {
-				// Bind auto relationships
-				$this->with($alias);
-			}
+			// Bind auto relationships
+			$this->with($alias);
+		}
 
 		$this->_build(Database::SELECT);
 
@@ -937,10 +937,10 @@ class Kohana_ORM extends Model implements \Stringable
 	 */
 	protected function _build_select(): array
 	{
-		$columns = [];
+		$columns = array();
 
 		foreach ($this->_table_columns as $column => $_) {
-			$columns[] = [$this->_object_name.'.'.$column, $column];
+			$columns[] = array($this->_object_name.'.'.$column, $column);
 		}
 
 		return $columns;
@@ -956,7 +956,7 @@ class Kohana_ORM extends Model implements \Stringable
 	 */
 	protected function _load_result($multiple = false)
 	{
-		$this->_db_builder->from([$this->_table_name, $this->_object_name]);
+		$this->_db_builder->from(array($this->_table_name, $this->_object_name));
 
 		if ($multiple === false) {
 			// Only fetch 1 record
@@ -1025,7 +1025,7 @@ class Kohana_ORM extends Model implements \Stringable
 		}
 
 		// Related objects
-		$related = [];
+		$related = array();
 
 		foreach ($values as $column => $value) {
 			if (!str_contains((string) $column, ':')) {
@@ -1040,9 +1040,9 @@ class Kohana_ORM extends Model implements \Stringable
 		}
 
 		foreach ($related as $object => $values) {
-				// Load the related objects with the values in the result
-				$this->_related($object)->_load_values($values);
-			}
+			// Load the related objects with the values in the result
+			$this->_related($object)->_load_values($values);
+		}
 
 		if ($this->_loaded) {
 			// Store the object in its original state
@@ -1053,11 +1053,11 @@ class Kohana_ORM extends Model implements \Stringable
 	}
 
 	/**
-     * Rule definitions for validation
-     */
-    public function rules(): array
+	 * Rule definitions for validation
+	 */
+	public function rules(): array
 	{
-		return [];
+		return array();
 	}
 
 	/**
@@ -1072,16 +1072,16 @@ class Kohana_ORM extends Model implements \Stringable
 		$filters = $this->filters();
 
 		// Get the filters for this column
-		$wildcards = empty($filters[true]) ? [] : $filters[true];
+		$wildcards = empty($filters[true]) ? array() : $filters[true];
 
 		// Merge in the wildcards
 		$filters = empty($filters[$field]) ? $wildcards : array_merge($wildcards, $filters[$field]);
 
 		// Bind the field name and model so they can be used in the filter method
-		$_bound = [
+		$_bound = array(
 			':field' => $field,
 			':model' => $this,
-		];
+		);
 
 		foreach ($filters as $array) {
 			// Value needs to be bound inside the loop so we are always using the
@@ -1090,7 +1090,7 @@ class Kohana_ORM extends Model implements \Stringable
 
 			// Filters are defined as array($filter, $params)
 			$filter = $array[0];
-			$params = Arr::get($array, 1, [':value']);
+			$params = Arr::get($array, 1, array(':value'));
 
 			foreach ($params as $key => $param) {
 				if (is_string($param) and array_key_exists($param, $_bound)) {
@@ -1124,19 +1124,19 @@ class Kohana_ORM extends Model implements \Stringable
 	}
 
 	/**
-     * Filter definitions for validation
-     */
-    public function filters(): array
+	 * Filter definitions for validation
+	 */
+	public function filters(): array
 	{
-		return [];
+		return array();
 	}
 
 	/**
-     * Label definitions for validation
-     */
-    public function labels(): array
+	 * Label definitions for validation
+	 */
+	public function labels(): array
 	{
-		return [];
+		return array();
 	}
 
 	/**
@@ -1178,7 +1178,7 @@ class Kohana_ORM extends Model implements \Stringable
 	public function create(Validation $validation = null): static
 	{
 		if ($this->_loaded) {
-			throw new Kohana_Exception('Cannot create :model model because it is already loaded.', [':model' => $this->_object_name]);
+			throw new Kohana_Exception('Cannot create :model model because it is already loaded.', array(':model' => $this->_object_name));
 		}
 
 		// Require model validation before saving
@@ -1186,7 +1186,7 @@ class Kohana_ORM extends Model implements \Stringable
 			$this->check($validation);
 		}
 
-		$data = [];
+		$data = array();
 		foreach ($this->_changed as $column) {
 			// Generate list of column => values
 			$data[$column] = $this->_object[$column];
@@ -1216,7 +1216,7 @@ class Kohana_ORM extends Model implements \Stringable
 		$this->_loaded = $this->_saved = true;
 
 		// All changes have been saved
-		$this->_changed = [];
+		$this->_changed = array();
 		$this->_original_values = $this->_object;
 
 		return $this;
@@ -1233,7 +1233,7 @@ class Kohana_ORM extends Model implements \Stringable
 	public function update(Validation $validation = null): static
 	{
 		if (! $this->_loaded) {
-			throw new Kohana_Exception('Cannot update :model model because it is not loaded.', [':model' => $this->_object_name]);
+			throw new Kohana_Exception('Cannot update :model model because it is not loaded.', array(':model' => $this->_object_name));
 		}
 
 		// Run validation if the model isn't valid or we have additional validation rules.
@@ -1246,7 +1246,7 @@ class Kohana_ORM extends Model implements \Stringable
 			return $this;
 		}
 
-		$data = [];
+		$data = array();
 		foreach ($this->_changed as $column) {
 			// Compile changed data
 			$data[$column] = $this->_object[$column];
@@ -1278,7 +1278,7 @@ class Kohana_ORM extends Model implements \Stringable
 		$this->_saved = true;
 
 		// All changes have been saved
-		$this->_changed = [];
+		$this->_changed = array();
 		$this->_original_values = $this->_object;
 
 		return $this;
@@ -1306,7 +1306,7 @@ class Kohana_ORM extends Model implements \Stringable
 	public function delete()
 	{
 		if (! $this->_loaded) {
-			throw new Kohana_Exception('Cannot delete :model model because it is not loaded.', [':model' => $this->_object_name]);
+			throw new Kohana_Exception('Cannot delete :model model because it is not loaded.', array(':model' => $this->_object_name));
 		}
 
 		// Use primary key value
@@ -1321,24 +1321,24 @@ class Kohana_ORM extends Model implements \Stringable
 	}
 
 	/**
-     * Tests if this object has a relationship to a different model,
-     * or an array of different models. When providing far keys, the number
-     * of relations must equal the number of keys.
-     *
-     *
-     *     // Check if $model has the login role
-     *     $model->has('roles', ORM::factory('role', array('name' => 'login')));
-     *     // Check for the login role if you know the roles.id is 5
-     *     $model->has('roles', 5);
-     *     // Check for all of the following roles
-     *     $model->has('roles', array(1, 2, 3, 4));
-     *     // Check if $model has any roles
-     *     $model->has('roles')
-     *
-     * @param  string  $alias    Alias of the has_many "through" relationship
-     * @param  mixed   $far_keys Related model, primary key, or an array of primary keys
-     */
-    public function has($alias, $far_keys = null): bool
+	 * Tests if this object has a relationship to a different model,
+	 * or an array of different models. When providing far keys, the number
+	 * of relations must equal the number of keys.
+	 *
+	 *
+	 *     // Check if $model has the login role
+	 *     $model->has('roles', ORM::factory('role', array('name' => 'login')));
+	 *     // Check for the login role if you know the roles.id is 5
+	 *     $model->has('roles', 5);
+	 *     // Check for all of the following roles
+	 *     $model->has('roles', array(1, 2, 3, 4));
+	 *     // Check if $model has any roles
+	 *     $model->has('roles')
+	 *
+	 * @param  string  $alias    Alias of the has_many "through" relationship
+	 * @param  mixed   $far_keys Related model, primary key, or an array of primary keys
+	 */
+	public function has($alias, $far_keys = null): bool
 	{
 		$count = $this->count_relations($alias, $far_keys);
 		if ($far_keys === null) {
@@ -1350,47 +1350,47 @@ class Kohana_ORM extends Model implements \Stringable
 	}
 
 	/**
-     * Tests if this object has a relationship to a different model,
-     * or an array of different models. When providing far keys, this function
-     * only checks that at least one of the relationships is satisfied.
-     *
-     *     // Check if $model has the login role
-     *     $model->has('roles', ORM::factory('role', array('name' => 'login')));
-     *     // Check for the login role if you know the roles.id is 5
-     *     $model->has('roles', 5);
-     *     // Check for any of the following roles
-     *     $model->has('roles', array(1, 2, 3, 4));
-     *     // Check if $model has any roles
-     *     $model->has('roles')
-     *
-     * @param  string  $alias    Alias of the has_many "through" relationship
-     * @param  mixed   $far_keys Related model, primary key, or an array of primary keys
-     */
-    public function has_any($alias, $far_keys = null): bool
+	 * Tests if this object has a relationship to a different model,
+	 * or an array of different models. When providing far keys, this function
+	 * only checks that at least one of the relationships is satisfied.
+	 *
+	 *     // Check if $model has the login role
+	 *     $model->has('roles', ORM::factory('role', array('name' => 'login')));
+	 *     // Check for the login role if you know the roles.id is 5
+	 *     $model->has('roles', 5);
+	 *     // Check for any of the following roles
+	 *     $model->has('roles', array(1, 2, 3, 4));
+	 *     // Check if $model has any roles
+	 *     $model->has('roles')
+	 *
+	 * @param  string  $alias    Alias of the has_many "through" relationship
+	 * @param  mixed   $far_keys Related model, primary key, or an array of primary keys
+	 */
+	public function has_any($alias, $far_keys = null): bool
 	{
 		return (bool) $this->count_relations($alias, $far_keys);
 	}
 
 	/**
-     * Returns the number of relationships
-     *
-     *     // Counts the number of times the login role is attached to $model
-     *     $model->count_relations('roles', ORM::factory('role', array('name' => 'login')));
-     *     // Counts the number of times role 5 is attached to $model
-     *     $model->count_relations('roles', 5);
-     *     // Counts the number of times any of roles 1, 2, 3, or 4 are attached to
-     *     // $model
-     *     $model->count_relations('roles', array(1, 2, 3, 4));
-     *     // Counts the number roles attached to $model
-     *     $model->count_relations('roles')
-     *
-     * @param  string  $alias    Alias of the has_many "through" relationship
-     * @param  mixed   $far_keys Related model, primary key, or an array of primary keys
-     */
-    public function count_relations($alias, $far_keys = null): int
+	 * Returns the number of relationships
+	 *
+	 *     // Counts the number of times the login role is attached to $model
+	 *     $model->count_relations('roles', ORM::factory('role', array('name' => 'login')));
+	 *     // Counts the number of times role 5 is attached to $model
+	 *     $model->count_relations('roles', 5);
+	 *     // Counts the number of times any of roles 1, 2, 3, or 4 are attached to
+	 *     // $model
+	 *     $model->count_relations('roles', array(1, 2, 3, 4));
+	 *     // Counts the number roles attached to $model
+	 *     $model->count_relations('roles')
+	 *
+	 * @param  string  $alias    Alias of the has_many "through" relationship
+	 * @param  mixed   $far_keys Related model, primary key, or an array of primary keys
+	 */
+	public function count_relations($alias, $far_keys = null): int
 	{
 		if ($far_keys === null) {
-			return (int) DB::select([DB::expr('COUNT(*)'), 'records_found'])
+			return (int) DB::select(array(DB::expr('COUNT(*)'), 'records_found'))
 				->from($this->_has_many[$alias]['through'])
 				->where($this->_has_many[$alias]['foreign_key'], '=', $this->pk())
 				->execute($this->_db)->get('records_found');
@@ -1407,7 +1407,7 @@ class Kohana_ORM extends Model implements \Stringable
 		}
 
 		// Rows found need to match the rows searched
-		return (int) DB::select([DB::expr('COUNT(*)'), 'records_found'])
+		return (int) DB::select(array(DB::expr('COUNT(*)'), 'records_found'))
 			->from($this->_has_many[$alias]['through'])
 			->where($this->_has_many[$alias]['foreign_key'], '=', $this->pk())
 			->where($this->_has_many[$alias]['far_key'], 'IN', $far_keys)
@@ -1432,13 +1432,13 @@ class Kohana_ORM extends Model implements \Stringable
 	{
 		$far_keys = ($far_keys instanceof ORM) ? $far_keys->pk() : $far_keys;
 
-		$columns = [$this->_has_many[$alias]['foreign_key'], $this->_has_many[$alias]['far_key']];
+		$columns = array($this->_has_many[$alias]['foreign_key'], $this->_has_many[$alias]['far_key']);
 		$foreign_key = $this->pk();
 
 		$query = DB::insert($this->_has_many[$alias]['through'], $columns);
 
 		foreach ((array) $far_keys as $key) {
-			$query->values([$foreign_key, $key]);
+			$query->values(array($foreign_key, $key));
 		}
 
 		$query->execute($this->_db);
@@ -1480,11 +1480,11 @@ class Kohana_ORM extends Model implements \Stringable
 	}
 
 	/**
-     * Count the number of records in the table.
-     */
-    public function count_all(): int
+	 * Count the number of records in the table.
+	 */
+	public function count_all(): int
 	{
-		$selects = [];
+		$selects = array();
 
 		foreach ($this->_db_pending as $key => $method) {
 			if ($method['name'] == 'select') {
@@ -1495,14 +1495,14 @@ class Kohana_ORM extends Model implements \Stringable
 		}
 
 		foreach ($this->_load_with as $alias) {
-				// Bind relationship
-				$this->with($alias);
-			}
+			// Bind relationship
+			$this->with($alias);
+		}
 
 		$this->_build(Database::SELECT);
 
-		$records = $this->_db_builder->from([$this->_table_name, $this->_object_name])
-			->select([DB::expr('COUNT('.$this->_db->quote_column($this->_object_name.'.'.$this->_primary_key).')'), 'records_found'])
+		$records = $this->_db_builder->from(array($this->_table_name, $this->_object_name))
+			->select(array(DB::expr('COUNT('.$this->_db->quote_column($this->_object_name.'.'.$this->_primary_key).')'), 'records_found'))
 			->execute($this->_db)
 			->get('records_found');
 
@@ -1575,10 +1575,10 @@ class Kohana_ORM extends Model implements \Stringable
 	public function reset($next = true): static
 	{
 		if ($next and $this->_db_reset) {
-			$this->_db_pending   = [];
-			$this->_db_applied   = [];
+			$this->_db_pending   = array();
+			$this->_db_applied   = array();
 			$this->_db_builder   = null;
-			$this->_with_applied = [];
+			$this->_with_applied = array();
 		}
 
 		// Reset on the next call?
@@ -1698,10 +1698,10 @@ class Kohana_ORM extends Model implements \Stringable
 	public function where($column, $op, $value): static
 	{
 		// Add pending database call which is executed after query type is determined
-		$this->_db_pending[] = [
+		$this->_db_pending[] = array(
 			'name' => 'where',
-			'args' => [$column, $op, $value],
-		];
+			'args' => array($column, $op, $value),
+		);
 
 		return $this;
 	}
@@ -1717,10 +1717,10 @@ class Kohana_ORM extends Model implements \Stringable
 	public function and_where($column, $op, $value): static
 	{
 		// Add pending database call which is executed after query type is determined
-		$this->_db_pending[] = [
+		$this->_db_pending[] = array(
 			'name' => 'and_where',
-			'args' => [$column, $op, $value],
-		];
+			'args' => array($column, $op, $value),
+		);
 
 		return $this;
 	}
@@ -1736,10 +1736,10 @@ class Kohana_ORM extends Model implements \Stringable
 	public function or_where($column, $op, $value): static
 	{
 		// Add pending database call which is executed after query type is determined
-		$this->_db_pending[] = [
+		$this->_db_pending[] = array(
 			'name' => 'or_where',
-			'args' => [$column, $op, $value],
-		];
+			'args' => array($column, $op, $value),
+		);
 
 		return $this;
 	}
@@ -1762,10 +1762,10 @@ class Kohana_ORM extends Model implements \Stringable
 	public function and_where_open(): static
 	{
 		// Add pending database call which is executed after query type is determined
-		$this->_db_pending[] = [
+		$this->_db_pending[] = array(
 			'name' => 'and_where_open',
-			'args' => [],
-		];
+			'args' => array(),
+		);
 
 		return $this;
 	}
@@ -1778,10 +1778,10 @@ class Kohana_ORM extends Model implements \Stringable
 	public function or_where_open(): static
 	{
 		// Add pending database call which is executed after query type is determined
-		$this->_db_pending[] = [
+		$this->_db_pending[] = array(
 			'name' => 'or_where_open',
-			'args' => [],
-		];
+			'args' => array(),
+		);
 
 		return $this;
 	}
@@ -1804,10 +1804,10 @@ class Kohana_ORM extends Model implements \Stringable
 	public function and_where_close(): static
 	{
 		// Add pending database call which is executed after query type is determined
-		$this->_db_pending[] = [
+		$this->_db_pending[] = array(
 			'name' => 'and_where_close',
-			'args' => [],
-		];
+			'args' => array(),
+		);
 
 		return $this;
 	}
@@ -1820,10 +1820,10 @@ class Kohana_ORM extends Model implements \Stringable
 	public function or_where_close(): static
 	{
 		// Add pending database call which is executed after query type is determined
-		$this->_db_pending[] = [
+		$this->_db_pending[] = array(
 			'name' => 'or_where_close',
-			'args' => [],
-		];
+			'args' => array(),
+		);
 
 		return $this;
 	}
@@ -1838,10 +1838,10 @@ class Kohana_ORM extends Model implements \Stringable
 	public function order_by($column, $direction = null): static
 	{
 		// Add pending database call which is executed after query type is determined
-		$this->_db_pending[] = [
+		$this->_db_pending[] = array(
 			'name' => 'order_by',
-			'args' => [$column, $direction],
-		];
+			'args' => array($column, $direction),
+		);
 
 		return $this;
 	}
@@ -1855,10 +1855,10 @@ class Kohana_ORM extends Model implements \Stringable
 	public function limit($number): static
 	{
 		// Add pending database call which is executed after query type is determined
-		$this->_db_pending[] = [
+		$this->_db_pending[] = array(
 			'name' => 'limit',
-			'args' => [$number],
-		];
+			'args' => array($number),
+		);
 
 		return $this;
 	}
@@ -1872,10 +1872,10 @@ class Kohana_ORM extends Model implements \Stringable
 	public function distinct($value): static
 	{
 		// Add pending database call which is executed after query type is determined
-		$this->_db_pending[] = [
+		$this->_db_pending[] = array(
 			'name' => 'distinct',
-			'args' => [$value],
-		];
+			'args' => array($value),
+		);
 
 		return $this;
 	}
@@ -1892,10 +1892,10 @@ class Kohana_ORM extends Model implements \Stringable
 		$columns = func_get_args();
 
 		// Add pending database call which is executed after query type is determined
-		$this->_db_pending[] = [
+		$this->_db_pending[] = array(
 			'name' => 'select',
 			'args' => $columns,
-		];
+		);
 
 		return $this;
 	}
@@ -1912,10 +1912,10 @@ class Kohana_ORM extends Model implements \Stringable
 		$tables = func_get_args();
 
 		// Add pending database call which is executed after query type is determined
-		$this->_db_pending[] = [
+		$this->_db_pending[] = array(
 			'name' => 'from',
 			'args' => $tables,
-		];
+		);
 
 		return $this;
 	}
@@ -1930,10 +1930,10 @@ class Kohana_ORM extends Model implements \Stringable
 	public function join($table, $type = null): static
 	{
 		// Add pending database call which is executed after query type is determined
-		$this->_db_pending[] = [
+		$this->_db_pending[] = array(
 			'name' => 'join',
-			'args' => [$table, $type],
-		];
+			'args' => array($table, $type),
+		);
 
 		return $this;
 	}
@@ -1949,10 +1949,10 @@ class Kohana_ORM extends Model implements \Stringable
 	public function on($c1, $op, $c2): static
 	{
 		// Add pending database call which is executed after query type is determined
-		$this->_db_pending[] = [
+		$this->_db_pending[] = array(
 			'name' => 'on',
-			'args' => [$c1, $op, $c2],
-		];
+			'args' => array($c1, $op, $c2),
+		);
 
 		return $this;
 	}
@@ -1969,10 +1969,10 @@ class Kohana_ORM extends Model implements \Stringable
 		$columns = func_get_args();
 
 		// Add pending database call which is executed after query type is determined
-		$this->_db_pending[] = [
+		$this->_db_pending[] = array(
 			'name' => 'group_by',
 			'args' => $columns,
-		];
+		);
 
 		return $this;
 	}
@@ -2001,10 +2001,10 @@ class Kohana_ORM extends Model implements \Stringable
 	public function and_having($column, $op, $value = null): static
 	{
 		// Add pending database call which is executed after query type is determined
-		$this->_db_pending[] = [
+		$this->_db_pending[] = array(
 			'name' => 'and_having',
-			'args' => [$column, $op, $value],
-		];
+			'args' => array($column, $op, $value),
+		);
 
 		return $this;
 	}
@@ -2020,10 +2020,10 @@ class Kohana_ORM extends Model implements \Stringable
 	public function or_having($column, $op, $value = null): static
 	{
 		// Add pending database call which is executed after query type is determined
-		$this->_db_pending[] = [
+		$this->_db_pending[] = array(
 			'name' => 'or_having',
-			'args' => [$column, $op, $value],
-		];
+			'args' => array($column, $op, $value),
+		);
 
 		return $this;
 	}
@@ -2046,10 +2046,10 @@ class Kohana_ORM extends Model implements \Stringable
 	public function and_having_open(): static
 	{
 		// Add pending database call which is executed after query type is determined
-		$this->_db_pending[] = [
+		$this->_db_pending[] = array(
 			'name' => 'and_having_open',
-			'args' => [],
-		];
+			'args' => array(),
+		);
 
 		return $this;
 	}
@@ -2062,10 +2062,10 @@ class Kohana_ORM extends Model implements \Stringable
 	public function or_having_open(): static
 	{
 		// Add pending database call which is executed after query type is determined
-		$this->_db_pending[] = [
+		$this->_db_pending[] = array(
 			'name' => 'or_having_open',
-			'args' => [],
-		];
+			'args' => array(),
+		);
 
 		return $this;
 	}
@@ -2088,10 +2088,10 @@ class Kohana_ORM extends Model implements \Stringable
 	public function and_having_close(): static
 	{
 		// Add pending database call which is executed after query type is determined
-		$this->_db_pending[] = [
+		$this->_db_pending[] = array(
 			'name' => 'and_having_close',
-			'args' => [],
-		];
+			'args' => array(),
+		);
 
 		return $this;
 	}
@@ -2104,10 +2104,10 @@ class Kohana_ORM extends Model implements \Stringable
 	public function or_having_close(): static
 	{
 		// Add pending database call which is executed after query type is determined
-		$this->_db_pending[] = [
+		$this->_db_pending[] = array(
 			'name' => 'or_having_close',
-			'args' => [],
-		];
+			'args' => array(),
+		);
 
 		return $this;
 	}
@@ -2121,10 +2121,10 @@ class Kohana_ORM extends Model implements \Stringable
 	public function offset($number): static
 	{
 		// Add pending database call which is executed after query type is determined
-		$this->_db_pending[] = [
+		$this->_db_pending[] = array(
 			'name' => 'offset',
-			'args' => [$number],
-		];
+			'args' => array($number),
+		);
 
 		return $this;
 	}
@@ -2139,10 +2139,10 @@ class Kohana_ORM extends Model implements \Stringable
 	public function cached($lifetime = null): static
 	{
 		// Add pending database call which is executed after query type is determined
-		$this->_db_pending[] = [
+		$this->_db_pending[] = array(
 			'name' => 'cached',
-			'args' => [$lifetime],
-		];
+			'args' => array($lifetime),
+		);
 
 		return $this;
 	}
@@ -2157,10 +2157,10 @@ class Kohana_ORM extends Model implements \Stringable
 	public function param($param, $value): static
 	{
 		// Add pending database call which is executed after query type is determined
-		$this->_db_pending[] = [
+		$this->_db_pending[] = array(
 			'name' => 'param',
-			'args' => [$param, $value],
-		];
+			'args' => array($param, $value),
+		);
 
 		return $this;
 	}
@@ -2174,10 +2174,10 @@ class Kohana_ORM extends Model implements \Stringable
 	public function using($columns): static
 	{
 		// Add pending database call which is executed after query type is determined
-		$this->_db_pending[] = [
+		$this->_db_pending[] = array(
 			'name' => 'using',
-			'args' => [$columns],
-		];
+			'args' => array($columns),
+		);
 
 		return $this;
 	}

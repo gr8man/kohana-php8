@@ -89,7 +89,7 @@ class Kohana_URL
 				if ($host && '' !== preg_replace('/(?:^\[)?[a-zA-Z0-9-:\]_]+\.?/', '', $host)) {
 					throw new Kohana_Exception(
 						'Invalid host :host',
-						[':host' => $host]
+						array(':host' => $host)
 					);
 				}
 
@@ -97,7 +97,7 @@ class Kohana_URL
 				if (! static::is_trusted_host($host)) {
 					throw new Kohana_Exception(
 						'Untrusted host :host. If you trust :host, add it to the trusted hosts in the `url` config file.',
-						[':host' => $host]
+						array(':host' => $host)
 					);
 				}
 			}
@@ -152,21 +152,21 @@ class Kohana_URL
 	}
 
 	/**
-     * Merges the current GET parameters with an array of new or overloaded
-     * parameters and returns the resulting query string.
-     *
-     *     // Returns "?sort=title&limit=10" combined with any existing GET values
-     *     $query = URL::query(array('sort' => 'title', 'limit' => 10));
-     *
-     * Typically you would use this when you are sorting query results,
-     * or something similar.
-     *
-     * [!!] Parameters with a NULL value are left out.
-     *
-     * @param   array    $params   Array of GET parameters
-     * @param   boolean  $use_get  Include current request GET parameters
-     */
-    public static function query(array $params = null, $use_get = true): string
+	 * Merges the current GET parameters with an array of new or overloaded
+	 * parameters and returns the resulting query string.
+	 *
+	 *     // Returns "?sort=title&limit=10" combined with any existing GET values
+	 *     $query = URL::query(array('sort' => 'title', 'limit' => 10));
+	 *
+	 * Typically you would use this when you are sorting query results,
+	 * or something similar.
+	 *
+	 * [!!] Parameters with a NULL value are left out.
+	 *
+	 * @param   array    $params   Array of GET parameters
+	 * @param   boolean  $use_get  Include current request GET parameters
+	 */
+	public static function query(array $params = null, $use_get = true): string
 	{
 		if ($use_get) {
 			if ($params === null) {
@@ -191,16 +191,16 @@ class Kohana_URL
 	}
 
 	/**
-     * Convert a phrase to a URL-safe title.
-     *
-     *     echo URL::title('My Blog Post'); // "my-blog-post"
-     *
-     * @param   string   $title       Phrase to convert
-     * @param   string   $separator   Word separator (any single character)
-     * @param   boolean  $ascii_only  Transliterate to ASCII?
-     * @uses    UTF8::transliterate_to_ascii
-     */
-    public static function title($title, $separator = '-', $ascii_only = false): string
+	 * Convert a phrase to a URL-safe title.
+	 *
+	 *     echo URL::title('My Blog Post'); // "my-blog-post"
+	 *
+	 * @param   string   $title       Phrase to convert
+	 * @param   string   $separator   Word separator (any single character)
+	 * @param   boolean  $ascii_only  Transliterate to ASCII?
+	 * @uses    UTF8::transliterate_to_ascii
+	 */
+	public static function title($title, $separator = '-', $ascii_only = false): string
 	{
 		if ($ascii_only === true) {
 			// Transliterate non-ASCII characters
@@ -221,15 +221,15 @@ class Kohana_URL
 	}
 
 	/**
-     * Test if given $host should be trusted.
-     *
-     * Tests against given $trusted_hosts
-     * or looks for key `trusted_hosts` in `url` config
-     *
-     * @param string $host
-     * @return boolean TRUE if $host is trustworthy
-     */
-    public static function is_trusted_host($host, array $trusted_hosts = null): bool
+	 * Test if given $host should be trusted.
+	 *
+	 * Tests against given $trusted_hosts
+	 * or looks for key `trusted_hosts` in `url` config
+	 *
+	 * @param string $host
+	 * @return boolean TRUE if $host is trustworthy
+	 */
+	public static function is_trusted_host($host, array $trusted_hosts = null): bool
 	{
 
 		// If list of trusted hosts is not directly provided read from config

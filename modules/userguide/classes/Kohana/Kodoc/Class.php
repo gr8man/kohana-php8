@@ -31,26 +31,26 @@ class Kohana_Kodoc_Class extends Kodoc
 	/**
 	 * @var  array  array of tags, retrieved from the comment
 	 */
-	public $tags = [];
+	public $tags = array();
 
 	/**
 	 * @var  array  array of this classes constants
 	 */
-	public $constants = [];
+	public $constants = array();
 
 	/**
 	 * @var array Parent classes/interfaces of this class/interface
 	 */
-	public $parents = [];
+	public $parents = array();
 
 	/**
-     * Loads a class and uses [reflection](http://php.net/reflection) to parse
-     * the class. Reads the class modifiers, constants and comment. Parses the
-     * comment to find the description and tags.
-     *
-     * @param   string  Class name
-     */
-    public function __construct($class)
+	 * Loads a class and uses [reflection](http://php.net/reflection) to parse
+	 * the class. Reads the class modifiers, constants and comment. Parses the
+	 * comment to find the description and tags.
+	 *
+	 * @param   string  Class name
+	 */
+	public function __construct($class)
 	{
 		$this->class = new ReflectionClass($class);
 
@@ -85,11 +85,11 @@ class Kohana_Kodoc_Class extends Kodoc
 	}
 
 	/**
-     * Gets the constants of this class as HTML.
-     */
-    public function constants(): array
+	 * Gets the constants of this class as HTML.
+	 */
+	public function constants(): array
 	{
-		$result = [];
+		$result = array();
 
 		foreach ($this->constants as $name => $value) {
 			$result[$name] = Debug::vars($value);
@@ -123,9 +123,9 @@ class Kohana_Kodoc_Class extends Kodoc
 	}
 
 	/**
-     * Gets a list of the class properties as [Kodoc_Property] objects.
-     */
-    public function properties(): array
+	 * Gets a list of the class properties as [Kodoc_Property] objects.
+	 */
+	public function properties(): array
 	{
 		$props = $this->class->getProperties();
 
@@ -164,9 +164,9 @@ class Kohana_Kodoc_Class extends Kodoc
 	}
 
 	/**
-     * Gets a list of the class properties as [Kodoc_Method] objects.
-     */
-    public function methods(): array
+	 * Gets a list of the class properties as [Kodoc_Method] objects.
+	 */
+	public function methods(): array
 	{
 		$methods = $this->class->getMethods();
 
@@ -249,11 +249,11 @@ class Kohana_Kodoc_Class extends Kodoc
 	}
 
 	/**
-     * Get the tags of this class as HTML.
-     */
-    public function tags(): array
+	 * Get the tags of this class as HTML.
+	 */
+	public function tags(): array
 	{
-		$result = [];
+		$result = array();
 
 		foreach ($this->tags as $name => $set) {
 			foreach ($set as $text) {

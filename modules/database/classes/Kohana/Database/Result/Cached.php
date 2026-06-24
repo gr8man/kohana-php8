@@ -27,7 +27,7 @@ class Kohana_Database_Result_Cached extends Database_Result
 	}
 
 	#[\Override]
-    public function cached(): static
+	public function cached(): static
 	{
 		return $this;
 	}

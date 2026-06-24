@@ -27,24 +27,24 @@ abstract class Kohana_Codebench
 	/**
 	 * @var  array  The subjects to supply iteratively to your benchmark methods.
 	 */
-	public $subjects = [];
+	public $subjects = array();
 
 	/**
 	 * @var  array  Grade letters with their maximum scores. Used to color the graphs.
 	 */
-	public $grades = [
+	public $grades = array(
 		125 => 'A',
 		150 => 'B',
 		200 => 'C',
 		300 => 'D',
 		500 => 'E',
 		'default' => 'F',
-	];
+	);
 
 	/**
-     * Constructor.
-     */
-    public function __construct()
+	 * Constructor.
+	 */
+	public function __construct()
 	{
 		// Set the maximum execution time
 		set_time_limit(Kohana::$config->load('codebench')->max_execution_time);
@@ -63,25 +63,25 @@ abstract class Kohana_Codebench
 		// Make sure the benchmark runs at least once,
 		// also if no subject data has been provided.
 		if (empty($this->subjects)) {
-			$this->subjects = ['NULL' => null];
+			$this->subjects = array('NULL' => null);
 		}
 
 		// Initialize benchmark output
-		$codebench = [
+		$codebench = array(
 			'class'       => static::class,
 			'description' => $this->description,
-			'loops'       => [
+			'loops'       => array(
 				'base'    => (int) $this->loops,
 				'total'   => (int) $this->loops * count($this->subjects) * count($methods),
-			],
+			),
 			'subjects'    => $this->subjects,
-			'benchmarks'  => [],
-		];
+			'benchmarks'  => array(),
+		);
 
 		// Benchmark each method
 		foreach ($methods as $method) {
 			// Initialize benchmark output for this method
-			$codebench['benchmarks'][$method] = ['time' => 0, 'memory' => 0];
+			$codebench['benchmarks'][$method] = array('time' => 0, 'memory' => 0);
 
 			// Using Reflection because simply calling $this->$method($subject) in the loop below
 			// results in buggy benchmark times correlating to the length of the method name.
@@ -106,11 +106,11 @@ abstract class Kohana_Codebench
 				$benchmark = Profiler::total($token);
 
 				// Benchmark output specific to the current method and subject
-				$codebench['benchmarks'][$method]['subjects'][$subject_key] = [
+				$codebench['benchmarks'][$method]['subjects'][$subject_key] = array(
 					'return' => $return,
 					'time'   => $benchmark[0],
 					'memory' => $benchmark[1],
-				];
+				);
 
 				// Update method totals
 				$codebench['benchmarks'][$method]['time']   += $benchmark[0];
@@ -122,8 +122,8 @@ abstract class Kohana_Codebench
 		// these values will be overwritten using min() and max() later on.
 		// The 999999999 values look like a hack, I know, but they work,
 		// unless your method runs for more than 31 years or consumes over 1GB of memory.
-		$fastest_method = $fastest_subject = ['time' => 999999999, 'memory' => 999999999];
-		$slowest_method = $slowest_subject = ['time' => 0, 'memory' => 0];
+		$fastest_method = $fastest_subject = array('time' => 999999999, 'memory' => 999999999);
+		$slowest_method = $slowest_subject = array('time' => 0, 'memory' => 0);
 
 		// Find the fastest and slowest benchmarks, needed for the percentage calculations
 		foreach ($methods as $method) {

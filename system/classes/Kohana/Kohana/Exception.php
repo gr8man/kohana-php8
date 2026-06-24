@@ -16,7 +16,7 @@ class Kohana_Kohana_Exception extends Exception
 	/**
 	 * @var  array  PHP error code => human readable name
 	 */
-	public static $php_errors = [
+	public static $php_errors = array(
 		E_ERROR              => 'Fatal Error',
 		E_USER_ERROR         => 'User Error',
 		E_PARSE              => 'Parse Error',
@@ -26,7 +26,7 @@ class Kohana_Kohana_Exception extends Exception
 		E_NOTICE             => 'Notice',
 		E_RECOVERABLE_ERROR  => 'Recoverable Error',
 		E_DEPRECATED         => 'Deprecated',
-	];
+	);
 
 	/**
 	 * @var  string  error rendering view
@@ -39,17 +39,17 @@ class Kohana_Kohana_Exception extends Exception
 	public static $error_view_content_type = 'text/html';
 
 	/**
-     * Creates a new translated exception.
-     *
-     *     throw new Kohana_Exception('Something went terrible wrong, :user',
-     *         array(':user' => $user));
-     *
-     * @param   string          $message    error message
-     * @param   array           $variables  translation variables
-     * @param   integer|string  $code       the exception code
-     * @param   Exception       $previous   Previous exception
-     */
-    public function __construct($message = "", array $variables = null, $code = 0, Throwable $previous = null)
+	 * Creates a new translated exception.
+	 *
+	 *     throw new Kohana_Exception('Something went terrible wrong, :user',
+	 *         array(':user' => $user));
+	 *
+	 * @param   string          $message    error message
+	 * @param   array           $variables  translation variables
+	 * @param   integer|string  $code       the exception code
+	 * @param   Exception       $previous   Previous exception
+	 */
+	public function __construct($message = "", array $variables = null, $code = 0, Throwable $previous = null)
 	{
 		// Set the message
 		$message = __((string) $message, $variables);
@@ -63,24 +63,24 @@ class Kohana_Kohana_Exception extends Exception
 	}
 
 	/**
-     * Magic object-to-string method.
-     *
-     *     echo $exception;
-     *
-     * @uses    Kohana_Exception::text
-     */
-    public function __toString(): string
+	 * Magic object-to-string method.
+	 *
+	 *     echo $exception;
+	 *
+	 * @uses    Kohana_Exception::text
+	 */
+	public function __toString(): string
 	{
 		return Kohana_Exception::text($this);
 	}
 
 	/**
-     * Inline exception handler, displays the error message, source of the
-     * exception, and the stack trace of the error.
-     *
-     * @uses    Kohana_Exception::response
-     */
-    public static function handler(Throwable $e): never
+	 * Inline exception handler, displays the error message, source of the
+	 * exception, and the stack trace of the error.
+	 *
+	 * @uses    Kohana_Exception::response
+	 */
+	public static function handler(Throwable $e): never
 	{
 		$response = Kohana_Exception::_handler($e);
 
@@ -91,13 +91,13 @@ class Kohana_Kohana_Exception extends Exception
 	}
 
 	/**
-     * Exception handler, logs the exception and generates a Response object
-     * for display.
-     *
-     * @uses    Kohana_Exception::response
-     * @return  Response
-     */
-    public static function _handler(Throwable $e)
+	 * Exception handler, logs the exception and generates a Response object
+	 * for display.
+	 *
+	 * @uses    Kohana_Exception::response
+	 * @return  Response
+	 */
+	public static function _handler(Throwable $e)
 	{
 		try {
 			// Log the exception
@@ -127,19 +127,19 @@ class Kohana_Kohana_Exception extends Exception
 	}
 
 	/**
-     * Logs an exception.
-     *
-     * @uses    Kohana_Exception::text
-     * @param   int        $level
-     */
-    public static function log(Throwable $e, $level = Log::EMERGENCY): void
+	 * Logs an exception.
+	 *
+	 * @uses    Kohana_Exception::text
+	 * @param   int        $level
+	 */
+	public static function log(Throwable $e, $level = Log::EMERGENCY): void
 	{
 		if (is_object(Kohana::$log)) {
 			// Create a text version of the exception
 			$error = Kohana_Exception::text($e);
 
 			// Add this exception to the log
-			Kohana::$log->add($level, $error, null, ['exception' => $e]);
+			Kohana::$log->add($level, $error, null, array('exception' => $e));
 
 			// Make sure the logs are written
 			Kohana::$log->write();
@@ -147,11 +147,11 @@ class Kohana_Kohana_Exception extends Exception
 	}
 
 	/**
-     * Get a single line of text representing the exception:
-     *
-     * Error [ Code ]: Message ~ File [ Line ]
-     */
-    public static function text(Throwable $e): string
+	 * Get a single line of text representing the exception:
+	 *
+	 * Error [ Code ]: Message ~ File [ Line ]
+	 */
+	public static function text(Throwable $e): string
 	{
 		return sprintf(
 			'%s [ %s ]: %s ~ %s [ %d ]',
@@ -164,12 +164,12 @@ class Kohana_Kohana_Exception extends Exception
 	}
 
 	/**
-     * Get a Response object representing the exception
-     *
-     * @uses    Kohana_Exception::text
-     * @return  Response
-     */
-    public static function response(Throwable $e)
+	 * Get a Response object representing the exception
+	 *
+	 * @uses    Kohana_Exception::text
+	 * @return  Response
+	 */
+	public static function response(Throwable $e)
 	{
 		try {
 			// Get the exception information

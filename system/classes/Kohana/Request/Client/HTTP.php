@@ -28,7 +28,7 @@ class Kohana_Request_Client_HTTP extends Request_Client_External
 	 * @param   array    $params Params
 	 * @throws  Request_Exception
 	 */
-	public function __construct(array $params = [])
+	public function __construct(array $params = array())
 	{
 		// Check that PECL HTTP supports requests
 		if (! http_support(HTTP_SUPPORT_REQUESTS)) {
@@ -43,18 +43,18 @@ class Kohana_Request_Client_HTTP extends Request_Client_External
 	 * @var     array     curl options
 	 * @link    http://www.php.net/manual/function.curl-setopt
 	 */
-	protected $_options = [];
+	protected $_options = array();
 
 	/**
-     * Sends the HTTP message [Request] to a remote server and processes
-     * the response.
-     *
-     * @param   Request   $request  request to send
-     * @param   Response  $request  response to send
-     */
-    public function _send_message(Request $request, Response $response): Response
+	 * Sends the HTTP message [Request] to a remote server and processes
+	 * the response.
+	 *
+	 * @param   Request   $request  request to send
+	 * @param   Response  $request  response to send
+	 */
+	public function _send_message(Request $request, Response $response): Response
 	{
-		$http_method_mapping = [
+		$http_method_mapping = array(
 			HTTP_Request::GET     => HTTPRequest::METH_GET,
 			HTTP_Request::HEAD    => HTTPRequest::METH_HEAD,
 			HTTP_Request::POST    => HTTPRequest::METH_POST,
@@ -63,7 +63,7 @@ class Kohana_Request_Client_HTTP extends Request_Client_External
 			HTTP_Request::OPTIONS => HTTPRequest::METH_OPTIONS,
 			HTTP_Request::TRACE   => HTTPRequest::METH_TRACE,
 			HTTP_Request::CONNECT => HTTPRequest::METH_CONNECT,
-		];
+		);
 
 		// Create an http request object
 		$http_request = new HTTPRequest($request->uri(), $http_method_mapping[$request->method()]);

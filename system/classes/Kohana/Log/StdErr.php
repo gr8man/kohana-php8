@@ -14,11 +14,11 @@ defined('SYSPATH') or die('No direct script access.');
 class Kohana_Log_StdErr extends Log_Writer
 {
 	/**
-     * Writes each of the messages to STDERR.
-     *
-     *     $writer->write($messages);
-     */
-    public function write(array $messages): void
+	 * Writes each of the messages to STDERR.
+	 *
+	 *     $writer->write($messages);
+	 */
+	public function write(array $messages): void
 	{
 		foreach ($messages as $message) {
 			// Writes out each message

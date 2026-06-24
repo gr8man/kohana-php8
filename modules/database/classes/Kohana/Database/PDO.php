@@ -33,12 +33,12 @@ class Kohana_Database_PDO extends Database
 		}
 
 		// Extract the connection parameters, adding required variabels
-		extract($this->_config['connection'] + [
+		extract($this->_config['connection'] + array(
 			'dsn'        => '',
 			'username'   => null,
 			'password'   => null,
 			'persistent' => false,
-		]);
+		));
 
 		// Clear the connection parameters for security
 		unset($this->_config['connection']);
@@ -57,7 +57,7 @@ class Kohana_Database_PDO extends Database
 		} catch (PDOException $e) {
 			throw new Database_Exception(
 				':error',
-				[':error' => $e->getMessage()],
+				array(':error' => $e->getMessage()),
 				$e->getCode()
 			);
 		}
@@ -119,7 +119,7 @@ class Kohana_Database_PDO extends Database
 	}
 
 	#[\Override]
-    public function disconnect()
+	public function disconnect()
 	{
 		// Destroy the PDO object
 		$this->_connection = null;
@@ -157,10 +157,10 @@ class Kohana_Database_PDO extends Database
 			// Convert the exception in a database exception
 			throw new Database_Exception(
 				':error [ :query ]',
-				[
+				array(
 					':error' => $e->getMessage(),
 					':query' => $sql
-				],
+				),
 				$e->getCode()
 			);
 		}
@@ -188,10 +188,10 @@ class Kohana_Database_PDO extends Database
 			return new Database_Result_Cached($result, $sql, $as_object, $params);
 		} elseif ($type === Database::INSERT) {
 			// Return a list of insert id and rows created
-			return [
+			return array(
 				$this->_connection->lastInsertId(),
 				$result->rowCount(),
-			];
+			);
 		} else {
 			// Return the number of rows affected
 			return $result->rowCount();
@@ -226,7 +226,7 @@ class Kohana_Database_PDO extends Database
 	{
 		throw new Kohana_Exception(
 			'Database method :method is not supported by :class',
-			[':method' => __FUNCTION__, ':class' => self::class]
+			array(':method' => __FUNCTION__, ':class' => self::class)
 		);
 	}
 
@@ -234,7 +234,7 @@ class Kohana_Database_PDO extends Database
 	{
 		throw new Kohana_Exception(
 			'Database method :method is not supported by :class',
-			[':method' => __FUNCTION__, ':class' => self::class]
+			array(':method' => __FUNCTION__, ':class' => self::class)
 		);
 	}
 

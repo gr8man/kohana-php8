@@ -14,7 +14,7 @@ defined('SYSPATH') or die('No direct script access.');
 class Kohana_Minion_Exception_InvalidTask extends Minion_Exception
 {
 	#[\Override]
-    public function format_for_cli(): string
+	public function format_for_cli(): string
 	{
 		return 'ERROR: '. $this->getMessage().PHP_EOL;
 	}

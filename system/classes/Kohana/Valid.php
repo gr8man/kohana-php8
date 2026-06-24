@@ -15,9 +15,9 @@ defined('SYSPATH') or die('No direct script access.');
 class Kohana_Valid
 {
 	/**
-     * Checks if a field is not empty.
-     */
-    public static function not_empty($value): bool
+	 * Checks if a field is not empty.
+	 */
+	public static function not_empty($value): bool
 	{
 		if (is_object($value) and $value instanceof ArrayObject) {
 			// Get the array from the ArrayObject
@@ -25,64 +25,64 @@ class Kohana_Valid
 		}
 
 		// Value cannot be NULL, FALSE, '', or an empty array
-		return ! in_array($value, [null, false, '', []], true);
+		return ! in_array($value, array(null, false, '', array()), true);
 	}
 
 	/**
-     * Checks a field against a regular expression.
-     *
-     * @param   string  $value      value
-     * @param   string  $expression regular expression to match (including delimiters)
-     */
-    public static function regex($value, $expression): bool
+	 * Checks a field against a regular expression.
+	 *
+	 * @param   string  $value      value
+	 * @param   string  $expression regular expression to match (including delimiters)
+	 */
+	public static function regex($value, $expression): bool
 	{
 		return (bool) preg_match($expression, (string) $value);
 	}
 
 	/**
-     * Checks that a field is long enough.
-     *
-     * @param   string  $value  value
-     * @param   integer $length minimum length required
-     */
-    public static function min_length($value, $length): bool
+	 * Checks that a field is long enough.
+	 *
+	 * @param   string  $value  value
+	 * @param   integer $length minimum length required
+	 */
+	public static function min_length($value, $length): bool
 	{
 		return UTF8::strlen((string) $value) >= $length;
 	}
 
 	/**
-     * Checks that a field is short enough.
-     *
-     * @param   string  $value  value
-     * @param   integer $length maximum length required
-     */
-    public static function max_length($value, $length): bool
+	 * Checks that a field is short enough.
+	 *
+	 * @param   string  $value  value
+	 * @param   integer $length maximum length required
+	 */
+	public static function max_length($value, $length): bool
 	{
 		return UTF8::strlen((string) $value) <= $length;
 	}
 
 	/**
-     * Checks that a field is exactly the right length.
-     *
-     * @param   string          $value  value
-     * @param   integer|array   $length exact length required, or array of valid lengths
-     */
-    public static function exact_length($value, $length): bool
+	 * Checks that a field is exactly the right length.
+	 *
+	 * @param   string          $value  value
+	 * @param   integer|array   $length exact length required, or array of valid lengths
+	 */
+	public static function exact_length($value, $length): bool
 	{
 		if (is_array($length)) {
-            return array_any($length, fn($strlen): bool => UTF8::strlen((string) $value) === $strlen);
-        }
+			return array_any($length, fn ($strlen): bool => UTF8::strlen((string) $value) === $strlen);
+		}
 
 		return UTF8::strlen((string) $value) === $length;
 	}
 
 	/**
-     * Checks that a field is exactly the value required.
-     *
-     * @param   string  $value      value
-     * @param   string  $required   required value
-     */
-    public static function equals($value, $required): bool
+	 * Checks that a field is exactly the value required.
+	 *
+	 * @param   string  $value      value
+	 * @param   string  $required   required value
+	 */
+	public static function equals($value, $required): bool
 	{
 		return ($value === $required);
 	}
@@ -209,12 +209,12 @@ class Kohana_Valid
 	}
 
 	/**
-     * Validate an IP.
-     *
-     * @param   string  $ip             IP address
-     * @param   boolean $allow_private  allow private IP networks
-     */
-    public static function ip($ip, $allow_private = true): bool
+	 * Validate an IP.
+	 *
+	 * @param   string  $ip             IP address
+	 * @param   boolean $allow_private  allow private IP networks
+	 */
+	public static function ip($ip, $allow_private = true): bool
 	{
 		// Do not allow reserved addresses
 		$flags = FILTER_FLAG_NO_RES_RANGE;
@@ -246,8 +246,8 @@ class Kohana_Valid
 			// Use the default type
 			$type = 'default';
 		} elseif (is_array($type)) {
-            return array_any($type, fn($t) => Valid::credit_card($number, $t));
-        }
+			return array_any($type, fn ($t) => Valid::credit_card($number, $t));
+		}
 
 		$cards = Kohana::$config->load('credit_cards');
 
@@ -321,15 +321,15 @@ class Kohana_Valid
 	}
 
 	/**
-     * Checks if a phone number is valid.
-     *
-     * @param   string  $number     phone number to check
-     * @param   array   $lengths
-     */
-    public static function phone($number, $lengths = null): bool
+	 * Checks if a phone number is valid.
+	 *
+	 * @param   string  $number     phone number to check
+	 * @param   array   $lengths
+	 */
+	public static function phone($number, $lengths = null): bool
 	{
 		if (! is_array($lengths)) {
-			$lengths = [7,10,11];
+			$lengths = array(7,10,11);
 		}
 
 		// Remove all non-digit characters from the number
@@ -340,22 +340,22 @@ class Kohana_Valid
 	}
 
 	/**
-     * Tests if a string is a valid date string.
-     *
-     * @param   string  $str    date to check
-     */
-    public static function date($str): bool
+	 * Tests if a string is a valid date string.
+	 *
+	 * @param   string  $str    date to check
+	 */
+	public static function date($str): bool
 	{
 		return (strtotime((string) $str) !== false);
 	}
 
 	/**
-     * Checks whether a string consists of alphabetical characters only.
-     *
-     * @param   string  $str    input string
-     * @param   boolean $utf8   trigger UTF-8 compatibility
-     */
-    public static function alpha($str, $utf8 = false): bool
+	 * Checks whether a string consists of alphabetical characters only.
+	 *
+	 * @param   string  $str    input string
+	 * @param   boolean $utf8   trigger UTF-8 compatibility
+	 */
+	public static function alpha($str, $utf8 = false): bool
 	{
 		$str = (string) $str;
 
@@ -367,12 +367,12 @@ class Kohana_Valid
 	}
 
 	/**
-     * Checks whether a string consists of alphabetical characters and numbers only.
-     *
-     * @param   string  $str    input string
-     * @param   boolean $utf8   trigger UTF-8 compatibility
-     */
-    public static function alpha_numeric($str, $utf8 = false): bool
+	 * Checks whether a string consists of alphabetical characters and numbers only.
+	 *
+	 * @param   string  $str    input string
+	 * @param   boolean $utf8   trigger UTF-8 compatibility
+	 */
+	public static function alpha_numeric($str, $utf8 = false): bool
 	{
 		if ($utf8 === true) {
 			return (bool) preg_match('/^[\pL\pN]++$/uD', (string) $str);
@@ -382,12 +382,12 @@ class Kohana_Valid
 	}
 
 	/**
-     * Checks whether a string consists of alphabetical characters, numbers, underscores and dashes only.
-     *
-     * @param   string  $str    input string
-     * @param   boolean $utf8   trigger UTF-8 compatibility
-     */
-    public static function alpha_dash($str, $utf8 = false): bool
+	 * Checks whether a string consists of alphabetical characters, numbers, underscores and dashes only.
+	 *
+	 * @param   string  $str    input string
+	 * @param   boolean $utf8   trigger UTF-8 compatibility
+	 */
+	public static function alpha_dash($str, $utf8 = false): bool
 	{
 		if ($utf8 === true) {
 			$regex = '/^[-\pL\pN_]++$/uD';
@@ -399,12 +399,12 @@ class Kohana_Valid
 	}
 
 	/**
-     * Checks whether a string consists of digits only (no dots or dashes).
-     *
-     * @param   string  $str    input string
-     * @param   boolean $utf8   trigger UTF-8 compatibility
-     */
-    public static function digit($str, $utf8 = false): bool
+	 * Checks whether a string consists of digits only (no dots or dashes).
+	 *
+	 * @param   string  $str    input string
+	 * @param   boolean $utf8   trigger UTF-8 compatibility
+	 */
+	public static function digit($str, $utf8 = false): bool
 	{
 		if ($utf8 === true) {
 			return (bool) preg_match('/^\pN++$/uD', (string) $str);
@@ -414,14 +414,14 @@ class Kohana_Valid
 	}
 
 	/**
-     * Checks whether a string is a valid number (negative and decimal numbers allowed).
-     *
-     * Uses {@link http://www.php.net/manual/en/function.localeconv.php locale conversion}
-     * to allow decimal point to be locale specific.
-     *
-     * @param   string  $str    input string
-     */
-    public static function numeric($str): bool
+	 * Checks whether a string is a valid number (negative and decimal numbers allowed).
+	 *
+	 * Uses {@link http://www.php.net/manual/en/function.localeconv.php locale conversion}
+	 * to allow decimal point to be locale specific.
+	 *
+	 * @param   string  $str    input string
+	 */
+	public static function numeric($str): bool
 	{
 		// Get the decimal point for the current locale
 		[$decimal] = array_values(localeconv());
@@ -456,14 +456,14 @@ class Kohana_Valid
 	}
 
 	/**
-     * Checks if a string is a proper decimal format. Optionally, a specific
-     * number of digits can be checked too.
-     *
-     * @param   string  $str    number to check
-     * @param   integer $places number of decimal places
-     * @param   integer $digits number of digits
-     */
-    public static function decimal($str, $places = 2, $digits = null): bool
+	 * Checks if a string is a proper decimal format. Optionally, a specific
+	 * number of digits can be checked too.
+	 *
+	 * @param   string  $str    number to check
+	 * @param   integer $places number of decimal places
+	 * @param   integer $digits number of digits
+	 */
+	public static function decimal($str, $places = 2, $digits = null): bool
 	{
 		if ($digits > 0) {
 			// Specific number of digits
@@ -480,25 +480,25 @@ class Kohana_Valid
 	}
 
 	/**
-     * Checks if a string is a proper hexadecimal HTML color value. The validation
-     * is quite flexible as it does not require an initial "#" and also allows for
-     * the short notation using only three instead of six hexadecimal characters.
-     *
-     * @param   string  $str    input string
-     */
-    public static function color($str): bool
+	 * Checks if a string is a proper hexadecimal HTML color value. The validation
+	 * is quite flexible as it does not require an initial "#" and also allows for
+	 * the short notation using only three instead of six hexadecimal characters.
+	 *
+	 * @param   string  $str    input string
+	 */
+	public static function color($str): bool
 	{
 		return (bool) preg_match('/^#?+[0-9a-f]{3}(?:[0-9a-f]{3})?$/iD', (string) $str);
 	}
 
 	/**
-     * Checks if a field matches the value of another field.
-     *
-     * @param   array   $array  array of values
-     * @param   string  $field  field name
-     * @param   string  $match  field name to match
-     */
-    public static function matches(array $array, $field, $match): bool
+	 * Checks if a field matches the value of another field.
+	 *
+	 * @param   array   $array  array of values
+	 * @param   string  $field  field name
+	 * @param   string  $match  field name to match
+	 */
+	public static function matches(array $array, $field, $match): bool
 	{
 		return ($array[$field] === $array[$match]);
 	}

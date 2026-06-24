@@ -14,15 +14,15 @@ defined('SYSPATH') or die('No direct script access.');
 class Kohana_Minion_Exception extends Kohana_Exception
 {
 	/**
-     * Inline exception handler, displays the error message, source of the
-     * exception, and the stack trace of the error.
-     *
-     * Should this display a stack trace? It's useful.
-     *
-     * @uses    Kohana_Exception::text
-     */
-    #[\Override]
-    public static function handler(Throwable $e): void
+	 * Inline exception handler, displays the error message, source of the
+	 * exception, and the stack trace of the error.
+	 *
+	 * Should this display a stack trace? It's useful.
+	 *
+	 * @uses    Kohana_Exception::text
+	 */
+	#[\Override]
+	public static function handler(Throwable $e): void
 	{
 		try {
 			// Log the exception

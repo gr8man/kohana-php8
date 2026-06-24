@@ -20,17 +20,17 @@ class Kohana_Arr
 	public static string $delimiter = '.';
 
 	/**
-     * Tests if an array is associative or not.
-     *
-     *     // Returns TRUE
-     *     Arr::is_assoc(array('username' => 'john.doe'));
-     *
-     *     // Returns FALSE
-     *     Arr::is_assoc('foo', 'bar');
-     *
-     * @param   array   $array  array to check
-     */
-    public static function is_assoc(array $array): bool
+	 * Tests if an array is associative or not.
+	 *
+	 *     // Returns TRUE
+	 *     Arr::is_assoc(array('username' => 'john.doe'));
+	 *
+	 *     // Returns FALSE
+	 *     Arr::is_assoc('foo', 'bar');
+	 *
+	 * @param   array   $array  array to check
+	 */
+	public static function is_assoc(array $array): bool
 	{
 		if (function_exists('array_is_list')) {
 			return ! array_is_list($array);
@@ -45,20 +45,20 @@ class Kohana_Arr
 	}
 
 	/**
-     * Test if a value is an array with an additional check for array-like objects.
-     *
-     *     // Returns TRUE
-     *     Arr::is_array(array());
-     *     Arr::is_array(new ArrayObject);
-     *
-     *     // Returns FALSE
-     *     Arr::is_array(FALSE);
-     *     Arr::is_array('not an array!');
-     *     Arr::is_array(Database::instance());
-     *
-     * @param   mixed   $value  value to check
-     */
-    public static function is_array($value): bool
+	 * Test if a value is an array with an additional check for array-like objects.
+	 *
+	 *     // Returns TRUE
+	 *     Arr::is_array(array());
+	 *     Arr::is_array(new ArrayObject);
+	 *
+	 *     // Returns FALSE
+	 *     Arr::is_array(FALSE);
+	 *     Arr::is_array('not an array!');
+	 *     Arr::is_array(Database::instance());
+	 *
+	 * @param   mixed   $value  value to check
+	 */
+	public static function is_array($value): bool
 	{
 		return is_array($value) or (is_object($value) and $value instanceof Traversable);
 	}
@@ -138,7 +138,7 @@ class Kohana_Arr
 			} elseif ($key === '*') {
 				// Handle wildcards
 
-				$values = [];
+				$values = array();
 				foreach ($array as $arr) {
 					if ($value = Arr::path($arr, implode('.', $keys))) {
 						$values[] = $value;
@@ -195,7 +195,7 @@ class Kohana_Arr
 			}
 
 			if (! isset($array[$key])) {
-				$array[$key] = [];
+				$array[$key] = array();
 			}
 
 			$array = & $array[$key];
@@ -206,21 +206,21 @@ class Kohana_Arr
 	}
 
 	/**
-     * Fill an array with a range of numbers.
-     *
-     *     // Fill an array with values 5, 10, 15, 20
-     *     $values = Arr::range(5, 20);
-     *
-     * @param   integer $step   stepping
-     * @param   integer $max    ending number
-     */
-    public static function range($step = 10, $max = 100): array
+	 * Fill an array with a range of numbers.
+	 *
+	 *     // Fill an array with values 5, 10, 15, 20
+	 *     $values = Arr::range(5, 20);
+	 *
+	 * @param   integer $step   stepping
+	 * @param   integer $max    ending number
+	 */
+	public static function range($step = 10, $max = 100): array
 	{
 		if ($step < 1) {
-			return [];
+			return array();
 		}
 
-		$array = [];
+		$array = array();
 		for ($i = $step; $i <= $max; $i += $step) {
 			$array[$i] = $i;
 		}
@@ -255,23 +255,23 @@ class Kohana_Arr
 	}
 
 	/**
-     * Retrieves multiple paths from an array. If the path does not exist in the
-     * array, the default value will be added instead.
-     *
-     *     // Get the values "username", "password" from $_POST
-     *     $auth = Arr::extract($_POST, array('username', 'password'));
-     *
-     *     // Get the value "level1.level2a" from $data
-     *     $data = array('level1' => array('level2a' => 'value 1', 'level2b' => 'value 2'));
-     *     Arr::extract($data, array('level1.level2a', 'password'));
-     *
-     * @param   array  $array    array to extract paths from
-     * @param   array  $paths    list of path
-     * @param   mixed  $default  default value
-     */
-    public static function extract($array, array $paths, $default = null): array
+	 * Retrieves multiple paths from an array. If the path does not exist in the
+	 * array, the default value will be added instead.
+	 *
+	 *     // Get the values "username", "password" from $_POST
+	 *     $auth = Arr::extract($_POST, array('username', 'password'));
+	 *
+	 *     // Get the value "level1.level2a" from $data
+	 *     $data = array('level1' => array('level2a' => 'value 1', 'level2b' => 'value 2'));
+	 *     Arr::extract($data, array('level1.level2a', 'password'));
+	 *
+	 * @param   array  $array    array to extract paths from
+	 * @param   array  $paths    list of path
+	 * @param   mixed  $default  default value
+	 */
+	public static function extract($array, array $paths, $default = null): array
 	{
-		$found = [];
+		$found = array();
 		foreach ($paths as $path) {
 			Arr::set_path($found, $path, Arr::path($array, $path, $default));
 		}
@@ -280,19 +280,19 @@ class Kohana_Arr
 	}
 
 	/**
-     * Retrieves muliple single-key values from a list of arrays.
-     *
-     *     // Get all of the "id" values from a result
-     *     $ids = Arr::pluck($result, 'id');
-     *
-     * [!!] A list of arrays is an array that contains arrays, eg: array(array $a, array $b, array $c, ...)
-     *
-     * @param   array   $array  list of arrays to check
-     * @param   string  $key    key to pluck
-     */
-    public static function pluck($array, $key): array
+	 * Retrieves muliple single-key values from a list of arrays.
+	 *
+	 *     // Get all of the "id" values from a result
+	 *     $ids = Arr::pluck($result, 'id');
+	 *
+	 * [!!] A list of arrays is an array that contains arrays, eg: array(array $a, array $b, array $c, ...)
+	 *
+	 * @param   array   $array  list of arrays to check
+	 * @param   string  $key    key to pluck
+	 */
+	public static function pluck($array, $key): array
 	{
-		$values = [];
+		$values = array();
 
 		foreach ($array as $row) {
 			if (isset($row[$key])) {
@@ -305,16 +305,16 @@ class Kohana_Arr
 	}
 
 	/**
-     * Adds a value to the beginning of an associative array.
-     *
-     *     // Add an empty value to the start of a select list
-     *     Arr::unshift($array, 'none', 'Select a value');
-     *
-     * @param   array   $array  array to modify
-     * @param   string  $key    array key name
-     * @param   mixed   $val    array value
-     */
-    public static function unshift(array & $array, $key, $val): array
+	 * Adds a value to the beginning of an associative array.
+	 *
+	 *     // Add an empty value to the start of a select list
+	 *     Arr::unshift($array, 'none', 'Select a value');
+	 *
+	 * @param   array   $array  array to modify
+	 * @param   string  $key    array key name
+	 * @param   mixed   $val    array value
+	 */
+	public static function unshift(array & $array, $key, $val): array
 	{
 		$array = array_reverse($array, true);
 		$array[$key] = $val;
@@ -324,29 +324,29 @@ class Kohana_Arr
 	}
 
 	/**
-     * Recursive version of [array_map](http://php.net/array_map), applies one or more
-     * callbacks to all elements in an array, including sub-arrays.
-     *
-     *     // Apply "strip_tags" to every element in the array
-     *     $array = Arr::map('strip_tags', $array);
-     *
-     *     // Apply $this->filter to every element in the array
-     *     $array = Arr::map(array(array($this,'filter')), $array);
-     *
-     *     // Apply strip_tags and $this->filter to every element
-     *     $array = Arr::map(array('strip_tags',array($this,'filter')), $array);
-     *
-     * [!!] Because you can pass an array of callbacks, if you wish to use an array-form callback
-     * you must nest it in an additional array as above. Calling Arr::map(array($this,'filter'), $array)
-     * will cause an error.
-     * [!!] Unlike `array_map`, this method requires a callback and will only map
-     * a single array.
-     *
-     * @param   mixed   $callbacks  array of callbacks to apply to every element in the array
-     * @param   array   $array      array to map
-     * @param   array   $keys       array of keys to apply to
-     */
-    public static function map($callbacks, array $array, $keys = null): array
+	 * Recursive version of [array_map](http://php.net/array_map), applies one or more
+	 * callbacks to all elements in an array, including sub-arrays.
+	 *
+	 *     // Apply "strip_tags" to every element in the array
+	 *     $array = Arr::map('strip_tags', $array);
+	 *
+	 *     // Apply $this->filter to every element in the array
+	 *     $array = Arr::map(array(array($this,'filter')), $array);
+	 *
+	 *     // Apply strip_tags and $this->filter to every element
+	 *     $array = Arr::map(array('strip_tags',array($this,'filter')), $array);
+	 *
+	 * [!!] Because you can pass an array of callbacks, if you wish to use an array-form callback
+	 * you must nest it in an additional array as above. Calling Arr::map(array($this,'filter'), $array)
+	 * will cause an error.
+	 * [!!] Unlike `array_map`, this method requires a callback and will only map
+	 * a single array.
+	 *
+	 * @param   mixed   $callbacks  array of callbacks to apply to every element in the array
+	 * @param   array   $array      array to map
+	 * @param   array   $keys       array of keys to apply to
+	 */
+	public static function map($callbacks, array $array, $keys = null): array
 	{
 		foreach ($array as $key => $val) {
 			if (is_array($val)) {
@@ -366,25 +366,25 @@ class Kohana_Arr
 	}
 
 	/**
-     * Recursively merge two or more arrays. Values in an associative array
-     * overwrite previous values with the same key. Values in an indexed array
-     * are appended, but only when they do not already exist in the result.
-     *
-     * Note that this does not work the same as [array_merge_recursive](http://php.net/array_merge_recursive)!
-     *
-     *     $john = array('name' => 'john', 'children' => array('fred', 'paul', 'sally', 'jane'));
-     *     $mary = array('name' => 'mary', 'children' => array('jane'));
-     *
-     *     // John and Mary are married, merge them together
-     *     $john = Arr::merge($john, $mary);
-     *
-     *     // The output of $john will now be:
-     *     array('name' => 'mary', 'children' => array('fred', 'paul', 'sally', 'jane'))
-     *
-     * @param   array  $array1      initial array
-     * @param   array  $array2,...  array to merge
-     */
-    public static function merge(array $array1, $array2): array
+	 * Recursively merge two or more arrays. Values in an associative array
+	 * overwrite previous values with the same key. Values in an indexed array
+	 * are appended, but only when they do not already exist in the result.
+	 *
+	 * Note that this does not work the same as [array_merge_recursive](http://php.net/array_merge_recursive)!
+	 *
+	 *     $john = array('name' => 'john', 'children' => array('fred', 'paul', 'sally', 'jane'));
+	 *     $mary = array('name' => 'mary', 'children' => array('jane'));
+	 *
+	 *     // John and Mary are married, merge them together
+	 *     $john = Arr::merge($john, $mary);
+	 *
+	 *     // The output of $john will now be:
+	 *     array('name' => 'mary', 'children' => array('fred', 'paul', 'sally', 'jane'))
+	 *
+	 * @param   array  $array1      initial array
+	 * @param   array  $array2,...  array to merge
+	 */
+	public static function merge(array $array1, $array2): array
 	{
 		if (Arr::is_assoc($array2)) {
 			foreach ($array2 as $key => $value) {
@@ -432,22 +432,22 @@ class Kohana_Arr
 	}
 
 	/**
-     * Overwrites an array with values from input arrays.
-     * Keys that do not exist in the first array will not be added!
-     *
-     *     $a1 = array('name' => 'john', 'mood' => 'happy', 'food' => 'bacon');
-     *     $a2 = array('name' => 'jack', 'food' => 'tacos', 'drink' => 'beer');
-     *
-     *     // Overwrite the values of $a1 with $a2
-     *     $array = Arr::overwrite($a1, $a2);
-     *
-     *     // The output of $array will now be:
-     *     array('name' => 'jack', 'mood' => 'happy', 'food' => 'tacos')
-     *
-     * @param   array   $array1 master array
-     * @param   array   $array2 input arrays that will overwrite existing values
-     */
-    public static function overwrite(array $array1, $array2): array
+	 * Overwrites an array with values from input arrays.
+	 * Keys that do not exist in the first array will not be added!
+	 *
+	 *     $a1 = array('name' => 'john', 'mood' => 'happy', 'food' => 'bacon');
+	 *     $a2 = array('name' => 'jack', 'food' => 'tacos', 'drink' => 'beer');
+	 *
+	 *     // Overwrite the values of $a1 with $a2
+	 *     $array = Arr::overwrite($a1, $a2);
+	 *
+	 *     // The output of $array will now be:
+	 *     array('name' => 'jack', 'mood' => 'happy', 'food' => 'tacos')
+	 *
+	 * @param   array   $array1 master array
+	 * @param   array   $array2 input arrays that will overwrite existing values
+	 */
+	public static function overwrite(array $array1, $array2): array
 	{
 		foreach (array_intersect_key($array2, $array1) as $key => $value) {
 			$array1[$key] = $value;
@@ -502,30 +502,30 @@ class Kohana_Arr
 			$command = explode('::', $command, 2);
 		}
 
-		return [$command, $params];
+		return array($command, $params);
 	}
 
 	/**
-     * Convert a multi-dimensional array into a single-dimensional array.
-     *
-     *     $array = array('set' => array('one' => 'something'), 'two' => 'other');
-     *
-     *     // Flatten the array
-     *     $array = Arr::flatten($array);
-     *
-     *     // The array will now be
-     *     array('one' => 'something', 'two' => 'other');
-     *
-     * [!!] The keys of array values will be discarded.
-     *
-     * @param   array   $array  array to flatten
-     * @since   3.0.6
-     */
-    public static function flatten(array $array): array
+	 * Convert a multi-dimensional array into a single-dimensional array.
+	 *
+	 *     $array = array('set' => array('one' => 'something'), 'two' => 'other');
+	 *
+	 *     // Flatten the array
+	 *     $array = Arr::flatten($array);
+	 *
+	 *     // The array will now be
+	 *     array('one' => 'something', 'two' => 'other');
+	 *
+	 * [!!] The keys of array values will be discarded.
+	 *
+	 * @param   array   $array  array to flatten
+	 * @since   3.0.6
+	 */
+	public static function flatten(array $array): array
 	{
 		$is_assoc = Arr::is_assoc($array);
 
-		$flat = [];
+		$flat = array();
 		foreach ($array as $key => $value) {
 			if (is_array($value)) {
 				$flat = array_merge($flat, Arr::flatten($value));

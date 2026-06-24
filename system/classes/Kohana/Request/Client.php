@@ -29,7 +29,7 @@ abstract class Kohana_Request_Client
 	/**
 	 * @var  array  Headers to preserve when following a redirect
 	 */
-	protected $_follow_headers = ['authorization'];
+	protected $_follow_headers = array('authorization');
 
 	/**
 	 * @var  bool  Follow 302 redirect with original request method?
@@ -39,9 +39,9 @@ abstract class Kohana_Request_Client
 	/**
 	 * @var array  Callbacks to use when response contains given headers
 	 */
-	protected $_header_callbacks = [
+	protected $_header_callbacks = array(
 		'Location'  => 'Request_Client::on_header_location'
-	];
+	);
 
 	/**
 	 * @var int  Maximum number of requests that header callbacks can trigger before the request is aborted
@@ -56,7 +56,7 @@ abstract class Kohana_Request_Client
 	/**
 	 * @var array  Arbitrary parameters that are shared with header callbacks through their Request_Client object
 	 */
-	protected $_callback_params = [];
+	protected $_callback_params = array();
 
 	/**
 	 * Creates a new `Request_Client` object,
@@ -64,7 +64,7 @@ abstract class Kohana_Request_Client
 	 *
 	 * @param   array    $params Params
 	 */
-	public function __construct(array $params = [])
+	public function __construct(array $params = array())
 	{
 		foreach ($params as $key => $value) {
 			if (method_exists($this, $key)) {
@@ -74,41 +74,41 @@ abstract class Kohana_Request_Client
 	}
 
 	/**
-     * Processes the request, executing the controller action that handles this
-     * request, determined by the [Route].
-     *
-     * 1. Before the controller action is called, the [Controller::before] method
-     * will be called.
-     * 2. Next the controller action will be called.
-     * 3. After the controller action is called, the [Controller::after] method
-     * will be called.
-     *
-     * By default, the output from the controller is captured and returned, and
-     * no headers are sent.
-     *
-     *     $request->execute();
-     *
-     * @param   Response  $response
-     * @return  Response
-     * @throws  Kohana_Exception
-     * @uses    [Kohana::$profiling]
-     * @uses    [Profiler]
-     */
-    public function execute(Request $request)
+	 * Processes the request, executing the controller action that handles this
+	 * request, determined by the [Route].
+	 *
+	 * 1. Before the controller action is called, the [Controller::before] method
+	 * will be called.
+	 * 2. Next the controller action will be called.
+	 * 3. After the controller action is called, the [Controller::after] method
+	 * will be called.
+	 *
+	 * By default, the output from the controller is captured and returned, and
+	 * no headers are sent.
+	 *
+	 *     $request->execute();
+	 *
+	 * @param   Response  $response
+	 * @return  Response
+	 * @throws  Kohana_Exception
+	 * @uses    [Kohana::$profiling]
+	 * @uses    [Profiler]
+	 */
+	public function execute(Request $request)
 	{
 		// Prevent too much recursion of header callback requests
 		if ($this->callback_depth() > $this->max_callback_depth()) {
 			throw new Request_Client_Recursion_Exception(
 				"Could not execute request to :uri - too many recursions after :depth requests",
-				[
+				array(
 						':uri' => $request->uri(),
 						':depth' => $this->callback_depth() - 1,
-					]
+					)
 			);
 		}
 
 		// Execute the request and pass the currently used protocol
-		$orig_response = $response = Response::factory(['_protocol' => $request->protocol()]);
+		$orig_response = $response = Response::factory(array('_protocol' => $request->protocol()));
 
 		if (($cache = $this->cache()) instanceof HTTP_Cache) {
 			return $cache->execute($this, $request, $response);
@@ -144,16 +144,16 @@ abstract class Kohana_Request_Client
 	}
 
 	/**
-     * Processes the request passed to it and returns the response from
-     * the URI resource identified.
-     *
-     * This method must be implemented by all clients.
-     *
-     * @param   Request   $request   request to execute by client
-     * @return  Response
-     * @since   3.2.0
-     */
-    abstract public function execute_request(Request $request, Response $response);
+	 * Processes the request passed to it and returns the response from
+	 * the URI resource identified.
+	 *
+	 * This method must be implemented by all clients.
+	 *
+	 * @param   Request   $request   request to execute by client
+	 * @return  Response
+	 * @since   3.2.0
+	 */
+	abstract public function execute_request(Request $request, Response $response);
 
 	/**
 	 * Getter and setter for the internal caching engine,
@@ -352,10 +352,10 @@ abstract class Kohana_Request_Client
 	}
 
 	/**
-     * Assigns the properties of the current Request_Client to another
-     * Request_Client instance - used when setting up a subsequent request.
-     */
-    public function assign_client_properties(Request_Client $client): void
+	 * Assigns the properties of the current Request_Client to another
+	 * Request_Client instance - used when setting up a subsequent request.
+	 */
+	public function assign_client_properties(Request_Client $client): void
 	{
 		$client->cache($this->cache());
 		$client->follow($this->follow());
@@ -366,16 +366,16 @@ abstract class Kohana_Request_Client
 	}
 
 	/**
-     * The default handler for following redirects, triggered by the presence of
-     * a Location header in the response.
-     *
-     * The client's follow property must be set TRUE and the HTTP response status
-     * one of 201, 301, 302, 303 or 307 for the redirect to be followed.
-     */
-    public static function on_header_location(Request $request, Response $response, Request_Client $client)
+	 * The default handler for following redirects, triggered by the presence of
+	 * a Location header in the response.
+	 *
+	 * The client's follow property must be set TRUE and the HTTP response status
+	 * one of 201, 301, 302, 303 or 307 for the redirect to be followed.
+	 */
+	public static function on_header_location(Request $request, Response $response, Request_Client $client)
 	{
 		// Do we need to follow a Location header ?
-		if ($client->follow() and in_array($response->status(), [201, 301, 302, 303, 307])) {
+		if ($client->follow() and in_array($response->status(), array(201, 301, 302, 303, 307))) {
 			// Figure out which method to use for the follow request
 			switch ($response->status()) {
 				default:

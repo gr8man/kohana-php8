@@ -28,7 +28,7 @@ class Kohana_Request implements HTTP_Request, \Stringable
 	/**
 	 * @var  string  trusted proxy server IPs
 	 */
-	public static $trusted_proxies = ['127.0.0.1', 'localhost', 'localhost.localdomain'];
+	public static $trusted_proxies = array('127.0.0.1', 'localhost', 'localhost.localdomain');
 
 	/**
 	 * @var  Request  main request instance
@@ -58,7 +58,7 @@ class Kohana_Request implements HTTP_Request, \Stringable
 	 * @uses    Route::all
 	 * @uses    Route::matches
 	 */
-	public static function factory($uri = true, $client_params = [], $allow_external = true, $injected_routes = [])
+	public static function factory($uri = true, $client_params = array(), $allow_external = true, $injected_routes = array())
 	{
 		// If this is the initial request
 		if (! Request::$initial) {
@@ -131,7 +131,7 @@ class Kohana_Request implements HTTP_Request, \Stringable
 				$uri = Request::detect_uri();
 			}
 
-			$cookies = [];
+			$cookies = array();
 
 			if (($cookie_keys = array_keys($_COOKIE))) {
 				foreach ($cookie_keys as $key) {
@@ -153,7 +153,7 @@ class Kohana_Request implements HTTP_Request, \Stringable
 			}
 
 			// Set the request method
-            $request->method($method);
+			$request->method($method);
 
 			if (isset($referrer)) {
 				// Set the referrer
@@ -290,25 +290,25 @@ class Kohana_Request implements HTTP_Request, \Stringable
 	}
 
 	/**
-     * Returns the accepted content types. If a specific type is defined,
-     * the quality of that type will be returned.
-     *
-     *     $types = Request::accept_type();
-     *
-     * [!!] Deprecated in favor of using [HTTP_Header::accepts_at_quality].
-     *
-     * @param   string  $type Content MIME type
-     * @return  mixed   An array of all types or a specific type as a string
-     * @uses    Request::_parse_accept
-     */
-    #[\Deprecated(message: 'since version 3.3.0')]
-    public static function accept_type($type = null)
+	 * Returns the accepted content types. If a specific type is defined,
+	 * the quality of that type will be returned.
+	 *
+	 *     $types = Request::accept_type();
+	 *
+	 * [!!] Deprecated in favor of using [HTTP_Header::accepts_at_quality].
+	 *
+	 * @param   string  $type Content MIME type
+	 * @return  mixed   An array of all types or a specific type as a string
+	 * @uses    Request::_parse_accept
+	 */
+	#[\Deprecated(message: 'since version 3.3.0')]
+	public static function accept_type($type = null)
 	{
 		static $accepts;
 
 		if ($accepts === null) {
 			// Parse the HTTP_ACCEPT header
-			$accepts = Request::_parse_accept($_SERVER['HTTP_ACCEPT'], ['*/*' => 1.0]);
+			$accepts = Request::_parse_accept($_SERVER['HTTP_ACCEPT'], array('*/*' => 1.0));
 		}
 
 		if (isset($type)) {
@@ -320,20 +320,20 @@ class Kohana_Request implements HTTP_Request, \Stringable
 	}
 
 	/**
-     * Returns the accepted languages. If a specific language is defined,
-     * the quality of that language will be returned. If the language is not
-     * accepted, FALSE will be returned.
-     *
-     *     $langs = Request::accept_lang();
-     *
-     * [!!] Deprecated in favor of using [HTTP_Header::accepts_language_at_quality].
-     *
-     * @param   string  $lang  Language code
-     * @return  mixed   An array of all types or a specific type as a string
-     * @uses    Request::_parse_accept
-     */
-    #[\Deprecated(message: 'since version 3.3.0')]
-    public static function accept_lang($lang = null)
+	 * Returns the accepted languages. If a specific language is defined,
+	 * the quality of that language will be returned. If the language is not
+	 * accepted, FALSE will be returned.
+	 *
+	 *     $langs = Request::accept_lang();
+	 *
+	 * [!!] Deprecated in favor of using [HTTP_Header::accepts_language_at_quality].
+	 *
+	 * @param   string  $lang  Language code
+	 * @return  mixed   An array of all types or a specific type as a string
+	 * @uses    Request::_parse_accept
+	 */
+	#[\Deprecated(message: 'since version 3.3.0')]
+	public static function accept_lang($lang = null)
 	{
 		static $accepts;
 
@@ -351,20 +351,20 @@ class Kohana_Request implements HTTP_Request, \Stringable
 	}
 
 	/**
-     * Returns the accepted encodings. If a specific encoding is defined,
-     * the quality of that encoding will be returned. If the encoding is not
-     * accepted, FALSE will be returned.
-     *
-     *     $encodings = Request::accept_encoding();
-     *
-     * [!!] Deprecated in favor of using [HTTP_Header::accepts_encoding_at_quality].
-     *
-     * @param   string  $type Encoding type
-     * @return  mixed   An array of all types or a specific type as a string
-     * @uses    Request::_parse_accept
-     */
-    #[\Deprecated(message: 'since version 3.3.0')]
-    public static function accept_encoding($type = null)
+	 * Returns the accepted encodings. If a specific encoding is defined,
+	 * the quality of that encoding will be returned. If the encoding is not
+	 * accepted, FALSE will be returned.
+	 *
+	 *     $encodings = Request::accept_encoding();
+	 *
+	 * [!!] Deprecated in favor of using [HTTP_Header::accepts_encoding_at_quality].
+	 *
+	 * @param   string  $type Encoding type
+	 * @return  mixed   An array of all types or a specific type as a string
+	 * @uses    Request::_parse_accept
+	 */
+	#[\Deprecated(message: 'since version 3.3.0')]
+	public static function accept_encoding($type = null)
 	{
 		static $accepts;
 
@@ -425,10 +425,10 @@ class Kohana_Request implements HTTP_Request, \Stringable
 
 			// We found something suitable
 			if ($params = $route->matches($request)) {
-				return [
+				return array(
 					'params' => $params,
 					'route' => $route,
-				];
+				);
 			}
 		}
 
@@ -436,15 +436,15 @@ class Kohana_Request implements HTTP_Request, \Stringable
 	}
 
 	/**
-     * Parses an accept header and returns an array (type => quality) of the
-     * accepted types, ordered by quality.
-     *
-     *     $accept = Request::_parse_accept($header, $defaults);
-     *
-     * @param   string   $header   Header to parse
-     * @param   array    $accepts  Default values
-     */
-    protected static function _parse_accept(& $header, array $accepts = null): array
+	 * Parses an accept header and returns an array (type => quality) of the
+	 * accepted types, ordered by quality.
+	 *
+	 *     $accept = Request::_parse_accept($header, $defaults);
+	 *
+	 * @param   string   $header   Header to parse
+	 * @param   array    $accepts  Default values
+	 */
+	protected static function _parse_accept(& $header, array $accepts = null): array
 	{
 		if (! empty($header)) {
 			// Get all of the types
@@ -558,22 +558,22 @@ class Kohana_Request implements HTTP_Request, \Stringable
 	/**
 	 * @var  array   parameters from the route
 	 */
-	protected $_params = [];
+	protected $_params = array();
 
 	/**
 	 * @var array    query parameters
 	 */
-	protected $_get = [];
+	protected $_get = array();
 
 	/**
 	 * @var array    post parameters
 	 */
-	protected $_post = [];
+	protected $_post = array();
 
 	/**
 	 * @var array    cookies to send with the request
 	 */
-	protected $_cookies = [];
+	protected $_cookies = array();
 
 	/**
 	 * @var Kohana_Request_Client
@@ -581,29 +581,29 @@ class Kohana_Request implements HTTP_Request, \Stringable
 	protected $_client;
 
 	/**
-     * Creates a new request object for the given URI. New requests should be
-     * Created using the [Request::factory] method.
-     *
-     *     $request = new Request($uri);
-     *
-     * If $cache parameter is set, the response for the request will attempt to
-     * be retrieved from the cache.
-     *
-     * @param   string  $uri              URI of the request
-     * @param   array   $client_params    Array of params to pass to the request client
-     * @param   bool    $allow_external   Allow external requests? (deprecated in 3.3)
-     * @param array $_routes An array of routes to use, for testing
-     * @throws  Request_Exception
-     * @uses    Route::all
-     * @uses    Route::matches
-     */
-    public function __construct($uri, $client_params = [], $allow_external = true, protected $_routes = [])
+	 * Creates a new request object for the given URI. New requests should be
+	 * Created using the [Request::factory] method.
+	 *
+	 *     $request = new Request($uri);
+	 *
+	 * If $cache parameter is set, the response for the request will attempt to
+	 * be retrieved from the cache.
+	 *
+	 * @param   string  $uri              URI of the request
+	 * @param   array   $client_params    Array of params to pass to the request client
+	 * @param   bool    $allow_external   Allow external requests? (deprecated in 3.3)
+	 * @param array $_routes An array of routes to use, for testing
+	 * @throws  Request_Exception
+	 * @uses    Route::all
+	 * @uses    Route::matches
+	 */
+	public function __construct($uri, $client_params = array(), $allow_external = true, protected $_routes = array())
 	{
-		$client_params = is_array($client_params) ? $client_params : [];
+		$client_params = is_array($client_params) ? $client_params : array();
 		$uri = is_string($uri) ? $uri : '';
 
 		// Initialise the header
-		$this->_header = new HTTP_Header([]);
+		$this->_header = new HTTP_Header(array());
 
 		// Cleanse query parameters from URI (faster that parse_url())
 		$split_uri = explode('?', $uri);
@@ -643,11 +643,11 @@ class Kohana_Request implements HTTP_Request, \Stringable
 	}
 
 	/**
-     * Returns the response as the string representation of a request.
-     *
-     *     echo $request;
-     */
-    public function __toString(): string
+	 * Returns the response as the string representation of a request.
+	 *
+	 *     echo $request;
+	 */
+	public function __toString(): string
 	{
 		return $this->render();
 	}
@@ -896,29 +896,29 @@ class Kohana_Request implements HTTP_Request, \Stringable
 		}
 
 		if (! $this->_route instanceof Route) {
-			return HTTP_Exception::factory(404, 'Unable to find a route to match the URI: :uri', [
+			return HTTP_Exception::factory(404, 'Unable to find a route to match the URI: :uri', array(
 				':uri' => $this->_uri,
-			])->request($this)
+			))->request($this)
 				->get_response();
 		}
 
 		if (! $this->_client instanceof Request_Client) {
-			throw new Request_Exception('Unable to execute :uri without a Kohana_Request_Client', [
+			throw new Request_Exception('Unable to execute :uri without a Kohana_Request_Client', array(
 				':uri' => $this->_uri,
-			]);
+			));
 		}
 
 		return $this->_client->execute($this);
 	}
 
 	/**
-     * Returns whether this request is the initial request Kohana received.
-     * Can be used to test for sub requests.
-     *
-     *     if ( ! $request->is_initial())
-     *         // This is a sub request
-     */
-    public function is_initial(): bool
+	 * Returns whether this request is the initial request Kohana received.
+	 * Can be used to test for sub requests.
+	 *
+	 *     if ( ! $request->is_initial())
+	 *         // This is a sub request
+	 */
+	public function is_initial(): bool
 	{
 		return ($this === Request::$initial);
 	}
@@ -937,9 +937,9 @@ class Kohana_Request implements HTTP_Request, \Stringable
 	}
 
 	/**
-     * Returns whether this is an ajax request (as used by JS frameworks)
-     */
-    public function is_ajax(): bool
+	 * Returns whether this is an ajax request (as used by JS frameworks)
+	 */
+	public function is_ajax(): bool
 	{
 		return ($this->requested_with() === 'xmlhttprequest');
 	}
@@ -1098,25 +1098,25 @@ class Kohana_Request implements HTTP_Request, \Stringable
 	}
 
 	/**
-     * Returns the length of the body for use with
-     * content header
-     */
-    public function content_length(): int
+	 * Returns the length of the body for use with
+	 * content header
+	 */
+	public function content_length(): int
 	{
 		return strlen((string) $this->body());
 	}
 
 	/**
-     * Renders the HTTP_Interaction to a string, producing
-     *
-     *  - Protocol
-     *  - Headers
-     *  - Body
-     *
-     *  If there are variables set to the `Kohana_Request::$_post`
-     *  they will override any values set to body.
-     */
-    public function render(): string
+	 * Renders the HTTP_Interaction to a string, producing
+	 *
+	 *  - Protocol
+	 *  - Headers
+	 *  - Body
+	 *
+	 *  If there are variables set to the `Kohana_Request::$_post`
+	 *  they will override any values set to body.
+	 */
+	public function render(): string
 	{
 		if (! $post = $this->post()) {
 			$body = $this->body();
@@ -1136,7 +1136,7 @@ class Kohana_Request implements HTTP_Request, \Stringable
 
 		// Prepare cookies
 		if ($this->_cookies) {
-			$cookie_string = [];
+			$cookie_string = array();
 
 			// Parse each
 			foreach ($this->_cookies as $key => $value) {

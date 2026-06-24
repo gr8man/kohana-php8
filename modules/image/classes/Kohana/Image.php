@@ -84,13 +84,13 @@ abstract class Kohana_Image implements \Stringable
 	public $mime;
 
 	/**
-     * Loads information about the image. Will throw an exception if the image
-     * does not exist or is not an image.
-     *
-     * @param   string  $file  image file path
-     * @throws  Kohana_Exception
-     */
-    public function __construct($file)
+	 * Loads information about the image. Will throw an exception if the image
+	 * does not exist or is not an image.
+	 *
+	 * @param   string  $file  image file path
+	 * @throws  Kohana_Exception
+	 */
+	public function __construct($file)
 	{
 		try {
 			// Get the real path to the file
@@ -105,7 +105,7 @@ abstract class Kohana_Image implements \Stringable
 		if (empty($file) or empty($info)) {
 			throw new Kohana_Exception(
 				'Not an image or invalid image: :file',
-				[':file' => Debug::path($file)]
+				array(':file' => Debug::path($file))
 			);
 		}
 
@@ -118,14 +118,14 @@ abstract class Kohana_Image implements \Stringable
 	}
 
 	/**
-     * Render the current image.
-     *
-     *     echo $image;
-     *
-     * [!!] The output of this function is binary and must be rendered with the
-     * appropriate Content-Type header or it will not be displayed correctly!
-     */
-    public function __toString(): string
+	 * Render the current image.
+	 *
+	 *     echo $image;
+	 *
+	 * [!!] The output of this function is binary and must be rendered with the
+	 * appropriate Content-Type header or it will not be displayed correctly!
+	 */
+	public function __toString(): string
 	{
 		try {
 			// Render the current image
@@ -560,7 +560,7 @@ abstract class Kohana_Image implements \Stringable
 			if (! is_writable($file)) {
 				throw new Kohana_Exception(
 					'File must be writable: :file',
-					[':file' => Debug::path($file)]
+					array(':file' => Debug::path($file))
 				);
 			}
 		} else {
@@ -570,7 +570,7 @@ abstract class Kohana_Image implements \Stringable
 			if (! is_dir($directory) or ! is_writable($directory)) {
 				throw new Kohana_Exception(
 					'Directory must be writable: :directory',
-					[':directory' => Debug::path($directory)]
+					array(':directory' => Debug::path($directory))
 				);
 			}
 		}

@@ -44,7 +44,7 @@ abstract class Kohana_HTTP_Exception_Redirect extends HTTP_Exception_Expected
 	 * @return bool
 	 */
 	#[\Override]
-    public function check()
+	public function check()
 	{
 		if ($this->headers('location') === null) {
 			throw new Kohana_Exception('A \'location\' must be specified for a redirect');

@@ -26,7 +26,7 @@ class Kohana_Database_Expression implements \Stringable
 	 */
 	public function __construct(
 		protected string $_value,
-		protected array $_parameters = []
+		protected array $_parameters = array()
 	) {
 	}
 
@@ -72,34 +72,34 @@ class Kohana_Database_Expression implements \Stringable
 	}
 
 	/**
-     * Get the expression value as a string.
-     *
-     *     $sql = $expression->value();
-     */
-    public function value(): string
+	 * Get the expression value as a string.
+	 *
+	 *     $sql = $expression->value();
+	 */
+	public function value(): string
 	{
 		return $this->_value;
 	}
 
 	/**
-     * Return the value of the expression as a string.
-     *
-     *     echo $expression;
-     *
-     * @uses    Database_Expression::value
-     */
-    public function __toString(): string
+	 * Return the value of the expression as a string.
+	 *
+	 *     echo $expression;
+	 *
+	 * @uses    Database_Expression::value
+	 */
+	public function __toString(): string
 	{
 		return $this->value();
 	}
 
 	/**
-     * Compile the SQL expression and return it. Replaces any parameters with
-     * their given values.
-     *
-     * @param   mixed    Database instance or name of instance
-     */
-    public function compile($db = null): string
+	 * Compile the SQL expression and return it. Replaces any parameters with
+	 * their given values.
+	 *
+	 * @param   mixed    Database instance or name of instance
+	 */
+	public function compile($db = null): string
 	{
 		if (! is_object($db)) {
 			$db = Database::instance($db);
@@ -108,7 +108,7 @@ class Kohana_Database_Expression implements \Stringable
 		$value = $this->value();
 
 		if (! empty($this->_parameters)) {
-			$params = array_map([$db, 'quote'], $this->_parameters);
+			$params = array_map(array($db, 'quote'), $this->_parameters);
 			$value = strtr($value, $params);
 		}
 

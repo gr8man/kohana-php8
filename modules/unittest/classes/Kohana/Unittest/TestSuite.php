@@ -15,20 +15,20 @@ abstract class Kohana_Unittest_TestSuite extends PHPUnit_Framework_TestSuite
 	 *
 	 * @var array
 	 */
-	protected $_filter_calls = [
-		'addFileToBlacklist' => [],
-		'addDirectoryToBlacklist' => [],
-		'addFileToWhitelist' => []];
+	protected $_filter_calls = array(
+		'addFileToBlacklist' => array(),
+		'addDirectoryToBlacklist' => array(),
+		'addFileToWhitelist' => array());
 
 	/**
-     * Runs the tests and collects their result in a TestResult.
-     *
-     * @param  mixed                        $filter
-     * @param  boolean                      $processIsolation
-     * @return PHPUnit_Framework_TestResult
-     * @throws InvalidArgumentException
-     */
-    public function run(PHPUnit_Framework_TestResult $result = null, $filter = false, array $groups = [], array $excludeGroups = [], $processIsolation = false)
+	 * Runs the tests and collects their result in a TestResult.
+	 *
+	 * @param  mixed                        $filter
+	 * @param  boolean                      $processIsolation
+	 * @return PHPUnit_Framework_TestResult
+	 * @throws InvalidArgumentException
+	 */
+	public function run(PHPUnit_Framework_TestResult $result = null, $filter = false, array $groups = array(), array $excludeGroups = array(), $processIsolation = false)
 	{
 
 		// Get the code coverage filter from the suite's result object

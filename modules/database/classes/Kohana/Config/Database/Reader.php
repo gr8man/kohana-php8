@@ -37,13 +37,13 @@ class Kohana_Config_Database_Reader implements Kohana_Config_Reader
 	}
 
 	/**
-     * Tries to load the specificed configuration group
-     *
-     * Returns FALSE if group does not exist or an array if it does
-     *
-     * @param  string $group Configuration group
-     */
-    public function load($group): false|array
+	 * Tries to load the specificed configuration group
+	 *
+	 * Returns FALSE if group does not exist or an array if it does
+	 *
+	 * @param  string $group Configuration group
+	 */
+	public function load($group): false|array
 	{
 		/**
 		 * Prevents the catch-22 scenario where the database config reader attempts to load the
@@ -60,6 +60,6 @@ class Kohana_Config_Database_Reader implements Kohana_Config_Reader
 			->where('group_name', '=', $group)
 			->execute($this->_db_instance);
 
-		return count($query) ? array_map(fn ($v): mixed => unserialize($v, ['allowed_classes' => false]), $query->as_array('config_key', 'config_value')) : false;
+		return count($query) ? array_map(fn ($v): mixed => unserialize($v, array('allowed_classes' => false)), $query->as_array('config_key', 'config_value')) : false;
 	}
 }

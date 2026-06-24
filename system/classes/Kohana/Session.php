@@ -22,7 +22,7 @@ abstract class Kohana_Session implements \Stringable
 	/**
 	 * @var  array  session instances
 	 */
-	public static $instances = [];
+	public static $instances = array();
 
 	/**
 	 * Creates a singleton session of the given type. Some session types
@@ -56,7 +56,7 @@ abstract class Kohana_Session implements \Stringable
 			Session::$instances[$type] = $session = new $class($config, $id);
 
 			// Write the session at shutdown
-			register_shutdown_function([$session, 'write']);
+			register_shutdown_function(array($session, 'write'));
 		}
 
 		return Session::$instances[$type];
@@ -80,7 +80,7 @@ abstract class Kohana_Session implements \Stringable
 	/**
 	 * @var  array  session data
 	 */
-	protected $_data = [];
+	protected $_data = array();
 
 	/**
 	 * @var  bool  session destroyed?
@@ -88,15 +88,15 @@ abstract class Kohana_Session implements \Stringable
 	protected $_destroyed = false;
 
 	/**
-     * Overloads the name, lifetime, and encrypted session settings.
-     *
-     * [!!] Sessions can only be created using the [Session::instance] method.
-     *
-     * @param   array   $config configuration
-     * @param   string  $id     session id
-     * @uses    Session::read
-     */
-    public function __construct(array $config = null, $id = null)
+	 * Overloads the name, lifetime, and encrypted session settings.
+	 *
+	 * [!!] Sessions can only be created using the [Session::instance] method.
+	 *
+	 * @param   array   $config configuration
+	 * @param   string  $id     session id
+	 * @uses    Session::read
+	 */
+	public function __construct(array $config = null, $id = null)
 	{
 		if (isset($config['name'])) {
 			// Cookie name to store the session id in
@@ -123,15 +123,15 @@ abstract class Kohana_Session implements \Stringable
 	}
 
 	/**
-     * Session object is rendered to a serialized string. If encryption is
-     * enabled, the session will be encrypted. If not, the output string will
-     * be encoded.
-     *
-     *     echo $session;
-     *
-     * @uses    Encrypt::encode
-     */
-    public function __toString(): string
+	 * Session object is rendered to a serialized string. If encryption is
+	 * enabled, the session will be encrypted. If not, the output string will
+	 * be encoded.
+	 *
+	 *     echo $session;
+	 *
+	 * @uses    Encrypt::encode
+	 */
+	public function __toString(): string
 	{
 		// Serialize the data array
 		$data = $this->_serialize($this->_data);
@@ -276,13 +276,13 @@ abstract class Kohana_Session implements \Stringable
 	}
 
 	/**
-     * Loads existing session data.
-     *
-     *     $session->read();
-     *
-     * @param   string  $id session id
-     */
-    public function read($id = null): void
+	 * Loads existing session data.
+	 *
+	 *     $session->read();
+	 *
+	 * @param   string  $id session id
+	 */
+	public function read($id = null): void
 	{
 		$data = null;
 
@@ -369,7 +369,7 @@ abstract class Kohana_Session implements \Stringable
 		if ($this->_destroyed === false) {
 			if ($this->_destroyed = $this->_destroy()) {
 				// The session has been destroyed, clear all data
-				$this->_data = [];
+				$this->_data = array();
 			}
 		}
 
@@ -416,7 +416,7 @@ abstract class Kohana_Session implements \Stringable
 	protected function _unserialize($data)
 	{
 		// SECURITY: Disable class instantiation during unserialization to prevent object injection attacks
-		return unserialize($data, ['allowed_classes' => false]);
+		return unserialize($data, array('allowed_classes' => false));
 	}
 
 	/**

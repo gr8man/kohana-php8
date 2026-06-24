@@ -16,22 +16,27 @@ class Kohana_ORM_Validation_Exception extends Kohana_Exception
    * Array of validation objects
    * @var array
    */
-	protected $_objects = [];
+	protected $_objects = array();
 
 	/**
-     * Constructs a new exception for the specified model
-     *
-     * @param string $_alias The alias to use when looking for error messages
-     * @param  Validation $object      The Validation object of the model
-     * @param  string     $message     The error message
-     * @param  array      $values      The array of values for the error message
-     * @param  integer    $code        The error code for the exception
-     */
-    public function __construct(/**
-     * The alias of the main ORM model this exception was created for
-     */
-    protected $_alias, Validation $object, $message = 'Failed to validate array', array $values = null, $code = 0, Exception $previous = null)
-	{
+	 * Constructs a new exception for the specified model
+	 *
+	 * @param string $_alias The alias to use when looking for error messages
+	 * @param  Validation $object      The Validation object of the model
+	 * @param  string     $message     The error message
+	 * @param  array      $values      The array of values for the error message
+	 * @param  integer    $code        The error code for the exception
+	 */
+	public function __construct(/**
+	 * The alias of the main ORM model this exception was created for
+	 */
+		protected $_alias,
+		Validation $object,
+		$message = 'Failed to validate array',
+		array $values = null,
+		$code = 0,
+		Exception $previous = null
+	) {
 		$this->_objects['_object'] = $object;
 		$this->_objects['_has_many'] = false;
 
@@ -122,16 +127,16 @@ class Kohana_ORM_Validation_Exception extends Kohana_Exception
 	}
 
 	/**
-     * Recursive method to fetch all the errors in this exception
-     *
-     * @param  string $alias     Alias to use for messages file
-     * @param  array  $array     Array of Validation objects to get errors from
-     * @param  string $directory Directory to load error messages from
-     * @param  mixed  $translate Translate the message
-     */
-    protected function generate_errors(string $alias, array $array, string $directory, $translate): array
+	 * Recursive method to fetch all the errors in this exception
+	 *
+	 * @param  string $alias     Alias to use for messages file
+	 * @param  array  $array     Array of Validation objects to get errors from
+	 * @param  string $directory Directory to load error messages from
+	 * @param  mixed  $translate Translate the message
+	 */
+	protected function generate_errors(string $alias, array $array, string $directory, $translate): array
 	{
-		$errors = [];
+		$errors = array();
 
 		foreach ($array as $key => $object) {
 			if (is_array($object)) {

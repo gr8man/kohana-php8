@@ -30,17 +30,17 @@ class Kohana_Config_Group extends ArrayObject implements \Stringable
 	public function __construct(
 		protected Kohana_Config $_parent_instance,
 		protected string $_group_name,
-		array $config = []
+		array $config = array()
 	) {
 		parent::__construct($config, ArrayObject::ARRAY_AS_PROPS);
 	}
 
 	/**
-     * Return the current group in serialized form.
-     *
-     *     echo $config;
-     */
-    public function __toString(): string
+	 * Return the current group in serialized form.
+	 *
+	 *     echo $config;
+	 */
+	public function __toString(): string
 	{
 		return serialize($this->getArrayCopy());
 	}
@@ -96,19 +96,19 @@ class Kohana_Config_Group extends ArrayObject implements \Stringable
 	}
 
 	/**
-     * Overrides ArrayObject::offsetSet()
-     * This method is called when config is changed via
-     *
-     *     $config->var = 'asd';
-     *
-     *     // OR
-     *
-     *     $config['var'] = 'asd';
-     *
-     * @param mixed  $key   The key of the config item we're changing
-     * @param mixed  $value The new array value
-     */
-    public function offsetSet(mixed $key, mixed $value): void
+	 * Overrides ArrayObject::offsetSet()
+	 * This method is called when config is changed via
+	 *
+	 *     $config->var = 'asd';
+	 *
+	 *     // OR
+	 *
+	 *     $config['var'] = 'asd';
+	 *
+	 * @param mixed  $key   The key of the config item we're changing
+	 * @param mixed  $value The new array value
+	 */
+	public function offsetSet(mixed $key, mixed $value): void
 	{
 		$this->_parent_instance->_write_config($this->_group_name, $key, $value);
 

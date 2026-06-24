@@ -22,9 +22,9 @@ class Kohana_Session_Native extends Session
 	}
 
 	/**
-     * @param   string  $id  session id
-     */
-    protected function _read($id = null): null
+	 * @param   string  $id  session id
+	 */
+	protected function _read($id = null): null
 	{
 		/**
 		 * session_set_cookie_params will override php ini settings

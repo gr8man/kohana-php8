@@ -19,11 +19,11 @@ class Kohana_Kodoc
 	public static $regex_class_member = '((\w++)(?:::(\$?\w++))?(?:\(\))?)';
 
 	/**
-     * Make a class#member API link using an array of matches from [Kodoc::$regex_class_member]
-     *
-     * @param   array   $matches    array( 1 => link text, 2 => class name, [3 => member name] )
-     */
-    public static function link_class_member(array $matches): string
+	 * Make a class#member API link using an array of matches from [Kodoc::$regex_class_member]
+	 *
+	 * @param   array   $matches    array( 1 => link text, 2 => class name, [3 => member name] )
+	 */
+	public static function link_class_member(array $matches): string
 	{
 		$link = $matches[1];
 		$class = $matches[2];
@@ -40,7 +40,7 @@ class Kohana_Kodoc
 			}
 		}
 
-		return HTML::anchor(Route::get('docs/api')->uri(['class' => $class]).$member, $link, null, null, true);
+		return HTML::anchor(Route::get('docs/api')->uri(array('class' => $class)).$member, $link, null, null, true);
 	}
 
 	public static function factory($class): \Kodoc_Class
@@ -59,7 +59,7 @@ class Kohana_Kodoc
 
 		ksort($classes);
 
-		$menu = [];
+		$menu = array();
 
 		$route = Route::get('docs/api');
 
@@ -75,7 +75,7 @@ class Kohana_Kodoc
 				continue;
 			}
 
-			$link = HTML::anchor($route->uri(['class' => $class->class->name]), $class->class->name);
+			$link = HTML::anchor($route->uri(array('class' => $class->class->name)), $class->class->name);
 
 			if (isset($class->tags['package'])) {
 				foreach ($class->tags['package'] as $package) {
@@ -111,7 +111,7 @@ class Kohana_Kodoc
 			$list = Kohana::list_files('classes');
 		}
 
-		$classes = [];
+		$classes = array();
 
 		// This will be used a lot!
 		$ext_length = strlen(EXT);
@@ -134,19 +134,19 @@ class Kohana_Kodoc
 	}
 
 	/**
-     * Get all classes and methods of files in a list.
-     *
-     * >  I personally don't like this as it was used on the index page.  Way too much stuff on one page.  It has potential for a package index page though.
-     * >  For example:  class_methods( Kohana::list_files('classes/sprig') ) could make a nice index page for the sprig package in the api browser
-     * >     ~bluehawk
-     *
-     * @return array<string, list>
-     */
-    public static function class_methods(array $list = null): array
+	 * Get all classes and methods of files in a list.
+	 *
+	 * >  I personally don't like this as it was used on the index page.  Way too much stuff on one page.  It has potential for a package index page though.
+	 * >  For example:  class_methods( Kohana::list_files('classes/sprig') ) could make a nice index page for the sprig package in the api browser
+	 * >     ~bluehawk
+	 *
+	 * @return array<string, list>
+	 */
+	public static function class_methods(array $list = null): array
 	{
 		$list = Kodoc::classes($list);
 
-		$classes = [];
+		$classes = array();
 
 		foreach ($list as $class) {
 			// Skip transparent extension classes
@@ -156,7 +156,7 @@ class Kohana_Kodoc
 
 			$_class = new ReflectionClass($class);
 
-			$methods = [];
+			$methods = array();
 
 			foreach ($_class->getMethods() as $_method) {
 				$declares = $_method->getDeclaringClass()->name;
@@ -207,13 +207,13 @@ class Kohana_Kodoc
 
 			if (preg_match('/^(\w+)\W(.*)$/D', $text, $matches)) {
 				return HTML::anchor(
-					$route->uri(['class' => $matches[1]]),
+					$route->uri(array('class' => $matches[1])),
 					$matches[1]
 				).' '.$matches[2];
 			}
 
 			return HTML::anchor(
-				$route->uri(['class' => $text]),
+				$route->uri(array('class' => $text)),
 				$text
 			);
 		} elseif ($tag === 'see' or $tag === 'uses') {
@@ -238,13 +238,13 @@ class Kohana_Kodoc
 	public static function parse($comment, $html = true): array
 	{
 		// Normalize all new lines to \n
-		$comment = str_replace(["\r\n", "\n"], "\n", $comment);
+		$comment = str_replace(array("\r\n", "\n"), "\n", $comment);
 
 		// Split into lines while capturing without leading whitespace
 		preg_match_all('/^\s*\* ?(.*)\n/m', $comment, $lines);
 
 		// Tag content
-		$tags = [];
+		$tags = array();
 
 		/**
 		 * Process a tag and add it to $tags
@@ -303,7 +303,7 @@ class Kohana_Kodoc
 			$comment = Kodoc_Markdown::markdown($comment);
 		}
 
-		return [$comment, $tags];
+		return array($comment, $tags);
 	}
 
 	/**
@@ -350,7 +350,7 @@ class Kohana_Kodoc
 		}
 
 		// Get the package tags for this class (as an array)
-		$packages = Arr::get($class->tags, 'package', ['None']);
+		$packages = Arr::get($class->tags, 'package', array('None'));
 
 		$show_this = false;
 

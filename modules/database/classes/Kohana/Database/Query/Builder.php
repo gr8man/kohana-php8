@@ -22,7 +22,7 @@ abstract class Kohana_Database_Query_Builder extends Database_Query
 	 */
 	protected function _compile_join(Database $db, array $joins)
 	{
-		$statements = [];
+		$statements = array();
 
 		foreach ($joins as $join) {
 			// Compile each of the join statements
@@ -130,7 +130,7 @@ abstract class Kohana_Database_Query_Builder extends Database_Query
 	 */
 	protected function _compile_set(Database $db, array $values)
 	{
-		$set = [];
+		$set = array();
 		foreach ($values as $group) {
 			// Split the set
 			[$column, $value] = $group;
@@ -150,14 +150,14 @@ abstract class Kohana_Database_Query_Builder extends Database_Query
 	}
 
 	/**
-     * Compiles an array of GROUP BY columns into an SQL partial.
-     *
-     * @param   object  $db       Database instance
-     * @return  string
-     */
-    protected function _compile_group_by(Database $db, array $columns)
+	 * Compiles an array of GROUP BY columns into an SQL partial.
+	 *
+	 * @param   object  $db       Database instance
+	 * @return  string
+	 */
+	protected function _compile_group_by(Database $db, array $columns)
 	{
-		$group = [];
+		$group = array();
 
 		foreach ($columns as $column) {
 			if (is_array($column)) {
@@ -183,7 +183,7 @@ abstract class Kohana_Database_Query_Builder extends Database_Query
 	 */
 	protected function _compile_order_by(Database $db, array $columns)
 	{
-		$sort = [];
+		$sort = array();
 		foreach ($columns as $group) {
 			[$column, $direction] = $group;
 
@@ -201,7 +201,7 @@ abstract class Kohana_Database_Query_Builder extends Database_Query
 				$direction_upper = strtoupper(trim((string) $direction));
 
 				// Allow 'ASC', 'DESC', 'RAND()', 'RANDOM()' (case-insensitive)
-				if (! in_array($direction_upper, ['ASC', 'DESC', 'RAND()', 'RANDOM()'], true)) {
+				if (! in_array($direction_upper, array('ASC', 'DESC', 'RAND()', 'RANDOM()'), true)) {
 					// Reject invalid directions - default to ASC
 					$direction = ' ASC';
 				} else {

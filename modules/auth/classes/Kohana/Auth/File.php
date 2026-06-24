@@ -19,12 +19,12 @@ class Kohana_Auth_File extends Auth
 	/**
 	 * Constructor loads the user list into the class.
 	 */
-	public function __construct($config = [])
+	public function __construct($config = array())
 	{
 		parent::__construct($config);
 
 		// Load user list
-		$this->_users = Arr::get($config, 'users', []);
+		$this->_users = Arr::get($config, 'users', array());
 	}
 
 	/**
@@ -82,7 +82,7 @@ class Kohana_Auth_File extends Auth
 	 * @return  boolean
 	 */
 	#[\Override]
-    public function check_password($password, $hash = null)
+	public function check_password($password, $hash = null)
 	{
 		$username = $this->get_user();
 

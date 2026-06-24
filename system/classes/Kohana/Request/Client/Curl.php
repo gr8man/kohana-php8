@@ -16,15 +16,15 @@ defined('SYSPATH') or die('No direct script access.');
 class Kohana_Request_Client_Curl extends Request_Client_External
 {
 	/**
-     * Sends the HTTP message [Request] to a remote server and processes
-     * the response.
-     *
-     * @param   Request   $request  request to send
-     * @param   Response  $request  response to send
-     */
-    public function _send_message(Request $request, Response $response): Response
+	 * Sends the HTTP message [Request] to a remote server and processes
+	 * the response.
+	 *
+	 * @param   Request   $request  request to send
+	 * @param   Response  $request  response to send
+	 */
+	public function _send_message(Request $request, Response $response): Response
 	{
-		$options = [];
+		$options = array();
 
 		// Set the request method
 		$options = $this->_set_curl_request_method($request, $options);
@@ -40,7 +40,7 @@ class Kohana_Request_Client_Curl extends Request_Client_External
 
 		// Process headers
 		if ($headers = $request->headers()) {
-			$http_headers = [];
+			$http_headers = array();
 
 			foreach ($headers as $key => $value) {
 				$http_headers[] = $key.': '.$value;
@@ -58,7 +58,7 @@ class Kohana_Request_Client_Curl extends Request_Client_External
 		$response_header = $response->headers();
 
 		// Implement the standard parsing parameters
-		$options[CURLOPT_HEADERFUNCTION]        = [$response_header, 'parse_header_string'];
+		$options[CURLOPT_HEADERFUNCTION]        = array($response_header, 'parse_header_string');
 		$this->_options[CURLOPT_RETURNTRANSFER] = true;
 		$this->_options[CURLOPT_HEADER]         = false;
 
@@ -78,7 +78,7 @@ class Kohana_Request_Client_Curl extends Request_Client_External
 		if (! curl_setopt_array($curl, $options)) {
 			throw new Request_Exception(
 				'Failed to set CURL options, check CURL documentation: :url',
-				[':url' => 'http://php.net/curl_setopt_array']
+				array(':url' => 'http://php.net/curl_setopt_array')
 			);
 		}
 
@@ -98,7 +98,7 @@ class Kohana_Request_Client_Curl extends Request_Client_External
 		if (isset($error)) {
 			throw new Request_Exception(
 				'Error fetching remote :url [ status :code ] :error',
-				[':url' => $request->url(), ':code' => $code, ':error' => $error]
+				array(':url' => $request->url(), ':code' => $code, ':error' => $error)
 			);
 		}
 
@@ -109,10 +109,10 @@ class Kohana_Request_Client_Curl extends Request_Client_External
 	}
 
 	/**
-     * Sets the appropriate curl request options. Uses the responding option
-     * for POST or CURLOPT_CUSTOMREQUEST otherwise
-     */
-    public function _set_curl_request_method(Request $request, array $options): array
+	 * Sets the appropriate curl request options. Uses the responding option
+	 * for POST or CURLOPT_CUSTOMREQUEST otherwise
+	 */
+	public function _set_curl_request_method(Request $request, array $options): array
 	{
 		switch ($request->method()) {
 			case Request::POST:

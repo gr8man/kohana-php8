@@ -14,9 +14,9 @@ defined('SYSPATH') or die('No direct script access.');
 class Task_Help extends Minion_Task
 {
 	/**
-     * Generates a help list for all tasks
-     */
-    protected function _execute(array $params)
+	 * Generates a help list for all tasks
+	 */
+	protected function _execute(array $params)
 	{
 		$tasks = $this->_compile_task_list(Kohana::list_files('classes/Task'));
 

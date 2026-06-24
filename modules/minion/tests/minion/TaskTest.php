@@ -17,15 +17,15 @@ declare(strict_types=1);
 class Minion_TaskTest extends Kohana_Unittest_TestCase
 {
 	/**
-     * Provides test data for test_convert_task_to_class_name()
-     */
-    public function provider_convert_task_to_class_name(): array
+	 * Provides test data for test_convert_task_to_class_name()
+	 */
+	public function provider_convert_task_to_class_name(): array
 	{
-		return [
-			['Task_Db_Migrate', 'db:migrate'],
-			['Task_Db_Status',  'db:status'],
-			['', ''],
-		];
+		return array(
+			array('Task_Db_Migrate', 'db:migrate'),
+			array('Task_Db_Status',  'db:status'),
+			array('', ''),
+		);
 	}
 
 	/**
@@ -43,13 +43,13 @@ class Minion_TaskTest extends Kohana_Unittest_TestCase
 	}
 
 	/**
-     * Provides test data for test_convert_class_to_task()
-     */
-    public function provider_convert_class_to_task(): array
+	 * Provides test data for test_convert_class_to_task()
+	 */
+	public function provider_convert_class_to_task(): array
 	{
-		return [
-			['db:migrate', 'Task_Db_Migrate'],
-		];
+		return array(
+			array('db:migrate', 'Task_Db_Migrate'),
+		);
 	}
 
 	/**

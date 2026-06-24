@@ -31,15 +31,15 @@ abstract class Kohana_HTTP_Exception extends Kohana_Exception
 	protected $_request;
 
 	/**
-     * Creates a new translated exception.
-     *
-     *     throw new Kohana_Exception('Something went terrible wrong, :user',
-     *         array(':user' => $user));
-     *
-     * @param   string  $message    status message, custom content to display with error
-     * @param   array   $variables  translation variables
-     */
-    public function __construct($message = null, array $variables = null, Exception $previous = null)
+	 * Creates a new translated exception.
+	 *
+	 *     throw new Kohana_Exception('Something went terrible wrong, :user',
+	 *         array(':user' => $user));
+	 *
+	 * @param   string  $message    status message, custom content to display with error
+	 * @param   array   $variables  translation variables
+	 */
+	public function __construct($message = null, array $variables = null, Exception $previous = null)
 	{
 		parent::__construct($message, $variables, $this->_code, $previous);
 	}

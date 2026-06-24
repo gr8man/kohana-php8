@@ -95,7 +95,7 @@ class Kohana_Date
 		// Always integer
 		$step = (int) $step;
 
-		$seconds = [];
+		$seconds = array();
 
 		for ($i = $start; $i < $end; $i += $step) {
 			$seconds[$i] = sprintf('%02d', $i);
@@ -139,14 +139,14 @@ class Kohana_Date
 		// Default values
 		$step = (int) $step;
 		$long = (bool) $long;
-		$hours = [];
+		$hours = array();
 
 		// Set the default start if none was specified.
 		if ($start === null) {
 			$start = ($long === false) ? 1 : 0;
 		}
 
-		$hours = [];
+		$hours = array();
 
 		// 24-hour time has 24 hours, instead of 12
 		$size = ($long === true) ? 23 : 12;
@@ -159,14 +159,14 @@ class Kohana_Date
 	}
 
 	/**
-     * Returns AM or PM, based on a given hour (in 24 hour format).
-     *
-     *     $type = Date::ampm(12); // PM
-     *     $type = Date::ampm(1);  // AM
-     *
-     * @param   integer $hour   number of the hour
-     */
-    public static function ampm($hour): string
+	 * Returns AM or PM, based on a given hour (in 24 hour format).
+	 *
+	 *     $type = Date::ampm(12); // PM
+	 *     $type = Date::ampm(1);  // AM
+	 *
+	 * @param   integer $hour   number of the hour
+	 */
+	public static function ampm($hour): string
 	{
 		// Always integer
 		$hour = (int) $hour;
@@ -175,14 +175,14 @@ class Kohana_Date
 	}
 
 	/**
-     * Adjusts a non-24-hour number into a 24-hour number.
-     *
-     *     $hour = Date::adjust(3, 'pm'); // 15
-     *
-     * @param   integer $hour   hour to adjust
-     * @param   string  $ampm   AM or PM
-     */
-    public static function adjust($hour, $ampm): string
+	 * Adjusts a non-24-hour number into a 24-hour number.
+	 *
+	 *     $hour = Date::adjust(3, 'pm'); // 15
+	 *
+	 * @param   integer $hour   hour to adjust
+	 * @param   string  $ampm   AM or PM
+	 */
+	public static function adjust($hour, $ampm): string
 	{
 		$hour = (int) $hour;
 		$ampm = strtolower($ampm);
@@ -228,7 +228,7 @@ class Kohana_Date
 
 		// We use caching for months, because time functions are used
 		if (empty($months[$year][$month])) {
-			$months[$year][$month] = [];
+			$months[$year][$month] = array();
 
 			// Use date to find the number of days in the given month
 			$total = date('t', mktime(1, 0, 0, $month, 1, $year)) + 1;
@@ -266,7 +266,7 @@ class Kohana_Date
 	 */
 	public static function months($format = null)
 	{
-		$months = [];
+		$months = array();
 
 		if ($format === Date::MONTHS_LONG or $format === Date::MONTHS_SHORT) {
 			$date_format = ($format === Date::MONTHS_LONG) ? 'F' : 'M';
@@ -281,22 +281,22 @@ class Kohana_Date
 	}
 
 	/**
-     * Returns an array of years between a starting and ending year. By default,
-     * the the current year - 5 and current year + 5 will be used. Typically used
-     * as a shortcut for generating a list that can be used in a form.
-     *
-     *     $years = Date::years(2000, 2010); // 2000, 2001, ..., 2009, 2010
-     *
-     * @param   integer $start  starting year (default is current year - 5)
-     * @param   integer $end    ending year (default is current year + 5)
-     */
-    public static function years($start = false, $end = false): array
+	 * Returns an array of years between a starting and ending year. By default,
+	 * the the current year - 5 and current year + 5 will be used. Typically used
+	 * as a shortcut for generating a list that can be used in a form.
+	 *
+	 *     $years = Date::years(2000, 2010); // 2000, 2001, ..., 2009, 2010
+	 *
+	 * @param   integer $start  starting year (default is current year - 5)
+	 * @param   integer $end    ending year (default is current year + 5)
+	 */
+	public static function years($start = false, $end = false): array
 	{
 		// Default values
 		$start = ($start === false) ? (date('Y') - 5) : (int) $start;
 		$end   = ($end   === false) ? (date('Y') + 5) : (int) $end;
 
-		$years = [];
+		$years = array();
 
 		for ($i = $start; $i <= $end; $i++) {
 			$years[$i] = (string) $i;
@@ -385,20 +385,20 @@ class Kohana_Date
 	}
 
 	/**
-     * Returns the difference between a time and now in a "fuzzy" way.
-     * Displaying a fuzzy time instead of a date is usually faster to read and understand.
-     *
-     *     $span = Date::fuzzy_span(time() - 10); // "moments ago"
-     *     $span = Date::fuzzy_span(time() + 20); // "in moments"
-     *
-     * A second parameter is available to manually set the "local" timestamp,
-     * however this parameter shouldn't be needed in normal usage and is only
-     * included for unit tests
-     *
-     * @param   integer $timestamp          "remote" timestamp
-     * @param   integer $local_timestamp    "local" timestamp, defaults to time()
-     */
-    public static function fuzzy_span($timestamp, $local_timestamp = null): string
+	 * Returns the difference between a time and now in a "fuzzy" way.
+	 * Displaying a fuzzy time instead of a date is usually faster to read and understand.
+	 *
+	 *     $span = Date::fuzzy_span(time() - 10); // "moments ago"
+	 *     $span = Date::fuzzy_span(time() + 20); // "in moments"
+	 *
+	 * A second parameter is available to manually set the "local" timestamp,
+	 * however this parameter shouldn't be needed in normal usage and is only
+	 * included for unit tests
+	 *
+	 * @param   integer $timestamp          "remote" timestamp
+	 * @param   integer $local_timestamp    "local" timestamp, defaults to time()
+	 */
+	public static function fuzzy_span($timestamp, $local_timestamp = null): string
 	{
 		$local_timestamp = ($local_timestamp === null) ? time() : (int) $local_timestamp;
 
@@ -457,15 +457,15 @@ class Kohana_Date
 	}
 
 	/**
-     * Converts a UNIX timestamp to DOS format. There are very few cases where
-     * this is needed, but some binary formats use it (eg: zip files.)
-     * Converting the other direction is done using {@link Date::dos2unix}.
-     *
-     *     $dos = Date::unix2dos($unix);
-     *
-     * @param   integer $timestamp  UNIX timestamp
-     */
-    public static function unix2dos($timestamp = false): int
+	 * Converts a UNIX timestamp to DOS format. There are very few cases where
+	 * this is needed, but some binary formats use it (eg: zip files.)
+	 * Converting the other direction is done using {@link Date::dos2unix}.
+	 *
+	 *     $dos = Date::unix2dos($unix);
+	 *
+	 * @param   integer $timestamp  UNIX timestamp
+	 */
+	public static function unix2dos($timestamp = false): int
 	{
 		$timestamp = ($timestamp === false) ? getdate() : getdate($timestamp);
 
@@ -505,16 +505,16 @@ class Kohana_Date
 	}
 
 	/**
-     * Returns a date/time string with the specified timestamp format
-     *
-     *     $time = Date::formatted_time('5 minutes ago');
-     *
-     * @link    http://www.php.net/manual/datetime.construct
-     * @param   string  $datetime_str       datetime string
-     * @param   string  $timestamp_format   timestamp format
-     * @param   string  $timezone           timezone identifier
-     */
-    public static function formatted_time($datetime_str = 'now', $timestamp_format = null, $timezone = null): string
+	 * Returns a date/time string with the specified timestamp format
+	 *
+	 *     $time = Date::formatted_time('5 minutes ago');
+	 *
+	 * @link    http://www.php.net/manual/datetime.construct
+	 * @param   string  $datetime_str       datetime string
+	 * @param   string  $timestamp_format   timestamp format
+	 * @param   string  $timezone           timezone identifier
+	 */
+	public static function formatted_time($datetime_str = 'now', $timestamp_format = null, $timezone = null): string
 	{
 		$timestamp_format = ($timestamp_format == null) ? Date::$timestamp_format : $timestamp_format;
 		$timezone ??= Date::$timezone;

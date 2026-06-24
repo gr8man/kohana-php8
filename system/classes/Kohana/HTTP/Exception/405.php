@@ -27,12 +27,12 @@ class Kohana_HTTP_Exception_405 extends HTTP_Exception_Expected
 	}
 
 	/**
-     * Validate this exception contains everything needed to continue.
-     *
-     * @throws Kohana_Exception
-     */
-    #[\Override]
-    public function check(): bool
+	 * Validate this exception contains everything needed to continue.
+	 *
+	 * @throws Kohana_Exception
+	 */
+	#[\Override]
+	public function check(): bool
 	{
 		if ($location = $this->headers('allow') === null) {
 			throw new Kohana_Exception('A list of allowed methods must be specified');

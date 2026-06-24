@@ -17,18 +17,18 @@ class Kohana_Database_Query_Builder_Insert extends Database_Query_Builder
 	protected $_table;
 
 	// (...)
-	protected $_columns = [];
+	protected $_columns = array();
 
 	// VALUES (...)
-	protected $_values = [];
+	protected $_values = array();
 
 	/**
-     * Set the table and columns for an insert.
-     *
-     * @param   mixed  $table    table name or array($table, $alias) or object
-     * @param   array  $columns  column names
-     */
-    public function __construct($table = null, array $columns = null)
+	 * Set the table and columns for an insert.
+	 *
+	 * @param   mixed  $table    table name or array($table, $alias) or object
+	 * @param   array  $columns  column names
+	 */
+	public function __construct($table = null, array $columns = null)
 	{
 		if ($table) {
 			// Set the inital table name
@@ -121,7 +121,7 @@ class Kohana_Database_Query_Builder_Insert extends Database_Query_Builder
 	 * @return  string
 	 */
 	#[\Override]
-    public function compile($db = null)
+	public function compile($db = null)
 	{
 		if (! is_object($db)) {
 			// Get the database instance
@@ -132,13 +132,13 @@ class Kohana_Database_Query_Builder_Insert extends Database_Query_Builder
 		$query = 'INSERT INTO '.$db->quote_table($this->_table);
 
 		// Add the column names
-		$query .= ' ('.implode(', ', array_map([$db, 'quote_column'], $this->_columns)).') ';
+		$query .= ' ('.implode(', ', array_map(array($db, 'quote_column'), $this->_columns)).') ';
 
 		if (is_array($this->_values)) {
 			// Callback for quoting values
-			$quote = [$db, 'quote'];
+			$quote = array($db, 'quote');
 
-			$groups = [];
+			$groups = array();
 			foreach ($this->_values as $group) {
 				foreach ($group as $offset => $value) {
 					if ((is_string($value) and array_key_exists($value, $this->_parameters)) === false) {
@@ -168,9 +168,9 @@ class Kohana_Database_Query_Builder_Insert extends Database_Query_Builder
 		$this->_table = null;
 
 		$this->_columns =
-		$this->_values  = [];
+		$this->_values  = array();
 
-		$this->_parameters = [];
+		$this->_parameters = array();
 
 		$this->_sql = null;
 

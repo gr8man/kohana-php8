@@ -15,7 +15,7 @@ class Bench_ValidURL extends Codebench
 
 	public $loops = 1000;
 
-	public $subjects = [
+	public $subjects = array(
 		// Valid
 		'http://google.com',
 		'http://google.com/',
@@ -44,7 +44,7 @@ class Bench_ValidURL extends Codebench
 		'http://127.0.0.1.1',
 		'http://user:@127.0.0.1',
 		"http://finalnewline.com\n",
-	];
+	);
 
 	public function bench_filter_var($url): bool
 	{

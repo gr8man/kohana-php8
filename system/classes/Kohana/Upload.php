@@ -78,7 +78,7 @@ class Kohana_Upload
 		if (! is_dir($directory) or ! is_writable(realpath($directory))) {
 			throw new Kohana_Exception(
 				'Directory :dir must be writable',
-				[':dir' => Debug::path($directory)]
+				array(':dir' => Debug::path($directory))
 			);
 		}
 
@@ -99,15 +99,15 @@ class Kohana_Upload
 	}
 
 	/**
-     * Tests if upload data is valid, even if no file was uploaded. If you
-     * _do_ require a file to be uploaded, add the [Upload::not_empty] rule
-     * before this rule.
-     *
-     *     $array->rule('file', 'Upload::valid')
-     *
-     * @param   array   $file   $_FILES item
-     */
-    public static function valid(array $file): bool
+	 * Tests if upload data is valid, even if no file was uploaded. If you
+	 * _do_ require a file to be uploaded, add the [Upload::not_empty] rule
+	 * before this rule.
+	 *
+	 *     $array->rule('file', 'Upload::valid')
+	 *
+	 * @param   array   $file   $_FILES item
+	 */
+	public static function valid(array $file): bool
 	{
 		return (isset($file['error'])
 			and isset($file['name'])
@@ -117,13 +117,13 @@ class Kohana_Upload
 	}
 
 	/**
-     * Tests if a successful upload has been made.
-     *
-     *     $array->rule('file', 'Upload::not_empty');
-     *
-     * @param   array   $file   $_FILES item
-     */
-    public static function not_empty(array $file): bool
+	 * Tests if a successful upload has been made.
+	 *
+	 *     $array->rule('file', 'Upload::not_empty');
+	 *
+	 * @param   array   $file   $_FILES item
+	 */
+	public static function not_empty(array $file): bool
 	{
 		return (isset($file['error'])
 			and isset($file['tmp_name'])

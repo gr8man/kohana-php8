@@ -33,7 +33,7 @@ class Kohana_Debug
 		// Get all passed variables
 		$variables = func_get_args();
 
-		$output = [];
+		$output = array();
 		foreach ($variables as $var) {
 			$output[] = Debug::_dump($var, 1024);
 		}
@@ -106,7 +106,7 @@ class Kohana_Debug
 
 			return '<small>string</small><span>('.strlen((string) $var).')</span> "'.$str.'"';
 		} elseif (is_array($var)) {
-			$output = [];
+			$output = array();
 
 			// Indentation for this variable
 			$space = str_repeat($s = '    ', $level);
@@ -149,7 +149,7 @@ class Kohana_Debug
 			// Copy the object as an array
 			$array = (array) $var;
 
-			$output = [];
+			$output = array();
 
 			// Indentation for this variable
 			$space = str_repeat($s = '    ', $level);
@@ -157,7 +157,7 @@ class Kohana_Debug
 			$hash = spl_object_hash($var);
 
 			// Objects that are being dumped
-			static $objects = [];
+			static $objects = array();
 
 			if (empty($var)) {
 				// Do nothing
@@ -245,7 +245,7 @@ class Kohana_Debug
 		$line = 0;
 
 		// Set the reading range
-		$range = ['start' => $line_number - $padding, 'end' => $line_number + $padding];
+		$range = array('start' => $line_number - $padding, 'end' => $line_number + $padding);
 
 		// Set the zero-padding amount for line numbers
 		$format = '% '.strlen((string) $range['end']).'d';
@@ -283,14 +283,14 @@ class Kohana_Debug
 	}
 
 	/**
-     * Returns an array of HTML strings that represent each step in the backtrace.
-     *
-     *     // Displays the entire current backtrace
-     *     echo implode('<br/>', Debug::trace());
-     *
-     * @return  string
-     */
-    public static function trace(array $trace = null): array
+	 * Returns an array of HTML strings that represent each step in the backtrace.
+	 *
+	 *     // Displays the entire current backtrace
+	 *     echo implode('<br/>', Debug::trace());
+	 *
+	 * @return  string
+	 */
+	public static function trace(array $trace = null): array
 	{
 		if ($trace === null) {
 			// Start a new trace
@@ -298,9 +298,9 @@ class Kohana_Debug
 		}
 
 		// Non-standard function calls
-		$statements = ['include', 'include_once', 'require', 'require_once'];
+		$statements = array('include', 'include_once', 'require', 'require_once');
 
-		$output = [];
+		$output = array();
 		foreach ($trace as $step) {
 			if (! isset($step['function'])) {
 				// Invalid trace step
@@ -326,10 +326,10 @@ class Kohana_Debug
 			if (in_array((string) $step['function'], $statements)) {
 				if (empty($step['args'])) {
 					// No arguments
-					$args = [];
+					$args = array();
 				} else {
 					// Sanitize the file path
-					$args = [$step['args'][0]];
+					$args = array($step['args'][0]);
 				}
 			} elseif (isset($step['args'])) {
 				if (! function_exists($step['function']) or str_contains($step['function'], '{closure}')) {
@@ -350,7 +350,7 @@ class Kohana_Debug
 					$params = $reflection->getParameters();
 				}
 
-				$args = [];
+				$args = array();
 
 				foreach ($step['args'] as $i => $arg) {
 					if (isset($params[$i])) {
@@ -368,13 +368,13 @@ class Kohana_Debug
 				$function = $step['class'].$step['type'].$step['function'];
 			}
 
-			$output[] = [
+			$output[] = array(
 				'function' => $function,
 				'args'     => $args ?? null,
 				'file'     => $file ?? null,
 				'line'     => $line ?? null,
 				'source'   => $source ?? null,
-			];
+			);
 
 			unset($function, $args, $file, $line, $source);
 		}

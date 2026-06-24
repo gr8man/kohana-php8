@@ -23,7 +23,7 @@ class Kohana_Num
 	/**
 	 * @var  array  Valid byte units => power of 2 that defines the unit's size
 	 */
-	public static $byte_units = [
+	public static $byte_units = array(
 		'B'   => 0,
 		'K'   => 10,
 		'Ki'  => 10,
@@ -57,50 +57,50 @@ class Kohana_Num
 		'Yi'  => 80,
 		'YB'  => 80,
 		'YiB' => 80,
-	];
+	);
 
 	/**
-     * Returns the English ordinal suffix (th, st, nd, etc) of a number.
-     *
-     *     echo 2, Num::ordinal(2);   // "2nd"
-     *     echo 10, Num::ordinal(10); // "10th"
-     *     echo 33, Num::ordinal(33); // "33rd"
-     *
-     * @param   integer $number
-     */
-    public static function ordinal($number): string
+	 * Returns the English ordinal suffix (th, st, nd, etc) of a number.
+	 *
+	 *     echo 2, Num::ordinal(2);   // "2nd"
+	 *     echo 10, Num::ordinal(10); // "10th"
+	 *     echo 33, Num::ordinal(33); // "33rd"
+	 *
+	 * @param   integer $number
+	 */
+	public static function ordinal($number): string
 	{
 		if ($number % 100 > 10 and $number % 100 < 14) {
 			return 'th';
 		}
 
 		return match ($number % 10) {
-            1 => 'st',
-            2 => 'nd',
-            3 => 'rd',
-            default => 'th',
-        };
+			1 => 'st',
+			2 => 'nd',
+			3 => 'rd',
+			default => 'th',
+		};
 	}
 
 	/**
-     * Locale-aware number and monetary formatting.
-     *
-     *     // In English, "1,200.05"
-     *     // In Spanish, "1200,05"
-     *     // In Portuguese, "1 200,05"
-     *     echo Num::format(1200.05, 2);
-     *
-     *     // In English, "1,200.05"
-     *     // In Spanish, "1.200,05"
-     *     // In Portuguese, "1.200.05"
-     *     echo Num::format(1200.05, 2, TRUE);
-     *
-     * @param   float   $number     number to format
-     * @param   integer $places     decimal places
-     * @param   boolean $monetary   monetary formatting?
-     * @since   3.0.2
-     */
-    public static function format($number, $places, $monetary = false): string
+	 * Locale-aware number and monetary formatting.
+	 *
+	 *     // In English, "1,200.05"
+	 *     // In Spanish, "1200,05"
+	 *     // In Portuguese, "1 200,05"
+	 *     echo Num::format(1200.05, 2);
+	 *
+	 *     // In English, "1,200.05"
+	 *     // In Spanish, "1.200,05"
+	 *     // In Portuguese, "1.200.05"
+	 *     echo Num::format(1200.05, 2, TRUE);
+	 *
+	 * @param   float   $number     number to format
+	 * @param   integer $places     decimal places
+	 * @param   boolean $monetary   monetary formatting?
+	 * @since   3.0.2
+	 */
+	public static function format($number, $places, $monetary = false): string
 	{
 		$info = localeconv();
 
@@ -193,9 +193,9 @@ class Kohana_Num
 
 		// Verify the size format and store the matching parts
 		if (! preg_match($pattern, $size, $matches)) {
-			throw new Kohana_Exception('The byte unit size, ":size", is improperly formatted.', [
+			throw new Kohana_Exception('The byte unit size, ":size", is improperly formatted.', array(
 				':size' => $size,
-			]);
+			));
 		}
 
 		// Find the float value of the size

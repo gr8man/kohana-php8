@@ -34,11 +34,11 @@ class Kohana_Image_Imagick extends Image
 	}
 
 	/**
-     * Runs [Image_Imagick::check] and loads the image.
-     *
-     * @throws  Kohana_Exception
-     */
-    public function __construct($file)
+	 * Runs [Image_Imagick::check] and loads the image.
+	 *
+	 * @throws  Kohana_Exception
+	 */
+	public function __construct($file)
 	{
 		if (! Image_Imagick::$_checked) {
 			// Run the install check
@@ -57,9 +57,9 @@ class Kohana_Image_Imagick extends Image
 	}
 
 	/**
-     * Destroys the loaded image to free up resources.
-     */
-    public function __destruct()
+	 * Destroys the loaded image to free up resources.
+	 */
+	public function __destruct()
 	{
 		$this->im->clear();
 		$this->im->destroy();
@@ -141,7 +141,7 @@ class Kohana_Image_Imagick extends Image
 		$reflection->setImagePage($this->width, $height, 0, 0);
 
 		// Select the fade direction
-		$direction = ['transparent', 'black'];
+		$direction = array('transparent', 'black');
 
 		if ($fade_in) {
 			// Change the direction of the fade
@@ -296,15 +296,15 @@ class Kohana_Image_Imagick extends Image
 		$format = strtolower($extension);
 
 		$type = match ($format) {
-            'jpg', 'jpe', 'jpeg' => IMAGETYPE_JPEG,
-            'gif' => IMAGETYPE_GIF,
-            'png' => IMAGETYPE_PNG,
-            default => throw new Kohana_Exception(
-					'Installed ImageMagick does not support :type images',
-					[':type' => $extension]
-				),
-        };
+			'jpg', 'jpe', 'jpeg' => IMAGETYPE_JPEG,
+			'gif' => IMAGETYPE_GIF,
+			'png' => IMAGETYPE_PNG,
+			default => throw new Kohana_Exception(
+				'Installed ImageMagick does not support :type images',
+				array(':type' => $extension)
+			),
+		};
 
-		return [$format, $type];
+		return array($format, $type);
 	}
 } // End Kohana_Image_Imagick

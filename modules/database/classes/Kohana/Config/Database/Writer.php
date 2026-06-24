@@ -23,7 +23,7 @@ defined('SYSPATH') or die('No direct script access.');
  */
 class Kohana_Config_Database_Writer extends Config_Database_Reader implements Kohana_Config_Writer
 {
-	protected $_loaded_keys = [];
+	protected $_loaded_keys = array();
 
 	/**
 	 * Tries to load the specificed configuration group
@@ -34,7 +34,7 @@ class Kohana_Config_Database_Writer extends Config_Database_Reader implements Ko
 	 * @return boolean|array
 	 */
 	#[\Override]
-    public function load($group)
+	public function load($group)
 	{
 		$config = parent::load($group);
 
@@ -46,16 +46,16 @@ class Kohana_Config_Database_Writer extends Config_Database_Reader implements Ko
 	}
 
 	/**
-     * Writes the passed config for $group
-     *
-     * Returns chainable instance on success or throws
-     * Kohana_Config_Exception on failure
-     *
-     * @param string      $group  The config group
-     * @param string      $key    The config key to write to
-     * @param array       $config The configuration to write
-     */
-    public function write($group, $key, $config): bool
+	 * Writes the passed config for $group
+	 *
+	 * Returns chainable instance on success or throws
+	 * Kohana_Config_Exception on failure
+	 *
+	 * @param string      $group  The config group
+	 * @param string      $key    The config key to write to
+	 * @param array       $config The configuration to write
+	 */
+	public function write($group, $key, $config): bool
 	{
 		$config = serialize($config);
 
@@ -87,8 +87,8 @@ class Kohana_Config_Database_Writer extends Config_Database_Reader implements Ko
 	 */
 	protected function _insert($group, $key, $config): static
 	{
-		DB::insert($this->_table_name, ['group_name', 'config_key', 'config_value'])
-			->values([$group, $key, $config])
+		DB::insert($this->_table_name, array('group_name', 'config_key', 'config_value'))
+			->values(array($group, $key, $config))
 			->execute($this->_db_instance);
 
 		return $this;
@@ -105,7 +105,7 @@ class Kohana_Config_Database_Writer extends Config_Database_Reader implements Ko
 	protected function _update($group, $key, $config): static
 	{
 		DB::update($this->_table_name)
-			->set(['config_value' => $config])
+			->set(array('config_value' => $config))
 			->where('group_name', '=', $group)
 			->where('config_key', '=', $key)
 			->execute($this->_db_instance);

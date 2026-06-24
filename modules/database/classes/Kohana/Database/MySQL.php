@@ -21,7 +21,7 @@ class Kohana_Database_MySQL extends Database
 	}
 
 	#[\Override]
-    public function disconnect(): bool
+	public function disconnect(): bool
 	{
 		return true;
 	}

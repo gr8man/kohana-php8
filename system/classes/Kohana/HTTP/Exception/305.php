@@ -27,12 +27,12 @@ class Kohana_HTTP_Exception_305 extends HTTP_Exception_Expected
 	}
 
 	/**
-     * Validate this exception contains everything needed to continue.
-     *
-     * @throws Kohana_Exception
-     */
-    #[\Override]
-    public function check(): bool
+	 * Validate this exception contains everything needed to continue.
+	 *
+	 * @throws Kohana_Exception
+	 */
+	#[\Override]
+	public function check(): bool
 	{
 		if ($location = $this->headers('location') === null) {
 			throw new Kohana_Exception('A \'location\' must be specified for a redirect');

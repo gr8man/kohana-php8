@@ -17,19 +17,19 @@ class Kohana_Database_Query_Builder_Join extends Database_Query_Builder
 	protected $_type;
 
 	// ON ...
-	protected $_on = [];
+	protected $_on = array();
 
 	// USING ...
-	protected $_using = [];
+	protected $_using = array();
 
 	/**
-     * Creates a new JOIN statement for a table. Optionally, the type of JOIN
-     * can be specified as the second parameter.
-     *
-     * @param mixed $_table column name or array($column, $alias) or object
-     * @param   string  $type   type of JOIN: INNER, RIGHT, LEFT, etc
-     */
-    public function __construct(protected $_table, $type = null)
+	 * Creates a new JOIN statement for a table. Optionally, the type of JOIN
+	 * can be specified as the second parameter.
+	 *
+	 * @param mixed $_table column name or array($column, $alias) or object
+	 * @param   string  $type   type of JOIN: INNER, RIGHT, LEFT, etc
+	 */
+	public function __construct(protected $_table, $type = null)
 	{
 		if ($type !== null) {
 			// Set the JOIN type
@@ -51,7 +51,7 @@ class Kohana_Database_Query_Builder_Join extends Database_Query_Builder
 			throw new Kohana_Exception('JOIN ... ON ... cannot be combined with JOIN ... USING ...');
 		}
 
-		$this->_on[] = [$c1, $op, $c2];
+		$this->_on[] = array($c1, $op, $c2);
 
 		return $this;
 	}
@@ -76,12 +76,12 @@ class Kohana_Database_Query_Builder_Join extends Database_Query_Builder
 	}
 
 	/**
-     * Compile the SQL partial for a JOIN statement and return it.
-     *
-     * @param   mixed  $db  Database instance or name of instance
-     */
-    #[\Override]
-    public function compile($db = null): string
+	 * Compile the SQL partial for a JOIN statement and return it.
+	 *
+	 * @param   mixed  $db  Database instance or name of instance
+	 */
+	#[\Override]
+	public function compile($db = null): string
 	{
 		if (! is_object($db)) {
 			// Get the database instance
@@ -99,9 +99,9 @@ class Kohana_Database_Query_Builder_Join extends Database_Query_Builder
 
 		if (! empty($this->_using)) {
 			// Quote and concat the columns
-			$sql .= ' USING ('.implode(', ', array_map([$db, 'quote_column'], $this->_using)).')';
+			$sql .= ' USING ('.implode(', ', array_map(array($db, 'quote_column'), $this->_using)).')';
 		} else {
-			$conditions = [];
+			$conditions = array();
 			foreach ($this->_on as $condition) {
 				// Split the condition
 				[$c1, $op, $c2] = $condition;
@@ -127,7 +127,7 @@ class Kohana_Database_Query_Builder_Join extends Database_Query_Builder
 		$this->_type =
 		$this->_table = null;
 
-		$this->_on = [];
+		$this->_on = array();
 	}
 
 } // End Database_Query_Builder_Join

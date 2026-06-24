@@ -23,9 +23,9 @@ class Kohana_ImageTest extends PHPUnit_Framework_TestCase
 	}
 
 	/**
-     * Tests the Image::save() method for files that don't have extensions
-     */
-    public function test_save_without_extension(): void
+	 * Tests the Image::save() method for files that don't have extensions
+	 */
+	public function test_save_without_extension(): void
 	{
 		$image = Image::factory(MODPATH.'image/tests/test_data/test_image');
 		$this->assertTrue($image->save(Kohana::$cache_dir.'/test_image'));

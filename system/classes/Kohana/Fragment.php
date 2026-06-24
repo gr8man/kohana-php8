@@ -36,19 +36,19 @@ class Kohana_Fragment
 	/**
 	 * @var  array  list of buffer => cache key
 	 */
-	protected static $_caches = [];
+	protected static $_caches = array();
 
 	/**
-     * Generate the cache key name for a fragment.
-     *
-     *     $key = Fragment::_cache_key('footer', TRUE);
-     *
-     * @param   string  $name   fragment name
-     * @param   boolean $i18n   multilingual fragment support
-     * @uses    I18n::lang
-     * @since   3.0.4
-     */
-    protected static function _cache_key(string $name, $i18n = null): string
+	 * Generate the cache key name for a fragment.
+	 *
+	 *     $key = Fragment::_cache_key('footer', TRUE);
+	 *
+	 * @param   string  $name   fragment name
+	 * @param   boolean $i18n   multilingual fragment support
+	 * @uses    I18n::lang
+	 * @since   3.0.4
+	 */
+	protected static function _cache_key(string $name, $i18n = null): string
 	{
 		if ($i18n === null) {
 			// Use the default setting
@@ -63,19 +63,19 @@ class Kohana_Fragment
 	}
 
 	/**
-     * Load a fragment from cache and display it. Multiple fragments can
-     * be nested with different life times.
-     *
-     *     if ( ! Fragment::load('footer')) {
-     *         // Anything that is echo'ed here will be saved
-     *         Fragment::save();
-     *     }
-     *
-     * @param   string  $name       fragment name
-     * @param   integer $lifetime   fragment cache lifetime
-     * @param   boolean $i18n       multilingual fragment support
-     */
-    public static function load($name, $lifetime = null, $i18n = null): bool
+	 * Load a fragment from cache and display it. Multiple fragments can
+	 * be nested with different life times.
+	 *
+	 *     if ( ! Fragment::load('footer')) {
+	 *         // Anything that is echo'ed here will be saved
+	 *         Fragment::save();
+	 *     }
+	 *
+	 * @param   string  $name       fragment name
+	 * @param   integer $lifetime   fragment cache lifetime
+	 * @param   boolean $i18n       multilingual fragment support
+	 */
+	public static function load($name, $lifetime = null, $i18n = null): bool
 	{
 		// Set the cache lifetime
 		$lifetime = ($lifetime === null) ? Fragment::$lifetime : (int) $lifetime;
@@ -100,11 +100,11 @@ class Kohana_Fragment
 	}
 
 	/**
-     * Saves the currently open fragment in the cache.
-     *
-     *     Fragment::save();
-     */
-    public static function save(): void
+	 * Saves the currently open fragment in the cache.
+	 *
+	 *     Fragment::save();
+	 */
+	public static function save(): void
 	{
 		// Get the buffer level
 		$level = ob_get_level();
@@ -125,14 +125,14 @@ class Kohana_Fragment
 	}
 
 	/**
-     * Delete a cached fragment.
-     *
-     *     Fragment::delete($key);
-     *
-     * @param   string  $name   fragment name
-     * @param   boolean $i18n   multilingual fragment support
-     */
-    public static function delete($name, $i18n = null): void
+	 * Delete a cached fragment.
+	 *
+	 *     Fragment::delete($key);
+	 *
+	 * @param   string  $name   fragment name
+	 * @param   boolean $i18n   multilingual fragment support
+	 */
+	public static function delete($name, $i18n = null): void
 	{
 		// Invalid the cache
 		Kohana::cache(Fragment::_cache_key($name, $i18n), null, -3600);

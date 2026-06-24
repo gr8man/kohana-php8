@@ -22,15 +22,15 @@ abstract class Kohana_HTTP_Exception_Expected extends HTTP_Exception
 	protected $_response;
 
 	/**
-     * Creates a new translated exception.
-     *
-     *     throw new Kohana_Exception('Something went terrible wrong, :user',
-     *         array(':user' => $user));
-     *
-     * @param   string  $message    status message, custom content to display with error
-     * @param   array   $variables  translation variables
-     */
-    public function __construct($message = null, array $variables = null, Exception $previous = null)
+	 * Creates a new translated exception.
+	 *
+	 *     throw new Kohana_Exception('Something went terrible wrong, :user',
+	 *         array(':user' => $user));
+	 *
+	 * @param   string  $message    status message, custom content to display with error
+	 * @param   array   $variables  translation variables
+	 */
+	public function __construct($message = null, array $variables = null, Exception $previous = null)
 	{
 		parent::__construct($message, $variables, $previous);
 
@@ -76,7 +76,7 @@ abstract class Kohana_HTTP_Exception_Expected extends HTTP_Exception
 	 * @return Response
 	 */
 	#[\Override]
-    public function get_response()
+	public function get_response()
 	{
 		$this->check();
 
