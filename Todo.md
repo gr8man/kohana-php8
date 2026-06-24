@@ -42,11 +42,12 @@
     *   **NAPRAWIONO:** `Debug.php` line 304 - `strlen()` oczekuje stringa, ale otrzymuje int.
     *   **NAPRAWIONO:** `Debug.php` line 390 - `in_array()` porównuje string z integerami.
 
-6.  **Formatowanie i automatyzacja Git (PHP 8.4/8.5+):**
+6.  **Formatowanie i testy statyczne (PHP 8.4/8.5+):**
     *   **NAPRAWIONO:** Szablony widoków (views) - usunięto z nich błędne tagi `strict_types` wywołujące błędy składniowe w linterze.
-    *   **ZAINSTALOWANO:** `php-cs-fixer` zainstalowany do katalogu `vendor`.
-    *   **SKONFIGUROWANO:** Plik `.php-cs-fixer.dist.php` skonfigurowany z zachowaniem tabulacji jako wcięć (styl Kohany).
-    *   **DODANO:** Git hook `pre-push` (`.git/hooks/pre-push`) automatyzujący proces na gałęzi `dev`: formatowanie (`php-cs-fixer`) -> testy jednostkowe (z wyciszeniem deprecacji PHP 8.4+) -> automatyczny merge do `master` i push na serwer.
+    *   **ZAINSTALOWANO:** `php-cs-fixer`, `phpstan` oraz `rector` zainstalowane w katalogu `vendor`.
+    *   **SKONFIGUROWANO:** Pliki konfiguracyjne `.php-cs-fixer.dist.php`, `phpstan.neon` oraz `rector.php` dostosowane do specyfiki projektu.
+    *   **DODANO:** Skrypt `run_tests.sh` do lokalnego uruchamiania kompletnej puli testów: formatowanie (`php-cs-fixer`) -> analiza statyczna (`phpstan`) -> reguły modernizacji (`rector`) -> testy jednostkowe (`phpunit`).
+
 
 ## Naprawione błędy bezpieczeństwa:
 
