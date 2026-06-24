@@ -16,7 +16,7 @@ class Kohana_Kohana_Exception extends Exception
 	/**
 	 * @var  array  PHP error code => human readable name
 	 */
-	public static $php_errors = array(
+	public static $php_errors = [
 		E_ERROR              => 'Fatal Error',
 		E_USER_ERROR         => 'User Error',
 		E_PARSE              => 'Parse Error',
@@ -26,7 +26,7 @@ class Kohana_Kohana_Exception extends Exception
 		E_NOTICE             => 'Notice',
 		E_RECOVERABLE_ERROR  => 'Recoverable Error',
 		E_DEPRECATED         => 'Deprecated',
-	);
+	];
 
 	/**
 	 * @var  string  error rendering view
@@ -139,7 +139,7 @@ class Kohana_Kohana_Exception extends Exception
 			$error = Kohana_Exception::text($e);
 
 			// Add this exception to the log
-			Kohana::$log->add($level, $error, null, array('exception' => $e));
+			Kohana::$log->add($level, $error, null, ['exception' => $e]);
 
 			// Make sure the logs are written
 			Kohana::$log->write();

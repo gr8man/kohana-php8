@@ -16,7 +16,7 @@ class Kohana_ORM_Validation_Exception extends Kohana_Exception
    * Array of validation objects
    * @var array
    */
-	protected $_objects = array();
+	protected $_objects = [];
 
 	/**
 	 * Constructs a new exception for the specified model
@@ -135,7 +135,7 @@ class Kohana_ORM_Validation_Exception extends Kohana_Exception
 	 */
 	protected function generate_errors(string $alias, array $array, string $directory, $translate): array
 	{
-		$errors = array();
+		$errors = [];
 
 		foreach ($array as $key => $object) {
 			if (is_array($object)) {

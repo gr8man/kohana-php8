@@ -26,7 +26,7 @@ class Kohana_Database_Expression implements \Stringable
 	 */
 	public function __construct(
 		protected string $_value,
-		protected array $_parameters = array()
+		protected array $_parameters = []
 	) {
 	}
 
@@ -108,7 +108,7 @@ class Kohana_Database_Expression implements \Stringable
 		$value = $this->value();
 
 		if (! empty($this->_parameters)) {
-			$params = array_map(array($db, 'quote'), $this->_parameters);
+			$params = array_map([$db, 'quote'], $this->_parameters);
 			$value = strtr($value, $params);
 		}
 

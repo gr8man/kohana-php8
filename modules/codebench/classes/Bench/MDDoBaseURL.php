@@ -15,7 +15,7 @@ class Bench_MDDoBaseURL extends Codebench
 
 	public $loops = 10000;
 
-	public $subjects = array(
+	public $subjects = [
 		// Valid matches
 		'[filesystem](about.filesystem)',
 		'[filesystem](about.filesystem "Optional title")',
@@ -25,7 +25,7 @@ class Bench_MDDoBaseURL extends Codebench
 		// Invalid matches
 		'![this is image syntax](about.filesystem)',
 		'[filesystem](about.filesystem',
-	);
+	];
 
 	public function bench_original($subject): string|array|null
 	{
