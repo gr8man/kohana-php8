@@ -53,13 +53,13 @@ class Kohana_Request_Client_Stream extends Request_Client_External
 		[$protocol] = explode('/', (string) $request->protocol());
 
 		// Create the context
-		$options = array(
-			strtolower($protocol) => array(
+		$options = [
+			strtolower($protocol) => [
 				'method'     => $request->method(),
 				'header'     => (string) $request->headers(),
 				'content'    => $body
-			)
-		);
+			]
+		];
 
 		// Create the context stream
 		$context = stream_context_create($options);
@@ -92,7 +92,7 @@ class Kohana_Request_Client_Stream extends Request_Client_External
 		$response_header = $response->headers();
 
 		// Process headers
-		array_map(array($response_header, 'parse_header_string'), array(), $meta_data['wrapper_data']);
+		array_map([$response_header, 'parse_header_string'], [], $meta_data['wrapper_data']);
 
 		$response->status($status)
 			->protocol($protocol)

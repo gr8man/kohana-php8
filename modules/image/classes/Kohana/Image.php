@@ -105,7 +105,7 @@ abstract class Kohana_Image implements \Stringable
 		if (empty($file) or empty($info)) {
 			throw new Kohana_Exception(
 				'Not an image or invalid image: :file',
-				array(':file' => Debug::path($file))
+				[':file' => Debug::path($file)]
 			);
 		}
 
@@ -561,7 +561,7 @@ abstract class Kohana_Image implements \Stringable
 			if (! is_writable($file)) {
 				throw new Kohana_Exception(
 					'File must be writable: :file',
-					array(':file' => Debug::path($file))
+					[':file' => Debug::path($file)]
 				);
 			}
 		} else {
@@ -571,7 +571,7 @@ abstract class Kohana_Image implements \Stringable
 			if (! is_dir($directory) or ! is_writable($directory)) {
 				throw new Kohana_Exception(
 					'Directory must be writable: :directory',
-					array(':directory' => Debug::path($directory))
+					[':directory' => Debug::path($directory)]
 				);
 			}
 		}
