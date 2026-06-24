@@ -29,7 +29,7 @@ abstract class Kohana_Request_Client
 	/**
 	 * @var  array  Headers to preserve when following a redirect
 	 */
-	protected $_follow_headers = ['authorization'];
+	protected $_follow_headers = array('authorization');
 
 	/**
 	 * @var  bool  Follow 302 redirect with original request method?
@@ -39,9 +39,9 @@ abstract class Kohana_Request_Client
 	/**
 	 * @var array  Callbacks to use when response contains given headers
 	 */
-	protected $_header_callbacks = [
+	protected $_header_callbacks = array(
 		'Location'  => 'Request_Client::on_header_location'
-	];
+	);
 
 	/**
 	 * @var int  Maximum number of requests that header callbacks can trigger before the request is aborted
@@ -56,7 +56,7 @@ abstract class Kohana_Request_Client
 	/**
 	 * @var array  Arbitrary parameters that are shared with header callbacks through their Request_Client object
 	 */
-	protected $_callback_params = [];
+	protected $_callback_params = array();
 
 	/**
 	 * Creates a new `Request_Client` object,
@@ -64,7 +64,7 @@ abstract class Kohana_Request_Client
 	 *
 	 * @param   array    $params Params
 	 */
-	public function __construct(array $params = [])
+	public function __construct(array $params = array())
 	{
 		foreach ($params as $key => $value) {
 			if (method_exists($this, $key)) {
@@ -100,15 +100,15 @@ abstract class Kohana_Request_Client
 		if ($this->callback_depth() > $this->max_callback_depth()) {
 			throw new Request_Client_Recursion_Exception(
 				"Could not execute request to :uri - too many recursions after :depth requests",
-				[
+				array(
 						':uri' => $request->uri(),
 						':depth' => $this->callback_depth() - 1,
-					]
+					)
 			);
 		}
 
 		// Execute the request and pass the currently used protocol
-		$orig_response = $response = Response::factory(['_protocol' => $request->protocol()]);
+		$orig_response = $response = Response::factory(array('_protocol' => $request->protocol()));
 
 		if (($cache = $this->cache()) instanceof HTTP_Cache) {
 			return $cache->execute($this, $request, $response);
@@ -161,7 +161,7 @@ abstract class Kohana_Request_Client
 				 *
 				 * @param HTTP_Cache  $cache  engine to use for caching
 				 */
-				public function cache(HTTP_Cache $cache = null): static|Cache
+	public function cache(HTTP_Cache $cache = null): static|Cache
 	{
 		if ($cache === null) {
 			return $this->_cache;
@@ -367,7 +367,7 @@ abstract class Kohana_Request_Client
 	public static function on_header_location(Request $request, Response $response, Request_Client $client)
 	{
 		// Do we need to follow a Location header ?
-		if ($client->follow() and in_array($response->status(), [201, 301, 302, 303, 307])) {
+		if ($client->follow() and in_array($response->status(), array(201, 301, 302, 303, 307))) {
 			// Figure out which method to use for the follow request
 			switch ($response->status()) {
 				default:

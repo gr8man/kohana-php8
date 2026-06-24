@@ -28,13 +28,13 @@ class Kohana_Response implements HTTP_Response, \Stringable
 	 *
 	 * @param   array    $config Setup the response object
 	 */
-	public static function factory(array $config = []): \Response
+	public static function factory(array $config = array()): \Response
 	{
 		return new Response($config);
 	}
 
 	// HTTP status codes and messages
-	public static $messages = [
+	public static $messages = array(
 		// Informational 1xx
 		100 => 'Continue',
 		101 => 'Switching Protocols',
@@ -86,7 +86,7 @@ class Kohana_Response implements HTTP_Response, \Stringable
 		504 => 'Gateway Timeout',
 		505 => 'HTTP Version Not Supported',
 		509 => 'Bandwidth Limit Exceeded'
-	];
+	);
 
 	/**
 	 * @var  integer     The response http status
@@ -106,7 +106,7 @@ class Kohana_Response implements HTTP_Response, \Stringable
 	/**
 	 * @var  array       Cookies to be returned in the response
 	 */
-	protected $_cookies = [];
+	protected $_cookies = array();
 
 	/**
 	 * @var  string      The response protocol
@@ -118,7 +118,7 @@ class Kohana_Response implements HTTP_Response, \Stringable
 	 *
 	 * @param   array $config Setup the response object
 	 */
-	public function __construct(array $config = [])
+	public function __construct(array $config = array())
 	{
 		$this->_header = new HTTP_Header();
 
@@ -147,8 +147,8 @@ class Kohana_Response implements HTTP_Response, \Stringable
 				 *
 				 * @return mixed
 				 */
-				#[\Override]
-	public function body(string|null $content = null)
+	#[\Override]
+	public function body(mixed $content = null)
 	{
 		if ($content === null) {
 			return $this->_body;
@@ -202,7 +202,7 @@ class Kohana_Response implements HTTP_Response, \Stringable
 			$this->_status = (int) $status;
 			return $this;
 		} else {
-			throw new Kohana_Exception(__METHOD__.' unknown status value : :value', [':value' => $status]);
+			throw new Kohana_Exception(__METHOD__.' unknown status value : :value', array(':value' => $status));
 		}
 	}
 
@@ -289,10 +289,10 @@ class Kohana_Response implements HTTP_Response, \Stringable
 			}
 		} else {
 			if (! is_array($value)) {
-				$value = [
+				$value = array(
 					'value' => $value,
 					'expiration' => Cookie::$expiration
-				];
+				);
 			} elseif (! isset($value['expiration'])) {
 				$value['expiration'] = Cookie::$expiration;
 			}
@@ -319,7 +319,7 @@ class Kohana_Response implements HTTP_Response, \Stringable
 	 */
 	public function delete_cookies(): static
 	{
-		$this->_cookies = [];
+		$this->_cookies = array();
 		return $this;
 	}
 
@@ -422,9 +422,9 @@ class Kohana_Response implements HTTP_Response, \Stringable
 		}
 
 		if (! is_resource($file)) {
-			throw new Kohana_Exception('Could not read file to send: :file', [
+			throw new Kohana_Exception('Could not read file to send: :file', array(
 				':file' => $download,
-			]);
+			));
 		}
 
 		// Inline or download?
@@ -558,7 +558,7 @@ class Kohana_Response implements HTTP_Response, \Stringable
 					http_build_cookie($this->_cookies);
 				$this->_header['set-cookie'] = $cookies;
 			} else {
-				$cookies = [];
+				$cookies = array();
 
 				// Parse each
 				foreach ($this->_cookies as $key => $value) {
@@ -650,7 +650,7 @@ class Kohana_Response implements HTTP_Response, \Stringable
 		// Keep the start in bounds.
 		$start = ($end < $start) ? 0 : max($start, 0);
 
-		return [$start, $end];
+		return array($start, $end);
 	}
 
 }

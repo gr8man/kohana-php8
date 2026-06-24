@@ -216,7 +216,7 @@ class Kohana_Form
 		$attributes['name'] = $name;
 
 		// Add default rows and cols attributes (required)
-		$attributes += ['rows' => 10, 'cols' => 50];
+		$attributes += array('rows' => 10, 'cols' => 50);
 
 		return '<textarea'.HTML::attributes($attributes).'>'.HTML::chars($body, $double_encode).'</textarea>';
 	}
@@ -247,10 +247,10 @@ class Kohana_Form
 		if (! is_array($selected)) {
 			if ($selected === null) {
 				// Use an empty array
-				$selected = [];
+				$selected = array();
 			} else {
 				// Convert the selected options to an array
-				$selected = [ (string) $selected];
+				$selected = array( (string) $selected);
 			}
 		}
 
@@ -261,17 +261,17 @@ class Kohana_Form
 			foreach ($options as $value => $name) {
 				if (is_array($name)) {
 					// Create a new optgroup
-					$group = ['label' => $value];
+					$group = array('label' => $value);
 
 					// Create a new list of options
-					$_options = [];
+					$_options = array();
 
 					foreach ($name as $_value => $_name) {
 						// Force value to be string
 						$_value = (string) $_value;
 
 						// Create a new attribute set for this option
-						$option = ['value' => $_value];
+						$option = array('value' => $_value);
 
 						if (in_array($_value, $selected)) {
 							// This option is selected
@@ -291,7 +291,7 @@ class Kohana_Form
 					$value = (string) $value;
 
 					// Create a new attribute set for this option
-					$option = ['value' => $value];
+					$option = array('value' => $value);
 
 					if (in_array($value, $selected)) {
 						// This option is selected

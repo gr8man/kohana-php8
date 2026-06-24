@@ -236,7 +236,7 @@ class Kohana_Route
 	{
 		// The URI should be considered literal except for keys and optional parts
 		// Escape everything preg_quote would escape except for : ( ) < >
-		$expression = preg_replace('#'.Route::REGEX_ESCAPE.'#', '\\\\$0', (string) $uri);
+		$expression = preg_replace('#'.Route::REGEX_ESCAPE.'#', '\\\\$0', $uri);
 
 		if (str_contains((string) $expression, '(')) {
 			// Make optional parts of the URI non-capturing and optional
@@ -464,24 +464,23 @@ class Kohana_Route
 	}
 
 	/**
-	 * Generates a URI for the current route based on the parameters given.
-	 *
-	 * // Using the "default" route: "users/profile/10"
-	 * $route->uri(array(
-	 * 'controller' => 'users',
-	 * 'action'     => 'profile',
-	 * 'id'         => '10'
-	 * ));
-	 *
-	 * @param array   $params URI parameters
-	 *
-	 * @return null|string
-	 *
-	 * @throws Kohana_Exception
-	 *
-	 * @uses Route::REGEX_GROUP
-	 * @uses Route::REGEX_KEY
-	 */
+				 * Generates a URI for the current route based on the parameters given.
+				 *
+				 * // Using the "default" route: "users/profile/10"
+				 * $route->uri(array(
+				 * 'controller' => 'users',
+				 * 'action'     => 'profile',
+				 * 'id'         => '10'
+				 * ));
+				 *
+				 * @param array   $params URI parameters
+				 *
+				 *
+				 * @throws Kohana_Exception
+				 *
+				 * @uses Route::REGEX_GROUP
+				 * @uses Route::REGEX_KEY
+				 */
 	public function uri(array $params = null): string|null
 	{
 		if ($params) {

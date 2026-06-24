@@ -14,28 +14,28 @@ defined('SYSPATH') or die('No direct script access.');
 class Kohana_Database_Query_Builder_Select extends Database_Query_Builder_Where
 {
 	// SELECT ...
-	protected $_select = [];
+	protected $_select = array();
 
 	// DISTINCT
 	protected $_distinct = false;
 
 	// FROM ...
-	protected $_from = [];
+	protected $_from = array();
 
 	// JOIN ...
-	protected $_join = [];
+	protected $_join = array();
 
 	// GROUP BY ...
-	protected $_group_by = [];
+	protected $_group_by = array();
 
 	// HAVING ...
-	protected $_having = [];
+	protected $_having = array();
 
 	// OFFSET ...
 	protected $_offset;
 
 	// UNION ...
-	protected $_union = [];
+	protected $_union = array();
 
 	// The last JOIN statement created
 	protected $_last_join;
@@ -155,7 +155,7 @@ class Kohana_Database_Query_Builder_Select extends Database_Query_Builder_Where
 	{
 		$columns = func_get_args();
 
-		call_user_func_array([$this->_last_join, 'using'], $columns);
+		call_user_func_array(array($this->_last_join, 'using'), $columns);
 
 		return $this;
 	}
@@ -198,7 +198,7 @@ class Kohana_Database_Query_Builder_Select extends Database_Query_Builder_Where
 	 */
 	public function and_having($column, $op, $value = null): static
 	{
-		$this->_having[] = ['AND' => [$column, $op, $value]];
+		$this->_having[] = array('AND' => array($column, $op, $value));
 
 		return $this;
 	}
@@ -213,7 +213,7 @@ class Kohana_Database_Query_Builder_Select extends Database_Query_Builder_Where
 	 */
 	public function or_having($column, $op, $value = null): static
 	{
-		$this->_having[] = ['OR' => [$column, $op, $value]];
+		$this->_having[] = array('OR' => array($column, $op, $value));
 
 		return $this;
 	}
@@ -235,7 +235,7 @@ class Kohana_Database_Query_Builder_Select extends Database_Query_Builder_Where
 	 */
 	public function and_having_open(): static
 	{
-		$this->_having[] = ['AND' => '('];
+		$this->_having[] = array('AND' => '(');
 
 		return $this;
 	}
@@ -247,7 +247,7 @@ class Kohana_Database_Query_Builder_Select extends Database_Query_Builder_Where
 	 */
 	public function or_having_open(): static
 	{
-		$this->_having[] = ['OR' => '('];
+		$this->_having[] = array('OR' => '(');
 
 		return $this;
 	}
@@ -269,7 +269,7 @@ class Kohana_Database_Query_Builder_Select extends Database_Query_Builder_Where
 	 */
 	public function and_having_close(): static
 	{
-		$this->_having[] = ['AND' => ')'];
+		$this->_having[] = array('AND' => ')');
 
 		return $this;
 	}
@@ -281,7 +281,7 @@ class Kohana_Database_Query_Builder_Select extends Database_Query_Builder_Where
 	 */
 	public function or_having_close(): static
 	{
-		$this->_having[] = ['OR' => ')'];
+		$this->_having[] = array('OR' => ')');
 
 		return $this;
 	}
@@ -302,7 +302,7 @@ class Kohana_Database_Query_Builder_Select extends Database_Query_Builder_Where
 		if (! $select instanceof Database_Query_Builder_Select) {
 			throw new Kohana_Exception('first parameter must be a string or an instance of Database_Query_Builder_Select');
 		}
-		$this->_union [] = ['select' => $select, 'all' => $all];
+		$this->_union [] = array('select' => $select, 'all' => $all);
 		return $this;
 	}
 
@@ -334,10 +334,10 @@ class Kohana_Database_Query_Builder_Select extends Database_Query_Builder_Where
 		}
 
 		// Callback to quote columns
-		$quote_column = [$db, 'quote_column'];
+		$quote_column = array($db, 'quote_column');
 
 		// Callback to quote tables
-		$quote_table = [$db, 'quote_table'];
+		$quote_table = array($db, 'quote_table');
 
 		// Start a selection query
 		$query = 'SELECT ';
@@ -421,7 +421,7 @@ class Kohana_Database_Query_Builder_Select extends Database_Query_Builder_Where
 		$this->_group_by =
 		$this->_having   =
 		$this->_order_by =
-		$this->_union = [];
+		$this->_union = array();
 
 		$this->_distinct = false;
 
@@ -429,7 +429,7 @@ class Kohana_Database_Query_Builder_Select extends Database_Query_Builder_Where
 		$this->_offset    =
 		$this->_last_join = null;
 
-		$this->_parameters = [];
+		$this->_parameters = array();
 
 		$this->_sql = null;
 

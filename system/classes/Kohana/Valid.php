@@ -25,7 +25,7 @@ class Kohana_Valid
 		}
 
 		// Value cannot be NULL, FALSE, '', or an empty array
-		return ! in_array($value, [null, false, '', []], true);
+		return ! in_array($value, array(null, false, '', array()), true);
 	}
 
 	/**
@@ -329,7 +329,7 @@ class Kohana_Valid
 	public static function phone($number, $lengths = null): bool
 	{
 		if (! is_array($lengths)) {
-			$lengths = [7,10,11];
+			$lengths = array(7,10,11);
 		}
 
 		// Remove all non-digit characters from the number

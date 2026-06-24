@@ -14,7 +14,7 @@ class Bench_GruberURL extends Codebench
 
 	public $loops = 10000;
 
-	public $subjects = [
+	public $subjects = array(
 		'http://foo.com/blah_blah',
 		'http://foo.com/blah_blah/',
 		'(Something like http://foo.com/blah_blah)',
@@ -37,7 +37,7 @@ class Bench_GruberURL extends Codebench
 		'Just a www.example.com link.',
 		// To test the use of possessive quatifiers:
 		'httpppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppp',
-	];
+	);
 
 	/**
 	 * @return false|string

@@ -15,7 +15,7 @@ class Bench_MDDoIncludeViews extends Codebench
 
 	public $loops = 10000;
 
-	public $subjects = [
+	public $subjects = array(
 		// Valid matches
 		'{{one}} two {{three}}',
 		'{{userguide/examples/hello_world_error}}',
@@ -26,7 +26,7 @@ class Bench_MDDoIncludeViews extends Codebench
 		'{{userguide/examples/hello_world_error}',
 		'{{userguide/examples/hello_world_error }}',
 		'{{userguide/examples/{{hello_world_error }}',
-	];
+	);
 
 	/**
 	 * @return string[][]

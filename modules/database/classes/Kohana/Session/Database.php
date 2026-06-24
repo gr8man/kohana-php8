@@ -30,11 +30,11 @@ class Kohana_Session_Database extends Session
 	protected string $_table = 'sessions';
 
 	// Database column names
-	protected $_columns = [
+	protected $_columns = array(
 		'session_id'  => 'session_id',
 		'last_active' => 'last_active',
 		'contents'    => 'contents'
-	];
+	);
 
 	// Garbage collection requests
 	protected $_gc = 500;
@@ -89,7 +89,7 @@ class Kohana_Session_Database extends Session
 	protected function _read($id = null)
 	{
 		if ($id or $id = Cookie::get($this->_name)) {
-			$result = DB::select([$this->_columns['contents'], 'contents'])
+			$result = DB::select(array($this->_columns['contents'], 'contents'))
 				->from($this->_table)
 				->where($this->_columns['session_id'], '=', ':id')
 				->limit(1)
@@ -138,7 +138,7 @@ class Kohana_Session_Database extends Session
 		if ($this->_update_id === null) {
 			// Insert a new row
 			$query = DB::insert($this->_table, $this->_columns)
-				->values([':new_id', ':active', ':contents']);
+				->values(array(':new_id', ':active', ':contents'));
 		} else {
 			// Update the row
 			$query = DB::update($this->_table)

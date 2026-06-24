@@ -77,7 +77,7 @@ abstract class Kohana_Minion_Task implements \Stringable
 		if (! class_exists($class)) {
 			throw new Minion_Exception_InvalidTask(
 				"Task ':task' is not a valid minion task",
-				[':task' => $class]
+				array(':task' => $class)
 			);
 		}
 
@@ -86,7 +86,7 @@ abstract class Kohana_Minion_Task implements \Stringable
 		if (! $class instanceof Minion_Task) {
 			throw new Minion_Exception_InvalidTask(
 				"Task ':task' is not a valid minion task",
-				[':task' => $class]
+				array(':task' => $class)
 			);
 		}
 
@@ -110,7 +110,7 @@ abstract class Kohana_Minion_Task implements \Stringable
 	 *
 	 * @var array
 	 */
-	protected $_options = [];
+	protected $_options = array();
 
 	/**
 	 * Populated with the accepted options for this task.
@@ -198,7 +198,7 @@ abstract class Kohana_Minion_Task implements \Stringable
 	{
 		// Add a rule to each key making sure it's in the task
 		foreach ($validation->data() as $key => $value) {
-			$validation->rule($key, $this->valid_option(...), [':validation', ':field']);
+			$validation->rule($key, $this->valid_option(...), array(':validation', ':field'));
 		}
 
 		return $validation;
@@ -207,7 +207,7 @@ abstract class Kohana_Minion_Task implements \Stringable
 	/**
 				 * Returns $_errors_file
 				 */
-				public function get_errors_file(): string|null
+	public function get_errors_file(): string|null
 	{
 		return $this->_errors_file;
 	}
@@ -272,16 +272,16 @@ abstract class Kohana_Minion_Task implements \Stringable
 				 *
 				 * @return array First element is the comment, second is an array of tags
 				 */
-				protected function _parse_doccomment(string|false $comment)
+	protected function _parse_doccomment(string|false $comment)
 	{
 		// Normalize all new lines to \n
-		$comment = str_replace(["\r\n", "\n"], "\n", $comment);
+		$comment = str_replace(array("\r\n", "\n"), "\n", $comment);
 
 		// Remove the phpdoc open/close tags and split
 		$comment = array_slice(explode("\n", $comment), 1, -1);
 
 		// Tag content
-		$tags        = [];
+		$tags        = array();
 
 		foreach ($comment as $i => $line) {
 			// Remove all leading whitespace
@@ -303,7 +303,7 @@ abstract class Kohana_Minion_Task implements \Stringable
 
 		$comment = trim(implode("\n", $comment));
 
-		return [$comment, $tags];
+		return array($comment, $tags);
 	}
 
 	/**
@@ -315,7 +315,7 @@ abstract class Kohana_Minion_Task implements \Stringable
 	 */
 	protected function _compile_task_list(array $files, string $prefix = '')
 	{
-		$output = [];
+		$output = array();
 
 		foreach ($files as $file => $path) {
 			$file = substr((string) $file, strrpos((string) $file, DIRECTORY_SEPARATOR) + 1);

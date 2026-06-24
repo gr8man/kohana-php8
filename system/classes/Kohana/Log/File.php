@@ -31,7 +31,7 @@ class Kohana_Log_File extends Log_Writer
 		if (! is_dir($directory) or ! is_writable($directory)) {
 			throw new Kohana_Exception(
 				'Directory :dir must be writable',
-				[':dir' => Debug::path($directory)]
+				array(':dir' => Debug::path($directory))
 			);
 		}
 

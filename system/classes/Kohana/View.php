@@ -17,7 +17,7 @@ defined('SYSPATH') or die('No direct script access.');
 class Kohana_View implements \Stringable
 {
 	// Array of global variables
-	protected static $_global_data = [];
+	protected static $_global_data = array();
 
 	/**
 	 * Returns a new View object. If you do not define the "file" parameter,
@@ -119,7 +119,7 @@ class Kohana_View implements \Stringable
 	protected $_file;
 
 	// Array of local variables
-	protected array $_data = [];
+	protected array $_data = array();
 
 	/**
 	 * Sets the initial view filename and local data. Views should almost
@@ -163,7 +163,7 @@ class Kohana_View implements \Stringable
 		} else {
 			throw new Kohana_Exception(
 				'View variable is not set: :var',
-				[':var' => $key]
+				array(':var' => $key)
 			);
 		}
 	}
@@ -245,9 +245,9 @@ class Kohana_View implements \Stringable
 	public function set_filename($file): static
 	{
 		if (($path = Kohana::find_file('views', $file)) === false) {
-			throw new View_Exception('The requested view :file could not be found', [
+			throw new View_Exception('The requested view :file could not be found', array(
 				':file' => $file,
-			]);
+			));
 		}
 
 		// Store the file path locally

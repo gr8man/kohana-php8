@@ -15,7 +15,7 @@ class Bench_ArrCallback extends Codebench
 
 	public $loops = 10000;
 
-	public $subjects = [
+	public $subjects = array(
 		// Valid callback strings
 		'foo',
 		'foo::bar',
@@ -26,7 +26,7 @@ class Bench_ArrCallback extends Codebench
 
 		// Invalid callback strings
 		'foo[apple,orange', // no closing bracket
-	];
+	);
 
 	/**
 	 * @return null|string[]

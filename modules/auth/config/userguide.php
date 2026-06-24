@@ -3,12 +3,12 @@
 declare(strict_types=1);
 defined('SYSPATH') or die('No direct script access.');
 
-return [
+return array(
 	// Leave this alone
-	'modules' => [
+	'modules' => array(
 
 		// This should be the path to this modules userguide pages, without the 'guide/'. Ex: '/guide/modulename/' would be 'modulename'
-		'auth' => [
+		'auth' => array(
 
 			// Whether this modules userguide pages should be shown
 			'enabled' => true,
@@ -21,6 +21,6 @@ return [
 
 			// Copyright message, shown in the footer for this module
 			'copyright' => '&copy; 2008–2012 Kohana Team',
-		]
-	]
-];
+		)
+	)
+);

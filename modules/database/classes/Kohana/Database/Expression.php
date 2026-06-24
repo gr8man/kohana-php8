@@ -26,7 +26,7 @@ class Kohana_Database_Expression implements \Stringable
 	 */
 	public function __construct(
 		protected string $_value,
-		protected array $_parameters = []
+		protected array $_parameters = array()
 	) {
 	}
 

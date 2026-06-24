@@ -82,7 +82,7 @@ abstract class Kohana_Database_Result implements Countable, Iterator, SeekableIt
 	 */
 	public function as_array($key = null, $value = null)
 	{
-		$results = [];
+		$results = array();
 
 		if ($key === null and $value === null) {
 			// Indexed rows

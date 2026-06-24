@@ -18,7 +18,7 @@ class Kohana_HTML
 	/**
 	 * @var  array  preferred order of attributes
 	 */
-	public static $attribute_order = [
+	public static $attribute_order = array(
 		'action',
 		'method',
 		'type',
@@ -47,7 +47,7 @@ class Kohana_HTML
 		'checked',
 		'readonly',
 		'disabled',
-	];
+	);
 
 	/**
 	 * @var  boolean  use strict XHTML mode?
@@ -277,7 +277,7 @@ class Kohana_HTML
 			return '';
 		}
 
-		$sorted = [];
+		$sorted = array();
 		foreach (HTML::$attribute_order as $key) {
 			if (isset($attributes[$key])) {
 				// Add the attribute to the sorted list

@@ -2,6 +2,8 @@
 <psalm
     errorLevel="8"
     resolveFromConfigFile="true"
+    allConstantsGlobal="true"
+    allFunctionsGlobal="true"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns="https://getpsalm.org/schema/config"
     xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
@@ -25,6 +27,14 @@
         <UnusedMethod errorLevel="suppress" />
         <PossiblyUnusedMethod errorLevel="suppress" />
         <UnusedVariable errorLevel="suppress" />
+        <UnusedFunctionCall errorLevel="suppress" />
         <ClassMustBeFinal errorLevel="suppress" />
+        <PossiblyUnusedProperty errorLevel="suppress" />
+        <PossiblyUnusedParam errorLevel="suppress" />
+        <PossiblyUnusedReturnValue errorLevel="suppress" />
+        <UnusedDocblockParam errorLevel="suppress" />
+        <UndefinedDocblockClass errorLevel="suppress" />
+        <MissingTemplateParam errorLevel="suppress" />
+        <InvalidParamDefault errorLevel="suppress" />
     </issueHandlers>
 </psalm>

@@ -138,7 +138,7 @@ class Kohana_Arr
 			} elseif ($key === '*') {
 				// Handle wildcards
 
-				$values = [];
+				$values = array();
 				foreach ($array as $arr) {
 					if ($value = Arr::path($arr, implode('.', $keys))) {
 						$values[] = $value;
@@ -195,7 +195,7 @@ class Kohana_Arr
 			}
 
 			if (! isset($array[$key])) {
-				$array[$key] = [];
+				$array[$key] = array();
 			}
 
 			$array = & $array[$key];
@@ -217,10 +217,10 @@ class Kohana_Arr
 	public static function range($step = 10, $max = 100): array
 	{
 		if ($step < 1) {
-			return [];
+			return array();
 		}
 
-		$array = [];
+		$array = array();
 		for ($i = $step; $i <= $max; $i += $step) {
 			$array[$i] = $i;
 		}
@@ -271,7 +271,7 @@ class Kohana_Arr
 	 */
 	public static function extract($array, array $paths, $default = null): array
 	{
-		$found = [];
+		$found = array();
 		foreach ($paths as $path) {
 			Arr::set_path($found, $path, Arr::path($array, $path, $default));
 		}
@@ -292,7 +292,7 @@ class Kohana_Arr
 	 */
 	public static function pluck($array, $key): array
 	{
-		$values = [];
+		$values = array();
 
 		foreach ($array as $row) {
 			if (isset($row[$key])) {
@@ -503,7 +503,7 @@ class Kohana_Arr
 			$command = explode('::', $command, 2);
 		}
 
-		return [$command, $params];
+		return array($command, $params);
 	}
 
 	/**
@@ -526,7 +526,7 @@ class Kohana_Arr
 	{
 		$is_assoc = Arr::is_assoc($array);
 
-		$flat = [];
+		$flat = array();
 		foreach ($array as $key => $value) {
 			if (is_array($value)) {
 				$flat = array_merge($flat, Arr::flatten($value));
