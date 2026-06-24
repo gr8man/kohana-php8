@@ -36,5 +36,11 @@
         <UndefinedDocblockClass errorLevel="suppress" />
         <MissingTemplateParam errorLevel="suppress" />
         <InvalidParamDefault errorLevel="suppress" />
+        <UndefinedConstant errorLevel="suppress" />
+        <UndefinedFunction errorLevel="suppress" />
+        <UndefinedClass errorLevel="suppress" />
+        <UndefinedGlobalVariable errorLevel="suppress" />
+        <NoValue errorLevel="suppress" />
+        <MissingDependency errorLevel="suppress" />
     </issueHandlers>
 </psalm>

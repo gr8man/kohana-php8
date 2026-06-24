@@ -139,7 +139,7 @@ class Kohana_Route
 	 *
 	 * @return false
 	 */
-	public static function name(Route $route): bool|string|false
+	public static function name(Route $route): string|false
 	{
 		return array_search($route, Route::$_routes);
 	}

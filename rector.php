@@ -15,6 +15,8 @@ return RectorConfig::configure()
         __DIR__ . '/system/tests',
         __DIR__ . '/modules/*/tests',
         __DIR__ . '/application/tests',
+        // Keep Kohana-style long arrays to match php-cs-fixer
+        \Rector\Php54\Rector\Array_\LongArrayToShortArrayRector::class,
     ])
     ->withPhpSets(
         php82: true

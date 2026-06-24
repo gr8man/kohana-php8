@@ -355,7 +355,7 @@ class Kohana_CookieTest_TestableCookie extends Cookie
 	/**
 	 * {@inheritdoc}
 	 */
-	protected static function _setcookie($name, $value, $expire, $path, $domain, $secure, $httponly)
+	protected static function _setcookie($name, $value, $expire, $path, $domain, $secure, $httponly): bool
 	{
 		self::$_mock_cookies_set[] = array(
 			'name'     => $name,
