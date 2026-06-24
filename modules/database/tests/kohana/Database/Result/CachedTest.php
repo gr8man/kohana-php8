@@ -24,24 +24,24 @@ class Kohana_Database_Result_CachedTest extends Unittest_TestCase
 	 */
 	public function provider_result_data(): array
 	{
-		return array(
-			array(
-				array(
-					array('id' => 1, 'name' => 'John'),
-					array('id' => 2, 'name' => 'Jane'),
-					array('id' => 3, 'name' => 'Bob'),
-				),
-			),
-			array(
-				array(
-					array('id' => 10, 'title' => 'First', 'active' => true),
-					array('id' => 20, 'title' => 'Second', 'active' => false),
-				),
-			),
-			array(
-				array(),
-			),
-		);
+		return [
+			[
+				[
+					['id' => 1, 'name' => 'John'],
+					['id' => 2, 'name' => 'Jane'],
+					['id' => 3, 'name' => 'Bob'],
+				],
+			],
+			[
+				[
+					['id' => 10, 'title' => 'First', 'active' => true],
+					['id' => 20, 'title' => 'Second', 'active' => false],
+				],
+			],
+			[
+				[],
+			],
+		];
 	}
 
 	/**
@@ -49,29 +49,29 @@ class Kohana_Database_Result_CachedTest extends Unittest_TestCase
 	 */
 	public function provider_get(): array
 	{
-		return array(
+		return [
 			// existing column
-			array(
-				array(array('id' => 1, 'name' => 'John')),
+			[
+				[['id' => 1, 'name' => 'John']],
 				'name',
 				null,
 				'John',
-			),
+			],
 			// non-existing column with default
-			array(
-				array(array('id' => 1, 'name' => 'John')),
+			[
+				[['id' => 1, 'name' => 'John']],
 				'age',
 				0,
 				0,
-			),
+			],
 			// non-existing column without default
-			array(
-				array(array('id' => 1, 'name' => 'John')),
+			[
+				[['id' => 1, 'name' => 'John']],
 				'age',
 				null,
 				null,
-			),
-		);
+			],
+		];
 	}
 
 	/**
@@ -82,11 +82,11 @@ class Kohana_Database_Result_CachedTest extends Unittest_TestCase
 	 */
 	public function test_count(): void
 	{
-		$data = array(
-			array('id' => 1),
-			array('id' => 2),
-			array('id' => 3),
-		);
+		$data = [
+			['id' => 1],
+			['id' => 2],
+			['id' => 3],
+		];
 		$result = new Database_Result_Cached($data, 'SELECT * FROM test');
 		$this->assertCount(3, $result);
 		$this->assertSame(3, $result->count());
@@ -98,7 +98,7 @@ class Kohana_Database_Result_CachedTest extends Unittest_TestCase
 	 */
 	public function test_count_empty(): void
 	{
-		$result = new Database_Result_Cached(array(), 'SELECT * FROM test');
+		$result = new Database_Result_Cached([], 'SELECT * FROM test');
 		$this->assertCount(0, $result);
 		$this->assertSame(0, $result->count());
 	}
@@ -111,12 +111,12 @@ class Kohana_Database_Result_CachedTest extends Unittest_TestCase
 	public function test_current_and_key(): void
 	{
 		$result = new Database_Result_Cached(
-			array(
-				array('id' => 42, 'name' => 'Answer'),
-			),
+			[
+				['id' => 42, 'name' => 'Answer'],
+			],
 			'SELECT * FROM test'
 		);
-		$this->assertSame(array('id' => 42, 'name' => 'Answer'), $result->current());
+		$this->assertSame(['id' => 42, 'name' => 'Answer'], $result->current());
 		$this->assertSame(0, $result->key());
 	}
 
@@ -128,14 +128,14 @@ class Kohana_Database_Result_CachedTest extends Unittest_TestCase
 	public function test_next(): void
 	{
 		$result = new Database_Result_Cached(
-			array(
-				array('id' => 1),
-				array('id' => 2),
-			),
+			[
+				['id' => 1],
+				['id' => 2],
+			],
 			'SELECT * FROM test'
 		);
 		$result->next();
-		$this->assertSame(array('id' => 2), $result->current());
+		$this->assertSame(['id' => 2], $result->current());
 		$this->assertSame(1, $result->key());
 	}
 
@@ -147,15 +147,15 @@ class Kohana_Database_Result_CachedTest extends Unittest_TestCase
 	public function test_prev(): void
 	{
 		$result = new Database_Result_Cached(
-			array(
-				array('id' => 1),
-				array('id' => 2),
-			),
+			[
+				['id' => 1],
+				['id' => 2],
+			],
 			'SELECT * FROM test'
 		);
 		$result->next();
 		$result->prev();
-		$this->assertSame(array('id' => 1), $result->current());
+		$this->assertSame(['id' => 1], $result->current());
 		$this->assertSame(0, $result->key());
 	}
 
@@ -167,15 +167,15 @@ class Kohana_Database_Result_CachedTest extends Unittest_TestCase
 	public function test_rewind(): void
 	{
 		$result = new Database_Result_Cached(
-			array(
-				array('id' => 1),
-				array('id' => 2),
-			),
+			[
+				['id' => 1],
+				['id' => 2],
+			],
 			'SELECT * FROM test'
 		);
 		$result->next();
 		$result->rewind();
-		$this->assertSame(array('id' => 1), $result->current());
+		$this->assertSame(['id' => 1], $result->current());
 		$this->assertSame(0, $result->key());
 	}
 
@@ -186,9 +186,9 @@ class Kohana_Database_Result_CachedTest extends Unittest_TestCase
 	public function test_valid(): void
 	{
 		$result = new Database_Result_Cached(
-			array(
-				array('id' => 1),
-			),
+			[
+				['id' => 1],
+			],
 			'SELECT * FROM test'
 		);
 		$this->assertTrue($result->valid());
@@ -201,9 +201,9 @@ class Kohana_Database_Result_CachedTest extends Unittest_TestCase
 	public function test_valid_false_when_past_end(): void
 	{
 		$result = new Database_Result_Cached(
-			array(
-				array('id' => 1),
-			),
+			[
+				['id' => 1],
+			],
 			'SELECT * FROM test'
 		);
 		$result->next();
@@ -216,7 +216,7 @@ class Kohana_Database_Result_CachedTest extends Unittest_TestCase
 	 */
 	public function test_valid_empty(): void
 	{
-		$result = new Database_Result_Cached(array(), 'SELECT * FROM test');
+		$result = new Database_Result_Cached([], 'SELECT * FROM test');
 		$this->assertFalse($result->valid());
 	}
 
@@ -227,15 +227,15 @@ class Kohana_Database_Result_CachedTest extends Unittest_TestCase
 	public function test_seek(): void
 	{
 		$result = new Database_Result_Cached(
-			array(
-				array('id' => 1),
-				array('id' => 2),
-				array('id' => 3),
-			),
+			[
+				['id' => 1],
+				['id' => 2],
+				['id' => 3],
+			],
 			'SELECT * FROM test'
 		);
 		$result->seek(2);
-		$this->assertSame(array('id' => 3), $result->current());
+		$this->assertSame(['id' => 3], $result->current());
 		$this->assertSame(2, $result->key());
 	}
 
@@ -247,14 +247,14 @@ class Kohana_Database_Result_CachedTest extends Unittest_TestCase
 	public function test_seek_invalid_offset(): void
 	{
 		$result = new Database_Result_Cached(
-			array(
-				array('id' => 1),
-			),
+			[
+				['id' => 1],
+			],
 			'SELECT * FROM test'
 		);
 		// seek to invalid offset should silently do nothing
 		$result->seek(999);
-		$this->assertSame(array('id' => 1), $result->current());
+		$this->assertSame(['id' => 1], $result->current());
 	}
 
 	/**
@@ -264,10 +264,10 @@ class Kohana_Database_Result_CachedTest extends Unittest_TestCase
 	public function test_offset_exists(): void
 	{
 		$result = new Database_Result_Cached(
-			array(
-				array('id' => 1),
-				array('id' => 2),
-			),
+			[
+				['id' => 1],
+				['id' => 2],
+			],
 			'SELECT * FROM test'
 		);
 		$this->assertTrue(isset($result[0]));
@@ -283,14 +283,14 @@ class Kohana_Database_Result_CachedTest extends Unittest_TestCase
 	public function test_offset_get(): void
 	{
 		$result = new Database_Result_Cached(
-			array(
-				array('id' => 1, 'name' => 'John'),
-				array('id' => 2, 'name' => 'Jane'),
-			),
+			[
+				['id' => 1, 'name' => 'John'],
+				['id' => 2, 'name' => 'Jane'],
+			],
 			'SELECT * FROM test'
 		);
-		$this->assertSame(array('id' => 1, 'name' => 'John'), $result[0]);
-		$this->assertSame(array('id' => 2, 'name' => 'Jane'), $result[1]);
+		$this->assertSame(['id' => 1, 'name' => 'John'], $result[0]);
+		$this->assertSame(['id' => 2, 'name' => 'Jane'], $result[1]);
 	}
 
 	/**
@@ -299,7 +299,7 @@ class Kohana_Database_Result_CachedTest extends Unittest_TestCase
 	 */
 	public function test_offset_get_invalid(): void
 	{
-		$result = new Database_Result_Cached(array(), 'SELECT * FROM test');
+		$result = new Database_Result_Cached([], 'SELECT * FROM test');
 		$this->assertNull($result[999]);
 	}
 
@@ -310,7 +310,7 @@ class Kohana_Database_Result_CachedTest extends Unittest_TestCase
 	public function test_offset_set_throws(): void
 	{
 		$this->expectException(Kohana_Exception::class);
-		$result = new Database_Result_Cached(array(), 'SELECT * FROM test');
+		$result = new Database_Result_Cached([], 'SELECT * FROM test');
 		$result[0] = 'test';
 	}
 
@@ -322,7 +322,7 @@ class Kohana_Database_Result_CachedTest extends Unittest_TestCase
 	{
 		$this->expectException(Kohana_Exception::class);
 		$result = new Database_Result_Cached(
-			array(array('id' => 1)),
+			[['id' => 1]],
 			'SELECT * FROM test'
 		);
 		unset($result[0]);
@@ -335,7 +335,7 @@ class Kohana_Database_Result_CachedTest extends Unittest_TestCase
 	public function test_cached_returns_self(): void
 	{
 		$result = new Database_Result_Cached(
-			array(array('id' => 1)),
+			[['id' => 1]],
 			'SELECT * FROM test'
 		);
 		$this->assertSame($result, $result->cached());
@@ -347,10 +347,10 @@ class Kohana_Database_Result_CachedTest extends Unittest_TestCase
 	 */
 	public function test_as_array_indexed(): void
 	{
-		$data = array(
-			array('id' => 1, 'name' => 'John'),
-			array('id' => 2, 'name' => 'Jane'),
-		);
+		$data = [
+			['id' => 1, 'name' => 'John'],
+			['id' => 2, 'name' => 'Jane'],
+		];
 		$result = new Database_Result_Cached($data, 'SELECT * FROM test');
 		$this->assertSame($data, $result->as_array());
 	}
@@ -361,14 +361,14 @@ class Kohana_Database_Result_CachedTest extends Unittest_TestCase
 	 */
 	public function test_as_array_keyed(): void
 	{
-		$data = array(
-			array('id' => 1, 'name' => 'John'),
-			array('id' => 2, 'name' => 'Jane'),
-		);
-		$expected = array(
-			1 => array('id' => 1, 'name' => 'John'),
-			2 => array('id' => 2, 'name' => 'Jane'),
-		);
+		$data = [
+			['id' => 1, 'name' => 'John'],
+			['id' => 2, 'name' => 'Jane'],
+		];
+		$expected = [
+			1 => ['id' => 1, 'name' => 'John'],
+			2 => ['id' => 2, 'name' => 'Jane'],
+		];
 		$result = new Database_Result_Cached($data, 'SELECT * FROM test');
 		$this->assertSame($expected, $result->as_array('id'));
 	}
@@ -379,14 +379,14 @@ class Kohana_Database_Result_CachedTest extends Unittest_TestCase
 	 */
 	public function test_as_array_key_value(): void
 	{
-		$data = array(
-			array('id' => 1, 'name' => 'John'),
-			array('id' => 2, 'name' => 'Jane'),
-		);
-		$expected = array(
+		$data = [
+			['id' => 1, 'name' => 'John'],
+			['id' => 2, 'name' => 'Jane'],
+		];
+		$expected = [
 			1 => 'John',
 			2 => 'Jane',
-		);
+		];
 		$result = new Database_Result_Cached($data, 'SELECT * FROM test');
 		$this->assertSame($expected, $result->as_array('id', 'name'));
 	}
@@ -397,8 +397,8 @@ class Kohana_Database_Result_CachedTest extends Unittest_TestCase
 	 */
 	public function test_as_array_empty(): void
 	{
-		$result = new Database_Result_Cached(array(), 'SELECT * FROM test');
-		$this->assertSame(array(), $result->as_array());
+		$result = new Database_Result_Cached([], 'SELECT * FROM test');
+		$this->assertSame([], $result->as_array());
 	}
 
 	/**
@@ -407,11 +407,11 @@ class Kohana_Database_Result_CachedTest extends Unittest_TestCase
 	 */
 	public function test_as_array_value_only(): void
 	{
-		$data = array(
-			array('id' => 1, 'name' => 'John'),
-			array('id' => 2, 'name' => 'Jane'),
-		);
-		$expected = array('John', 'Jane');
+		$data = [
+			['id' => 1, 'name' => 'John'],
+			['id' => 2, 'name' => 'Jane'],
+		];
+		$expected = ['John', 'Jane'];
 		$result = new Database_Result_Cached($data, 'SELECT * FROM test');
 		$this->assertSame($expected, $result->as_array(null, 'name'));
 	}
@@ -423,9 +423,9 @@ class Kohana_Database_Result_CachedTest extends Unittest_TestCase
 	public function test_get(): void
 	{
 		$result = new Database_Result_Cached(
-			array(
-				array('id' => 1, 'name' => 'John'),
-			),
+			[
+				['id' => 1, 'name' => 'John'],
+			],
 			'SELECT * FROM test'
 		);
 		$this->assertSame('John', $result->get('name'));
@@ -438,9 +438,9 @@ class Kohana_Database_Result_CachedTest extends Unittest_TestCase
 	public function test_get_default(): void
 	{
 		$result = new Database_Result_Cached(
-			array(
-				array('id' => 1, 'name' => 'John'),
-			),
+			[
+				['id' => 1, 'name' => 'John'],
+			],
 			'SELECT * FROM test'
 		);
 		$this->assertSame(0, $result->get('age', 0));
@@ -453,9 +453,9 @@ class Kohana_Database_Result_CachedTest extends Unittest_TestCase
 	public function test_get_null_default(): void
 	{
 		$result = new Database_Result_Cached(
-			array(
-				array('id' => 1, 'name' => 'John'),
-			),
+			[
+				['id' => 1, 'name' => 'John'],
+			],
 			'SELECT * FROM test'
 		);
 		$this->assertNull($result->get('age'));
@@ -468,9 +468,9 @@ class Kohana_Database_Result_CachedTest extends Unittest_TestCase
 	public function test_get_non_existent_default_null(): void
 	{
 		$result = new Database_Result_Cached(
-			array(
-				array('id' => 1),
-			),
+			[
+				['id' => 1],
+			],
 			'SELECT * FROM test'
 		);
 		$this->assertNull($result->get('name'));
@@ -483,13 +483,13 @@ class Kohana_Database_Result_CachedTest extends Unittest_TestCase
 	 */
 	public function test_foreach_iteration(): void
 	{
-		$data = array(
-			array('id' => 1),
-			array('id' => 2),
-			array('id' => 3),
-		);
+		$data = [
+			['id' => 1],
+			['id' => 2],
+			['id' => 3],
+		];
 		$result = new Database_Result_Cached($data, 'SELECT * FROM test');
-		$iterated = array();
+		$iterated = [];
 		foreach ($result as $key => $row) {
 			$iterated[$key] = $row;
 		}
@@ -503,16 +503,16 @@ class Kohana_Database_Result_CachedTest extends Unittest_TestCase
 	 */
 	public function test_multiple_foreach(): void
 	{
-		$data = array(
-			array('id' => 1),
-			array('id' => 2),
-		);
+		$data = [
+			['id' => 1],
+			['id' => 2],
+		];
 		$result = new Database_Result_Cached($data, 'SELECT * FROM test');
-		$first = array();
+		$first = [];
 		foreach ($result as $row) {
 			$first[] = $row;
 		}
-		$second = array();
+		$second = [];
 		foreach ($result as $row) {
 			$second[] = $row;
 		}
@@ -526,11 +526,11 @@ class Kohana_Database_Result_CachedTest extends Unittest_TestCase
 	 */
 	public function test_count_after_iteration(): void
 	{
-		$data = array(
-			array('id' => 1),
-			array('id' => 2),
-			array('id' => 3),
-		);
+		$data = [
+			['id' => 1],
+			['id' => 2],
+			['id' => 3],
+		];
 		$result = new Database_Result_Cached($data, 'SELECT * FROM test');
 		foreach ($result as $row) {
 			// just iterate
@@ -545,7 +545,7 @@ class Kohana_Database_Result_CachedTest extends Unittest_TestCase
 	 */
 	public function test_implements_interfaces(): void
 	{
-		$result = new Database_Result_Cached(array(), 'SELECT * FROM test');
+		$result = new Database_Result_Cached([], 'SELECT * FROM test');
 		$this->assertInstanceOf(Countable::class, $result);
 		$this->assertInstanceOf(Iterator::class, $result);
 		$this->assertInstanceOf(SeekableIterator::class, $result);

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 defined('SYSPATH') or die('No direct access allowed.');
 
-return array(
+return [
 	// Enable the API browser.  TRUE or FALSE
 	'api_browser'  => true,
 
@@ -15,10 +15,10 @@ return array(
 	'show_comments' => Kohana::$environment === Kohana::PRODUCTION,
 
 	// Leave this alone
-	'modules' => array(
+	'modules' => [
 
 		// This should be the path to this modules userguide pages, without the 'guide/'. Ex: '/guide/modulename/' would be 'modulename'
-		'userguide' => array(
+		'userguide' => [
 
 			// Whether this modules userguide pages should be shown
 			'enabled' => true,
@@ -31,11 +31,11 @@ return array(
 
 			// Copyright message, shown in the footer for this module
 			'copyright' => '&copy; 2008–2014 Kohana Team',
-		)
-	),
+		]
+	],
 
 	// Set transparent class name segments
-	'transparent_prefixes' => array(
+	'transparent_prefixes' => [
 		'Kohana' => true,
-	)
-);
+	]
+];

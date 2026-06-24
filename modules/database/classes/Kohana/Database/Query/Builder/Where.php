@@ -14,10 +14,10 @@ defined('SYSPATH') or die('No direct script access.');
 abstract class Kohana_Database_Query_Builder_Where extends Database_Query_Builder
 {
 	// WHERE ...
-	protected $_where = array();
+	protected $_where = [];
 
 	// ORDER BY ...
-	protected $_order_by = array();
+	protected $_order_by = [];
 
 	// LIMIT ...
 	protected $_limit;
@@ -45,7 +45,7 @@ abstract class Kohana_Database_Query_Builder_Where extends Database_Query_Builde
 	 */
 	public function and_where($column, $op, $value)
 	{
-		$this->_where[] = array('AND' => array($column, $op, $value));
+		$this->_where[] = ['AND' => [$column, $op, $value]];
 
 		return $this;
 	}
@@ -60,7 +60,7 @@ abstract class Kohana_Database_Query_Builder_Where extends Database_Query_Builde
 	 */
 	public function or_where($column, $op, $value)
 	{
-		$this->_where[] = array('OR' => array($column, $op, $value));
+		$this->_where[] = ['OR' => [$column, $op, $value]];
 
 		return $this;
 	}
@@ -82,7 +82,7 @@ abstract class Kohana_Database_Query_Builder_Where extends Database_Query_Builde
 	 */
 	public function and_where_open()
 	{
-		$this->_where[] = array('AND' => '(');
+		$this->_where[] = ['AND' => '('];
 
 		return $this;
 	}
@@ -94,7 +94,7 @@ abstract class Kohana_Database_Query_Builder_Where extends Database_Query_Builde
 	 */
 	public function or_where_open()
 	{
-		$this->_where[] = array('OR' => '(');
+		$this->_where[] = ['OR' => '('];
 
 		return $this;
 	}
@@ -135,7 +135,7 @@ abstract class Kohana_Database_Query_Builder_Where extends Database_Query_Builde
 	 */
 	public function and_where_close()
 	{
-		$this->_where[] = array('AND' => ')');
+		$this->_where[] = ['AND' => ')'];
 
 		return $this;
 	}
@@ -147,7 +147,7 @@ abstract class Kohana_Database_Query_Builder_Where extends Database_Query_Builde
 	 */
 	public function or_where_close()
 	{
-		$this->_where[] = array('OR' => ')');
+		$this->_where[] = ['OR' => ')'];
 
 		return $this;
 	}
@@ -161,7 +161,7 @@ abstract class Kohana_Database_Query_Builder_Where extends Database_Query_Builde
 	 */
 	public function order_by($column, $direction = null)
 	{
-		$this->_order_by[] = array($column, $direction);
+		$this->_order_by[] = [$column, $direction];
 
 		return $this;
 	}

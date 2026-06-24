@@ -89,7 +89,7 @@ class Kohana_URL
 				if ($host && '' !== preg_replace('/(?:^\[)?[a-zA-Z0-9-:\]_]+\.?/', '', $host)) {
 					throw new Kohana_Exception(
 						'Invalid host :host',
-						array(':host' => $host)
+						[':host' => $host]
 					);
 				}
 
@@ -97,7 +97,7 @@ class Kohana_URL
 				if (! static::is_trusted_host($host)) {
 					throw new Kohana_Exception(
 						'Untrusted host :host. If you trust :host, add it to the trusted hosts in the `url` config file.',
-						array(':host' => $host)
+						[':host' => $host]
 					);
 				}
 			}
