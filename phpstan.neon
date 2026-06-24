@@ -1,0 +1,11 @@
+parameters:
+  level: 1
+  paths:
+    - system/classes
+    - modules
+    - application/classes
+  excludePaths:
+    - vendor
+    - system/tests
+    - modules/*/tests
+    - application/tests
