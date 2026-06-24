@@ -141,7 +141,7 @@ class Kohana_Image_Imagick extends Image
 		$reflection->setImagePage($this->width, $height, 0, 0);
 
 		// Select the fade direction
-		$direction = array('transparent', 'black');
+		$direction = ['transparent', 'black'];
 
 		if ($fade_in) {
 			// Change the direction of the fade
@@ -301,10 +301,10 @@ class Kohana_Image_Imagick extends Image
 			'png' => IMAGETYPE_PNG,
 			default => throw new Kohana_Exception(
 				'Installed ImageMagick does not support :type images',
-				array(':type' => $extension)
+				[':type' => $extension]
 			),
 		};
 
-		return array($format, $type);
+		return [$format, $type];
 	}
 } // End Kohana_Image_Imagick

@@ -17,10 +17,10 @@ class Kohana_Database_Query_Builder_Insert extends Database_Query_Builder
 	protected $_table;
 
 	// (...)
-	protected $_columns = array();
+	protected $_columns = [];
 
 	// VALUES (...)
-	protected $_values = array();
+	protected $_values = [];
 
 	/**
 	 * Set the table and columns for an insert.
@@ -132,13 +132,13 @@ class Kohana_Database_Query_Builder_Insert extends Database_Query_Builder
 		$query = 'INSERT INTO '.$db->quote_table($this->_table);
 
 		// Add the column names
-		$query .= ' ('.implode(', ', array_map(array($db, 'quote_column'), $this->_columns)).') ';
+		$query .= ' ('.implode(', ', array_map([$db, 'quote_column'], $this->_columns)).') ';
 
 		if (is_array($this->_values)) {
 			// Callback for quoting values
-			$quote = array($db, 'quote');
+			$quote = [$db, 'quote'];
 
-			$groups = array();
+			$groups = [];
 			foreach ($this->_values as $group) {
 				foreach ($group as $offset => $value) {
 					if ((is_string($value) and array_key_exists($value, $this->_parameters)) === false) {
@@ -168,9 +168,9 @@ class Kohana_Database_Query_Builder_Insert extends Database_Query_Builder
 		$this->_table = null;
 
 		$this->_columns =
-		$this->_values  = array();
+		$this->_values  = [];
 
-		$this->_parameters = array();
+		$this->_parameters = [];
 
 		$this->_sql = null;
 

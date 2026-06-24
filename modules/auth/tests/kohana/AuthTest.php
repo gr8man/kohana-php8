@@ -23,7 +23,7 @@ class Kohana_AuthTest extends Unittest_TestCase
 	{
 		parent::setUp();
 
-		$this->_auth_config = array(
+		$this->_auth_config = [
 			'driver' => 'File',
 			'hash_method' => 'sha256',
 			'hash_key' => 'test_hash_key_for_unit_tests_only',
@@ -31,7 +31,7 @@ class Kohana_AuthTest extends Unittest_TestCase
 			'session_type' => 'cookie',
 			'session_key' => 'auth_user',
 			'bcrypt_cost' => 4,
-		);
+		];
 	}
 
 	public function tearDown(): void
@@ -69,7 +69,7 @@ class Kohana_AuthTest extends Unittest_TestCase
 		$auth = new Auth_File($this->_auth_config);
 
 		$password = 'my_secure_password';
-		$hash = password_hash($password, PASSWORD_BCRYPT, array('cost' => 4));
+		$hash = password_hash($password, PASSWORD_BCRYPT, ['cost' => 4]);
 
 		$this->assertTrue($auth->check_password($password, $hash));
 		$this->assertFalse($auth->check_password('wrong_password', $hash));
@@ -97,7 +97,7 @@ class Kohana_AuthTest extends Unittest_TestCase
 		$auth = new Auth_File($auth_config);
 
 		$password = 'test_password';
-		$hash = password_hash($password, PASSWORD_BCRYPT, array('cost' => 4));
+		$hash = password_hash($password, PASSWORD_BCRYPT, ['cost' => 4]);
 
 		// With same cost, should NOT need rehash
 		$this->assertFalse($auth->needs_rehash($hash));
@@ -114,7 +114,7 @@ class Kohana_AuthTest extends Unittest_TestCase
 		$auth_high = new Auth_File($auth_config_high);
 
 		$password = 'test_password';
-		$hash_low_cost = password_hash($password, PASSWORD_BCRYPT, array('cost' => 4));
+		$hash_low_cost = password_hash($password, PASSWORD_BCRYPT, ['cost' => 4]);
 
 		// With higher cost, should need rehash
 		$this->assertTrue($auth_high->needs_rehash($hash_low_cost));

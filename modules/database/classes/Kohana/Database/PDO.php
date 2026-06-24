@@ -33,12 +33,12 @@ class Kohana_Database_PDO extends Database
 		}
 
 		// Extract the connection parameters, adding required variabels
-		extract($this->_config['connection'] + array(
+		extract($this->_config['connection'] + [
 			'dsn'        => '',
 			'username'   => null,
 			'password'   => null,
 			'persistent' => false,
-		));
+		]);
 
 		// Clear the connection parameters for security
 		unset($this->_config['connection']);
@@ -57,7 +57,7 @@ class Kohana_Database_PDO extends Database
 		} catch (PDOException $e) {
 			throw new Database_Exception(
 				':error',
-				array(':error' => $e->getMessage()),
+				[':error' => $e->getMessage()],
 				$e->getCode()
 			);
 		}
@@ -157,10 +157,10 @@ class Kohana_Database_PDO extends Database
 			// Convert the exception in a database exception
 			throw new Database_Exception(
 				':error [ :query ]',
-				array(
+				[
 					':error' => $e->getMessage(),
 					':query' => $sql
-				),
+				],
 				$e->getCode()
 			);
 		}
@@ -188,10 +188,10 @@ class Kohana_Database_PDO extends Database
 			return new Database_Result_Cached($result, $sql, $as_object, $params);
 		} elseif ($type === Database::INSERT) {
 			// Return a list of insert id and rows created
-			return array(
+			return [
 				$this->_connection->lastInsertId(),
 				$result->rowCount(),
-			);
+			];
 		} else {
 			// Return the number of rows affected
 			return $result->rowCount();
@@ -226,7 +226,7 @@ class Kohana_Database_PDO extends Database
 	{
 		throw new Kohana_Exception(
 			'Database method :method is not supported by :class',
-			array(':method' => __FUNCTION__, ':class' => self::class)
+			[':method' => __FUNCTION__, ':class' => self::class]
 		);
 	}
 
@@ -234,7 +234,7 @@ class Kohana_Database_PDO extends Database
 	{
 		throw new Kohana_Exception(
 			'Database method :method is not supported by :class',
-			array(':method' => __FUNCTION__, ':class' => self::class)
+			[':method' => __FUNCTION__, ':class' => self::class]
 		);
 	}
 
