@@ -20,13 +20,13 @@ class Kohana_Database_Query implements \Stringable
 	protected $_lifetime;
 
 	// Quoted query parameters
-	protected $_parameters = [];
+	protected $_parameters = array();
 
 	// Return results as associative arrays or objects
 	protected $_as_object = false;
 
 	// Parameters for __construct when using object results
-	protected $_object_params = [];
+	protected $_object_params = array();
 
 	/**
 	 * Creates a new SQL query of the specified type.
@@ -91,7 +91,7 @@ class Kohana_Database_Query implements \Stringable
 	{
 		$this->_as_object = false;
 
-		$this->_object_params = [];
+		$this->_object_params = array();
 
 		return $this;
 	}
@@ -177,7 +177,7 @@ class Kohana_Database_Query implements \Stringable
 
 		if (! empty($this->_parameters)) {
 			// Quote all of the values
-			$values = array_map([$db, 'quote'], $this->_parameters);
+			$values = array_map(array($db, 'quote'), $this->_parameters);
 
 			// Replace the values in the SQL
 			$sql = strtr($sql, $values);

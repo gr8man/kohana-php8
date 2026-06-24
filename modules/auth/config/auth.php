@@ -3,7 +3,7 @@
 declare(strict_types=1);
 defined('SYSPATH') or die('No direct access allowed.');
 
-return [
+return array(
 
 	'driver'       => 'File',
 	'hash_method'  => 'sha256',
@@ -16,8 +16,8 @@ return [
 	'bcrypt_cost'  => 12,
 
 	// Username/password combinations for the Auth File driver
-	'users' => [
+	'users' => array(
 		// 'admin' => '$2y$10$hashedpasswordhere...',
-	],
+	),
 
-];
+);

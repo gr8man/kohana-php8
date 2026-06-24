@@ -48,7 +48,7 @@ abstract class Kohana_Auth
 	 *
 	 * @param array $_config Config Options
 	 */
-	public function __construct(protected $_config = [])
+	public function __construct(protected $_config = array())
 	{
 		$this->_session = Session::instance($this->_config['session_type']);
 	}
@@ -135,7 +135,7 @@ abstract class Kohana_Auth
 	{
 		if (function_exists('password_hash')) {
 			$cost = isset($this->_config['bcrypt_cost']) ? (int) $this->_config['bcrypt_cost'] : 12;
-			return password_hash($password, PASSWORD_BCRYPT, ['cost' => $cost]);
+			return password_hash($password, PASSWORD_BCRYPT, array('cost' => $cost));
 		}
 
 		if (! $this->_config['hash_key']) {
@@ -182,7 +182,7 @@ abstract class Kohana_Auth
 	{
 		if (function_exists('password_needs_rehash')) {
 			$cost = isset($this->_config['bcrypt_cost']) ? (int) $this->_config['bcrypt_cost'] : 12;
-			return password_needs_rehash($hash, PASSWORD_BCRYPT, ['cost' => $cost]);
+			return password_needs_rehash($hash, PASSWORD_BCRYPT, array('cost' => $cost));
 		}
 		return false;
 	}

@@ -77,7 +77,7 @@ class Kohana_Unittest_Helpers
 	 * @see set_environment
 	 * @var array
 	 */
-	protected $_environment_backup = [];
+	protected $_environment_backup = array();
 
 	/**
 	 * Allows easy setting & backing up of enviroment config
@@ -100,7 +100,7 @@ class Kohana_Unittest_Helpers
 			$backup_needed = ! array_key_exists($option, $this->_environment_backup);
 
 			// Handle changing superglobals
-			if (in_array($option, ['_GET', '_POST', '_SERVER', '_FILES'])) {
+			if (in_array($option, array('_GET', '_POST', '_SERVER', '_FILES'))) {
 				// For some reason we need to do this in order to change the superglobals
 				global ${$option};
 

@@ -17,7 +17,7 @@ class Kohana_Text
 	/**
 	 * @var  array   number units and text equivalents
 	 */
-	public static $units = [
+	public static $units = array(
 		1000000000 => 'billion',
 		1000000    => 'million',
 		1000       => 'thousand',
@@ -49,7 +49,7 @@ class Kohana_Text
 		3  => 'three',
 		2  => 'two',
 		1  => 'one',
-	];
+	);
 
 	/**
 	 * Limits a phrase to a given number of words.
@@ -410,7 +410,7 @@ class Kohana_Text
 		}
 
 		// Standardize newlines
-		$str = str_replace(["\r\n", "\r"], "\n", $str);
+		$str = str_replace(array("\r\n", "\r"), "\n", $str);
 
 		// Trim whitespace on each line
 		$str = preg_replace('~^[ \t]+~m', '', $str);
@@ -464,12 +464,12 @@ class Kohana_Text
 
 		// IEC prefixes (binary)
 		if ($si == false or str_contains((string) $force_unit, 'i')) {
-			$units = ['B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB'];
+			$units = array('B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB');
 			$mod   = 1024;
 		}
 		// SI prefixes (decimal)
 		else {
-			$units = ['B', 'kB', 'MB', 'GB', 'TB', 'PB'];
+			$units = array('B', 'kB', 'MB', 'GB', 'TB', 'PB');
 			$mod   = 1000;
 		}
 
@@ -499,7 +499,7 @@ class Kohana_Text
 		$number = (int) $number;
 
 		// Uncompiled text version
-		$text = [];
+		$text = array();
 
 		// Last matched unit within the loop
 		$last_unit = null;
@@ -597,7 +597,7 @@ class Kohana_Text
 	public static function user_agent($agent, $value)
 	{
 		if (is_array($value)) {
-			$data = [];
+			$data = array();
 			foreach ($value as $part) {
 				// Add each part to the set
 				$data[$part] = Text::user_agent($agent, $part);
@@ -608,7 +608,7 @@ class Kohana_Text
 
 		if ($value === 'browser' or $value == 'version') {
 			// Extra data will be captured
-			$info = [];
+			$info = array();
 
 			// Load browsers
 			$browsers = Kohana::$config->load('user_agents')->browser;

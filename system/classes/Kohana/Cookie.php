@@ -208,17 +208,17 @@ class Kohana_Cookie
 	{
 		// SECURITY: Use SameSite attribute if PHP version supports it (PHP 7.3+)
 		if (PHP_VERSION_ID >= 70300 and Cookie::$samesite !== null) {
-			return setcookie($name, $value, [
+			return setcookie($name, $value, array(
 				'expires' => $expire,
 				'path' => $path,
 				'domain' => $domain,
 				'secure' => $secure,
 				'httponly' => $httponly,
 				'samesite' => Cookie::$samesite,
-			]);
+			));
 		}
 
-		return setcookie($name, $value, ['expires' => $expire, 'path' => $path, 'domain' => $domain, 'secure' => $secure, 'httponly' => $httponly]);
+		return setcookie($name, $value, array('expires' => $expire, 'path' => $path, 'domain' => $domain, 'secure' => $secure, 'httponly' => $httponly));
 	}
 
 	/**

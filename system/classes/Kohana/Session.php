@@ -22,7 +22,7 @@ abstract class Kohana_Session implements \Stringable
 	/**
 	 * @var  array  session instances
 	 */
-	public static $instances = [];
+	public static $instances = array();
 
 	/**
 	 * Creates a singleton session of the given type. Some session types
@@ -56,7 +56,7 @@ abstract class Kohana_Session implements \Stringable
 			Session::$instances[$type] = $session = new $class($config, $id);
 
 			// Write the session at shutdown
-			register_shutdown_function([$session, 'write']);
+			register_shutdown_function(array($session, 'write'));
 		}
 
 		return Session::$instances[$type];
@@ -80,7 +80,7 @@ abstract class Kohana_Session implements \Stringable
 	/**
 	 * @var  array  session data
 	 */
-	protected $_data = [];
+	protected $_data = array();
 
 	/**
 	 * @var  bool  session destroyed?
@@ -369,7 +369,7 @@ abstract class Kohana_Session implements \Stringable
 		if ($this->_destroyed === false) {
 			if ($this->_destroyed = $this->_destroy()) {
 				// The session has been destroyed, clear all data
-				$this->_data = [];
+				$this->_data = array();
 			}
 		}
 
@@ -416,7 +416,7 @@ abstract class Kohana_Session implements \Stringable
 	protected function _unserialize($data)
 	{
 		// SECURITY: Disable class instantiation during unserialization to prevent object injection attacks
-		return unserialize($data, ['allowed_classes' => false]);
+		return unserialize($data, array('allowed_classes' => false));
 	}
 
 	/**
