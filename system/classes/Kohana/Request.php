@@ -28,7 +28,7 @@ class Kohana_Request implements HTTP_Request, \Stringable
 	/**
 	 * @var  string  trusted proxy server IPs
 	 */
-	public static $trusted_proxies = ['127.0.0.1', 'localhost', 'localhost.localdomain'];
+	public static $trusted_proxies = array('127.0.0.1', 'localhost', 'localhost.localdomain');
 
 	/**
 	 * @var  Request  main request instance
@@ -58,7 +58,7 @@ class Kohana_Request implements HTTP_Request, \Stringable
 	 * @uses    Route::all
 	 * @uses    Route::matches
 	 */
-	public static function factory($uri = true, $client_params = [], $allow_external = true, $injected_routes = [])
+	public static function factory($uri = true, $client_params = array(), $allow_external = true, $injected_routes = array())
 	{
 		// If this is the initial request
 		if (! Request::$initial) {
@@ -131,7 +131,7 @@ class Kohana_Request implements HTTP_Request, \Stringable
 				$uri = Request::detect_uri();
 			}
 
-			$cookies = [];
+			$cookies = array();
 
 			if (($cookie_keys = array_keys($_COOKIE))) {
 				foreach ($cookie_keys as $key) {
@@ -308,7 +308,7 @@ class Kohana_Request implements HTTP_Request, \Stringable
 
 		if ($accepts === null) {
 			// Parse the HTTP_ACCEPT header
-			$accepts = Request::_parse_accept($_SERVER['HTTP_ACCEPT'], ['*/*' => 1.0]);
+			$accepts = Request::_parse_accept($_SERVER['HTTP_ACCEPT'], array('*/*' => 1.0));
 		}
 
 		if (isset($type)) {
@@ -425,10 +425,10 @@ class Kohana_Request implements HTTP_Request, \Stringable
 
 			// We found something suitable
 			if ($params = $route->matches($request)) {
-				return [
+				return array(
 					'params' => $params,
 					'route' => $route,
-				];
+				);
 			}
 		}
 
@@ -558,22 +558,22 @@ class Kohana_Request implements HTTP_Request, \Stringable
 	/**
 	 * @var  array   parameters from the route
 	 */
-	protected $_params = [];
+	protected $_params = array();
 
 	/**
 	 * @var array    query parameters
 	 */
-	protected $_get = [];
+	protected $_get = array();
 
 	/**
 	 * @var array    post parameters
 	 */
-	protected $_post = [];
+	protected $_post = array();
 
 	/**
 	 * @var array    cookies to send with the request
 	 */
-	protected $_cookies = [];
+	protected $_cookies = array();
 
 	/**
 	 * @var Kohana_Request_Client
@@ -597,13 +597,13 @@ class Kohana_Request implements HTTP_Request, \Stringable
 	 * @uses    Route::all
 	 * @uses    Route::matches
 	 */
-	public function __construct($uri, $client_params = [], $allow_external = true, protected $_routes = [])
+	public function __construct($uri, $client_params = array(), $allow_external = true, protected $_routes = array())
 	{
-		$client_params = is_array($client_params) ? $client_params : [];
+		$client_params = is_array($client_params) ? $client_params : array();
 		$uri = is_string($uri) ? $uri : '';
 
 		// Initialise the header
-		$this->_header = new HTTP_Header([]);
+		$this->_header = new HTTP_Header(array());
 
 		// Cleanse query parameters from URI (faster that parse_url())
 		$split_uri = explode('?', $uri);
@@ -653,11 +653,11 @@ class Kohana_Request implements HTTP_Request, \Stringable
 	}
 
 	/**
-     * Sets and gets the uri from the request.
-     *
-     * @param   string $uri
-     */
-    public function uri($uri = null): string|self
+	 * Sets and gets the uri from the request.
+	 *
+	 * @param   string $uri
+	 */
+	public function uri($uri = null): string|self
 	{
 		if ($uri === null) {
 			// Act as a getter
@@ -730,11 +730,11 @@ class Kohana_Request implements HTTP_Request, \Stringable
 	}
 
 	/**
-     * Sets and gets the route from the request.
-     *
-     * @param   string $route
-     */
-    public function route(Route $route = null): \Route|self
+	 * Sets and gets the route from the request.
+	 *
+	 * @param   string $route
+	 */
+	public function route(Route $route = null): \Route|self
 	{
 		if ($route === null) {
 			// Act as a getter
@@ -894,16 +894,16 @@ class Kohana_Request implements HTTP_Request, \Stringable
 		}
 
 		if (! $this->_route instanceof Route) {
-			return HTTP_Exception::factory(404, 'Unable to find a route to match the URI: :uri', [
+			return HTTP_Exception::factory(404, 'Unable to find a route to match the URI: :uri', array(
 				':uri' => $this->_uri,
-			])->request($this)
+			))->request($this)
 				->get_response();
 		}
 
 		if (! $this->_client instanceof Request_Client) {
-			throw new Request_Exception('Unable to execute :uri without a Kohana_Request_Client', [
+			throw new Request_Exception('Unable to execute :uri without a Kohana_Request_Client', array(
 				':uri' => $this->_uri,
-			]);
+			));
 		}
 
 		return $this->_client->execute($this);
@@ -1134,7 +1134,7 @@ class Kohana_Request implements HTTP_Request, \Stringable
 
 		// Prepare cookies
 		if ($this->_cookies) {
-			$cookie_string = [];
+			$cookie_string = array();
 
 			// Parse each
 			foreach ($this->_cookies as $key => $value) {

@@ -15,7 +15,7 @@ defined('SYSPATH') or die('No direct script access.');
  */
 class Kohana_Unittest_Tests
 {
-	protected static $cache = [];
+	protected static $cache = array();
 
 	/**
 	 * Loads test files if they cannot be found by kohana
@@ -44,9 +44,9 @@ class Kohana_Unittest_Tests
 		restore_exception_handler();
 		restore_error_handler();
 
-		spl_autoload_register(['Unittest_tests', 'autoload']);
+		spl_autoload_register(array('Unittest_tests', 'autoload'));
 
-		Unittest_tests::$cache = (($cache = Kohana::cache('unittest_whitelist_cache')) === null) ? [] : $cache;
+		Unittest_tests::$cache = (($cache = Kohana::cache('unittest_whitelist_cache')) === null) ? array() : $cache;
 
 	}
 
@@ -169,7 +169,7 @@ class Kohana_Unittest_Tests
 	protected static function get_config_whitelist(): array
 	{
 		$config = Kohana::$config->load('unittest');
-		$directories = [];
+		$directories = array();
 
 		if ($config->whitelist['app']) {
 			$directories['k_app'] = APPPATH;
@@ -187,7 +187,7 @@ class Kohana_Unittest_Tests
 				$modules = array_intersect_key($k_modules, array_combine($modules, $modules));
 			} else {
 				// modules are disabled
-				$modules = [];
+				$modules = array();
 			}
 
 			$directories += $modules;

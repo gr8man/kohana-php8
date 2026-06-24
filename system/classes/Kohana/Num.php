@@ -23,7 +23,7 @@ class Kohana_Num
 	/**
 	 * @var  array  Valid byte units => power of 2 that defines the unit's size
 	 */
-	public static $byte_units = [
+	public static $byte_units = array(
 		'B'   => 0,
 		'K'   => 10,
 		'Ki'  => 10,
@@ -57,7 +57,7 @@ class Kohana_Num
 		'Yi'  => 80,
 		'YB'  => 80,
 		'YiB' => 80,
-	];
+	);
 
 	/**
 	 * Returns the English ordinal suffix (th, st, nd, etc) of a number.
@@ -167,19 +167,19 @@ class Kohana_Num
 	}
 
 	/**
-     * Converts a file size number to a byte value. File sizes are defined in
-     * the format: SB, where S is the size (1, 8.5, 300, etc.) and B is the
-     * byte unit (K, MiB, GB, etc.). All valid byte units are defined in
-     * Num::$byte_units
-     *
-     *     echo Num::bytes('200K');  // 204800
-     *     echo Num::bytes('5MiB');  // 5242880
-     *     echo Num::bytes('1000');  // 1000
-     *     echo Num::bytes('2.5GB'); // 2684354560
-     *
-     * @param   string  $bytes  file size in SB format
-     */
-    public static function bytes($size): float
+	 * Converts a file size number to a byte value. File sizes are defined in
+	 * the format: SB, where S is the size (1, 8.5, 300, etc.) and B is the
+	 * byte unit (K, MiB, GB, etc.). All valid byte units are defined in
+	 * Num::$byte_units
+	 *
+	 *     echo Num::bytes('200K');  // 204800
+	 *     echo Num::bytes('5MiB');  // 5242880
+	 *     echo Num::bytes('1000');  // 1000
+	 *     echo Num::bytes('2.5GB'); // 2684354560
+	 *
+	 * @param   string  $bytes  file size in SB format
+	 */
+	public static function bytes($size): float
 	{
 		// Prepare the size
 		$size = trim((string) $size);
@@ -192,9 +192,9 @@ class Kohana_Num
 
 		// Verify the size format and store the matching parts
 		if (! preg_match($pattern, $size, $matches)) {
-			throw new Kohana_Exception('The byte unit size, ":size", is improperly formatted.', [
+			throw new Kohana_Exception('The byte unit size, ":size", is improperly formatted.', array(
 				':size' => $size,
-			]);
+			));
 		}
 
 		// Find the float value of the size

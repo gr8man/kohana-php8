@@ -14,12 +14,12 @@ class Bench_AutoLinkEmails extends Codebench
 
 	public $loops = 1000;
 
-	public $subjects = [
+	public $subjects = array(
 		'<ul>
 		    <li>voorzitter@xxxx.com</li>
 		    <li>vicevoorzitter@xxxx.com</li>
 		</ul>',
-	];
+	);
 
 	// The original function, with str_replace replaced by preg_replace. Looks clean.
 	public function bench_match_all_loop($subject)

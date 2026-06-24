@@ -16,7 +16,7 @@ class Kohana_ORM_Validation_Exception extends Kohana_Exception
    * Array of validation objects
    * @var array
    */
-	protected $_objects = [];
+	protected $_objects = array();
 
 	/**
 	 * Constructs a new exception for the specified model
@@ -111,16 +111,16 @@ class Kohana_ORM_Validation_Exception extends Kohana_Exception
 	}
 
 	/**
-     * Returns a merged array of the errors from all the Validation objects in this exception
-     *
-     *     // Will load Model_User errors from messages/orm-validation/user.php
-     *     $e->errors('orm-validation');
-     *
-     * @param   string  $directory Directory to load error messages from
-     * @param   mixed   $translate Translate the message
-     * @see generate_errors()
-     */
-    public function errors(?string $directory = null, $translate = true): array
+	 * Returns a merged array of the errors from all the Validation objects in this exception
+	 *
+	 *     // Will load Model_User errors from messages/orm-validation/user.php
+	 *     $e->errors('orm-validation');
+	 *
+	 * @param   string  $directory Directory to load error messages from
+	 * @param   mixed   $translate Translate the message
+	 * @see generate_errors()
+	 */
+	public function errors(?string $directory = null, $translate = true): array
 	{
 		return $this->generate_errors($this->_alias, $this->_objects, $directory, $translate);
 	}
@@ -135,7 +135,7 @@ class Kohana_ORM_Validation_Exception extends Kohana_Exception
 	 */
 	protected function generate_errors(string $alias, array $array, string $directory, $translate): array
 	{
-		$errors = [];
+		$errors = array();
 
 		foreach ($array as $key => $object) {
 			if (is_array($object)) {

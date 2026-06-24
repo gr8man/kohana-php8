@@ -20,12 +20,12 @@ class Userguide_ControllerTest extends Unittest_TestCase
 {
 	public function provider_file_finds_markdown_files(): array
 	{
-		return [
-			['userguide/adding', 'guide/userguide/adding.md'],
-			['userguide/adding.md', 'guide/userguide/adding.md'],
-			['userguide/adding.markdown', 'guide/userguide/adding.md'],
-			['userguide/does_not_exist.md', false]
-		];
+		return array(
+			array('userguide/adding', 'guide/userguide/adding.md'),
+			array('userguide/adding.md', 'guide/userguide/adding.md'),
+			array('userguide/adding.markdown', 'guide/userguide/adding.md'),
+			array('userguide/does_not_exist.md', false)
+		);
 	}
 
 	/**
@@ -35,7 +35,7 @@ class Userguide_ControllerTest extends Unittest_TestCase
 	 */
 	public function test_file_finds_markdown_files(string $page, string|bool $expected_file): void
 	{
-		$controller = $this->getMock('Controller_Userguide', ['__construct'], [], '', false);
+		$controller = $this->getMock('Controller_Userguide', array('__construct'), array(), '', false);
 		$path = $controller->file($page);
 
 		// Only verify trailing segments to avoid problems if file overwritten in CFS

@@ -68,17 +68,17 @@ class Kohana_Security
 	}
 
 	/**
-     * Check that the given token matches the currently stored security token.
-     *
-     *     if (Security::check($token))
-     *     {
-     *         // Pass
-     *     }
-     *
-     * @param   string  $token  token to check
-     * @uses    Security::token
-     */
-    public static function check($token): bool
+	 * Check that the given token matches the currently stored security token.
+	 *
+	 *     if (Security::check($token))
+	 *     {
+	 *         // Pass
+	 *     }
+	 *
+	 * @param   string  $token  token to check
+	 * @uses    Security::token
+	 */
+	public static function check($token): bool
 	{
 		return Security::slow_equals(Security::token(), $token);
 	}
@@ -154,7 +154,7 @@ class Kohana_Security
 	 */
 	public static function encode_php_tags($str): string
 	{
-		return str_replace(['<?', '?>'], ['&lt;?', '?&gt;'], $str);
+		return str_replace(array('<?', '?>'), array('&lt;?', '?&gt;'), $str);
 	}
 
 }

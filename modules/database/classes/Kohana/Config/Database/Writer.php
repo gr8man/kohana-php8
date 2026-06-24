@@ -23,16 +23,16 @@ defined('SYSPATH') or die('No direct script access.');
  */
 class Kohana_Config_Database_Writer extends Config_Database_Reader implements Kohana_Config_Writer
 {
-	protected $_loaded_keys = [];
+	protected $_loaded_keys = array();
 
 	/**
-     * Tries to load the specificed configuration group
-     *
-     * Returns FALSE if group does not exist or an array if it does
-     *
-     * @param  string $group Configuration group
-     */
-    #[\Override]
+	 * Tries to load the specificed configuration group
+	 *
+	 * Returns FALSE if group does not exist or an array if it does
+	 *
+	 * @param  string $group Configuration group
+	 */
+	#[\Override]
 	public function load($group): array|false
 	{
 		$config = parent::load($group);
@@ -86,8 +86,8 @@ class Kohana_Config_Database_Writer extends Config_Database_Reader implements Ko
 	 */
 	protected function _insert($group, $key, $config): static
 	{
-		DB::insert($this->_table_name, ['group_name', 'config_key', 'config_value'])
-			->values([$group, $key, $config])
+		DB::insert($this->_table_name, array('group_name', 'config_key', 'config_value'))
+			->values(array($group, $key, $config))
 			->execute($this->_db_instance);
 
 		return $this;
@@ -104,7 +104,7 @@ class Kohana_Config_Database_Writer extends Config_Database_Reader implements Ko
 	protected function _update($group, $key, $config): static
 	{
 		DB::update($this->_table_name)
-			->set(['config_value' => $config])
+			->set(array('config_value' => $config))
 			->where('group_name', '=', $group)
 			->where('config_key', '=', $key)
 			->execute($this->_db_instance);

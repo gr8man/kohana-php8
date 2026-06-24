@@ -102,16 +102,16 @@ class Kohana_Form
 	}
 
 	/**
-     * Creates a hidden form input.
-     *
-     *     echo Form::hidden('csrf', $token);
-     *
-     * @param   string  $name       input name
-     * @param   string  $value      input value
-     * @param   array   $attributes html attributes
-     * @uses    Form::input
-     */
-    public static function hidden($name, $value = null, array $attributes = null): string
+	 * Creates a hidden form input.
+	 *
+	 *     echo Form::hidden('csrf', $token);
+	 *
+	 * @param   string  $name       input name
+	 * @param   string  $value      input value
+	 * @param   array   $attributes html attributes
+	 * @uses    Form::input
+	 */
+	public static function hidden($name, $value = null, array $attributes = null): string
 	{
 		$attributes['type'] = 'hidden';
 
@@ -119,16 +119,16 @@ class Kohana_Form
 	}
 
 	/**
-     * Creates a password form input.
-     *
-     *     echo Form::password('password');
-     *
-     * @param   string  $name       input name
-     * @param   string  $value      input value
-     * @param   array   $attributes html attributes
-     * @uses    Form::input
-     */
-    public static function password($name, $value = null, array $attributes = null): string
+	 * Creates a password form input.
+	 *
+	 *     echo Form::password('password');
+	 *
+	 * @param   string  $name       input name
+	 * @param   string  $value      input value
+	 * @param   array   $attributes html attributes
+	 * @uses    Form::input
+	 */
+	public static function password($name, $value = null, array $attributes = null): string
 	{
 		$attributes['type'] = 'password';
 
@@ -136,15 +136,15 @@ class Kohana_Form
 	}
 
 	/**
-     * Creates a file upload form input. No input value can be specified.
-     *
-     *     echo Form::file('image');
-     *
-     * @param   string  $name       input name
-     * @param   array   $attributes html attributes
-     * @uses    Form::input
-     */
-    public static function file($name, array $attributes = null): string
+	 * Creates a file upload form input. No input value can be specified.
+	 *
+	 *     echo Form::file('image');
+	 *
+	 * @param   string  $name       input name
+	 * @param   array   $attributes html attributes
+	 * @uses    Form::input
+	 */
+	public static function file($name, array $attributes = null): string
 	{
 		$attributes['type'] = 'file';
 
@@ -152,17 +152,17 @@ class Kohana_Form
 	}
 
 	/**
-     * Creates a checkbox form input.
-     *
-     *     echo Form::checkbox('remember_me', 1, (bool) $remember);
-     *
-     * @param   string  $name       input name
-     * @param   string  $value      input value
-     * @param   boolean $checked    checked status
-     * @param   array   $attributes html attributes
-     * @uses    Form::input
-     */
-    public static function checkbox($name, $value = null, $checked = false, array $attributes = null): string
+	 * Creates a checkbox form input.
+	 *
+	 *     echo Form::checkbox('remember_me', 1, (bool) $remember);
+	 *
+	 * @param   string  $name       input name
+	 * @param   string  $value      input value
+	 * @param   boolean $checked    checked status
+	 * @param   array   $attributes html attributes
+	 * @uses    Form::input
+	 */
+	public static function checkbox($name, $value = null, $checked = false, array $attributes = null): string
 	{
 		$attributes['type'] = 'checkbox';
 
@@ -175,18 +175,18 @@ class Kohana_Form
 	}
 
 	/**
-     * Creates a radio form input.
-     *
-     *     echo Form::radio('like_cats', 1, $cats);
-     *     echo Form::radio('like_cats', 0, ! $cats);
-     *
-     * @param   string  $name       input name
-     * @param   string  $value      input value
-     * @param   boolean $checked    checked status
-     * @param   array   $attributes html attributes
-     * @uses    Form::input
-     */
-    public static function radio($name, $value = null, $checked = false, array $attributes = null): string
+	 * Creates a radio form input.
+	 *
+	 *     echo Form::radio('like_cats', 1, $cats);
+	 *     echo Form::radio('like_cats', 0, ! $cats);
+	 *
+	 * @param   string  $name       input name
+	 * @param   string  $value      input value
+	 * @param   boolean $checked    checked status
+	 * @param   array   $attributes html attributes
+	 * @uses    Form::input
+	 */
+	public static function radio($name, $value = null, $checked = false, array $attributes = null): string
 	{
 		$attributes['type'] = 'radio';
 
@@ -216,7 +216,7 @@ class Kohana_Form
 		$attributes['name'] = $name;
 
 		// Add default rows and cols attributes (required)
-		$attributes += ['rows' => 10, 'cols' => 50];
+		$attributes += array('rows' => 10, 'cols' => 50);
 
 		return '<textarea'.HTML::attributes($attributes).'>'.HTML::chars($body, $double_encode).'</textarea>';
 	}
@@ -247,10 +247,10 @@ class Kohana_Form
 		if (! is_array($selected)) {
 			if ($selected === null) {
 				// Use an empty array
-				$selected = [];
+				$selected = array();
 			} else {
 				// Convert the selected options to an array
-				$selected = [ (string) $selected];
+				$selected = array( (string) $selected);
 			}
 		}
 
@@ -261,17 +261,17 @@ class Kohana_Form
 			foreach ($options as $value => $name) {
 				if (is_array($name)) {
 					// Create a new optgroup
-					$group = ['label' => $value];
+					$group = array('label' => $value);
 
 					// Create a new list of options
-					$_options = [];
+					$_options = array();
 
 					foreach ($name as $_value => $_name) {
 						// Force value to be string
 						$_value = (string) $_value;
 
 						// Create a new attribute set for this option
-						$option = ['value' => $_value];
+						$option = array('value' => $_value);
 
 						if (in_array($_value, $selected)) {
 							// This option is selected
@@ -291,7 +291,7 @@ class Kohana_Form
 					$value = (string) $value;
 
 					// Create a new attribute set for this option
-					$option = ['value' => $value];
+					$option = array('value' => $value);
 
 					if (in_array($value, $selected)) {
 						// This option is selected
@@ -311,16 +311,16 @@ class Kohana_Form
 	}
 
 	/**
-     * Creates a submit form input.
-     *
-     *     echo Form::submit(NULL, 'Login');
-     *
-     * @param   string  $name       input name
-     * @param   string  $value      input value
-     * @param   array   $attributes html attributes
-     * @uses    Form::input
-     */
-    public static function submit($name, $value, array $attributes = null): string
+	 * Creates a submit form input.
+	 *
+	 *     echo Form::submit(NULL, 'Login');
+	 *
+	 * @param   string  $name       input name
+	 * @param   string  $value      input value
+	 * @param   array   $attributes html attributes
+	 * @uses    Form::input
+	 */
+	public static function submit($name, $value, array $attributes = null): string
 	{
 		$attributes['type'] = 'submit';
 
@@ -328,17 +328,17 @@ class Kohana_Form
 	}
 
 	/**
-     * Creates a image form input.
-     *
-     *     echo Form::image(NULL, NULL, array('src' => 'media/img/login.png'));
-     *
-     * @param   string  $name       input name
-     * @param   string  $value      input value
-     * @param   array   $attributes html attributes
-     * @param   boolean $index      add index file to URL?
-     * @uses    Form::input
-     */
-    public static function image($name, $value, array $attributes = null, $index = false): string
+	 * Creates a image form input.
+	 *
+	 *     echo Form::image(NULL, NULL, array('src' => 'media/img/login.png'));
+	 *
+	 * @param   string  $name       input name
+	 * @param   string  $value      input value
+	 * @param   array   $attributes html attributes
+	 * @param   boolean $index      add index file to URL?
+	 * @uses    Form::input
+	 */
+	public static function image($name, $value, array $attributes = null, $index = false): string
 	{
 		if (! empty($attributes['src'])) {
 			if (!str_contains((string) $attributes['src'], '://')) {

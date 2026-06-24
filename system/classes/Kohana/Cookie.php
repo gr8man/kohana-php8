@@ -115,23 +115,23 @@ class Kohana_Cookie
 	}
 
 	/**
-     * Sets a signed cookie. Note that all cookie values must be strings and no
-     * automatic serialization will be performed!
-     *
-     * [!!] By default, Cookie::$expiration is 0 - if you skip/pass NULL for the optional
-     *      lifetime argument your cookies will expire immediately unless you have separately
-     *      configured Cookie::$expiration.
-     *
-     *
-     *     // Set the "theme" cookie
-     *     Cookie::set('theme', 'red');
-     *
-     * @param   string  $name       name of cookie
-     * @param   string  $value      value of cookie
-     * @param   integer $lifetime   lifetime in seconds
-     * @uses    Cookie::salt
-     */
-    public static function set($name, $value, $lifetime = null): bool
+	 * Sets a signed cookie. Note that all cookie values must be strings and no
+	 * automatic serialization will be performed!
+	 *
+	 * [!!] By default, Cookie::$expiration is 0 - if you skip/pass NULL for the optional
+	 *      lifetime argument your cookies will expire immediately unless you have separately
+	 *      configured Cookie::$expiration.
+	 *
+	 *
+	 *     // Set the "theme" cookie
+	 *     Cookie::set('theme', 'red');
+	 *
+	 * @param   string  $name       name of cookie
+	 * @param   string  $value      value of cookie
+	 * @param   integer $lifetime   lifetime in seconds
+	 * @uses    Cookie::salt
+	 */
+	public static function set($name, $value, $lifetime = null): bool
 	{
 		if ($lifetime === null) {
 			// Use the default expiration
@@ -150,13 +150,13 @@ class Kohana_Cookie
 	}
 
 	/**
-     * Deletes a cookie by making the value NULL and expiring it.
-     *
-     *     Cookie::delete('theme');
-     *
-     * @param   string  $name   cookie name
-     */
-    public static function delete($name): bool
+	 * Deletes a cookie by making the value NULL and expiring it.
+	 *
+	 *     Cookie::delete('theme');
+	 *
+	 * @param   string  $name   cookie name
+	 */
+	public static function delete($name): bool
 	{
 		// Remove the cookie
 		unset($_COOKIE[$name]);
@@ -208,17 +208,17 @@ class Kohana_Cookie
 	{
 		// SECURITY: Use SameSite attribute if PHP version supports it (PHP 7.3+)
 		if (PHP_VERSION_ID >= 70300 and Cookie::$samesite !== null) {
-			return setcookie($name, $value, [
+			return setcookie($name, $value, array(
 				'expires' => $expire,
 				'path' => $path,
 				'domain' => $domain,
 				'secure' => $secure,
 				'httponly' => $httponly,
 				'samesite' => Cookie::$samesite,
-			]);
+			));
 		}
 
-		return setcookie($name, $value, ['expires' => $expire, 'path' => $path, 'domain' => $domain, 'secure' => $secure, 'httponly' => $httponly]);
+		return setcookie($name, $value, array('expires' => $expire, 'path' => $path, 'domain' => $domain, 'secure' => $secure, 'httponly' => $httponly));
 	}
 
 	/**

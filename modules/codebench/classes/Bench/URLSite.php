@@ -13,7 +13,7 @@ class Bench_URLSite extends Codebench
 
 	public $loops = 1000;
 
-	public $subjects = [
+	public $subjects = array(
 		'',
 		'news',
 		'news/',
@@ -24,7 +24,7 @@ class Bench_URLSite extends Codebench
 		'http://example.com/hello',
 		'http://example.com:80/',
 		'http://user:pass@example.com/',
-	];
+	);
 
 	public function __construct()
 	{
