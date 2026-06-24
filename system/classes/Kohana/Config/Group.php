@@ -30,7 +30,7 @@ class Kohana_Config_Group extends ArrayObject implements \Stringable
 	public function __construct(
 		protected Kohana_Config $_parent_instance,
 		protected string $_group_name,
-		array $config = []
+		array $config = array()
 	) {
 		parent::__construct($config, ArrayObject::ARRAY_AS_PROPS);
 	}

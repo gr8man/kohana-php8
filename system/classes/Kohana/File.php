@@ -90,7 +90,7 @@ class Kohana_File
 		// Load all of the mime types
 		$mimes = Kohana::$config->load('mimes');
 
-		return isset($mimes[$extension]) ? ((array) $mimes[$extension]) : [];
+		return isset($mimes[$extension]) ? ((array) $mimes[$extension]) : array();
 	}
 
 	/**
@@ -101,7 +101,7 @@ class Kohana_File
 	 */
 	public static function exts_by_mime($type)
 	{
-		static $types = [];
+		static $types = array();
 
 		// Fill the static array
 		if (empty($types)) {
@@ -113,7 +113,7 @@ class Kohana_File
 					}
 
 					if (! isset($types[$mime])) {
-						$types[$mime] = [ (string) $ext];
+						$types[$mime] = array( (string) $ext);
 					} elseif (! in_array($ext, $types[$mime])) {
 						$types[$mime][] = (string) $ext;
 					}

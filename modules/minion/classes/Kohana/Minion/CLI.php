@@ -7,7 +7,7 @@ class Kohana_Minion_CLI
 {
 	public static $wait_msg = 'Press any key to continue...';
 
-	protected static $foreground_colors = [
+	protected static $foreground_colors = array(
 		'black'        => '0;30',
 		'dark_gray'    => '1;30',
 		'blue'         => '0;34',
@@ -24,8 +24,8 @@ class Kohana_Minion_CLI
 		'yellow'       => '1;33',
 		'light_gray'   => '0;37',
 		'white'        => '1;37',
-	];
-	protected static $background_colors = [
+	);
+	protected static $background_colors = array(
 		'black'      => '40',
 		'red'        => '41',
 		'green'      => '42',
@@ -34,7 +34,7 @@ class Kohana_Minion_CLI
 		'magenta'    => '45',
 		'cyan'       => '46',
 		'light_gray' => '47',
-	];
+	);
 
 	/**
 	 * Returns one or more command-line options. Options are specified using
@@ -54,7 +54,7 @@ class Kohana_Minion_CLI
 		$options = func_get_args();
 
 		// Found option values
-		$values = [];
+		$values = array();
 
 		// Skip the first option, it is always the file executed
 		for ($i = 1; $i < $_SERVER['argc']; $i++) {

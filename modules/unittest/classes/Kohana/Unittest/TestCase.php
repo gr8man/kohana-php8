@@ -26,7 +26,7 @@ abstract class Kohana_Unittest_TestCase extends PHPUnit\Framework\TestCase
 	 * A default set of environment to be applied before each test
 	 * @var array
 	 */
-	protected $environmentDefault = [];
+	protected $environmentDefault = array();
 
 	/**
 	 * Creates a predefined environment using the default environment
@@ -157,7 +157,7 @@ abstract class Kohana_Unittest_TestCase extends PHPUnit\Framework\TestCase
 	public function assertTag(array $matcher, string $actual, string $message = ''): void
 	{
 		$tag = $matcher['tag'] ?? null;
-		$attributes = $matcher['attributes'] ?? [];
+		$attributes = $matcher['attributes'] ?? array();
 
 		if ($tag) {
 			$this->assertStringContainsString('<' . $tag, $actual, $message);
@@ -205,7 +205,7 @@ abstract class Kohana_Unittest_TestCase extends PHPUnit\Framework\TestCase
 	/**
 	 * Compatibility for removed getMock
 	 */
-	public function getMock(string $className, $methods = [], array $arguments = [], $mockClassName = '', $callOriginalConstructor = true, $callOriginalClone = true, $callAutoload = true, $cloneArguments = false, $callOriginalMethods = false)
+	public function getMock(string $className, $methods = array(), array $arguments = array(), $mockClassName = '', $callOriginalConstructor = true, $callOriginalClone = true, $callAutoload = true, $cloneArguments = false, $callOriginalMethods = false)
 	{
 		$builder = $this->getMockBuilder($className);
 		if ($methods) {

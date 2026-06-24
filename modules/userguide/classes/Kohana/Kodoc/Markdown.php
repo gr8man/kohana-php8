@@ -29,12 +29,12 @@ class Kohana_Kodoc_Markdown extends MarkdownExtra_Parser
 	 *
 	 * @var  array
 	 */
-	protected $_heading_ids = [];
+	protected $_heading_ids = array();
 
 	/**
 	 * @var  string   the generated table of contents
 	 */
-	protected static $_toc = [];
+	protected static $_toc = array();
 
 	/**
 	 * Slightly less terrible way to make it so the TOC only shows up when we
@@ -167,7 +167,7 @@ class Kohana_Kodoc_Markdown extends MarkdownExtra_Parser
 	public function doIncludeViews($text)
 	{
 		if (preg_match_all('/{{([^\s{}]++)}}/', (string) $text, $matches, PREG_SET_ORDER)) {
-			$replace = [];
+			$replace = array();
 
 			foreach ($matches as $set) {
 				[$search, $view] = $set;
@@ -254,10 +254,10 @@ class Kohana_Kodoc_Markdown extends MarkdownExtra_Parser
 
 	protected function _add_to_toc($level, $name, $id)
 	{
-		self::$_toc[] = [
+		self::$_toc[] = array(
 			'level' => $level,
 			'name'  => $name,
-			'id'    => $id];
+			'id'    => $id);
 	}
 
 	public function doTOC($text)

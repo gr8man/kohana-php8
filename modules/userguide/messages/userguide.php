@@ -3,8 +3,8 @@
 declare(strict_types=1);
 defined('SYSPATH') or die('No direct script access.');
 
-return [
-	'translations' => [
+return array(
+	'translations' => array(
 		'de-de' => 'Deutsch',
 		'en-us' => 'English',
 		'es-es' => 'Español',
@@ -13,5 +13,5 @@ return [
 		'fr-fr' => 'Français',
 		'he-il' => 'עברית',
 		'nl'	=> 'Nederlands',
-	],
-];
+	),
+);

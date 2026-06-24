@@ -31,17 +31,17 @@ class Kohana_Kodoc_Class extends Kodoc
 	/**
 	 * @var  array  array of tags, retrieved from the comment
 	 */
-	public $tags = [];
+	public $tags = array();
 
 	/**
 	 * @var  array  array of this classes constants
 	 */
-	public $constants = [];
+	public $constants = array();
 
 	/**
 	 * @var array Parent classes/interfaces of this class/interface
 	 */
-	public $parents = [];
+	public $parents = array();
 
 	/**
 	 * Loads a class and uses [reflection](http://php.net/reflection) to parse
@@ -89,7 +89,7 @@ class Kohana_Kodoc_Class extends Kodoc
 	 */
 	public function constants(): array
 	{
-		$result = [];
+		$result = array();
 
 		foreach ($this->constants as $name => $value) {
 			$result[$name] = Debug::vars($value);
@@ -253,7 +253,7 @@ class Kohana_Kodoc_Class extends Kodoc
 	 */
 	public function tags(): array
 	{
-		$result = [];
+		$result = array();
 
 		foreach ($this->tags as $name => $set) {
 			foreach ($set as $text) {

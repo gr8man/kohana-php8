@@ -61,7 +61,7 @@ class Kohana_Route
 	/**
 	 * @var  array   list of valid localhost entries
 	 */
-	public static $localhosts = [false, '', 'local', 'localhost'];
+	public static $localhosts = array(false, '', 'local', 'localhost');
 
 	/**
 	 * @var  string  default action for all routes
@@ -76,7 +76,7 @@ class Kohana_Route
 	/**
 	 * @var  array
 	 */
-	protected static $_routes = [];
+	protected static $_routes = array();
 
 	/**
 	 * Stores a named route and returns it. The "action" will always be set to
@@ -111,7 +111,7 @@ class Kohana_Route
 		if (! isset(Route::$_routes[$name])) {
 			throw new Kohana_Exception(
 				'The requested route does not exist: :route',
-				[':route' => $name]
+				array(':route' => $name)
 			);
 		}
 
@@ -168,12 +168,12 @@ class Kohana_Route
 				Kohana::cache('Route::cache()', Route::$_routes);
 			} catch (Exception $e) {
 				// We most likely have a lambda in a route, which cannot be cached
-				throw new Kohana_Exception('One or more routes could not be cached (:message)', [
+				throw new Kohana_Exception('One or more routes could not be cached (:message)', array(
 						':message' => $e->getMessage(),
-					], 0, $e);
+					), 0, $e);
 			}
 		} else {
-			if ($routes = Kohana::cache('Route::cache()', null, null, ['Route'])) {
+			if ($routes = Kohana::cache('Route::cache()', null, null, array('Route'))) {
 				if ($append) {
 					// Append cached routes
 					Route::$_routes += $routes;
@@ -238,14 +238,14 @@ class Kohana_Route
 
 		if (str_contains((string) $expression, '(')) {
 			// Make optional parts of the URI non-capturing and optional
-			$expression = str_replace(['(', ')'], ['(?:', ')?'], $expression);
+			$expression = str_replace(array('(', ')'), array('(?:', ')?'), $expression);
 		}
 
 		// Insert default regex for keys
-		$expression = str_replace(['<', '>'], ['(?P<', '>'.Route::REGEX_SEGMENT.')'], $expression);
+		$expression = str_replace(array('<', '>'), array('(?P<', '>'.Route::REGEX_SEGMENT.')'), $expression);
 
 		if ($regex) {
-			$search = $replace = [];
+			$search = $replace = array();
 			foreach ($regex as $key => $value) {
 				$search[]  = "<$key>".Route::REGEX_SEGMENT;
 				$replace[] = "<$key>$value";
@@ -261,7 +261,7 @@ class Kohana_Route
 	/**
 	 * @var  array  route filters
 	 */
-	protected $_filters = [];
+	protected $_filters = array();
 
 	/**
 	 * @var  string  route URI
@@ -271,12 +271,12 @@ class Kohana_Route
 	/**
 	 * @var  array
 	 */
-	protected $_regex = [];
+	protected $_regex = array();
 
 	/**
 	 * @var  array
 	 */
-	protected $_defaults = ['action' => 'index', 'host' => false];
+	protected $_defaults = array('action' => 'index', 'host' => false);
 
 	protected string $_route_regex;
 
@@ -405,7 +405,7 @@ class Kohana_Route
 			return false;
 		}
 
-		$params = [];
+		$params = array();
 		foreach ($matches as $key => $value) {
 			if (is_int($key)) {
 				// Skip all unnamed keys
@@ -482,7 +482,7 @@ class Kohana_Route
 			// @issue #4079 rawurlencode parameters
 			$params = array_map(rawurlencode(...), $params);
 			// decode slashes back, see Apache docs about AllowEncodedSlashes and AcceptPathInfo
-			$params = str_replace(['%2F', '%5C'], ['/', '\\'], $params);
+			$params = str_replace(array('%2F', '%5C'), array('/', '\\'), $params);
 		}
 
 		$defaults = $this->_defaults;
@@ -496,7 +496,7 @@ class Kohana_Route
 		 * @return  array   Tuple of the compiled portion and whether or not it contained specified parameters
 		 */
 		$compile = function ($portion, $required) use (&$compile, $defaults, $params): array {
-			$missing = [];
+			$missing = array();
 
 			$pattern = '#(?:'.Route::REGEX_KEY.'|'.Route::REGEX_GROUP.')#';
 			$result = preg_replace_callback($pattern, function (array $matches) use (&$compile, $defaults, &$missing, $params, &$required) {
@@ -540,11 +540,11 @@ class Kohana_Route
 			if ($required and $missing) {
 				throw new Kohana_Exception(
 					'Required route parameter not passed: :param',
-					[':param' => reset($missing)]
+					array(':param' => reset($missing))
 				);
 			}
 
-			return [$result, $required];
+			return array($result, $required);
 		};
 
 		[$uri] = $compile($this->_uri, true);

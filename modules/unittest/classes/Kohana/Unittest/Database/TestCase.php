@@ -30,7 +30,7 @@ abstract class Kohana_Unittest_Database_TestCase extends PHPUnit_Extensions_Data
 	 * A default set of environment to be applied before each test
 	 * @var array
 	 */
-	protected $environmentDefault = [];
+	protected $environmentDefault = array();
 
 	/**
 	 * The kohana database connection that PHPUnit should use for this test
