@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('Kohana bootstrap needs to be included before tests run');
+declare(strict_types=1);
+defined('SYSPATH') or die('Kohana bootstrap needs to be included before tests run');
 
 /**
  * Tests the View class
@@ -31,7 +32,7 @@ class Kohana_ViewTest extends Unittest_TestCase
 	{
 		self::$old_modules = Kohana::modules();
 
-		$new_modules = self::$old_modules+array(
+		$new_modules = self::$old_modules + array(
 			'test_views' => realpath(dirname(__FILE__).'/../test_data/')
 		);
 		Kohana::modules($new_modules);
@@ -57,9 +58,9 @@ class Kohana_ViewTest extends Unittest_TestCase
 	public function provider_instantiate()
 	{
 		return array(
-			array('kohana/error', FALSE),
-			array('test.css', FALSE),
-			array('doesnt_exist', TRUE),
+			array('kohana/error', false),
+			array('test.css', false),
+			array('doesnt_exist', true),
 		);
 	}
 
@@ -72,8 +73,8 @@ class Kohana_ViewTest extends Unittest_TestCase
 	{
 		return array(
 			array('foo', 'bar', 'foo', 'bar'),
-			array(array('foo' => 'bar'), NULL, 'foo', 'bar'),
-			array(new ArrayIterator(array('foo' => 'bar')), NULL, 'foo', 'bar'),
+			array(array('foo' => 'bar'), null, 'foo', 'bar'),
+			array(new ArrayIterator(array('foo' => 'bar')), null, 'foo', 'bar'),
 		);
 	}
 
@@ -87,14 +88,11 @@ class Kohana_ViewTest extends Unittest_TestCase
 	 */
 	public function test_instantiate($path, $expects_exception)
 	{
-		try
-		{
+		try {
 			$view = new View($path);
-			$this->assertSame(FALSE, $expects_exception);
-		}
-		catch(View_Exception $e)
-		{
-			$this->assertSame(TRUE, $expects_exception);
+			$this->assertSame(false, $expects_exception);
+		} catch (View_Exception $e) {
+			$this->assertSame(true, $expects_exception);
 		}
 	}
 

@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct script access.');
 /**
  * UTF8::strlen
  *
@@ -12,8 +13,9 @@ declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
  */
 function _strlen($str)
 {
-	if (UTF8::is_ascii($str))
+	if (UTF8::is_ascii($str)) {
 		return strlen($str);
+	}
 
 	return strlen(utf8_decode($str));
 }

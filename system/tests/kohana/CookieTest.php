@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('Kohana bootstrap needs to be included before tests run');
+declare(strict_types=1);
+defined('SYSPATH') or die('Kohana bootstrap needs to be included before tests run');
 
 /**
  * Tests the cookie class
@@ -20,8 +21,8 @@ declare(strict_types=1); defined('SYSPATH') OR die('Kohana bootstrap needs to be
 #[AllowDynamicProperties]
 class Kohana_CookieTest extends Unittest_TestCase
 {
-	const UNIX_TIMESTAMP      = 1411040141;
-	const COOKIE_EXPIRATION   = 60;
+	public const UNIX_TIMESTAMP      = 1411040141;
+	public const COOKIE_EXPIRATION   = 60;
 
 	/**
 	 * Sets up the environment
@@ -49,8 +50,8 @@ class Kohana_CookieTest extends Unittest_TestCase
 		$this->setEnvironment(array(
 			'Cookie::$path'     => '/path',
 			'Cookie::$domain'   => 'my.domain',
-			'Cookie::$secure'   => TRUE,
-			'Cookie::$httponly' => FALSE,
+			'Cookie::$secure'   => true,
+			'Cookie::$httponly' => false,
 		));
 
 		Kohana_CookieTest_TestableCookie::set('cookie', 'value');
@@ -58,8 +59,8 @@ class Kohana_CookieTest extends Unittest_TestCase
 		$this->assertSetCookieWith(array(
 			'path'       => '/path',
 			'domain'     => 'my.domain',
-			'secure'     => TRUE,
-			'httponly'   => FALSE
+			'secure'     => true,
+			'httponly'   => false
 		));
 	}
 
@@ -71,7 +72,7 @@ class Kohana_CookieTest extends Unittest_TestCase
 	public function provider_set_calculates_expiry_from_lifetime()
 	{
 		return array(
-			array(NULL, self::COOKIE_EXPIRATION + self::UNIX_TIMESTAMP),
+			array(null, self::COOKIE_EXPIRATION + self::UNIX_TIMESTAMP),
 			array(0,    0),
 			array(10,   10 + self::UNIX_TIMESTAMP),
 		);
@@ -170,7 +171,7 @@ class Kohana_CookieTest extends Unittest_TestCase
 	 */
 	public function test_delete_does_not_require_configured_salt()
 	{
-		Cookie::$salt = NULL;
+		Cookie::$salt = null;
 		$this->assertTrue(Kohana_CookieTest_TestableCookie::delete('cookie'));
 		$this->assertDeletedCookie('cookie');
 	}
@@ -182,7 +183,7 @@ class Kohana_CookieTest extends Unittest_TestCase
 	public function test_salt_throws_with_no_configured_salt()
 	{
 		$this->expectException('Kohana_Exception');
-		Cookie::$salt = NULL;
+		Cookie::$salt = null;
 		Cookie::salt('key', 'value');
 	}
 
@@ -208,7 +209,7 @@ class Kohana_CookieTest extends Unittest_TestCase
 			array(array('name' => 'foo', 'value' => 'bar', 'salt' => 'our-salt', 'user-agent' => 'Chrome'), array('value' => 'changed')),
 			array(array('name' => 'foo', 'value' => 'bar', 'salt' => 'our-salt', 'user-agent' => 'Chrome'), array('salt' => 'changed-salt')),
 			array(array('name' => 'foo', 'value' => 'bar', 'salt' => 'our-salt', 'user-agent' => 'Chrome'), array('user-agent' => 'Firefox')),
-			array(array('name' => 'foo', 'value' => 'bar', 'salt' => 'our-salt', 'user-agent' => 'Chrome'), array('user-agent' => NULL)),
+			array(array('name' => 'foo', 'value' => 'bar', 'salt' => 'our-salt', 'user-agent' => 'Chrome'), array('user-agent' => null)),
 		);
 	}
 
@@ -223,8 +224,7 @@ class Kohana_CookieTest extends Unittest_TestCase
 	{
 		$second_args = array_merge($first_args, $changed_args);
 		$hashes = array();
-		foreach (array($first_args, $second_args) as $args)
-		{
+		foreach (array($first_args, $second_args) as $args) {
 			Cookie::$salt = $args['salt'];
 			$this->set_or_remove_http_user_agent($args['user-agent']);
 
@@ -248,7 +248,7 @@ class Kohana_CookieTest extends Unittest_TestCase
 		// To delete the client-side cookie, Cookie::delete should send a new cookie with value NULL and expiry in the past
 		$this->assertSetCookieWith(array(
 			'name'     => $name,
-			'value'    => NULL,
+			'value'    => null,
 			'expire'   => -86400,
 			'path'     => Cookie::$path,
 			'domain'   => Cookie::$domain,
@@ -278,12 +278,9 @@ class Kohana_CookieTest extends Unittest_TestCase
 	 */
 	protected function set_or_remove_http_user_agent($user_agent)
 	{
-		if ($user_agent === NULL)
-		{
+		if ($user_agent === null) {
 			unset($_SERVER['HTTP_USER_AGENT']);
-		}
-		else
-		{
+		} else {
 			$_SERVER['HTTP_USER_AGENT'] = $user_agent;
 		}
 	}
@@ -348,8 +345,8 @@ class Kohana_CookieTest extends Unittest_TestCase
  * unit testing.
  */
 #[AllowDynamicProperties]
-class Kohana_CookieTest_TestableCookie extends Cookie {
-
+class Kohana_CookieTest_TestableCookie extends Cookie
+{
 	/**
 	 * @var array setcookie calls that were made
 	 */
@@ -370,7 +367,7 @@ class Kohana_CookieTest_TestableCookie extends Cookie {
 			'httponly' => $httponly
 		);
 
-		return TRUE;
+		return true;
 	}
 
 	/**

@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-defined('SYSPATH') OR die('Kohana bootstrap needs to be included before tests run');
+defined('SYSPATH') or die('Kohana bootstrap needs to be included before tests run');
 
 /**
  * Security Tests for SQL Injection Prevention (CVE-2019-8979)
- * 
+ *
  * These tests verify that the SQL injection fix in Database_Query_Builder
  * properly sanitizes the ORDER BY direction parameter.
  *
@@ -23,7 +23,7 @@ class Kohana_SQLInjectionTest extends Unittest_TestCase
 {
 	/**
 	 * Tests that valid ORDER BY directions are properly compiled
-	 * 
+	 *
 	 * @test
 	 */
 	public function test_order_by_valid_asc_direction()
@@ -68,7 +68,7 @@ class Kohana_SQLInjectionTest extends Unittest_TestCase
 
 	/**
 	 * Tests that malicious SQL injection patterns are blocked
-	 * 
+	 *
 	 * @test
 	 */
 	public function test_order_by_rejects_sql_injection_drop_table()
@@ -177,7 +177,7 @@ class Kohana_SQLInjectionTest extends Unittest_TestCase
 			->order_by('last_name', 'ASC')
 			->order_by('first_name', 'ASC')
 			->order_by('id', 'DESC');
-		
+
 		$sql = strtoupper($builder->__toString());
 		$this->assertStringContainsString('ORDER BY', $sql);
 		$this->assertStringContainsString('ASC', $sql);

@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('Kohana bootstrap needs to be included before tests run');
+declare(strict_types=1);
+defined('SYSPATH') or die('Kohana bootstrap needs to be included before tests run');
 
 /**
  * Tests HTTP
@@ -16,8 +17,8 @@ declare(strict_types=1); defined('SYSPATH') OR die('Kohana bootstrap needs to be
  * @license    http://kohanaframework.org/license
  */
 #[AllowDynamicProperties]
-class Kohana_HTTPTest extends Unittest_TestCase {
-
+class Kohana_HTTPTest extends Unittest_TestCase
+{
 	protected $_initial_request;
 
 	/**
@@ -98,17 +99,14 @@ class Kohana_HTTPTest extends Unittest_TestCase {
 	 */
 	public function test_redirect($location, $code, $expected_exception, $expected_location)
 	{
-		try
-		{
+		try {
 			HTTP::redirect($location, $code);
-		}
-		catch (HTTP_Exception_Redirect $e)
-		{
+		} catch (HTTP_Exception_Redirect $e) {
 			$response = $e->get_response();
 
 			$this->assertInstanceOf($expected_exception, $e);
 			$this->assertEquals($expected_location, $response->headers('Location'));
-			
+
 			return;
 		}
 
@@ -135,8 +133,8 @@ class Kohana_HTTPTest extends Unittest_TestCase {
 					'content-type' => 'text/html; charset=utf-8',
 					'content-length' => '3547',
 					'accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-					'accept-encoding'=>'gzip, deflate, sdch',
-					'accept-language'=>'en-US,en;q=0.8,fr;q=0.6,hy;q=0.4',
+					'accept-encoding' => 'gzip, deflate, sdch',
+					'accept-language' => 'en-US,en;q=0.8,fr;q=0.6,hy;q=0.4',
 				)
 			),
 			array(
@@ -168,8 +166,7 @@ class Kohana_HTTPTest extends Unittest_TestCase {
 	public function test_request_headers(array $server_globals, array $expected_headers)
 	{
 		// Skip if PECL http extension is loaded (returns empty in CLI) and apache_request_headers is not available
-		if (extension_loaded('http') AND !function_exists('apache_request_headers'))
-		{
+		if (extension_loaded('http') and !function_exists('apache_request_headers')) {
 			$this->markTestSkipped('Cannot test $_SERVER fallback when PECL http extension is loaded in CLI');
 		}
 

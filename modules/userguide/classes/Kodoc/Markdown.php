@@ -1,5 +1,8 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') or die('No direct script access.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct script access.');
 
-class Kodoc_Markdown extends Kohana_Kodoc_Markdown {}
+class Kodoc_Markdown extends Kohana_Kodoc_Markdown
+{
+}

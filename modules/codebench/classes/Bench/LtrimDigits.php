@@ -1,19 +1,19 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') or die('No direct access allowed.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct access allowed.');
 /**
  * @package    Kohana/Codebench
  * @category   Tests
  * @author     Geert De Deckere <geert@idoe.be>
  */
-class Bench_LtrimDigits extends Codebench {
-
+class Bench_LtrimDigits extends Codebench
+{
 	public $description = 'Chopping off leading digits: regex vs ltrim.';
 
 	public $loops = 100000;
 
-	public $subjects = array
-	(
+	public $subjects = array(
 		'123digits',
 		'no-digits',
 	);

@@ -1,19 +1,19 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') or die('No direct access allowed.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct access allowed.');
 /**
  * @package    Kohana/Codebench
  * @category   Tests
  * @author     Geert De Deckere <geert@idoe.be>
  */
-class Bench_URLSite extends Codebench {
-
+class Bench_URLSite extends Codebench
+{
 	public $description = 'http://dev.kohanaframework.org/issues/3110';
 
 	public $loops = 1000;
 
-	public $subjects = array
-	(
+	public $subjects = array(
 		'',
 		'news',
 		'news/',
@@ -28,8 +28,7 @@ class Bench_URLSite extends Codebench {
 
 	public function __construct()
 	{
-		foreach ($this->subjects as $subject)
-		{
+		foreach ($this->subjects as $subject) {
 			// Automatically create URIs with query string and/or fragment part appended
 			$this->subjects[] = $subject.'?query=string';
 			$this->subjects[] = $subject.'#fragment';
@@ -44,13 +43,11 @@ class Bench_URLSite extends Codebench {
 		// Get the path from the URI
 		$path = trim(parse_url($uri, PHP_URL_PATH), '/');
 
-		if ($query = parse_url($uri, PHP_URL_QUERY))
-		{
+		if ($query = parse_url($uri, PHP_URL_QUERY)) {
 			$query = '?'.$query;
 		}
 
-		if ($fragment = parse_url($uri, PHP_URL_FRAGMENT))
-		{
+		if ($fragment = parse_url($uri, PHP_URL_FRAGMENT)) {
 			$fragment = '#'.$fragment;
 		}
 
@@ -64,16 +61,14 @@ class Bench_URLSite extends Codebench {
 
 		$fragment = '';
 		$explode = explode('#', $path, 2);
-		if (isset($explode[1]))
-		{
+		if (isset($explode[1])) {
 			$path = $explode[0];
 			$fragment = '#'.$explode[1];
 		}
 
 		$query = '';
 		$explode = explode('?', $path, 2);
-		if (isset($explode[1]))
-		{
+		if (isset($explode[1])) {
 			$path = $explode[0];
 			$query = '?'.$explode[1];
 		}
@@ -113,8 +108,7 @@ class Bench_URLSite extends Codebench {
 
 	public function bench_less_is_more_with_strpos_optimization($uri)
 	{
-		if (strpos($uri, '://') !== FALSE)
-		{
+		if (strpos($uri, '://') !== false) {
 			// Chop off possible scheme, host, port, user and pass parts
 			$uri = preg_replace('~^[-a-z0-9+.]++://[^/]++/?~', '', trim($uri, '/'));
 		}

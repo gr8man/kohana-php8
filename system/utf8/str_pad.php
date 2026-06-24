@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct script access.');
 /**
  * UTF8::str_pad
  *
@@ -12,32 +13,31 @@ declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
  */
 function _str_pad($str, $final_str_length, $pad_str = ' ', $pad_type = STR_PAD_RIGHT)
 {
-	if (UTF8::is_ascii($str) AND UTF8::is_ascii($pad_str))
+	if (UTF8::is_ascii($str) and UTF8::is_ascii($pad_str)) {
 		return str_pad($str, $final_str_length, $pad_str, $pad_type);
+	}
 
 	$str_length = UTF8::strlen($str);
 
-	if ($final_str_length <= 0 OR $final_str_length <= $str_length)
+	if ($final_str_length <= 0 or $final_str_length <= $str_length) {
 		return $str;
+	}
 
 	$pad_str_length = UTF8::strlen($pad_str);
 	$pad_length = (int) ($final_str_length - $str_length);
 	$final_str_length = (int) $final_str_length;
 
-	if ($pad_type == STR_PAD_RIGHT)
-	{
+	if ($pad_type == STR_PAD_RIGHT) {
 		$repeat = (int) ceil($pad_length / $pad_str_length);
 		return UTF8::substr($str.str_repeat($pad_str, $repeat), 0, $final_str_length);
 	}
 
-	if ($pad_type == STR_PAD_LEFT)
-	{
+	if ($pad_type == STR_PAD_LEFT) {
 		$repeat = (int) ceil($pad_length / $pad_str_length);
 		return UTF8::substr(str_repeat($pad_str, $repeat), 0, $pad_length).$str;
 	}
 
-	if ($pad_type == STR_PAD_BOTH)
-	{
+	if ($pad_type == STR_PAD_BOTH) {
 		$pad_length_left = (int) floor($pad_length / 2);
 		$pad_length_right = (int) ceil($pad_length / 2);
 		$repeat_left = (int) ceil($pad_length_left / $pad_str_length);

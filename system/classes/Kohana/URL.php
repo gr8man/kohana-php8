@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-defined('SYSPATH') OR die('No direct script access.');
+defined('SYSPATH') or die('No direct script access.');
 /**
  * URL helper class.
  *
@@ -14,8 +14,8 @@ defined('SYSPATH') OR die('No direct script access.');
  * @copyright  (c) 2007-2012 Kohana Team
  * @license    http://kohanaframework.org/license
  */
-class Kohana_URL {
-
+class Kohana_URL
+{
 	/**
 	 * Gets the base URL to the application.
 	 * To specify a protocol, provide the protocol as a string or request object.
@@ -39,57 +39,45 @@ class Kohana_URL {
 	 * @uses    Kohana::$index_file
 	 * @uses    Request::protocol()
 	 */
-	public static function base($protocol = NULL, $index = FALSE)
+	public static function base($protocol = null, $index = false)
 	{
 		// Start with the configured base URL
 		$base_url = Kohana::$base_url;
 
-		if ($protocol === TRUE)
-		{
+		if ($protocol === true) {
 			// Use the initial request to get the protocol
 			$protocol = Request::$initial;
 		}
 
-		if ($protocol instanceof Request)
-		{
-			if ( ! $protocol->secure())
-			{
+		if ($protocol instanceof Request) {
+			if (! $protocol->secure()) {
 				// Use the current protocol
 				list($protocol) = explode('/', strtolower($protocol->protocol()));
-			}
-			else
-			{
+			} else {
 				$protocol = 'https';
 			}
 		}
 
-		if ( ! $protocol)
-		{
+		if (! $protocol) {
 			// Use the configured default protocol
 			$protocol = parse_url($base_url, PHP_URL_SCHEME);
 		}
 
-		if ($index === TRUE AND ! empty(Kohana::$index_file))
-		{
+		if ($index === true and ! empty(Kohana::$index_file)) {
 			// Add the index file to the URL
 			$base_url .= Kohana::$index_file.'/';
 		}
 
-		if (is_string($protocol))
-		{
-			if ($port = parse_url($base_url, PHP_URL_PORT))
-			{
+		if (is_string($protocol)) {
+			if ($port = parse_url($base_url, PHP_URL_PORT)) {
 				// Found a port, make it usable for the URL
 				$port = ':'.$port;
 			}
 
-			if ($host = parse_url($base_url, PHP_URL_HOST))
-			{
+			if ($host = parse_url($base_url, PHP_URL_HOST)) {
 				// Remove everything but the path from the URL
 				$base_url = parse_url($base_url, PHP_URL_PATH);
-			}
-			else
-			{
+			} else {
 				// Attempt to use HTTP_HOST and fallback to SERVER_NAME
 				$host = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : $_SERVER['SERVER_NAME'];
 
@@ -106,8 +94,7 @@ class Kohana_URL {
 				}
 
 				// Validate $host, see if it matches trusted hosts
-				if ( ! static::is_trusted_host($host))
-				{
+				if (! static::is_trusted_host($host)) {
 					throw new Kohana_Exception(
 						'Untrusted host :host. If you trust :host, add it to the trusted hosts in the `url` config file.',
 						array(':host' => $host)
@@ -133,21 +120,17 @@ class Kohana_URL {
 	 * @return  string
 	 * @uses    URL::base
 	 */
-	public static function site($uri = '', $protocol = NULL, $index = TRUE)
+	public static function site($uri = '', $protocol = null, $index = true)
 	{
 		// Fast path for simple URIs that don't need preg_replace
-		if (strpos($uri, '://') === FALSE)
-		{
+		if (strpos($uri, '://') === false) {
 			$path = trim($uri, '/');
-		}
-		else
-		{
+		} else {
 			// Chop off possible scheme, host, port, user and pass parts
 			$path = preg_replace('~^[-a-z0-9+.]++://[^/]++/?~', '', trim($uri, '/'));
 		}
 
-		if ($path !== '' AND ! UTF8::is_ascii($path))
-		{
+		if ($path !== '' and ! UTF8::is_ascii($path)) {
 			// Encode all non-ASCII characters, as per RFC 1738
 			$path = preg_replace_callback('~([^/]+)~', 'URL::_rawurlencode_callback', $path);
 		}
@@ -184,24 +167,19 @@ class Kohana_URL {
 	 * @param   boolean  $use_get  Include current request GET parameters
 	 * @return  string
 	 */
-	public static function query(array $params = NULL, $use_get = TRUE)
+	public static function query(array $params = null, $use_get = true)
 	{
-		if ($use_get)
-		{
-			if ($params === NULL)
-			{
+		if ($use_get) {
+			if ($params === null) {
 				// Use only the current parameters
 				$params = $_GET;
-			}
-			else
-			{
+			} else {
 				// Merge the current and new parameters
 				$params = Arr::merge($_GET, $params);
 			}
 		}
 
-		if (empty($params))
-		{
+		if (empty($params)) {
 			// No query parameters
 			return '';
 		}
@@ -224,18 +202,15 @@ class Kohana_URL {
 	 * @return  string
 	 * @uses    UTF8::transliterate_to_ascii
 	 */
-	public static function title($title, $separator = '-', $ascii_only = FALSE)
+	public static function title($title, $separator = '-', $ascii_only = false)
 	{
-		if ($ascii_only === TRUE)
-		{
+		if ($ascii_only === true) {
 			// Transliterate non-ASCII characters
 			$title = UTF8::transliterate_to_ascii($title);
 
 			// Remove all characters that are not the separator, a-z, 0-9, or whitespace
 			$title = preg_replace('![^'.preg_quote($separator).'a-z0-9\s]+!', '', strtolower($title));
-		}
-		else
-		{
+		} else {
 			// Remove all characters that are not the separator, letters, numbers, or whitespace
 			$title = preg_replace('![^'.preg_quote($separator).'\pL\pN\s]+!u', '', UTF8::strtolower($title));
 		}
@@ -257,31 +232,29 @@ class Kohana_URL {
 	 * @param array $trusted_hosts
 	 * @return boolean TRUE if $host is trustworthy
 	 */
-	public static function is_trusted_host($host, array $trusted_hosts = NULL)
+	public static function is_trusted_host($host, array $trusted_hosts = null)
 	{
 
 		// If list of trusted hosts is not directly provided read from config
-		if (empty($trusted_hosts))
-		{
+		if (empty($trusted_hosts)) {
 			$trusted_hosts = (array) Kohana::$config->load('url')->get('trusted_hosts');
 		}
 
 		// loop through the $trusted_hosts array for a match
-		foreach ($trusted_hosts as $trusted_host)
-		{
+		foreach ($trusted_hosts as $trusted_host) {
 
 			// make sure we fully match the trusted hosts
 			$pattern = '#^'.$trusted_host.'$#uD';
 
 			// return TRUE if there is match
 			if (preg_match($pattern, $host)) {
-				return TRUE;
+				return true;
 			}
 
 		}
 
 		// return FALSE as nothing is matched
-		return FALSE;
+		return false;
 
 	}
 }

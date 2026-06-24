@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct script access.');
 /**
  * A HTTP Response specific interface that adds the methods required
  * by HTTP responses. Over and above [Kohana_HTTP_Interaction], this
@@ -13,8 +14,8 @@ declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
  * @copyright  (c) 2008-2014 Kohana Team
  * @license    http://kohanaframework.org/license
  */
-interface Kohana_HTTP_Response extends HTTP_Message {
-
+interface Kohana_HTTP_Response extends HTTP_Message
+{
 	/**
 	 * Sets or gets the HTTP status from this response.
 	 *
@@ -28,6 +29,6 @@ interface Kohana_HTTP_Response extends HTTP_Message {
 	 * @param   integer  $code  Status to set to this response
 	 * @return  mixed
 	 */
-	public function status($code = NULL);
+	public function status($code = null);
 
 }

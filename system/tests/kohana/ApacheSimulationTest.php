@@ -1,7 +1,7 @@
 <?php
 
 declare(strict_types=1);
-defined('SYSPATH') OR die('Kohana bootstrap needs to be included before tests run');
+defined('SYSPATH') or die('Kohana bootstrap needs to be included before tests run');
 
 /**
  * Tests for Apache environment simulation in CLI
@@ -59,9 +59,9 @@ class Kohana_ApacheSimulationTest extends Unittest_TestCase
 	/**
 	 * Simulate Apache environment for testing
 	 */
-	protected function simulateApacheEnvironment(array $server_vars = [], array $trusted_hosts = ['localhost'])
+	protected function simulateApacheEnvironment(array $server_vars = array(), array $trusted_hosts = array('localhost'))
 	{
-		$defaults = [
+		$defaults = array(
 			'HTTP_HOST' => 'localhost',
 			'HTTP_USER_AGENT' => 'Mozilla/5.0 (compatible; CLI Test)',
 			'HTTP_ACCEPT' => 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
@@ -79,10 +79,10 @@ class Kohana_ApacheSimulationTest extends Unittest_TestCase
 			'REMOTE_ADDR' => '127.0.0.1',
 			'DOCUMENT_ROOT' => '/var/www/html',
 			'SCRIPT_FILENAME' => '/var/www/html/index.php',
-		];
+		);
 
 		$_SERVER = array_merge($defaults, $server_vars);
-		Request::$initial = NULL;
+		Request::$initial = null;
 	}
 
 	// =========================================================================
@@ -96,13 +96,13 @@ class Kohana_ApacheSimulationTest extends Unittest_TestCase
 	 */
 	public function test_request_headers_simulated_apache()
 	{
-		$this->simulateApacheEnvironment([
+		$this->simulateApacheEnvironment(array(
 			'HTTP_HOST' => 'example.com',
 			'HTTP_CONTENT_TYPE' => 'application/json',
 			'HTTP_CONTENT_LENGTH' => '256',
 			'HTTP_X_CUSTOM_HEADER' => 'custom-value',
 			'HTTP_ACCEPT' => 'application/json',
-		]);
+		));
 
 		$headers = HTTP::request_headers();
 
@@ -120,11 +120,11 @@ class Kohana_ApacheSimulationTest extends Unittest_TestCase
 	 */
 	public function test_request_headers_multiple_custom()
 	{
-		$this->simulateApacheEnvironment([
+		$this->simulateApacheEnvironment(array(
 			'HTTP_X_API_KEY' => 'secret-key-123',
 			'HTTP_X_FORWARDED_FOR' => '192.168.1.1',
 			'HTTP_X_REAL_IP' => '10.0.0.1',
-		]);
+		));
 
 		$headers = HTTP::request_headers();
 
@@ -138,10 +138,10 @@ class Kohana_ApacheSimulationTest extends Unittest_TestCase
 	 */
 	public function test_request_headers_empty()
 	{
-		$_SERVER = [
+		$_SERVER = array(
 			'SERVER_NAME' => 'localhost',
 			'SERVER_PORT' => 80,
-		];
+		);
 
 		$headers = HTTP::request_headers();
 
@@ -155,9 +155,9 @@ class Kohana_ApacheSimulationTest extends Unittest_TestCase
 	 */
 	public function test_request_headers_case_preservation()
 	{
-		$this->simulateApacheEnvironment([
+		$this->simulateApacheEnvironment(array(
 			'HTTP_X_CUSTOM_HEADER' => 'custom-value',
-		]);
+		));
 
 		$headers = HTTP::request_headers();
 
@@ -175,12 +175,9 @@ class Kohana_ApacheSimulationTest extends Unittest_TestCase
 	 */
 	public function test_redirect_301_permanent()
 	{
-		try
-		{
+		try {
 			HTTP::redirect('http://www.example.org/', 301);
-		}
-		catch (HTTP_Exception_Redirect $e)
-		{
+		} catch (HTTP_Exception_Redirect $e) {
 			$response = $e->get_response();
 			$this->assertInstanceOf('HTTP_Exception_301', $e);
 			$this->assertEquals('http://www.example.org/', $response->headers('Location'));
@@ -198,12 +195,9 @@ class Kohana_ApacheSimulationTest extends Unittest_TestCase
 	{
 		$this->simulateApacheEnvironment();
 
-		try
-		{
+		try {
 			HTTP::redirect('/page_one', 302);
-		}
-		catch (HTTP_Exception_Redirect $e)
-		{
+		} catch (HTTP_Exception_Redirect $e) {
 			$response = $e->get_response();
 			$this->assertInstanceOf('HTTP_Exception_302', $e);
 			return;
@@ -220,12 +214,9 @@ class Kohana_ApacheSimulationTest extends Unittest_TestCase
 	{
 		$this->simulateApacheEnvironment();
 
-		try
-		{
+		try {
 			HTTP::redirect('/page_two', 303);
-		}
-		catch (HTTP_Exception_Redirect $e)
-		{
+		} catch (HTTP_Exception_Redirect $e) {
 			$response = $e->get_response();
 			$this->assertInstanceOf('HTTP_Exception_303', $e);
 			return;
@@ -242,12 +233,9 @@ class Kohana_ApacheSimulationTest extends Unittest_TestCase
 	{
 		$this->simulateApacheEnvironment();
 
-		try
-		{
+		try {
 			HTTP::redirect('/temp', 307);
-		}
-		catch (HTTP_Exception_Redirect $e)
-		{
+		} catch (HTTP_Exception_Redirect $e) {
 			$response = $e->get_response();
 			$this->assertInstanceOf('HTTP_Exception_307', $e);
 			return;
@@ -305,7 +293,7 @@ class Kohana_ApacheSimulationTest extends Unittest_TestCase
 	 */
 	public function test_request_method_get()
 	{
-		$this->simulateApacheEnvironment(['REQUEST_METHOD' => 'GET']);
+		$this->simulateApacheEnvironment(array('REQUEST_METHOD' => 'GET'));
 		$request = Request::factory('test');
 
 		$this->assertEquals('GET', $request->method());
@@ -318,7 +306,7 @@ class Kohana_ApacheSimulationTest extends Unittest_TestCase
 	 */
 	public function test_request_method_post()
 	{
-		$this->simulateApacheEnvironment(['REQUEST_METHOD' => 'POST']);
+		$this->simulateApacheEnvironment(array('REQUEST_METHOD' => 'POST'));
 		$request = Request::factory('test');
 		$request->method('POST');
 
@@ -332,7 +320,7 @@ class Kohana_ApacheSimulationTest extends Unittest_TestCase
 	 */
 	public function test_request_method_put()
 	{
-		$this->simulateApacheEnvironment(['REQUEST_METHOD' => 'PUT']);
+		$this->simulateApacheEnvironment(array('REQUEST_METHOD' => 'PUT'));
 		$request = Request::factory('test');
 		$request->method('PUT');
 
@@ -346,7 +334,7 @@ class Kohana_ApacheSimulationTest extends Unittest_TestCase
 	 */
 	public function test_request_method_delete()
 	{
-		$this->simulateApacheEnvironment(['REQUEST_METHOD' => 'DELETE']);
+		$this->simulateApacheEnvironment(array('REQUEST_METHOD' => 'DELETE'));
 		$request = Request::factory('test');
 		$request->method('DELETE');
 
@@ -360,7 +348,7 @@ class Kohana_ApacheSimulationTest extends Unittest_TestCase
 	 */
 	public function test_request_method_patch()
 	{
-		$this->simulateApacheEnvironment(['REQUEST_METHOD' => 'PATCH']);
+		$this->simulateApacheEnvironment(array('REQUEST_METHOD' => 'PATCH'));
 		$request = Request::factory('test');
 		$request->method('PATCH');
 
@@ -374,7 +362,7 @@ class Kohana_ApacheSimulationTest extends Unittest_TestCase
 	 */
 	public function test_request_method_head()
 	{
-		$this->simulateApacheEnvironment(['REQUEST_METHOD' => 'HEAD']);
+		$this->simulateApacheEnvironment(array('REQUEST_METHOD' => 'HEAD'));
 		$request = Request::factory('test');
 		$request->method('HEAD');
 
@@ -388,7 +376,7 @@ class Kohana_ApacheSimulationTest extends Unittest_TestCase
 	 */
 	public function test_request_method_options()
 	{
-		$this->simulateApacheEnvironment(['REQUEST_METHOD' => 'OPTIONS']);
+		$this->simulateApacheEnvironment(array('REQUEST_METHOD' => 'OPTIONS'));
 		$request = Request::factory('test');
 		$request->method('OPTIONS');
 
@@ -423,11 +411,11 @@ class Kohana_ApacheSimulationTest extends Unittest_TestCase
 	 */
 	public function test_route_uri_generation()
 	{
-		$uri = Route::get('default')->uri([
+		$uri = Route::get('default')->uri(array(
 			'controller' => 'user',
 			'action' => 'profile',
 			'id' => '123'
-		]);
+		));
 
 		$this->assertEquals('user/profile/123', $uri);
 	}
@@ -440,10 +428,10 @@ class Kohana_ApacheSimulationTest extends Unittest_TestCase
 	public function test_route_custom_match()
 	{
 		$route = new Route('api/(<controller>(/<action>(/<id>)))');
-		$route->defaults([
+		$route->defaults(array(
 			'controller' => 'api',
 			'action' => 'index'
-		]);
+		));
 
 		$request = Request::factory('api/users/list/5');
 		$params = $route->matches($request);
@@ -461,10 +449,10 @@ class Kohana_ApacheSimulationTest extends Unittest_TestCase
 	public function test_route_optional_segments()
 	{
 		$route = new Route('(<controller>(/<action>(/<id>)))');
-		$route->defaults([
+		$route->defaults(array(
 			'controller' => 'welcome',
 			'action' => 'index'
-		]);
+		));
 
 		$request = Request::factory('users');
 		$params = $route->matches($request);
@@ -481,11 +469,11 @@ class Kohana_ApacheSimulationTest extends Unittest_TestCase
 	 */
 	public function test_route_regex_constraints()
 	{
-		$route = new Route('user/(<id>)', ['id' => '[0-9]+']);
-		$route->defaults([
+		$route = new Route('user/(<id>)', array('id' => '[0-9]+'));
+		$route->defaults(array(
 			'controller' => 'user',
 			'action' => 'view'
-		]);
+		));
 
 		$request = Request::factory('user/123');
 		$params = $route->matches($request);
@@ -501,7 +489,7 @@ class Kohana_ApacheSimulationTest extends Unittest_TestCase
 	public function test_route_named_params()
 	{
 		$route = new Route('(<controller>(/<action>(/<id>)))');
-		$route->defaults(['controller' => 'welcome', 'action' => 'index']);
+		$route->defaults(array('controller' => 'welcome', 'action' => 'index'));
 
 		$request = Request::factory('test/action/123');
 		$params = $route->matches($request);
@@ -517,8 +505,8 @@ class Kohana_ApacheSimulationTest extends Unittest_TestCase
 	public function test_route_filter()
 	{
 		$route = new Route('filtered/(<controller>)');
-		$route->filter(function($route, $params, $request) {
-			$params['filtered'] = TRUE;
+		$route->filter(function ($route, $params, $request) {
+			$params['filtered'] = true;
 			return $params;
 		});
 
@@ -536,11 +524,11 @@ class Kohana_ApacheSimulationTest extends Unittest_TestCase
 	public function test_route_with_directory()
 	{
 		$route = new Route('(<directory>/)<controller>(/<action>(/<id>))');
-		$route->defaults([
+		$route->defaults(array(
 			'directory' => 'admin',
 			'controller' => 'dashboard',
 			'action' => 'index'
-		]);
+		));
 
 		$request = Request::factory('admin/users/list/1');
 		$params = $route->matches($request);
@@ -558,11 +546,11 @@ class Kohana_ApacheSimulationTest extends Unittest_TestCase
 	 */
 	public function test_multiple_routes()
 	{
-		$routes = [
+		$routes = array(
 			'api' => new Route('api/<controller>(/<action>)'),
 			'admin' => new Route('admin/<controller>(/<action>)'),
 			'default' => Route::get('default'),
-		];
+		);
 
 		$api_request = Request::factory('api/users');
 		$api_params = $routes['api']->matches($api_request);
@@ -584,9 +572,9 @@ class Kohana_ApacheSimulationTest extends Unittest_TestCase
 	 */
 	public function test_url_base()
 	{
-		$this->simulateApacheEnvironment([
+		$this->simulateApacheEnvironment(array(
 			'HTTP_HOST' => 'localhost',
-		]);
+		));
 		Kohana::$base_url = '/kohana/';
 
 		$base = URL::base();
@@ -601,10 +589,10 @@ class Kohana_ApacheSimulationTest extends Unittest_TestCase
 	 */
 	public function test_url_base_https()
 	{
-		$this->simulateApacheEnvironment([
+		$this->simulateApacheEnvironment(array(
 			'HTTP_HOST' => 'localhost',
 			'HTTPS' => 'on',
-		]);
+		));
 		Kohana::$base_url = '/';
 
 		$base = URL::base();
@@ -619,9 +607,9 @@ class Kohana_ApacheSimulationTest extends Unittest_TestCase
 	 */
 	public function test_url_site_relative()
 	{
-		$this->simulateApacheEnvironment([
+		$this->simulateApacheEnvironment(array(
 			'HTTP_HOST' => 'example.com',
-		]);
+		));
 		Kohana::$base_url = '/';
 
 		$site = URL::site('controller/action');
@@ -671,7 +659,7 @@ class Kohana_ApacheSimulationTest extends Unittest_TestCase
 	 */
 	public function test_url_query()
 	{
-		$query = URL::query(['page' => 1, 'sort' => 'name']);
+		$query = URL::query(array('page' => 1, 'sort' => 'name'));
 
 		$this->assertEquals('?page=1&sort=name', $query);
 	}
@@ -720,9 +708,9 @@ class Kohana_ApacheSimulationTest extends Unittest_TestCase
 	 */
 	public function test_client_ip_remote_addr()
 	{
-		$this->simulateApacheEnvironment([
+		$this->simulateApacheEnvironment(array(
 			'REMOTE_ADDR' => '192.168.1.100',
-		]);
+		));
 
 		Request::$initial = new Request('/');
 		$request = Request::factory('test');
@@ -737,10 +725,10 @@ class Kohana_ApacheSimulationTest extends Unittest_TestCase
 	 */
 	public function test_client_ip_forwarded()
 	{
-		$this->simulateApacheEnvironment([
+		$this->simulateApacheEnvironment(array(
 			'REMOTE_ADDR' => '192.168.1.1',
 			'HTTP_X_FORWARDED_FOR' => '10.0.0.1, 192.168.1.1',
-		]);
+		));
 
 		Request::$initial = new Request('/');
 		$request = Request::factory('test');
@@ -755,10 +743,10 @@ class Kohana_ApacheSimulationTest extends Unittest_TestCase
 	 */
 	public function test_client_ip_real_ip()
 	{
-		$this->simulateApacheEnvironment([
+		$this->simulateApacheEnvironment(array(
 			'REMOTE_ADDR' => '127.0.0.1',
 			'HTTP_X_REAL_IP' => '172.16.0.1',
-		]);
+		));
 
 		Request::$initial = new Request('/');
 		$request = Request::factory('test');
@@ -777,9 +765,9 @@ class Kohana_ApacheSimulationTest extends Unittest_TestCase
 	 */
 	public function test_user_agent_parsing()
 	{
-		$this->simulateApacheEnvironment([
+		$this->simulateApacheEnvironment(array(
 			'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-		]);
+		));
 
 		Request::$initial = new Request('/');
 		$request = Request::factory('test');
@@ -795,7 +783,7 @@ class Kohana_ApacheSimulationTest extends Unittest_TestCase
 	public function test_user_agent_direct()
 	{
 		$_SERVER['HTTP_USER_AGENT'] = 'TestBot/1.0';
-		Request::$initial = NULL;
+		Request::$initial = null;
 
 		$request = Request::factory('test');
 
@@ -813,9 +801,9 @@ class Kohana_ApacheSimulationTest extends Unittest_TestCase
 	 */
 	public function test_accept_type_custom()
 	{
-		$this->simulateApacheEnvironment([
+		$this->simulateApacheEnvironment(array(
 			'HTTP_ACCEPT' => 'application/json, text/html;q=0.9',
-		]);
+		));
 
 		Request::$initial = new Request('/');
 		$accept = Request::accept_type();
@@ -831,9 +819,9 @@ class Kohana_ApacheSimulationTest extends Unittest_TestCase
 	 */
 	public function test_accept_lang_custom()
 	{
-		$this->simulateApacheEnvironment([
+		$this->simulateApacheEnvironment(array(
 			'HTTP_ACCEPT_LANGUAGE' => 'pl-PL, en-US;q=0.9, en;q=0.8',
-		]);
+		));
 
 		Request::$initial = new Request('/');
 
@@ -852,9 +840,9 @@ class Kohana_ApacheSimulationTest extends Unittest_TestCase
 	 */
 	public function test_protocol_default()
 	{
-		$this->simulateApacheEnvironment([
+		$this->simulateApacheEnvironment(array(
 			'SERVER_PROTOCOL' => 'HTTP/1.1',
-		]);
+		));
 
 		$request = Request::factory('test');
 
@@ -886,7 +874,7 @@ class Kohana_ApacheSimulationTest extends Unittest_TestCase
 	public function test_referrer()
 	{
 		$_SERVER['HTTP_REFERER'] = 'http://google.com/search';
-		Request::$initial = NULL;
+		Request::$initial = null;
 
 		$request = Request::factory('test');
 
@@ -901,7 +889,7 @@ class Kohana_ApacheSimulationTest extends Unittest_TestCase
 	public function test_referrer_empty()
 	{
 		unset($_SERVER['HTTP_REFERER']);
-		Request::$initial = NULL;
+		Request::$initial = null;
 
 		$request = Request::factory('test');
 
@@ -920,7 +908,7 @@ class Kohana_ApacheSimulationTest extends Unittest_TestCase
 	public function test_requested_with_ajax()
 	{
 		$_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-		Request::$initial = NULL;
+		Request::$initial = null;
 
 		$request = Request::factory('test');
 
@@ -936,7 +924,7 @@ class Kohana_ApacheSimulationTest extends Unittest_TestCase
 	public function test_requested_with_none()
 	{
 		unset($_SERVER['HTTP_X_REQUESTED_WITH']);
-		Request::$initial = NULL;
+		Request::$initial = null;
 
 		$request = Request::factory('test');
 
@@ -1004,9 +992,9 @@ class Kohana_ApacheSimulationTest extends Unittest_TestCase
 	 */
 	public function test_post_from_simulated()
 	{
-		$this->simulateApacheEnvironment([
+		$this->simulateApacheEnvironment(array(
 			'REQUEST_METHOD' => 'POST',
-		]);
+		));
 
 		$request = Request::factory('test');
 		$request->post('username', 'testuser');
@@ -1025,10 +1013,10 @@ class Kohana_ApacheSimulationTest extends Unittest_TestCase
 	 */
 	public function test_cookie_get()
 	{
-		$_COOKIE = [
+		$_COOKIE = array(
 			'session_id' => Cookie::salt('session_id', 'abc123').'~abc123',
 			'user_prefs' => Cookie::salt('user_prefs', 'dark_mode').'~dark_mode',
-		];
+		);
 
 		$session = Cookie::get('session_id', 'default');
 		$prefs = Cookie::get('user_prefs');
@@ -1036,7 +1024,7 @@ class Kohana_ApacheSimulationTest extends Unittest_TestCase
 		$this->assertEquals('abc123', $session);
 		$this->assertEquals('dark_mode', $prefs);
 
-		$_COOKIE = [];
+		$_COOKIE = array();
 	}
 
 	/**
@@ -1046,7 +1034,7 @@ class Kohana_ApacheSimulationTest extends Unittest_TestCase
 	 */
 	public function test_cookie_get_default()
 	{
-		$_COOKIE = [];
+		$_COOKIE = array();
 
 		$value = Cookie::get('nonexistent', 'default_value');
 
@@ -1110,7 +1098,7 @@ class Kohana_ApacheSimulationTest extends Unittest_TestCase
 	 */
 	public function test_response_status_codes()
 	{
-		$response = new Response;
+		$response = new Response();
 
 		$response->status(200);
 		$this->assertEquals(200, $response->status());
@@ -1129,7 +1117,7 @@ class Kohana_ApacheSimulationTest extends Unittest_TestCase
 	 */
 	public function test_response_body()
 	{
-		$response = new Response;
+		$response = new Response();
 		$response->body('Hello World');
 
 		$this->assertEquals('Hello World', $response->body());
@@ -1142,7 +1130,7 @@ class Kohana_ApacheSimulationTest extends Unittest_TestCase
 	 */
 	public function test_response_headers()
 	{
-		$response = new Response;
+		$response = new Response();
 		$response->headers('Content-Type', 'application/json');
 		$response->headers('X-Custom-Header', 'value');
 
@@ -1157,7 +1145,7 @@ class Kohana_ApacheSimulationTest extends Unittest_TestCase
 	 */
 	public function test_response_cookie()
 	{
-		$response = new Response;
+		$response = new Response();
 		$response->cookie('session', 'abc123', 3600);
 
 		$headers = $response->headers();
@@ -1171,7 +1159,7 @@ class Kohana_ApacheSimulationTest extends Unittest_TestCase
 	 */
 	public function test_response_render()
 	{
-		$response = new Response;
+		$response = new Response();
 		$response->body('Test Content');
 		$output = $response->render();
 
@@ -1185,7 +1173,7 @@ class Kohana_ApacheSimulationTest extends Unittest_TestCase
 	 */
 	public function test_response_protocol()
 	{
-		$response = new Response;
+		$response = new Response();
 		$response->protocol('HTTP/1.0');
 
 		$this->assertEquals('HTTP/1.0', $response->protocol());
@@ -1198,7 +1186,7 @@ class Kohana_ApacheSimulationTest extends Unittest_TestCase
 	 */
 	public function test_response_send_headers()
 	{
-		$response = new Response;
+		$response = new Response();
 		$response->status(200);
 		$response->headers('Content-Type', 'text/html');
 
@@ -1214,11 +1202,11 @@ class Kohana_ApacheSimulationTest extends Unittest_TestCase
 	 */
 	public function test_response_cookies_array()
 	{
-		$response = new Response;
-		$response->cookie([
+		$response = new Response();
+		$response->cookie(array(
 			'cookie1' => 'value1',
 			'cookie2' => 'value2',
-		]);
+		));
 
 		$this->assertEquals(2, count($response->cookie()));
 	}
@@ -1230,7 +1218,7 @@ class Kohana_ApacheSimulationTest extends Unittest_TestCase
 	 */
 	public function test_response_headers_sent()
 	{
-		$response = new Response;
+		$response = new Response();
 
 		$this->assertInstanceOf('Response', $response);
 	}
@@ -1302,13 +1290,13 @@ class Kohana_ApacheSimulationTest extends Unittest_TestCase
 	 */
 	public function test_full_request_cycle()
 	{
-		$this->simulateApacheEnvironment([
+		$this->simulateApacheEnvironment(array(
 			'HTTP_HOST' => 'localhost',
 			'REQUEST_URI' => '/api/users/list?page=1&limit=10',
 			'REQUEST_METHOD' => 'GET',
 			'HTTP_ACCEPT' => 'application/json',
 			'HTTP_X_API_KEY' => 'test-api-key',
-		]);
+		));
 
 		$request = Request::factory('/api/users/list?page=1&limit=10');
 
@@ -1323,13 +1311,13 @@ class Kohana_ApacheSimulationTest extends Unittest_TestCase
 	 */
 	public function test_post_json_request()
 	{
-		$this->simulateApacheEnvironment([
+		$this->simulateApacheEnvironment(array(
 			'REQUEST_METHOD' => 'POST',
 			'HTTP_CONTENT_TYPE' => 'application/json',
 			'HTTP_CONTENT_LENGTH' => '45',
-		]);
+		));
 
-		$_POST = ['username' => 'test', 'email' => 'test@test.com'];
+		$_POST = array('username' => 'test', 'email' => 'test@test.com');
 
 		$request = Request::factory('api/create');
 		$request->method('POST');
@@ -1345,10 +1333,10 @@ class Kohana_ApacheSimulationTest extends Unittest_TestCase
 	 */
 	public function test_authenticated_request()
 	{
-		$this->simulateApacheEnvironment([
+		$this->simulateApacheEnvironment(array(
 			'HTTP_AUTHORIZATION' => 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.test',
 			'HTTP_X_API_KEY' => 'secret-key',
-		]);
+		));
 
 		Request::$initial = new Request('/');
 		$headers = HTTP::request_headers();
@@ -1363,10 +1351,10 @@ class Kohana_ApacheSimulationTest extends Unittest_TestCase
 	 */
 	public function test_https_request()
 	{
-		$this->simulateApacheEnvironment([
+		$this->simulateApacheEnvironment(array(
 			'HTTPS' => 'on',
 			'SERVER_PORT' => 443,
-		]);
+		));
 
 		$request = Request::factory('test');
 		$this->assertInstanceOf('Request', $request);
@@ -1379,11 +1367,11 @@ class Kohana_ApacheSimulationTest extends Unittest_TestCase
 	 */
 	public function test_subdomain_routing()
 	{
-		$this->simulateApacheEnvironment([
+		$this->simulateApacheEnvironment(array(
 			'HTTP_HOST' => 'api.example.com',
-		]);
+		));
 
-		Kohana::$config->load('url')->set('trusted_hosts', ['api.example.com']);
+		Kohana::$config->load('url')->set('trusted_hosts', array('api.example.com'));
 		$this->assertTrue(URL::is_trusted_host('api.example.com'));
 	}
 
@@ -1409,11 +1397,11 @@ class Kohana_ApacheSimulationTest extends Unittest_TestCase
 	 */
 	public function test_cors_request()
 	{
-		$this->simulateApacheEnvironment([
+		$this->simulateApacheEnvironment(array(
 			'HTTP_ORIGIN' => 'https://other-domain.com',
 			'HTTP_ACCESS_CONTROL_REQUEST_METHOD' => 'POST',
 			'HTTP_ACCESS_CONTROL_REQUEST_HEADERS' => 'Content-Type, Authorization',
-		]);
+		));
 
 		Request::$initial = new Request('/');
 		$headers = HTTP::request_headers();
@@ -1428,11 +1416,11 @@ class Kohana_ApacheSimulationTest extends Unittest_TestCase
 	 */
 	public function test_cache_control()
 	{
-		$this->simulateApacheEnvironment([
+		$this->simulateApacheEnvironment(array(
 			'HTTP_CACHE_CONTROL' => 'no-cache',
 			'HTTP_PRAGMA' => 'no-cache',
 			'HTTP_IF_MODIFIED_SINCE' => 'Wed, 21 Oct 2015 07:28:00 GMT',
-		]);
+		));
 
 		Request::$initial = new Request('/');
 		$headers = HTTP::request_headers();
@@ -1447,9 +1435,9 @@ class Kohana_ApacheSimulationTest extends Unittest_TestCase
 	 */
 	public function test_accept_encoding()
 	{
-		$this->simulateApacheEnvironment([
+		$this->simulateApacheEnvironment(array(
 			'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, br',
-		]);
+		));
 
 		Request::$initial = new Request('/');
 		$headers = HTTP::request_headers();
@@ -1464,9 +1452,9 @@ class Kohana_ApacheSimulationTest extends Unittest_TestCase
 	 */
 	public function test_accept_language_preferences()
 	{
-		$this->simulateApacheEnvironment([
+		$this->simulateApacheEnvironment(array(
 			'HTTP_ACCEPT_LANGUAGE' => 'en-US,en;q=0.9,pl;q=0.8,de;q=0.7',
-		]);
+		));
 
 		Request::$initial = new Request('/');
 
@@ -1481,11 +1469,11 @@ class Kohana_ApacheSimulationTest extends Unittest_TestCase
 	 */
 	public function test_cookie_session()
 	{
-		$_COOKIE = [
+		$_COOKIE = array(
 			'kohana_session' => Cookie::salt('kohana_session', 'session_hash_123456').'~session_hash_123456',
 			'csrf_token' => Cookie::salt('csrf_token', 'csrf_hash_abcdef').'~csrf_hash_abcdef',
 			'remember_me' => Cookie::salt('remember_me', 'user_id_42').'~user_id_42',
-		];
+		);
 
 		$this->assertEquals('session_hash_123456', Cookie::get('kohana_session'));
 		$this->assertEquals('csrf_hash_abcdef', Cookie::get('csrf_token'));
@@ -1499,22 +1487,22 @@ class Kohana_ApacheSimulationTest extends Unittest_TestCase
 	 */
 	public function test_file_upload_simulation()
 	{
-		$_FILES = [
-			'document' => [
+		$_FILES = array(
+			'document' => array(
 				'name' => 'test.pdf',
 				'type' => 'application/pdf',
 				'tmp_name' => '/tmp/phpxxxxxx',
 				'error' => 0,
 				'size' => 1024,
-			],
-			'image' => [
+			),
+			'image' => array(
 				'name' => 'photo.jpg',
 				'type' => 'image/jpeg',
 				'tmp_name' => '/tmp/phpyyyyyy',
 				'error' => 0,
 				'size' => 2048,
-			],
-		];
+			),
+		);
 
 		$request = Request::factory('upload/process');
 
@@ -1529,16 +1517,13 @@ class Kohana_ApacheSimulationTest extends Unittest_TestCase
 	 */
 	public function test_redirect_with_query_params()
 	{
-		$this->simulateApacheEnvironment([
+		$this->simulateApacheEnvironment(array(
 			'HTTP_HOST' => 'example.com',
-		]);
+		));
 
-		try
-		{
+		try {
 			HTTP::redirect('/search?q=test&page=2', 302);
-		}
-		catch (HTTP_Exception_Redirect $e)
-		{
+		} catch (HTTP_Exception_Redirect $e) {
 			$response = $e->get_response();
 			$location = $response->headers('Location');
 			$this->assertStringContainsString('q=test', $location);

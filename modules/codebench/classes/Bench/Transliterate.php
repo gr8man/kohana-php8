@@ -1,21 +1,21 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') or die('No direct access allowed.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct access allowed.');
 /**
  * @package    Kohana/Codebench
  * @category   Tests
  * @author     Geert De Deckere <geert@idoe.be>
  */
-class Bench_Transliterate extends Codebench {
-
+class Bench_Transliterate extends Codebench
+{
 	public $description =
 		'Inspired by:
 		 http://forum.kohanaframework.org/comments.php?DiscussionID=6113';
 
 	public $loops = 10;
 
-	public $subjects = array
-	(
+	public $subjects = array(
 		// ASCII
 		'a', 'b', 'c', 'd', '1', '2', '3',
 

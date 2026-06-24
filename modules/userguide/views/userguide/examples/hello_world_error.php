@@ -1,7 +1,3 @@
-<?php
-
-declare(strict_types=1);
-
 <style type="text/css">
 #kohana_error { background: #ddd; font-size: 1em; font-family:sans-serif; text-align: left; color: #111; }
 #kohana_error h1,

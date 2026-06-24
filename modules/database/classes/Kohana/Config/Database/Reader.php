@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct script access.');
 
 /**
  * Database reader for the kohana config system
@@ -22,19 +23,15 @@ class Kohana_Config_Database_Reader implements Kohana_Config_Reader
 	 *
 	 * @param array Configuration for the reader
 	 */
-	public function __construct(array $config = NULL)
+	public function __construct(array $config = null)
 	{
-		if (isset($config['instance']))
-		{
+		if (isset($config['instance'])) {
 			$this->_db_instance = $config['instance'];
-		}
-		elseif ($this->_db_instance === NULL)
-		{
+		} elseif ($this->_db_instance === null) {
 			$this->_db_instance = Database::$default;
 		}
 
-		if (isset($config['table_name']))
-		{
+		if (isset($config['table_name'])) {
 			$this->_table_name = $config['table_name'];
 		}
 	}
@@ -50,19 +47,20 @@ class Kohana_Config_Database_Reader implements Kohana_Config_Reader
 	public function load($group)
 	{
 		/**
-		 * Prevents the catch-22 scenario where the database config reader attempts to load the 
+		 * Prevents the catch-22 scenario where the database config reader attempts to load the
 		 * database connections details from the database.
 		 *
 		 * @link http://dev.kohanaframework.org/issues/4316
 		 */
-		if ($group === 'database')
-			return FALSE;
+		if ($group === 'database') {
+			return false;
+		}
 
 		$query = DB::select('config_key', 'config_value')
 			->from($this->_table_name)
 			->where('group_name', '=', $group)
 			->execute($this->_db_instance);
 
-		return count($query) ? array_map(fn($v) => unserialize($v, ['allowed_classes' => FALSE]), $query->as_array('config_key', 'config_value')) : FALSE;
+		return count($query) ? array_map(fn ($v) => unserialize($v, array('allowed_classes' => false)), $query->as_array('config_key', 'config_value')) : false;
 	}
 }

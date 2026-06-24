@@ -1,15 +1,15 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('No direct access allowed.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct access allowed.');
 
-return array
-(
+return array(
 	// Enable the API browser.  TRUE or FALSE
-	'api_browser'  => TRUE,
+	'api_browser'  => true,
 
 	// Enable these packages in the API browser.  TRUE for all packages, or a string of comma seperated packages, using 'None' for a class with no @package
 	// Example: 'api_packages' => 'Kohana,Kohana/Database,Kohana/ORM,None',
-	'api_packages' => TRUE,
+	'api_packages' => true,
 
 	// Enables Disqus comments on the API and User Guide pages
 	'show_comments' => Kohana::$environment === Kohana::PRODUCTION,
@@ -21,7 +21,7 @@ return array
 		'userguide' => array(
 
 			// Whether this modules userguide pages should be shown
-			'enabled' => TRUE,
+			'enabled' => true,
 
 			// The name that should show up on the userguide index page
 			'name' => 'Userguide',
@@ -36,6 +36,6 @@ return array
 
 	// Set transparent class name segments
 	'transparent_prefixes' => array(
-		'Kohana' => TRUE,
+		'Kohana' => true,
 	)
 );

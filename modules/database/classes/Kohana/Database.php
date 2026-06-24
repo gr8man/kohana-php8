@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct script access.');
 /**
  * Database connection wrapper/helper.
  *
@@ -18,13 +19,13 @@ declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
  * @copyright  (c) 2008-2012 Kohana Team
  * @license    http://kohanaphp.com/license
  */
-abstract class Kohana_Database {
-
+abstract class Kohana_Database
+{
 	// Query types
-	const SELECT =  1;
-	const INSERT =  2;
-	const UPDATE =  3;
-	const DELETE =  4;
+	public const SELECT =  1;
+	public const INSERT =  2;
+	public const UPDATE =  3;
+	public const DELETE =  4;
 
 	/**
 	 * @var  string  default instance name
@@ -51,26 +52,24 @@ abstract class Kohana_Database {
 	 * @param   array    $config  configuration parameters
 	 * @return  Database
 	 */
-	public static function instance($name = NULL, array $config = NULL)
+	public static function instance($name = null, array $config = null)
 	{
-		if ($name === NULL)
-		{
+		if ($name === null) {
 			// Use the default instance name
 			$name = Database::$default;
 		}
 
-		if ( ! isset(Database::$instances[$name]))
-		{
-			if ($config === NULL)
-			{
+		if (! isset(Database::$instances[$name])) {
+			if ($config === null) {
 				// Load the configuration for this database
 				$config = Kohana::$config->load('database')->$name;
 			}
 
-			if ( ! isset($config['type']))
-			{
-				throw new Kohana_Exception('Database type not defined in :name configuration',
-					array(':name' => $name));
+			if (! isset($config['type'])) {
+				throw new Kohana_Exception(
+					'Database type not defined in :name configuration',
+					array(':name' => $name)
+				);
 			}
 
 			// Set the driver class name
@@ -118,8 +117,7 @@ abstract class Kohana_Database {
 		// Store the config locally
 		$this->_config = $config;
 
-		if (empty($this->_config['table_prefix']))
-		{
+		if (empty($this->_config['table_prefix'])) {
 			$this->_config['table_prefix'] = '';
 		}
 	}
@@ -175,7 +173,7 @@ abstract class Kohana_Database {
 	{
 		unset(Database::$instances[$this->_instance]);
 
-		return TRUE;
+		return true;
 	}
 
 	/**
@@ -206,7 +204,7 @@ abstract class Kohana_Database {
 	 * @return  array    list (insert id, row count) for INSERT queries
 	 * @return  integer  number of affected rows for all other queries
 	 */
-	abstract public function query($type, $sql, $as_object = FALSE, array $params = NULL);
+	abstract public function query($type, $sql, $as_object = false, array $params = null);
 
 	/**
 	 * Start a SQL transaction
@@ -229,7 +227,7 @@ abstract class Kohana_Database {
 	 * @param string $mode  transaction mode
 	 * @return  boolean
 	 */
-	abstract public function begin($mode = NULL);
+	abstract public function begin($mode = null);
 
 	/**
 	 * Commit the current transaction
@@ -265,7 +263,7 @@ abstract class Kohana_Database {
 		// Quote the table name
 		$table = $this->quote_table($table);
 
-		return $this->query(Database::SELECT, 'SELECT COUNT(*) AS total_row_count FROM '.$table, FALSE)
+		return $this->query(Database::SELECT, 'SELECT COUNT(*) AS total_row_count FROM '.$table, false)
 			->get('total_row_count');
 	}
 
@@ -279,30 +277,29 @@ abstract class Kohana_Database {
 	 */
 	public function datatype($type)
 	{
-		static $types = array
-		(
+		static $types = array(
 			// SQL-92
-			'bit'                           => array('type' => 'string', 'exact' => TRUE),
+			'bit'                           => array('type' => 'string', 'exact' => true),
 			'bit varying'                   => array('type' => 'string'),
-			'char'                          => array('type' => 'string', 'exact' => TRUE),
+			'char'                          => array('type' => 'string', 'exact' => true),
 			'char varying'                  => array('type' => 'string'),
-			'character'                     => array('type' => 'string', 'exact' => TRUE),
+			'character'                     => array('type' => 'string', 'exact' => true),
 			'character varying'             => array('type' => 'string'),
 			'date'                          => array('type' => 'string'),
-			'dec'                           => array('type' => 'float', 'exact' => TRUE),
-			'decimal'                       => array('type' => 'float', 'exact' => TRUE),
+			'dec'                           => array('type' => 'float', 'exact' => true),
+			'decimal'                       => array('type' => 'float', 'exact' => true),
 			'double precision'              => array('type' => 'float'),
 			'float'                         => array('type' => 'float'),
 			'int'                           => array('type' => 'int', 'min' => '-2147483648', 'max' => '2147483647'),
 			'integer'                       => array('type' => 'int', 'min' => '-2147483648', 'max' => '2147483647'),
 			'interval'                      => array('type' => 'string'),
-			'national char'                 => array('type' => 'string', 'exact' => TRUE),
+			'national char'                 => array('type' => 'string', 'exact' => true),
 			'national char varying'         => array('type' => 'string'),
-			'national character'            => array('type' => 'string', 'exact' => TRUE),
+			'national character'            => array('type' => 'string', 'exact' => true),
 			'national character varying'    => array('type' => 'string'),
-			'nchar'                         => array('type' => 'string', 'exact' => TRUE),
+			'nchar'                         => array('type' => 'string', 'exact' => true),
 			'nchar varying'                 => array('type' => 'string'),
-			'numeric'                       => array('type' => 'float', 'exact' => TRUE),
+			'numeric'                       => array('type' => 'float', 'exact' => true),
 			'real'                          => array('type' => 'float'),
 			'smallint'                      => array('type' => 'int', 'min' => '-32768', 'max' => '32767'),
 			'time'                          => array('type' => 'string'),
@@ -312,8 +309,8 @@ abstract class Kohana_Database {
 			'varchar'                       => array('type' => 'string'),
 
 			// SQL:1999
-			'binary large object'               => array('type' => 'string', 'binary' => TRUE),
-			'blob'                              => array('type' => 'string', 'binary' => TRUE),
+			'binary large object'               => array('type' => 'string', 'binary' => true),
+			'blob'                              => array('type' => 'string', 'binary' => true),
 			'boolean'                           => array('type' => 'bool'),
 			'char large object'                 => array('type' => 'string'),
 			'character large object'            => array('type' => 'string'),
@@ -328,13 +325,14 @@ abstract class Kohana_Database {
 			'bigint'    => array('type' => 'int', 'min' => '-9223372036854775808', 'max' => '9223372036854775807'),
 
 			// SQL:2008
-			'binary'            => array('type' => 'string', 'binary' => TRUE, 'exact' => TRUE),
-			'binary varying'    => array('type' => 'string', 'binary' => TRUE),
-			'varbinary'         => array('type' => 'string', 'binary' => TRUE),
+			'binary'            => array('type' => 'string', 'binary' => true, 'exact' => true),
+			'binary varying'    => array('type' => 'string', 'binary' => true),
+			'varbinary'         => array('type' => 'string', 'binary' => true),
 		);
 
-		if (isset($types[$type]))
+		if (isset($types[$type])) {
 			return $types[$type];
+		}
 
 		return array();
 	}
@@ -352,7 +350,7 @@ abstract class Kohana_Database {
 	 * @param   string   $like  table to search for
 	 * @return  array
 	 */
-	abstract public function list_tables($like = NULL);
+	abstract public function list_tables($like = null);
 
 	/**
 	 * Lists all of the columns in a table. Optionally, a LIKE string can be
@@ -372,7 +370,7 @@ abstract class Kohana_Database {
 	 * @param   boolean $add_prefix  whether to add the table prefix automatically or not
 	 * @return  array
 	 */
-	abstract public function list_columns($table, $like = NULL, $add_prefix = TRUE);
+	abstract public function list_columns($table, $like = null, $add_prefix = true);
 
 	/**
 	 * Extracts the text between parentheses, if any.
@@ -385,10 +383,9 @@ abstract class Kohana_Database {
 	 */
 	protected function _parse_type($type)
 	{
-		if (($open = strpos($type, '(')) === FALSE)
-		{
+		if (($open = strpos($type, '(')) === false) {
 			// No length specified
-			return array($type, NULL);
+			return array($type, null);
 		}
 
 		// Closing parenthesis
@@ -433,46 +430,28 @@ abstract class Kohana_Database {
 	 */
 	public function quote($value)
 	{
-		if ($value === NULL)
-		{
+		if ($value === null) {
 			return 'NULL';
-		}
-		elseif ($value === TRUE)
-		{
+		} elseif ($value === true) {
 			return "'1'";
-		}
-		elseif ($value === FALSE)
-		{
+		} elseif ($value === false) {
 			return "'0'";
-		}
-		elseif (is_object($value))
-		{
-			if ($value instanceof Database_Query)
-			{
+		} elseif (is_object($value)) {
+			if ($value instanceof Database_Query) {
 				// Create a sub-query
 				return '('.$value->compile($this).')';
-			}
-			elseif ($value instanceof Database_Expression)
-			{
+			} elseif ($value instanceof Database_Expression) {
 				// Compile the expression
 				return $value->compile($this);
-			}
-			else
-			{
+			} else {
 				// Convert the object to a string
-				return $this->quote( (string) $value);
+				return $this->quote((string) $value);
 			}
-		}
-		elseif (is_array($value))
-		{
+		} elseif (is_array($value)) {
 			return '('.implode(', ', array_map(array($this, __FUNCTION__), $value)).')';
-		}
-		elseif (is_int($value))
-		{
+		} elseif (is_int($value)) {
 			return (int) $value;
-		}
-		elseif (is_float($value))
-		{
+		} elseif (is_float($value)) {
 			// Convert to non-locale aware float to prevent possible commas
 			return sprintf('%F', $value);
 		}
@@ -504,39 +483,29 @@ abstract class Kohana_Database {
 		// Identifiers are escaped by repeating them
 		$escaped_identifier = $this->_identifier.$this->_identifier;
 
-		if (is_array($column))
-		{
+		if (is_array($column)) {
 			list($column, $alias) = $column;
 			$alias = str_replace($this->_identifier, $escaped_identifier, $alias);
 		}
 
-		if ($column instanceof Database_Query)
-		{
+		if ($column instanceof Database_Query) {
 			// Create a sub-query
 			$column = '('.$column->compile($this).')';
-		}
-		elseif ($column instanceof Database_Expression)
-		{
+		} elseif ($column instanceof Database_Expression) {
 			// Compile the expression
 			$column = $column->compile($this);
-		}
-		else
-		{
+		} else {
 			// Convert to a string
 			$column = (string) $column;
 
 			$column = str_replace($this->_identifier, $escaped_identifier, $column);
 
-			if ($column === '*')
-			{
+			if ($column === '*') {
 				return $column;
-			}
-			elseif (strpos($column, '.') !== FALSE)
-			{
+			} elseif (strpos($column, '.') !== false) {
 				$parts = explode('.', $column);
 
-				if ($prefix = $this->table_prefix())
-				{
+				if ($prefix = $this->table_prefix()) {
 					// Get the offset of the table name, 2nd-to-last part
 					$offset = count($parts) - 2;
 
@@ -544,25 +513,20 @@ abstract class Kohana_Database {
 					$parts[$offset] = $prefix.$parts[$offset];
 				}
 
-				foreach ($parts as & $part)
-				{
-					if ($part !== '*')
-					{
+				foreach ($parts as & $part) {
+					if ($part !== '*') {
 						// Quote each of the parts
 						$part = $this->_identifier.$part.$this->_identifier;
 					}
 				}
 
 				$column = implode('.', $parts);
-			}
-			else
-			{
+			} else {
 				$column = $this->_identifier.$column.$this->_identifier;
 			}
 		}
 
-		if (isset($alias))
-		{
+		if (isset($alias)) {
 			$column .= ' AS '.$this->_identifier.$alias.$this->_identifier;
 		}
 
@@ -589,35 +553,27 @@ abstract class Kohana_Database {
 		// Identifiers are escaped by repeating them
 		$escaped_identifier = $this->_identifier.$this->_identifier;
 
-		if (is_array($table))
-		{
+		if (is_array($table)) {
 			list($table, $alias) = $table;
 			$alias = str_replace($this->_identifier, $escaped_identifier, $alias);
 		}
 
-		if ($table instanceof Database_Query)
-		{
+		if ($table instanceof Database_Query) {
 			// Create a sub-query
 			$table = '('.$table->compile($this).')';
-		}
-		elseif ($table instanceof Database_Expression)
-		{
+		} elseif ($table instanceof Database_Expression) {
 			// Compile the expression
 			$table = $table->compile($this);
-		}
-		else
-		{
+		} else {
 			// Convert to a string
 			$table = (string) $table;
 
 			$table = str_replace($this->_identifier, $escaped_identifier, $table);
 
-			if (strpos($table, '.') !== FALSE)
-			{
+			if (strpos($table, '.') !== false) {
 				$parts = explode('.', $table);
 
-				if ($prefix = $this->table_prefix())
-				{
+				if ($prefix = $this->table_prefix()) {
 					// Get the offset of the table name, last part
 					$offset = count($parts) - 1;
 
@@ -625,23 +581,19 @@ abstract class Kohana_Database {
 					$parts[$offset] = $prefix.$parts[$offset];
 				}
 
-				foreach ($parts as & $part)
-				{
+				foreach ($parts as & $part) {
 					// Quote each of the parts
 					$part = $this->_identifier.$part.$this->_identifier;
 				}
 
 				$table = implode('.', $parts);
-			}
-			else
-			{
+			} else {
 				// Add the table prefix
 				$table = $this->_identifier.$this->table_prefix().$table.$this->_identifier;
 			}
 		}
 
-		if (isset($alias))
-		{
+		if (isset($alias)) {
 			// Attach table prefix to alias
 			$table .= ' AS '.$this->_identifier.$this->table_prefix().$alias.$this->_identifier;
 		}
@@ -665,49 +617,38 @@ abstract class Kohana_Database {
 		// Identifiers are escaped by repeating them
 		$escaped_identifier = $this->_identifier.$this->_identifier;
 
-		if (is_array($value))
-		{
+		if (is_array($value)) {
 			list($value, $alias) = $value;
 			$alias = str_replace($this->_identifier, $escaped_identifier, $alias);
 		}
 
-		if ($value instanceof Database_Query)
-		{
+		if ($value instanceof Database_Query) {
 			// Create a sub-query
 			$value = '('.$value->compile($this).')';
-		}
-		elseif ($value instanceof Database_Expression)
-		{
+		} elseif ($value instanceof Database_Expression) {
 			// Compile the expression
 			$value = $value->compile($this);
-		}
-		else
-		{
+		} else {
 			// Convert to a string
 			$value = (string) $value;
 
 			$value = str_replace($this->_identifier, $escaped_identifier, $value);
 
-			if (strpos($value, '.') !== FALSE)
-			{
+			if (strpos($value, '.') !== false) {
 				$parts = explode('.', $value);
 
-				foreach ($parts as & $part)
-				{
+				foreach ($parts as & $part) {
 					// Quote each of the parts
 					$part = $this->_identifier.$part.$this->_identifier;
 				}
 
 				$value = implode('.', $parts);
-			}
-			else
-			{
+			} else {
 				$value = $this->_identifier.$value.$this->_identifier;
 			}
 		}
 
-		if (isset($alias))
-		{
+		if (isset($alias)) {
 			$value .= ' AS '.$this->_identifier.$alias.$this->_identifier;
 		}
 

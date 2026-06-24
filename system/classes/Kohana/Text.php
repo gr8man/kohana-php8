@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-defined('SYSPATH') OR die('No direct script access.');
+defined('SYSPATH') or die('No direct script access.');
 /**
  * Text helper class. Provides simple methods for working with text.
  *
@@ -12,8 +12,8 @@ defined('SYSPATH') OR die('No direct script access.');
  * @copyright  (c) 2007-2012 Kohana Team
  * @license    http://kohanaframework.org/license
  */
-class Kohana_Text {
-
+class Kohana_Text
+{
 	/**
 	 * @var  array   number units and text equivalents
 	 */
@@ -61,16 +61,18 @@ class Kohana_Text {
 	 * @param   string  $end_char   end character or entity
 	 * @return  string
 	 */
-	public static function limit_words($str, $limit = 100, $end_char = NULL)
+	public static function limit_words($str, $limit = 100, $end_char = null)
 	{
 		$limit = (int) $limit;
-		$end_char = ($end_char === NULL) ? '…' : $end_char;
+		$end_char = ($end_char === null) ? '…' : $end_char;
 
-		if (trim($str) === '')
+		if (trim($str) === '') {
 			return $str;
+		}
 
-		if ($limit <= 0)
+		if ($limit <= 0) {
 			return $end_char;
+		}
 
 		preg_match('/^\s*+(?:\S++\s*+){1,'.$limit.'}/u', $str, $matches);
 
@@ -91,25 +93,29 @@ class Kohana_Text {
 	 * @return  string
 	 * @uses    UTF8::strlen
 	 */
-	public static function limit_chars($str, $limit = 100, $end_char = NULL, $preserve_words = FALSE)
+	public static function limit_chars($str, $limit = 100, $end_char = null, $preserve_words = false)
 	{
-		$end_char = ($end_char === NULL) ? '…' : $end_char;
+		$end_char = ($end_char === null) ? '…' : $end_char;
 
 		$limit = (int) $limit;
 
-		if (trim($str) === '' OR UTF8::strlen($str) <= $limit)
+		if (trim($str) === '' or UTF8::strlen($str) <= $limit) {
 			return $str;
+		}
 
-		if ($limit <= 0)
+		if ($limit <= 0) {
 			return $end_char;
+		}
 
-		if ($preserve_words === FALSE)
+		if ($preserve_words === false) {
 			return rtrim(UTF8::substr($str, 0, $limit)).$end_char;
+		}
 
 		// Don't preserve words. The limit is considered the top limit.
 		// No strings with a length longer than $limit should be returned.
-		if ( ! preg_match('/^.{0,'.$limit.'}\s/us', $str, $matches))
+		if (! preg_match('/^.{0,'.$limit.'}\s/us', $str, $matches)) {
 			return $end_char;
+		}
 
 		return rtrim($matches[0]).((strlen($matches[0]) === strlen($str)) ? '' : $end_char);
 	}
@@ -131,8 +137,7 @@ class Kohana_Text {
 	{
 		static $i;
 
-		if (func_num_args() === 0)
-		{
+		if (func_num_args() === 0) {
 			$i = 0;
 			return '';
 		}
@@ -169,15 +174,14 @@ class Kohana_Text {
 	 * @return  string
 	 * @uses    UTF8::split
 	 */
-	public static function random($type = NULL, $length = 8)
+	public static function random($type = null, $length = 8)
 	{
-		if ($type === NULL)
-		{
+		if ($type === null) {
 			// Default is to generate an alphanumeric string
 			$type = 'alnum';
 		}
 
-		$utf8 = FALSE;
+		$utf8 = false;
 
 		$pool = match ($type) {
 			'alnum'    => '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',
@@ -186,38 +190,32 @@ class Kohana_Text {
 			'numeric'  => '0123456789',
 			'nozero'   => '123456789',
 			'distinct' => '2345679ACDEFHJKLMNPRSTUVWXYZ',
-			default    => NULL,
+			default    => null,
 		};
 
-		if ($pool === NULL)
-		{
+		if ($pool === null) {
 			$pool = (string) $type;
 			$utf8 = ! UTF8::is_ascii($pool);
 		}
 
 		// Split the pool into an array of characters
-		$pool = ($utf8 === TRUE) ? UTF8::str_split($pool, 1) : str_split($pool, 1);
+		$pool = ($utf8 === true) ? UTF8::str_split($pool, 1) : str_split($pool, 1);
 
 		// Largest pool key
 		$max = count($pool) - 1;
 
 		$str = '';
-		for ($i = 0; $i < $length; $i++)
-		{
+		for ($i = 0; $i < $length; $i++) {
 			// Select a random character from the pool and add it to the string
 			$str .= $pool[mt_rand(0, $max)];
 		}
 
 		// Make sure alnum strings contain at least one letter and one digit
-		if ($type === 'alnum' AND $length > 1)
-		{
-			if (ctype_alpha($str))
-			{
+		if ($type === 'alnum' and $length > 1) {
+			if (ctype_alpha($str)) {
 				// Add a random digit
 				$str[mt_rand(0, $length - 1)] = chr(mt_rand(48, 57));
-			}
-			elseif (ctype_digit((string) $str))
-			{
+			} elseif (ctype_digit((string) $str)) {
 				// Add a random letter
 				$str[mt_rand(0, $length - 1)] = chr(mt_rand(65, 90));
 			}
@@ -271,17 +269,15 @@ class Kohana_Text {
 	 * @return  string
 	 * @uses    UTF8::strlen
 	 */
-	public static function censor($str, $badwords, $replacement = '#', $replace_partial_words = TRUE)
+	public static function censor($str, $badwords, $replacement = '#', $replace_partial_words = true)
 	{
-		foreach ( (array) $badwords as $key => $badword)
-		{
-			$badwords[$key] = str_replace('\*', '\S*?', preg_quote( (string) $badword));
+		foreach ((array) $badwords as $key => $badword) {
+			$badwords[$key] = str_replace('\*', '\S*?', preg_quote((string) $badword));
 		}
 
 		$regex = '('.implode('|', $badwords).')';
 
-		if ($replace_partial_words === FALSE)
-		{
+		if ($replace_partial_words === false) {
 			// Just using \b isn't sufficient when we need to replace a badword that already contains word boundaries itself
 			$regex = '(?<=\b|\s|^)'.$regex.'(?=\b|\s|$)';
 		}
@@ -289,9 +285,8 @@ class Kohana_Text {
 		$regex = '!'.$regex.'!ui';
 
 		// if $replacement is a single character: replace each of the characters of the badword with $replacement
-		if (UTF8::strlen($replacement) == 1)
-		{
-			return preg_replace_callback($regex, function($matches) use ($replacement) {
+		if (UTF8::strlen($replacement) == 1) {
+			return preg_replace_callback($regex, function ($matches) use ($replacement) {
 				return str_repeat($replacement, UTF8::strlen($matches[1]));
 			}, $str);
 		}
@@ -313,13 +308,12 @@ class Kohana_Text {
 		// First word is the word to match against
 		$word = current($words);
 
-		for ($i = 0, $max = strlen($word); $i < $max; ++$i)
-		{
-			foreach ($words as $w)
-			{
+		for ($i = 0, $max = strlen($word); $i < $max; ++$i) {
+			foreach ($words as $w) {
 				// Once a difference is found, break out of the loops
-				if ( ! isset($w[$i]) OR $w[$i] !== $word[$i])
+				if (! isset($w[$i]) or $w[$i] !== $word[$i]) {
 					break 2;
+				}
 			}
 		}
 
@@ -413,11 +407,12 @@ class Kohana_Text {
 	 * @param   boolean $br     convert single linebreaks to <br />
 	 * @return  string
 	 */
-	public static function auto_p($str, $br = TRUE)
+	public static function auto_p($str, $br = true)
 	{
 		// Trim whitespace
-		if (($str = trim($str)) === '')
+		if (($str = trim($str)) === '') {
 			return '';
+		}
 
 		// Standardize newlines
 		$str = str_replace(array("\r\n", "\r"), "\n", $str);
@@ -427,8 +422,7 @@ class Kohana_Text {
 		$str = preg_replace('~[ \t]+$~m', '', $str);
 
 		// The following regexes only need to be executed if the string contains html
-		if ($html_found = (strpos($str, '<') !== FALSE))
-		{
+		if ($html_found = (strpos($str, '<') !== false)) {
 			// Elements that should not be surrounded by p tags
 			$no_p = '(?:p|div|h[1-6r]|ul|ol|li|blockquote|d[dlt]|pre|t[dhr]|t(?:able|body|foot|head)|c(?:aption|olgroup)|form|s(?:elect|tyle)|a(?:ddress|rea)|ma(?:p|th))';
 
@@ -442,16 +436,14 @@ class Kohana_Text {
 		$str = preg_replace('~\n{2,}~', "</p>\n\n<p>", $str);
 
 		// The following regexes only need to be executed if the string contains html
-		if ($html_found !== FALSE)
-		{
+		if ($html_found !== false) {
 			// Remove p tags around $no_p elements
 			$str = preg_replace('~<p>(?=</?'.$no_p.'[^>]*+>)~i', '', $str);
 			$str = preg_replace('~(</?'.$no_p.'[^>]*+>)</p>~i', '$1', $str);
 		}
 
 		// Convert single linebreaks to <br />
-		if ($br === TRUE)
-		{
+		if ($br === true) {
 			$str = preg_replace('~(?<!\n)\n(?!\n)~', "<br />\n", $str);
 		}
 
@@ -471,27 +463,24 @@ class Kohana_Text {
 	 * @param   boolean $si         whether to use SI prefixes or IEC
 	 * @return  string
 	 */
-	public static function bytes($bytes, $force_unit = NULL, $format = NULL, $si = TRUE)
+	public static function bytes($bytes, $force_unit = null, $format = null, $si = true)
 	{
 		// Format string
-		$format = ($format === NULL) ? '%01.2f %s' : (string) $format;
+		$format = ($format === null) ? '%01.2f %s' : (string) $format;
 
 		// IEC prefixes (binary)
-		if ($si == FALSE OR strpos((string) $force_unit, 'i') !== FALSE)
-		{
+		if ($si == false or strpos((string) $force_unit, 'i') !== false) {
 			$units = array('B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB');
 			$mod   = 1024;
 		}
 		// SI prefixes (decimal)
-		else
-		{
+		else {
 			$units = array('B', 'kB', 'MB', 'GB', 'TB', 'PB');
 			$mod   = 1000;
 		}
 
 		// Determine unit to use
-		if (($power = array_search( (string) $force_unit, $units)) === FALSE)
-		{
+		if (($power = array_search((string) $force_unit, $units)) === false) {
 			$power = ($bytes > 0) ? floor(log($bytes, $mod)) : 0;
 		}
 
@@ -520,40 +509,31 @@ class Kohana_Text {
 		$text = array();
 
 		// Last matched unit within the loop
-		$last_unit = NULL;
+		$last_unit = null;
 
 		// The last matched item within the loop
 		$last_item = '';
 
-		foreach (Text::$units as $unit => $name)
-		{
-			if ($number / $unit >= 1)
-			{
+		foreach (Text::$units as $unit => $name) {
+			if ($number / $unit >= 1) {
 				// $value = the number of times the number is divisible by unit
 				$number -= $unit * ($value = (int) floor($number / $unit));
 				// Temporary var for textifying the current unit
 				$item = '';
 
-				if ($unit < 100)
-				{
-					if ($last_unit < 100 AND $last_unit >= 20)
-					{
+				if ($unit < 100) {
+					if ($last_unit < 100 and $last_unit >= 20) {
 						$last_item .= '-'.$name;
-					}
-					else
-					{
+					} else {
 						$item = $name;
 					}
-				}
-				else
-				{
+				} else {
 					$item = Text::number($value).' '.$name;
 				}
 
 				// In the situation that we need to make a composite number (i.e. twenty-three)
 				// then we need to modify the previous entry
-				if (empty($item))
-				{
+				if (empty($item)) {
 					array_pop($text);
 
 					$item = $last_item;
@@ -564,15 +544,13 @@ class Kohana_Text {
 			}
 		}
 
-		if (count($text) > 1)
-		{
+		if (count($text) > 1) {
 			$and = array_pop($text);
 		}
 
 		$text = implode(', ', $text);
 
-		if (isset($and))
-		{
+		if (isset($and)) {
 			$text .= ' and '.$and;
 		}
 
@@ -593,8 +571,8 @@ class Kohana_Text {
 	 */
 	public static function widont($str)
 	{
-		// use '%' as delimiter and 'x' as modifier 
- 		$widont_regex = "%
+		// use '%' as delimiter and 'x' as modifier
+		$widont_regex = "%
 			((?:</?(?:a|em|span|strong|i|b)[^>]*>)|[^<>\s]) # must be proceeded by an approved inline opening or closing tag or a nontag/nonspace
 			\s+                                             # the space to replace
 			([^<>\s]+                                       # must be flollowed by non-tag non-space characters
@@ -625,11 +603,9 @@ class Kohana_Text {
 	 */
 	public static function user_agent($agent, $value)
 	{
-		if (is_array($value))
-		{
+		if (is_array($value)) {
 			$data = array();
-			foreach ($value as $part)
-			{
+			foreach ($value as $part) {
 				// Add each part to the set
 				$data[$part] = Text::user_agent($agent, $part);
 			}
@@ -637,45 +613,35 @@ class Kohana_Text {
 			return $data;
 		}
 
-		if ($value === 'browser' OR $value == 'version')
-		{
+		if ($value === 'browser' or $value == 'version') {
 			// Extra data will be captured
 			$info = array();
 
 			// Load browsers
 			$browsers = Kohana::$config->load('user_agents')->browser;
 
-			foreach ($browsers as $search => $name)
-			{
-				if (stripos($agent, $search) !== FALSE)
-				{
+			foreach ($browsers as $search => $name) {
+				if (stripos($agent, $search) !== false) {
 					// Set the browser name
 					$info['browser'] = $name;
 
-					if (preg_match('#'.preg_quote($search).'[^0-9.]*+([0-9.][0-9.a-z]*)#i', $agent, $matches))
-					{
+					if (preg_match('#'.preg_quote($search).'[^0-9.]*+([0-9.][0-9.a-z]*)#i', $agent, $matches)) {
 						// Set the version number
 						$info['version'] = $matches[1];
-					}
-					else
-					{
+					} else {
 						// No version number found
-						$info['version'] = FALSE;
+						$info['version'] = false;
 					}
 
 					return $info[$value];
 				}
 			}
-		}
-		else
-		{
+		} else {
 			// Load the search group for this type
 			$group = Kohana::$config->load('user_agents')->$value;
 
-			foreach ($group as $search => $name)
-			{
-				if (stripos($agent, $search) !== FALSE)
-				{
+			foreach ($group as $search => $name) {
+				if (stripos($agent, $search) !== false) {
 					// Set the value name
 					return $name;
 				}
@@ -683,7 +649,7 @@ class Kohana_Text {
 		}
 
 		// The value requested could not be found
-		return FALSE;
+		return false;
 	}
 
 }

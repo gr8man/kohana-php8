@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('Kohana bootstrap needs to be included before tests run');
+declare(strict_types=1);
+defined('SYSPATH') or die('Kohana bootstrap needs to be included before tests run');
 
 /**
  * Tests the Arr lib that's shipped with kohana
@@ -29,7 +30,7 @@ class Kohana_ArrTest extends Unittest_TestCase
 		return array(
 			// Tests....
 			// That no parameters returns null
-			array('function', array('function', NULL)),
+			array('function', array('function', null)),
 			// That we can get an array of parameters values
 			array('function(1,2,3)', array('function', array('1', '2', '3'))),
 			// That it's not just using the callback "function"
@@ -69,8 +70,8 @@ class Kohana_ArrTest extends Unittest_TestCase
 			array(
 				array('kohana' => 'awesome', 'blueflame' => 'was'),
 				array('kohana', 'cakephp', 'symfony'),
-				NULL,
-				array('kohana' => 'awesome', 'cakephp' => NULL, 'symfony' => NULL)
+				null,
+				array('kohana' => 'awesome', 'cakephp' => null, 'symfony' => null)
 			),
 			// I realise noone should EVER code like this in real life,
 			// but unit testing is very very very very boring
@@ -86,7 +87,7 @@ class Kohana_ArrTest extends Unittest_TestCase
 				// Paths to extract
 				array('level1.level2a', 'level1.level2b'),
 				// Default
-				NULL,
+				null,
 				// Expected Result
 				array('level1' => array('level2a' => 'value 1', 'level2b' => 'value 2')),
 			),
@@ -96,7 +97,7 @@ class Kohana_ArrTest extends Unittest_TestCase
 				// Paths to extract
 				array('level1a', 'level1b.level2b'),
 				// Default
-				NULL,
+				null,
 				// Expected Result
 				array('level1a' => array('level2a' => 'value 1'), 'level1b' => array('level2b' => 'value 2')),
 			),
@@ -176,11 +177,11 @@ class Kohana_ArrTest extends Unittest_TestCase
 	public function provider_get()
 	{
 		return array(
-			array(array('uno', 'dos', 'tress'), 1, NULL, 'dos'),
-			array(array('we' => 'can', 'make' => 'change'), 'we', NULL, 'can'),
+			array(array('uno', 'dos', 'tress'), 1, null, 'dos'),
+			array(array('we' => 'can', 'make' => 'change'), 'we', null, 'can'),
 
-			array(array('uno', 'dos', 'tress'), 10, NULL, NULL),
-			array(array('we' => 'can', 'make' => 'change'), 'he', NULL, NULL),
+			array(array('uno', 'dos', 'tress'), 10, null, null),
+			array(array('we' => 'can', 'make' => 'change'), 'he', null, null),
 			array(array('we' => 'can', 'make' => 'change'), 'he', 'who', 'who'),
 			array(array('we' => 'can', 'make' => 'change'), 'he', array('arrays'), array('arrays')),
 		);
@@ -212,8 +213,8 @@ class Kohana_ArrTest extends Unittest_TestCase
 	public function provider_is_assoc()
 	{
 		return array(
-			array(array('one', 'two', 'three'), FALSE),
-			array(array('one' => 'o clock', 'two' => 'o clock', 'three' => 'o clock'), TRUE),
+			array(array('one', 'two', 'three'), false),
+			array(array('one' => 'o clock', 'two' => 'o clock', 'three' => 'o clock'), true),
 		);
 	}
 
@@ -241,11 +242,11 @@ class Kohana_ArrTest extends Unittest_TestCase
 	public function provider_is_array()
 	{
 		return array(
-			array($a = array('one', 'two', 'three'), TRUE),
-			array(new ArrayObject($a), TRUE),
-			array(new ArrayIterator($a), TRUE),
-			array('not an array', FALSE),
-			array(new stdClass, FALSE),
+			array($a = array('one', 'two', 'three'), true),
+			array(new ArrayObject($a), true),
+			array(new ArrayIterator($a), true),
+			array('not an array', false),
+			array(new stdClass(), false),
 		);
 	}
 
@@ -397,7 +398,7 @@ class Kohana_ArrTest extends Unittest_TestCase
 	{
 		$this->assertSame(
 			$expected,
-			Arr::merge($array1,$array2)
+			Arr::merge($array1, $array2)
 		);
 	}
 
@@ -416,7 +417,7 @@ class Kohana_ArrTest extends Unittest_TestCase
 				2 => array('name' => 'john', 'interests' => array('hocky' => array('length' => 2), 'football' => array())),
 				3 => 'frank', // Issue #3194
 			),
-			'object' => new ArrayObject(array('iterator' => TRUE)), // Iterable object should work exactly the same
+			'object' => new ArrayObject(array('iterator' => true)), // Iterable object should work exactly the same
 		);
 
 		return array(
@@ -425,10 +426,10 @@ class Kohana_ArrTest extends Unittest_TestCase
 			array($array['kohana'], $array, 'kohana'),
 			array($array['foobar']['definition'], $array, 'foobar.definition'),
 			// Custom delimiters
-			array($array['foobar']['definition'], $array, 'foobar/definition', NULL, '/'),
+			array($array['foobar']['definition'], $array, 'foobar/definition', null, '/'),
 			// We should be able to use NULL as a default, returned if the key DNX
-			array(NULL, $array, 'foobar.alternatives',  NULL),
-			array(NULL, $array, 'kohana.alternatives',  NULL),
+			array(null, $array, 'foobar.alternatives',  null),
+			array(null, $array, 'kohana.alternatives',  null),
 			// Try using a string as a default
 			array('nothing', $array, 'kohana.alternatives',  'nothing'),
 			// Make sure you can use arrays as defaults
@@ -440,7 +441,7 @@ class Kohana_ArrTest extends Unittest_TestCase
 			// Now we check that keys after a wilcard will be processed
 			array(array(0 => array(0 => 2)), $array, 'users.*.interests.*.length'),
 			// See what happens when it can't dig any deeper from a wildcard
-			array(NULL, $array, 'users.*.fans'),
+			array(null, $array, 'users.*.fans'),
 			// Starting wildcards, issue #3269
 			array(array('matt', 'john'), $array['users'], '*.name'),
 			// Path as array, issue #3260
@@ -459,7 +460,7 @@ class Kohana_ArrTest extends Unittest_TestCase
 	 * @param boolean $expected   The expected value
 	 * @param string  $delimiter  The path delimiter
 	 */
-	public function test_path($expected, $array, $path, $default = NULL, $delimiter = NULL)
+	public function test_path($expected, $array, $path, $default = null, $delimiter = null)
 	{
 		$this->assertSame(
 			$expected,
@@ -498,7 +499,7 @@ class Kohana_ArrTest extends Unittest_TestCase
 	 * @param boolean $expected   The expected value
 	 * @param string  $delimiter  The path delimiter
 	 */
-	public function test_set_path($expected, $array, $path, $value, $delimiter = NULL)
+	public function test_set_path($expected, $array, $path, $value, $delimiter = null)
 	{
 		Arr::set_path($array, $path, $value, $delimiter);
 
@@ -530,12 +531,11 @@ class Kohana_ArrTest extends Unittest_TestCase
 	{
 		$range = Arr::range($step, $max);
 
-		$this->assertSame( (int) floor($max / $step), count($range));
+		$this->assertSame((int) floor($max / $step), count($range));
 
 		$current = $step;
 
-		foreach ($range as $key => $value)
-		{
+		foreach ($range as $key => $value) {
 			$this->assertSame($key, $value);
 			$this->assertSame($current, $key);
 			$this->assertLessThanOrEqual($max, $key);
@@ -617,15 +617,15 @@ class Kohana_ArrTest extends Unittest_TestCase
 	public function provider_map()
 	{
 		return array(
-			array('strip_tags', array('<p>foobar</p>'), NULL, array('foobar')),
-			array('strip_tags', array(array('<p>foobar</p>'), array('<p>foobar</p>')), NULL, array(array('foobar'), array('foobar'))),
+			array('strip_tags', array('<p>foobar</p>'), null, array('foobar')),
+			array('strip_tags', array(array('<p>foobar</p>'), array('<p>foobar</p>')), null, array(array('foobar'), array('foobar'))),
 			array(
 				'strip_tags',
 				array(
 					'foo' => '<p>foobar</p>',
 					'bar' => '<p>foobar</p>',
 				),
-				NULL,
+				null,
 				array(
 					'foo' => 'foobar',
 					'bar' => 'foobar',
@@ -652,7 +652,7 @@ class Kohana_ArrTest extends Unittest_TestCase
 					'foo' => '<p>foobar </p>',
 					'bar' => '<p>foobar</p>',
 				),
-				NULL,
+				null,
 				array(
 					'foo' => 'foobar',
 					'bar' => 'foobar',
@@ -765,7 +765,7 @@ class Kohana_ArrTest extends Unittest_TestCase
 	 */
 	public function test_get_null_value()
 	{
-		$array = array('key' => NULL);
+		$array = array('key' => null);
 		$this->assertNull(Arr::get($array, 'key'));
 	}
 

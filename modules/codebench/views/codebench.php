@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') or die('No direct access allowed.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct access allowed.');
 /**
  * Codebench — A benchmarking module.
  *
@@ -161,7 +162,7 @@ declare(strict_types=1); defined('SYSPATH') or die('No direct access allowed.');
 		<h1>
 			<input name="class" type="text" value="<?php echo ($class !== '') ? $class : 'Bench_' ?>" size="25" title="Name of the Codebench library to run" />
 			<input type="submit" value="Run" />
-			<?php if ( ! empty($class)) { ?>
+			<?php if (! empty($class)) { ?>
 				<?php if (empty($codebench)) { ?>
 					<strong class="alert">Library not found</strong>
 				<?php } elseif (empty($codebench['benchmarks'])) { ?>
@@ -171,7 +172,7 @@ declare(strict_types=1); defined('SYSPATH') or die('No direct access allowed.');
 		</h1>
 	</form>
 
-	<?php if ( ! empty($codebench)) { ?>
+	<?php if (! empty($codebench)) { ?>
 
 		<?php if (empty($codebench['benchmarks'])) { ?>
 
@@ -210,11 +211,11 @@ declare(strict_types=1); defined('SYSPATH') or die('No direct access allowed.');
 							<?php foreach ($benchmark['subjects'] as $subject_key => $subject) { ?>
 								<tr>
 									<td>
-										<strong class="help" title="(<?php echo gettype($codebench['subjects'][$subject_key]) ?>) <?php echo HTML::chars(var_export($codebench['subjects'][$subject_key], TRUE)) ?>">
+										<strong class="help" title="(<?php echo gettype($codebench['subjects'][$subject_key]) ?>) <?php echo HTML::chars(var_export($codebench['subjects'][$subject_key], true)) ?>">
 											[<?php echo HTML::chars($subject_key) ?>] →
 										</strong>
 										<span class="quiet">(<?php echo gettype($subject['return']) ?>)</span>
-										<?php echo HTML::chars(var_export($subject['return'], TRUE)) ?>
+										<?php echo HTML::chars(var_export($subject['return'], true)) ?>
 									</td>
 									<td class="numeric">
 										<span title="+<?php echo (int) $subject['percent']['fastest']['memory'] ?>% memory">
@@ -243,16 +244,16 @@ declare(strict_types=1); defined('SYSPATH') or die('No direct access allowed.');
 
 		<?php } ?>
 
-		<?php if ( ! empty($codebench['description'])) { ?>
-			<?php echo Text::auto_p(Text::auto_link($codebench['description']), FALSE) ?>
+		<?php if (! empty($codebench['description'])) { ?>
+			<?php echo Text::auto_p(Text::auto_link($codebench['description']), false) ?>
 		<?php } ?>
 
-		<?php // echo '<h2>Raw output:</h2>', Debug::vars($codebench) ?>
+		<?php // echo '<h2>Raw output:</h2>', Debug::vars($codebench)?>
 
 	<?php } ?>
 
 	<p id="footer">
-		Page executed in <strong><?php echo round(microtime(TRUE) - KOHANA_START_TIME, 2) ?>&nbsp;s</strong>
+		Page executed in <strong><?php echo round(microtime(true) - KOHANA_START_TIME, 2) ?>&nbsp;s</strong>
 		using <strong><?php echo Text::widont(Text::bytes(memory_get_usage(), 'MB')) ?></strong> of memory.<br />
 		<a href="http://github.com/kohana/codebench">Codebench</a>, a <a href="http://kohanaframework.org/">Kohana</a> module
 		by <a href="http://www.geertdedeckere.be/article/introducing-codebench">Geert De Deckere</a>.

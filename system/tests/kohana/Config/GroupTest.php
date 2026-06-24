@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('Kohana bootstrap needs to be included before tests run');
+declare(strict_types=1);
+defined('SYSPATH') or die('Kohana bootstrap needs to be included before tests run');
 
 /**
  * Tests the Config group lib
@@ -25,7 +26,7 @@ class Kohana_Config_GroupTest extends Kohana_Unittest_TestCase
 	 */
 	public function get_mock_config()
 	{
-		return new Kohana_Config;
+		return new Kohana_Config();
 	}
 
 	/**
@@ -36,10 +37,9 @@ class Kohana_Config_GroupTest extends Kohana_Unittest_TestCase
 	 * @param Kohana_Config $instance Instance of Kohana_Config
 	 * @return Kohana_Config_Group
 	 */
-	public function get_mock_group($group, $config = array(), $instance = NULL)
+	public function get_mock_group($group, $config = array(), $instance = null)
 	{
-		if ($instance === NULL)
-		{
+		if ($instance === null) {
 			$instance = $this->get_mock_config();
 		}
 
@@ -64,7 +64,7 @@ class Kohana_Config_GroupTest extends Kohana_Unittest_TestCase
 		// by casting the object in question into an array.  This usually works fine, but as Kohana_Config_Group
 		// is a subclass of ArrayObject, casting to an array returns the config items!
 		// Therefore we have to use this little workaround
-		$this->assertSame($group_name,   $group->group_name());
+		$this->assertSame($group_name, $group->group_name());
 		$this->assertSame($group_values, $group->getArrayCopy());
 	}
 
@@ -106,7 +106,7 @@ class Kohana_Config_GroupTest extends Kohana_Unittest_TestCase
 	{
 		$group = $this->get_mock_group('kohana');
 
-		$this->assertSame(NULL,   $group->get('problems', NULL));
+		$this->assertSame(null, $group->get('problems', null));
 		$this->assertSame('nada', $group->get('problems', 'nada'));
 	}
 
@@ -128,7 +128,7 @@ class Kohana_Config_GroupTest extends Kohana_Unittest_TestCase
 	/**
 	 * If we modify the config via set() [$var] or ->$var then the change should be passed to
 	 * the parent config instance so that the config writers can be notified.
-	 * 
+	 *
 	 * The modification to the config should also stick
 	 *
 	 * @test
@@ -192,4 +192,3 @@ class Kohana_Config_GroupTest extends Kohana_Unittest_TestCase
 		$this->assertSame(serialize($vars), (string) $config);
 	}
 }
-

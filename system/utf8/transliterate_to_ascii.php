@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct script access.');
 /**
  * UTF8::transliterate_to_ascii
  *
@@ -12,13 +13,11 @@ declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
  */
 function _transliterate_to_ascii($str, $case = 0)
 {
-	static $utf8_lower_accents = NULL;
-	static $utf8_upper_accents = NULL;
+	static $utf8_lower_accents = null;
+	static $utf8_upper_accents = null;
 
-	if ($case <= 0)
-	{
-		if ($utf8_lower_accents === NULL)
-		{
+	if ($case <= 0) {
+		if ($utf8_lower_accents === null) {
 			$utf8_lower_accents = array(
 				'à' => 'a',  'ô' => 'o',  'ď' => 'd',  'ḟ' => 'f',  'ë' => 'e',  'š' => 's',  'ơ' => 'o',
 				'ß' => 'ss', 'ă' => 'a',  'ř' => 'r',  'ț' => 't',  'ň' => 'n',  'ā' => 'a',  'ķ' => 'k',
@@ -45,10 +44,8 @@ function _transliterate_to_ascii($str, $case = 0)
 		);
 	}
 
-	if ($case >= 0)
-	{
-		if ($utf8_upper_accents === NULL)
-		{
+	if ($case >= 0) {
+		if ($utf8_upper_accents === null) {
 			$utf8_upper_accents = array(
 				'À' => 'A',  'Ô' => 'O',  'Ď' => 'D',  'Ḟ' => 'F',  'Ë' => 'E',  'Š' => 'S',  'Ơ' => 'O',
 				'Ă' => 'A',  'Ř' => 'R',  'Ț' => 'T',  'Ň' => 'N',  'Ā' => 'A',  'Ķ' => 'K',  'Ĕ' => 'E',

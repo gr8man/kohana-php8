@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct script access.');
 /**
  * File-based configuration reader. Multiple configuration directories can be
  * used by attaching multiple instances of this class to [Kohana_Config].
@@ -11,8 +12,8 @@ declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
  * @copyright  (c) 2009-2012 Kohana Team
  * @license    http://kohanaframework.org/license
  */
-class Kohana_Config_File_Reader implements Kohana_Config_Reader {
-
+class Kohana_Config_File_Reader implements Kohana_Config_Reader
+{
 	protected string $_directory = '';
 
 	/**
@@ -38,10 +39,8 @@ class Kohana_Config_File_Reader implements Kohana_Config_Reader {
 	{
 		$config = array();
 
-		if ($files = Kohana::find_file($this->_directory, $group, NULL, TRUE))
-		{
-			foreach ($files as $file)
-			{
+		if ($files = Kohana::find_file($this->_directory, $group, null, true)) {
+			foreach ($files as $file) {
 				// Merge each file to the configuration array
 				$config = Arr::merge($config, Kohana::load($file));
 			}

@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct script access.');
 
 /**
  * Backwards compatibility extension for the database writer.
@@ -13,5 +14,4 @@ declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
  */
 class Kohana_Config_Database extends Config_Database_Writer
 {
-
 }

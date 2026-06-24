@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct script access.');
 /**
  * Cookie-based session class.
  *
@@ -10,15 +11,15 @@ declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
  * @copyright  (c) 2008-2012 Kohana Team
  * @license    http://kohanaframework.org/license
  */
-class Kohana_Session_Cookie extends Session {
-
+class Kohana_Session_Cookie extends Session
+{
 	/**
 	 * @param   string  $id  session id
 	 * @return  string
 	 */
-	protected function _read($id = NULL)
+	protected function _read($id = null)
 	{
-		return Cookie::get($this->_name, NULL);
+		return Cookie::get($this->_name, null);
 	}
 
 	/**
@@ -27,7 +28,7 @@ class Kohana_Session_Cookie extends Session {
 	protected function _regenerate()
 	{
 		// Cookie sessions have no id
-		return NULL;
+		return null;
 	}
 
 	/**
@@ -43,7 +44,7 @@ class Kohana_Session_Cookie extends Session {
 	 */
 	protected function _restart()
 	{
-		return TRUE;
+		return true;
 	}
 
 	/**

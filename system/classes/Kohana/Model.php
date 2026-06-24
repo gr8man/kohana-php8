@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-defined('SYSPATH') OR die('No direct script access.');
+defined('SYSPATH') or die('No direct script access.');
 /**
  * Model base class. All models should extend this class.
  *
@@ -12,8 +12,8 @@ defined('SYSPATH') OR die('No direct script access.');
  * @copyright  (c) 2008-2012 Kohana Team
  * @license    http://kohanaframework.org/license
  */
-abstract class Kohana_Model {
-
+abstract class Kohana_Model
+{
 	/**
 	 * Create a new model instance.
 	 *
@@ -27,7 +27,7 @@ abstract class Kohana_Model {
 		// Add the model prefix
 		$class = 'Model_'.$name;
 
-		return new $class;
+		return new $class();
 	}
 
 }

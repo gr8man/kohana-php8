@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('No direct access allowed.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct access allowed.');
 /**
  * ORM Auth driver.
  *
@@ -9,52 +10,49 @@ declare(strict_types=1); defined('SYSPATH') OR die('No direct access allowed.');
  * @copyright  (c) 2007-2012 Kohana Team
  * @license    http://kohanaframework.org/license
  */
-class Kohana_Auth_ORM extends Auth {
-
+class Kohana_Auth_ORM extends Auth
+{
 	/**
 	 * Checks if a session is active.
 	 *
 	 * @param   mixed    $role Role name string, role ORM object, or array with role names
 	 * @return  boolean
 	 */
-	public function logged_in($role = NULL)
+	public function logged_in($role = null)
 	{
 		// Get the user from the session
 		$user = $this->get_user();
 
-		if ( ! $user)
-			return FALSE;
+		if (! $user) {
+			return false;
+		}
 
-		if ($user instanceof Model_User AND $user->loaded())
-		{
+		if ($user instanceof Model_User and $user->loaded()) {
 			// If we don't have a roll no further checking is needed
-			if ( ! $role)
-				return TRUE;
+			if (! $role) {
+				return true;
+			}
 
-			if (is_array($role))
-			{
+			if (is_array($role)) {
 				// Get all the roles
 				$roles = ORM::factory('Role')
 							->where('name', 'IN', $role)
 							->find_all()
-							->as_array(NULL, 'id');
+							->as_array(null, 'id');
 
 				// Make sure all the roles are valid ones
-				if (count($roles) !== count($role))
-					return FALSE;
-			}
-			else
-			{
-				if ( ! is_object($role))
-				{
+				if (count($roles) !== count($role)) {
+					return false;
+				}
+			} else {
+				if (! is_object($role)) {
 					// Load the role
 					$roles = ORM::factory('Role', array('name' => $role));
 
-					if ( ! $roles->loaded())
-						return FALSE;
-				}
-				else
-				{
+					if (! $roles->loaded()) {
+						return false;
+					}
+				} else {
 					$roles = $role;
 				}
 			}
@@ -73,8 +71,7 @@ class Kohana_Auth_ORM extends Auth {
 	 */
 	protected function _login($user, $password, $remember)
 	{
-		if ( ! is_object($user))
-		{
+		if (! is_object($user)) {
 			$username = $user;
 
 			// Load the user
@@ -87,10 +84,8 @@ class Kohana_Auth_ORM extends Auth {
 		$password_valid = $this->check_password($password, $user->password);
 
 		// If the passwords match, perform a login
-		if ($user->has('roles', ORM::factory('Role', array('name' => 'login'))) AND $password_valid)
-		{
-			if ($remember === TRUE)
-			{
+		if ($user->has('roles', ORM::factory('Role', array('name' => 'login'))) and $password_valid) {
+			if ($remember === true) {
 				// Token data
 				$data = array(
 					'user_id'    => $user->pk(),
@@ -110,11 +105,11 @@ class Kohana_Auth_ORM extends Auth {
 			// Finish the login
 			$this->complete_login($user);
 
-			return TRUE;
+			return true;
 		}
 
 		// Login failed
-		return FALSE;
+		return false;
 	}
 
 	/**
@@ -124,10 +119,9 @@ class Kohana_Auth_ORM extends Auth {
 	 * @param   boolean  $mark_session_as_forced  mark the session as forced
 	 * @return  boolean
 	 */
-	public function force_login($user, $mark_session_as_forced = FALSE)
+	public function force_login($user, $mark_session_as_forced = false)
 	{
-		if ( ! is_object($user))
-		{
+		if (! is_object($user)) {
 			$username = $user;
 
 			// Load the user
@@ -135,10 +129,9 @@ class Kohana_Auth_ORM extends Auth {
 			$user->where($user->unique_key($username), '=', $username)->find();
 		}
 
-		if ($mark_session_as_forced === TRUE)
-		{
+		if ($mark_session_as_forced === true) {
 			// Mark the session as forced, to prevent users from changing account information
-			$this->_session->set('auth_forced', TRUE);
+			$this->_session->set('auth_forced', true);
 		}
 
 		// Run the standard completion
@@ -152,15 +145,12 @@ class Kohana_Auth_ORM extends Auth {
 	 */
 	public function auto_login()
 	{
-		if ($token = Cookie::get('authautologin'))
-		{
+		if ($token = Cookie::get('authautologin')) {
 			// Load the token and user
 			$token = ORM::factory('User_Token', array('token' => $token));
 
-			if ($token->loaded() AND $token->user->loaded())
-			{
-				if ($token->user_agent === sha1(Request::$user_agent))
-				{
+			if ($token->loaded() and $token->user->loaded()) {
+				if ($token->user_agent === sha1(Request::$user_agent)) {
 					// Save the token to create a new unique token
 					$token->save();
 
@@ -179,7 +169,7 @@ class Kohana_Auth_ORM extends Auth {
 			}
 		}
 
-		return FALSE;
+		return false;
 	}
 
 	/**
@@ -189,15 +179,15 @@ class Kohana_Auth_ORM extends Auth {
 	 * @param   mixed    $default to return in case user isn't logged in
 	 * @return  mixed
 	 */
-	public function get_user($default = NULL)
+	public function get_user($default = null)
 	{
 		$user = parent::get_user($default);
 
-		if ($user === $default)
-		{
+		if ($user === $default) {
 			// check for "remembered" login
-			if (($user = $this->auto_login()) === FALSE)
+			if (($user = $this->auto_login()) === false) {
 				return $default;
+			}
 		}
 
 		return $user;
@@ -210,31 +200,26 @@ class Kohana_Auth_ORM extends Auth {
 	 * @param	boolean  $logout_all  remove all tokens for user
 	 * @return  boolean
 	 */
-	public function logout($destroy = FALSE, $logout_all = FALSE)
+	public function logout($destroy = false, $logout_all = false)
 	{
 		// Set by force_login()
 		$this->_session->delete('auth_forced');
 
-		if ($token = Cookie::get('authautologin'))
-		{
+		if ($token = Cookie::get('authautologin')) {
 			// Delete the autologin cookie to prevent re-login
 			Cookie::delete('authautologin');
 
 			// Clear the autologin token from the database
 			$token = ORM::factory('User_Token', array('token' => $token));
 
-			if ($token->loaded() AND $logout_all)
-			{
+			if ($token->loaded() and $logout_all) {
 				// Delete all user tokens. This isn't the most elegant solution but does the job
-				$tokens = ORM::factory('User_Token')->where('user_id','=',$token->user_id)->find_all();
-				
-				foreach ($tokens as $_token)
-				{
+				$tokens = ORM::factory('User_Token')->where('user_id', '=', $token->user_id)->find_all();
+
+				foreach ($tokens as $_token) {
 					$_token->delete();
 				}
-			}
-			elseif ($token->loaded())
-			{
+			} elseif ($token->loaded()) {
 				$token->delete();
 			}
 		}
@@ -250,8 +235,7 @@ class Kohana_Auth_ORM extends Auth {
 	 */
 	public function password($user)
 	{
-		if ( ! is_object($user))
-		{
+		if (! is_object($user)) {
 			$username = $user;
 
 			// Load the user
@@ -283,15 +267,15 @@ class Kohana_Auth_ORM extends Auth {
 	 * @param   string  $hash     Optional stored hash
 	 * @return  boolean
 	 */
-	public function check_password($password, $hash = NULL)
+	public function check_password($password, $hash = null)
 	{
 		$user = $this->get_user();
 
-		if ( ! $user)
-			return FALSE;
+		if (! $user) {
+			return false;
+		}
 
-		if ($hash === NULL)
-		{
+		if ($hash === null) {
 			$hash = $user->password;
 		}
 

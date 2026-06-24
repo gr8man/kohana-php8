@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('Kohana bootstrap needs to be included before tests run');
+declare(strict_types=1);
+defined('SYSPATH') or die('Kohana bootstrap needs to be included before tests run');
 
 /**
  * Tests the session class
@@ -19,7 +20,6 @@ declare(strict_types=1); defined('SYSPATH') OR die('Kohana bootstrap needs to be
 #[AllowDynamicProperties]
 class Kohana_SessionTest extends Unittest_TestCase
 {
-
 	/**
 	 * Gets a mock of the session class
 	 *
@@ -48,12 +48,12 @@ class Kohana_SessionTest extends Unittest_TestCase
 				array(
 					'name'      => 'awesomeness',
 					'lifetime'  =>  1231456421,
-					'encrypted' =>  FALSE
+					'encrypted' =>  false
 				),
 				array(
 					'name'      => 'awesomeness',
 					'lifetime'  => '1231456421',
-					'encrypted' =>  FALSE,
+					'encrypted' =>  false,
 				),
 			),
 			// data set 1
@@ -64,7 +64,7 @@ class Kohana_SessionTest extends Unittest_TestCase
 				),
 				array(
 					'name'       =>  123,
-					'encrypted'  =>  TRUE,
+					'encrypted'  =>  true,
 				),
 			),
 		);
@@ -82,8 +82,7 @@ class Kohana_SessionTest extends Unittest_TestCase
 	{
 		$session = $this->getMockForAbstractClass('Session', array($config));
 
-		foreach ($expected as $var => $value)
-		{
+		foreach ($expected as $var => $value) {
 			$this->assertAttributeSame($value, '_'.$var, $session);
 		}
 	}
@@ -176,7 +175,7 @@ class Kohana_SessionTest extends Unittest_TestCase
 	{
 		$session = $this->getMockSession();
 
-		$this->assertAttributeSame(FALSE, '_encrypted', $session);
+		$this->assertAttributeSame(false, '_encrypted', $session);
 	}
 
 	/**
@@ -189,7 +188,7 @@ class Kohana_SessionTest extends Unittest_TestCase
 	{
 		$session = $this->getMockSession();
 
-		$this->assertAttributeSame(FALSE, '_destroyed', $session);
+		$this->assertAttributeSame(false, '_destroyed', $session);
 	}
 
 	/**
@@ -200,8 +199,8 @@ class Kohana_SessionTest extends Unittest_TestCase
 	public function provider_get_returns_default_if_var_dnx()
 	{
 		return array(
-			array('something_crazy', FALSE),
-			array('a_true', TRUE),
+			array('something_crazy', false),
+			array('a_true', true),
 			array('an_int', 158163158),
 		);
 	}
@@ -231,7 +230,7 @@ class Kohana_SessionTest extends Unittest_TestCase
 	{
 		$session = $this->getMockSession();
 
-		$this->assertSame(NULL, $session->get('level_of_cool'));
+		$this->assertSame(null, $session->get('level_of_cool'));
 	}
 
 	/**
@@ -245,9 +244,9 @@ class Kohana_SessionTest extends Unittest_TestCase
 	{
 		$session = $this->getMockSession();
 
-		$session->set('arkward', NULL);
+		$session->set('arkward', null);
 
-		$this->assertSame(NULL, $session->get('arkward', 'uh oh'));
+		$this->assertSame(null, $session->get('arkward', 'uh oh'));
 	}
 
 	/**
@@ -262,7 +261,7 @@ class Kohana_SessionTest extends Unittest_TestCase
 	{
 		$session = $this->getMockSession();
 
-		$data_ref =& $session->as_array();
+		$data_ref = & $session->as_array();
 
 		$data_ref['something'] = 'pie';
 
@@ -315,7 +314,7 @@ class Kohana_SessionTest extends Unittest_TestCase
 		$session = $this->getMockSession();
 
 		// Bit of a hack for mass-loading session data
-		$data =& $session->as_array();
+		$data = & $session->as_array();
 
 		$data += array(
 			'a' => 'A',
@@ -437,7 +436,7 @@ class Kohana_SessionTest extends Unittest_TestCase
 			->expects($this->once())
 			->method('_destroy')
 			->with()
-			->will($this->returnValue(TRUE));
+			->will($this->returnValue(true));
 
 		$this->assertTrue($session->destroy());
 
@@ -463,7 +462,7 @@ class Kohana_SessionTest extends Unittest_TestCase
 			->expects($this->once())
 			->method('_destroy')
 			->with()
-			->will($this->returnValue(FALSE));
+			->will($this->returnValue(false));
 
 		$this->assertFalse($session->destroy());
 		$this->assertAttributeSame(

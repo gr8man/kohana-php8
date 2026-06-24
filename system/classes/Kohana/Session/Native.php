@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct script access.');
 /**
  * Native PHP session class.
  *
@@ -10,8 +11,8 @@ declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
  * @copyright  (c) 2008-2012 Kohana Team
  * @license    http://kohanaframework.org/license
  */
-class Kohana_Session_Native extends Session {
-
+class Kohana_Session_Native extends Session
+{
 	/**
 	 * @return  string
 	 */
@@ -24,24 +25,24 @@ class Kohana_Session_Native extends Session {
 	 * @param   string  $id  session id
 	 * @return  null
 	 */
-	protected function _read($id = NULL)
+	protected function _read($id = null)
 	{
 		/**
 		 * session_set_cookie_params will override php ini settings
 		 * If Cookie::$domain is NULL or empty and is passed, PHP
 		 * will override ini and sent cookies with the host name
 		 * of the server which generated the cookie
-		 * 
+		 *
 		 * see issue #3604
-		 * 
+		 *
 		 * see http://www.php.net/manual/en/function.session-set-cookie-params.php
 		 * see http://www.php.net/manual/en/session.configuration.php#ini.session.cookie-domain
-		 * 
+		 *
 		 * set to Cookie::$domain if available, otherwise default to ini setting
 		 */
 		$session_cookie_domain = empty(Cookie::$domain)
-		    ? ini_get('session.cookie_domain')
-		    : Cookie::$domain;
+			? ini_get('session.cookie_domain')
+			: Cookie::$domain;
 
 		// Sync up the session cookie with Cookie parameters
 		session_set_cookie_params(
@@ -58,8 +59,7 @@ class Kohana_Session_Native extends Session {
 		// Set the session cookie name
 		session_name($this->_name);
 
-		if ($id)
-		{
+		if ($id) {
 			// Set the session id
 			session_id($id);
 		}
@@ -68,9 +68,9 @@ class Kohana_Session_Native extends Session {
 		session_start();
 
 		// Use the $_SESSION global for storing data
-		$this->_data =& $_SESSION;
+		$this->_data = & $_SESSION;
 
-		return NULL;
+		return null;
 	}
 
 	/**
@@ -92,7 +92,7 @@ class Kohana_Session_Native extends Session {
 		// Write and close the session
 		session_write_close();
 
-		return TRUE;
+		return true;
 	}
 
 	/**
@@ -104,7 +104,7 @@ class Kohana_Session_Native extends Session {
 		$status = session_start();
 
 		// Use the $_SESSION global for storing data
-		$this->_data =& $_SESSION;
+		$this->_data = & $_SESSION;
 
 		return $status;
 	}
@@ -120,8 +120,7 @@ class Kohana_Session_Native extends Session {
 		// Did destruction work?
 		$status = ! session_id();
 
-		if ($status)
-		{
+		if ($status) {
 			// Make sure the session cannot be restarted
 			Cookie::delete($this->_name);
 		}

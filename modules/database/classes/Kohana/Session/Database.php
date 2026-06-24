@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct script access.');
 /**
  * Database-based session class.
  *
@@ -20,8 +21,8 @@ declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
  * @copyright  (c) 2008-2009 Kohana Team
  * @license    http://kohanaphp.com/license
  */
-class Kohana_Session_Database extends Session {
-
+class Kohana_Session_Database extends Session
+{
 	// Database instance
 	protected $_db;
 
@@ -44,10 +45,9 @@ class Kohana_Session_Database extends Session {
 	// The old session id
 	protected $_update_id;
 
-	public function __construct(array $config = NULL, $id = NULL)
+	public function __construct(array $config = null, $id = null)
 	{
-		if ( ! isset($config['group']))
-		{
+		if (! isset($config['group'])) {
 			// Use the default group
 			$config['group'] = Database::$default;
 		}
@@ -55,28 +55,24 @@ class Kohana_Session_Database extends Session {
 		// Load the database
 		$this->_db = Database::instance($config['group']);
 
-		if (isset($config['table']))
-		{
+		if (isset($config['table'])) {
 			// Set the table name
 			$this->_table = (string) $config['table'];
 		}
 
-		if (isset($config['gc']))
-		{
+		if (isset($config['gc'])) {
 			// Set the gc chance
 			$this->_gc = (int) $config['gc'];
 		}
 
-		if (isset($config['columns']))
-		{
+		if (isset($config['columns'])) {
 			// Overload column names
 			$this->_columns = $config['columns'];
 		}
 
 		parent::__construct($config, $id);
 
-		if (mt_rand(0, $this->_gc) === $this->_gc)
-		{
+		if (mt_rand(0, $this->_gc) === $this->_gc) {
 			// Run garbage collection
 			// This will average out to run once every X requests
 			$this->_gc();
@@ -88,10 +84,9 @@ class Kohana_Session_Database extends Session {
 		return $this->_session_id;
 	}
 
-	protected function _read($id = NULL)
+	protected function _read($id = null)
 	{
-		if ($id OR $id = Cookie::get($this->_name))
-		{
+		if ($id or $id = Cookie::get($this->_name)) {
 			$result = DB::select(array($this->_columns['contents'], 'contents'))
 				->from($this->_table)
 				->where($this->_columns['session_id'], '=', ':id')
@@ -99,8 +94,7 @@ class Kohana_Session_Database extends Session {
 				->param(':id', $id)
 				->execute($this->_db);
 
-			if ($result->count())
-			{
+			if ($result->count()) {
 				// Set the current session id
 				$this->_session_id = $this->_update_id = $id;
 
@@ -112,7 +106,7 @@ class Kohana_Session_Database extends Session {
 		// Create a new session id
 		$this->_regenerate();
 
-		return NULL;
+		return null;
 	}
 
 	protected function _regenerate()
@@ -124,46 +118,40 @@ class Kohana_Session_Database extends Session {
 			->limit(1)
 			->bind(':id', $id);
 
-		do
-		{
+		do {
 			// Create a new session id
-			$id = str_replace('.', '-', uniqid(NULL, TRUE));
+			$id = str_replace('.', '-', uniqid(null, true));
 
 			// Get the the id from the database
 			$result = $query->execute($this->_db);
-		}
-		while ($result->count());
+		} while ($result->count());
 
 		return $this->_session_id = $id;
 	}
 
 	protected function _write()
 	{
-		if ($this->_update_id === NULL)
-		{
+		if ($this->_update_id === null) {
 			// Insert a new row
 			$query = DB::insert($this->_table, $this->_columns)
 				->values(array(':new_id', ':active', ':contents'));
-		}
-		else
-		{
+		} else {
 			// Update the row
 			$query = DB::update($this->_table)
 				->value($this->_columns['last_active'], ':active')
 				->value($this->_columns['contents'], ':contents')
 				->where($this->_columns['session_id'], '=', ':old_id');
 
-			if ($this->_update_id !== $this->_session_id)
-			{
+			if ($this->_update_id !== $this->_session_id) {
 				// Also update the session id
 				$query->value($this->_columns['session_id'], ':new_id');
 			}
 		}
 
 		$query
-			->param(':new_id',   $this->_session_id)
-			->param(':old_id',   $this->_update_id)
-			->param(':active',   $this->_data['last_active'])
+			->param(':new_id', $this->_session_id)
+			->param(':old_id', $this->_update_id)
+			->param(':active', $this->_data['last_active'])
 			->param(':contents', $this->__toString());
 
 		// Execute the query
@@ -175,7 +163,7 @@ class Kohana_Session_Database extends Session {
 		// Update the cookie with the new session id
 		Cookie::set($this->_name, $this->_session_id, $this->_lifetime);
 
-		return TRUE;
+		return true;
 	}
 
 	/**
@@ -185,15 +173,14 @@ class Kohana_Session_Database extends Session {
 	{
 		$this->_regenerate();
 
-		return TRUE;
+		return true;
 	}
 
 	protected function _destroy()
 	{
-		if ($this->_update_id === NULL)
-		{
+		if ($this->_update_id === null) {
 			// Session has not been created yet
-			return TRUE;
+			return true;
 		}
 
 		// Delete the current session
@@ -201,35 +188,29 @@ class Kohana_Session_Database extends Session {
 			->where($this->_columns['session_id'], '=', ':id')
 			->param(':id', $this->_update_id);
 
-		try
-		{
+		try {
 			// Execute the query
 			$query->execute($this->_db);
 
 			// Delete the old session id
-			$this->_update_id = NULL;
+			$this->_update_id = null;
 
 			// Delete the cookie
 			Cookie::delete($this->_name);
-		}
-		catch (Exception $e)
-		{
+		} catch (Exception $e) {
 			// An error occurred, the session has not been deleted
-			return FALSE;
+			return false;
 		}
 
-		return TRUE;
+		return true;
 	}
 
 	protected function _gc()
 	{
-		if ($this->_lifetime)
-		{
+		if ($this->_lifetime) {
 			// Expire sessions when their lifetime is up
 			$expires = $this->_lifetime;
-		}
-		else
-		{
+		} else {
 			// Expire sessions after one month
 			$expires = Date::MONTH;
 		}

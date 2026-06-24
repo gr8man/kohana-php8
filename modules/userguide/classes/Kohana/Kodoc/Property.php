@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') or die('No direct script access.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct script access.');
 /**
  * Class property documentation generator.
  *
@@ -10,8 +11,8 @@ declare(strict_types=1); defined('SYSPATH') or die('No direct script access.');
  * @copyright  (c) 2008-2013 Kohana Team
  * @license    http://kohanaframework.org/license
  */
-class Kohana_Kodoc_Property extends Kodoc {
-
+class Kohana_Kodoc_Property extends Kodoc
+{
 	/**
 	 * @var  object  ReflectionProperty
 	 */
@@ -37,7 +38,7 @@ class Kohana_Kodoc_Property extends Kodoc {
 	 */
 	public $default;
 
-	public function __construct($class, $property, $default = NULL)
+	public function __construct($class, $property, $default = null)
 	{
 		$property = new ReflectionProperty($class, $property);
 
@@ -45,19 +46,15 @@ class Kohana_Kodoc_Property extends Kodoc {
 
 		$this->description = $description;
 
-		if ($modifiers = $property->getModifiers())
-		{
+		if ($modifiers = $property->getModifiers()) {
 			$this->modifiers = '<small>'.implode(' ', Reflection::getModifierNames($modifiers)).'</small> ';
 		}
 
-		if (isset($tags['var']))
-		{
-			if (preg_match('/^(\S*)(?:\s*(.+?))?$/s', $tags['var'][0], $matches))
-			{
+		if (isset($tags['var'])) {
+			if (preg_match('/^(\S*)(?:\s*(.+?))?$/s', $tags['var'][0], $matches)) {
 				$this->type = $matches[1];
 
-				if (isset($matches[2]))
-				{
+				if (isset($matches[2])) {
 					$this->description = Kodoc_Markdown::markdown($matches[2]);
 				}
 			}
@@ -66,27 +63,23 @@ class Kohana_Kodoc_Property extends Kodoc {
 		$this->property = $property;
 
 		// Show the value of static properties, but only if they are public or we are php 5.3 or higher and can force them to be accessible
-		if ($property->isStatic() AND ($property->isPublic() OR version_compare(PHP_VERSION, '5.3', '>=')))
-		{
+		if ($property->isStatic() and ($property->isPublic() or version_compare(PHP_VERSION, '5.3', '>='))) {
 			// Force the property to be accessible
-			if (version_compare(PHP_VERSION, '5.3', '>='))
-			{
-				$property->setAccessible(TRUE);
+			if (version_compare(PHP_VERSION, '5.3', '>=')) {
+				$property->setAccessible(true);
 			}
 
 			// Don't debug the entire object, just say what kind of object it is
-			if (is_object($property->getValue($class)))
-			{
+			if (is_object($property->getValue($class))) {
 				$this->value = '<pre>object '.get_class($property->getValue($class)).'()</pre>';
-			}
-			else
-			{
+			} else {
 				$this->value = Debug::vars($property->getValue($class));
 			}
 		}
 
 		// Store the defult property
-		$this->default = Debug::vars($default);;
+		$this->default = Debug::vars($default);
+		;
 	}
 
 } // End Kodoc_Property

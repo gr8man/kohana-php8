@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct script access.');
 /**
  * Database query builder for JOIN statements. See [Query Builder](/database/query/builder) for usage and examples.
  *
@@ -10,8 +11,8 @@ declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
  * @copyright  (c) 2008-2009 Kohana Team
  * @license    http://kohanaphp.com/license
  */
-class Kohana_Database_Query_Builder_Join extends Database_Query_Builder {
-
+class Kohana_Database_Query_Builder_Join extends Database_Query_Builder
+{
 	// Type of JOIN
 	protected $_type;
 
@@ -32,13 +33,12 @@ class Kohana_Database_Query_Builder_Join extends Database_Query_Builder {
 	 * @param   string  $type   type of JOIN: INNER, RIGHT, LEFT, etc
 	 * @return  void
 	 */
-	public function __construct($table, $type = NULL)
+	public function __construct($table, $type = null)
 	{
 		// Set the table to JOIN on
 		$this->_table = $table;
 
-		if ($type !== NULL)
-		{
+		if ($type !== null) {
 			// Set the JOIN type
 			$this->_type = (string) $type;
 		}
@@ -54,8 +54,7 @@ class Kohana_Database_Query_Builder_Join extends Database_Query_Builder {
 	 */
 	public function on($c1, $op, $c2)
 	{
-		if ( ! empty($this->_using))
-		{
+		if (! empty($this->_using)) {
 			throw new Kohana_Exception('JOIN ... ON ... cannot be combined with JOIN ... USING ...');
 		}
 
@@ -72,8 +71,7 @@ class Kohana_Database_Query_Builder_Join extends Database_Query_Builder {
 	 */
 	public function using($columns)
 	{
-		if ( ! empty($this->_on))
-		{
+		if (! empty($this->_on)) {
 			throw new Kohana_Exception('JOIN ... ON ... cannot be combined with JOIN ... USING ...');
 		}
 
@@ -90,41 +88,32 @@ class Kohana_Database_Query_Builder_Join extends Database_Query_Builder {
 	 * @param   mixed  $db  Database instance or name of instance
 	 * @return  string
 	 */
-	public function compile($db = NULL)
+	public function compile($db = null)
 	{
-		if ( ! is_object($db))
-		{
+		if (! is_object($db)) {
 			// Get the database instance
 			$db = Database::instance($db);
 		}
 
-		if ($this->_type)
-		{
+		if ($this->_type) {
 			$sql = strtoupper($this->_type).' JOIN';
-		}
-		else
-		{
+		} else {
 			$sql = 'JOIN';
 		}
 
 		// Quote the table name that is being joined
 		$sql .= ' '.$db->quote_table($this->_table);
 
-		if ( ! empty($this->_using))
-		{
+		if (! empty($this->_using)) {
 			// Quote and concat the columns
 			$sql .= ' USING ('.implode(', ', array_map(array($db, 'quote_column'), $this->_using)).')';
-		}
-		else
-		{
+		} else {
 			$conditions = array();
-			foreach ($this->_on as $condition)
-			{
+			foreach ($this->_on as $condition) {
 				// Split the condition
 				list($c1, $op, $c2) = $condition;
 
-				if ($op)
-				{
+				if ($op) {
 					// Make the operator uppercase and spaced
 					$op = ' '.strtoupper($op);
 				}
@@ -143,7 +132,7 @@ class Kohana_Database_Query_Builder_Join extends Database_Query_Builder {
 	public function reset()
 	{
 		$this->_type =
-		$this->_table = NULL;
+		$this->_table = null;
 
 		$this->_on = array();
 	}

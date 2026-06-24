@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-defined('SYSPATH') OR die('Kohana bootstrap needs to be included before tests run');
+defined('SYSPATH') or die('Kohana bootstrap needs to be included before tests run');
 
 /**
  * Tests for Cookie security improvements
@@ -25,15 +25,15 @@ class Kohana_CookieSecurityTest extends Unittest_TestCase
 	public function setUp(): void
 	{
 		parent::setUp();
-		
+
 		$this->_original_salt = Cookie::$salt;
 		$this->_original_httponly = Cookie::$httponly;
 		$this->_original_secure = Cookie::$secure;
 		$this->_original_samesite = Cookie::$samesite;
-		
+
 		Cookie::$salt = 'test_salt_for_unit_tests';
-		Cookie::$httponly = TRUE;
-		Cookie::$secure = FALSE;
+		Cookie::$httponly = true;
+		Cookie::$secure = false;
 		Cookie::$samesite = 'Lax';
 	}
 
@@ -43,7 +43,7 @@ class Kohana_CookieSecurityTest extends Unittest_TestCase
 		Cookie::$httponly = $this->_original_httponly;
 		Cookie::$secure = $this->_original_secure;
 		Cookie::$samesite = $this->_original_samesite;
-		
+
 		parent::tearDown();
 	}
 
@@ -61,9 +61,9 @@ class Kohana_CookieSecurityTest extends Unittest_TestCase
 	{
 		$name = 'test_cookie';
 		$value = 'test_value';
-		
+
 		$salt = Cookie::salt($name, $value);
-		
+
 		$this->assertNotEmpty($salt);
 		$this->assertEquals(64, strlen($salt));
 	}
@@ -73,21 +73,21 @@ class Kohana_CookieSecurityTest extends Unittest_TestCase
 		$name1 = 'cookie1';
 		$name2 = 'cookie2';
 		$value = 'test_value';
-		
+
 		$salt1 = Cookie::salt($name1, $value);
 		$salt2 = Cookie::salt($name2, $value);
-		
+
 		$this->assertNotEquals($salt1, $salt2);
 	}
 
 	public function test_cookie_get_returns_null_for_unsigned()
 	{
 		$_COOKIE['test_unsigned'] = 'value';
-		
+
 		$result = Cookie::get('test_unsigned');
-		
-		$this->assertSame(NULL, $result);
-		
+
+		$this->assertSame(null, $result);
+
 		unset($_COOKIE['test_unsigned']);
 	}
 
@@ -95,22 +95,22 @@ class Kohana_CookieSecurityTest extends Unittest_TestCase
 	{
 		$name = 'test_signed';
 		$value = 'signed_value';
-		
+
 		$_COOKIE[$name] = Cookie::salt($name, $value).'~'.$value;
-		
+
 		$result = Cookie::get($name);
-		
+
 		$this->assertSame($value, $result);
-		
+
 		unset($_COOKIE[$name]);
 	}
 
 	public function test_cookie_get_returns_default_for_missing()
 	{
 		$default = 'default_value';
-		
+
 		$result = Cookie::get('nonexistent_cookie', $default);
-		
+
 		$this->assertSame($default, $result);
 	}
 
@@ -118,36 +118,36 @@ class Kohana_CookieSecurityTest extends Unittest_TestCase
 	{
 		$name = 'test_tampered';
 		$value = 'original_value';
-		
+
 		$_COOKIE[$name] = 'wrong_hash~'.$value;
-		
+
 		$result = Cookie::get($name);
-		
+
 		$this->assertNull($result);
 	}
 
 	public function test_cookie_salt_requires_salt_to_be_set()
 	{
 		$original_salt = Cookie::$salt;
-		Cookie::$salt = NULL;
-		
+		Cookie::$salt = null;
+
 		$this->expectException(Kohana_Exception::class);
-		
+
 		Cookie::salt('name', 'value');
-		
+
 		Cookie::$salt = $original_salt;
 	}
 
 	public function test_cookie_salt_includes_user_agent()
 	{
 		$_SERVER['HTTP_USER_AGENT'] = 'Test Browser 1.0';
-		
+
 		$salt1 = Cookie::salt('name', 'value');
-		
+
 		$_SERVER['HTTP_USER_AGENT'] = 'Test Browser 2.0';
-		
+
 		$salt2 = Cookie::salt('name', 'value');
-		
+
 		$this->assertNotEquals($salt1, $salt2);
 	}
 
@@ -157,16 +157,15 @@ class Kohana_CookieSecurityTest extends Unittest_TestCase
 		$original_httponly = Cookie::$httponly;
 		$original_secure = Cookie::$secure;
 		$original_samesite = Cookie::$samesite;
-		
+
 		try {
 			Cookie::init();
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			// Config may not be available
 		}
-		
-		$this->assertTrue(TRUE);
-		
+
+		$this->assertTrue(true);
+
 		Cookie::$salt = $original_salt;
 		Cookie::$httponly = $original_httponly;
 		Cookie::$secure = $original_secure;
@@ -187,7 +186,7 @@ class Kohana_CookieSecurityTest extends Unittest_TestCase
 
 	public function test_same_site_null_value()
 	{
-		Cookie::$samesite = NULL;
+		Cookie::$samesite = null;
 		$this->assertNull(Cookie::$samesite);
 	}
 }

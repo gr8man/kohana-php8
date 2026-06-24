@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') or die('No direct script access.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct script access.');
 /**
  * Invalid Task Exception
  *
@@ -10,8 +11,8 @@ declare(strict_types=1); defined('SYSPATH') or die('No direct script access.');
  * @copyright  (c) 2009-2011 Kohana Team
  * @license    http://kohanaframework.org/license
  */
-class Kohana_Minion_Exception_InvalidTask extends Minion_Exception {
-
+class Kohana_Minion_Exception_InvalidTask extends Minion_Exception
+{
 	public function format_for_cli()
 	{
 		return 'ERROR: '. $this->getMessage().PHP_EOL;

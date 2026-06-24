@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') or die('No direct script access.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct script access.');
 /**
  * Class documentation generator.
  *
@@ -10,8 +11,8 @@ declare(strict_types=1); defined('SYSPATH') or die('No direct script access.');
  * @copyright  (c) 2008-2013 Kohana Team
  * @license    http://kohanaframework.org/license
  */
-class Kohana_Kodoc_Class extends Kodoc {
-
+class Kohana_Kodoc_Class extends Kodoc
+{
 	/**
 	 * @var  ReflectionClass The ReflectionClass for this class
 	 */
@@ -54,8 +55,7 @@ class Kohana_Kodoc_Class extends Kodoc {
 	{
 		$this->class = new ReflectionClass($class);
 
-		if ($modifiers = $this->class->getModifiers())
-		{
+		if ($modifiers = $this->class->getModifiers()) {
 			$this->modifiers = '<small>'.implode(' ', Reflection::getModifierNames($modifiers)).'</small> ';
 		}
 
@@ -63,33 +63,26 @@ class Kohana_Kodoc_Class extends Kodoc {
 
 		// If ReflectionClass::getParentClass() won't work if the class in
 		// question is an interface
-		if ($this->class->isInterface())
-		{
+		if ($this->class->isInterface()) {
 			$this->parents = $this->class->getInterfaces();
-		}
-		else
-		{
+		} else {
 			$parent = $this->class;
 
-			while ($parent = $parent->getParentClass())
-			{
+			while ($parent = $parent->getParentClass()) {
 				$this->parents[] = $parent;
 			}
 		}
 
-		if ( ! $comment = $this->class->getDocComment())
-		{
-			foreach ($this->parents as $parent)
-			{
-				if ($comment = $parent->getDocComment())
-				{
+		if (! $comment = $this->class->getDocComment()) {
+			foreach ($this->parents as $parent) {
+				if ($comment = $parent->getDocComment()) {
 					// Found a description for this class
 					break;
 				}
 			}
 		}
 
-		list($this->description, $this->tags) = Kodoc::parse($comment, FALSE);
+		list($this->description, $this->tags) = Kodoc::parse($comment, false);
 	}
 
 	/**
@@ -101,8 +94,7 @@ class Kohana_Kodoc_Class extends Kodoc {
 	{
 		$result = array();
 
-		foreach ($this->constants as $name => $value)
-		{
+		foreach ($this->constants as $name => $value) {
 			$result[$name] = Debug::vars($value);
 		}
 
@@ -121,10 +113,8 @@ class Kohana_Kodoc_Class extends Kodoc {
 
 		// If this class extends Kodoc_Missing, add a warning about possible
 		// incomplete documentation
-		foreach ($this->parents as $parent)
-		{
-			if ($parent->name == 'Kodoc_Missing')
-			{
+		foreach ($this->parents as $parent) {
+			if ($parent->name == 'Kodoc_Missing') {
 				$result .= "[!!] **This class, or a class parent, could not be
 				           found or loaded. This could be caused by a missing
 				           module or other dependancy. The documentation for
@@ -148,10 +138,9 @@ class Kohana_Kodoc_Class extends Kodoc {
 
 		usort($props, array($this,'_prop_sort'));
 
-		foreach ($props as $key => $property)
-		{
+		foreach ($props as $key => $property) {
 			// Create Kodoc Properties for each property
-			$props[$key] = new Kodoc_Property($this->class->name, $property->name,  Arr::get($defaults, $property->name));
+			$props[$key] = new Kodoc_Property($this->class->name, $property->name, Arr::get($defaults, $property->name));
 		}
 
 		return $props;
@@ -160,16 +149,20 @@ class Kohana_Kodoc_Class extends Kodoc {
 	protected function _prop_sort($a, $b)
 	{
 		// If one property is public, and the other is not, it goes on top
-		if ($a->isPublic() AND ( ! $b->isPublic()))
+		if ($a->isPublic() and (! $b->isPublic())) {
 			return -1;
-		if ($b->isPublic() AND ( ! $a->isPublic()))
+		}
+		if ($b->isPublic() and (! $a->isPublic())) {
 			return 1;
+		}
 
 		// If one property is protected and the other is private, it goes on top
-		if ($a->isProtected() AND $b->isPrivate())
+		if ($a->isProtected() and $b->isPrivate()) {
 			return -1;
-		if ($b->isProtected() AND $a->isPrivate())
+		}
+		if ($b->isProtected() and $a->isPrivate()) {
 			return 1;
+		}
 
 		// Otherwise just do alphabetical
 		return strcmp($a->name, $b->name);
@@ -186,8 +179,7 @@ class Kohana_Kodoc_Class extends Kodoc {
 
 		usort($methods, array($this,'_method_sort'));
 
-		foreach ($methods as $key => $method)
-		{
+		foreach ($methods as $key => $method) {
 			$methods[$key] = new Kodoc_Method($this->class->name, $method->name);
 		}
 
@@ -206,16 +198,20 @@ class Kohana_Kodoc_Class extends Kodoc {
 	protected function _method_sort($a, $b)
 	{
 		// If one method is public, and the other is not, it goes on top
-		if ($a->isPublic() AND ( ! $b->isPublic()))
+		if ($a->isPublic() and (! $b->isPublic())) {
 			return -1;
-		if ($b->isPublic() AND ( ! $a->isPublic()))
+		}
+		if ($b->isPublic() and (! $a->isPublic())) {
 			return 1;
+		}
 
 		// If one method is protected and the other is private, it goes on top
-		if ($a->isProtected() AND $b->isPrivate())
+		if ($a->isProtected() and $b->isPrivate()) {
 			return -1;
-		if ($b->isProtected() AND $a->isPrivate())
+		}
+		if ($b->isProtected() and $a->isPrivate()) {
 			return 1;
+		}
 
 		// The methods have the same visibility, so check the declaring class depth:
 
@@ -230,32 +226,31 @@ class Kohana_Kodoc_Class extends Kodoc {
 		*/
 
 		// If both methods are defined in the same class, just compare the method names
-		if ($a->class == $b->class)
+		if ($a->class == $b->class) {
 			return strcmp($a->name, $b->name);
+		}
 
 		// If one of them was declared by this class, it needs to be on top
-		if ($a->name == $this->class->name)
+		if ($a->name == $this->class->name) {
 			return -1;
-		if ($b->name == $this->class->name)
+		}
+		if ($b->name == $this->class->name) {
 			return 1;
+		}
 
 		// Otherwise, get the parents of each methods declaring class, then compare which function has more "ancestors"
 		$adepth = 0;
 		$bdepth = 0;
 
 		$parent = $a->getDeclaringClass();
-		do
-		{
+		do {
 			$adepth++;
-		}
-		while ($parent = $parent->getParentClass());
+		} while ($parent = $parent->getParentClass());
 
 		$parent = $b->getDeclaringClass();
-		do
-		{
+		do {
 			$bdepth++;
-		}
-		while ($parent = $parent->getParentClass());
+		} while ($parent = $parent->getParentClass());
 
 		return $bdepth - $adepth;
 	}
@@ -269,10 +264,8 @@ class Kohana_Kodoc_Class extends Kodoc {
 	{
 		$result = array();
 
-		foreach ($this->tags as $name => $set)
-		{
-			foreach ($set as $text)
-			{
+		foreach ($this->tags as $name => $set) {
+			foreach ($set as $text) {
 				$result[$name][] = Kodoc::format_tag($name, $text);
 			}
 		}

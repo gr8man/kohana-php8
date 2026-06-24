@@ -1,9 +1,10 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct script access.');
 
-class Kohana_HTTP_Exception_402 extends HTTP_Exception {
-
+class Kohana_HTTP_Exception_402 extends HTTP_Exception
+{
 	/**
 	 * @var   integer    HTTP 402 Payment Required
 	 */

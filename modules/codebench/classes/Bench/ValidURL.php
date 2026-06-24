@@ -1,21 +1,21 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') or die('No direct access allowed.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct access allowed.');
 /**
  * @package    Kohana/Codebench
  * @category   Tests
  * @author     Geert De Deckere <geert@idoe.be>
  */
-class Bench_ValidURL extends Codebench {
-
+class Bench_ValidURL extends Codebench
+{
 	public $description =
 		'filter_var vs regex:
 		 http://dev.kohanaframework.org/issues/2847';
 
 	public $loops = 1000;
 
-	public $subjects = array
-	(
+	public $subjects = array(
 		// Valid
 		'http://google.com',
 		'http://google.com/',
@@ -54,7 +54,7 @@ class Bench_ValidURL extends Codebench {
 	public function bench_regex($url)
 	{
 		// Based on http://www.apps.ietf.org/rfc/rfc1738.html#sec-5
-		if ( ! preg_match(
+		if (! preg_match(
 			'~^
 
 			# scheme
@@ -86,17 +86,23 @@ class Bench_ValidURL extends Codebench {
 			# path (optional)
 			(?:/.*)?
 
-			$~iDx', $url, $matches))
-			return FALSE;
+			$~iDx',
+			$url,
+			$matches
+		)) {
+			return false;
+		}
 
 		// We matched an IP address
-		if ( ! isset($matches[1]))
-			return TRUE;
+		if (! isset($matches[1])) {
+			return true;
+		}
 
 		// Check maximum length of the whole hostname
 		// http://en.wikipedia.org/wiki/Domain_name#cite_note-0
-		if (strlen($matches[1]) > 253)
-			return FALSE;
+		if (strlen($matches[1]) > 253) {
+			return false;
+		}
 
 		// An extra check for the top level domain
 		// It must start with a letter

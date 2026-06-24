@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('No direct access allowed.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct access allowed.');
 /**
  * Default auth role
  *
@@ -9,8 +10,8 @@ declare(strict_types=1); defined('SYSPATH') OR die('No direct access allowed.');
  * @copyright  (c) 2007-2009 Kohana Team
  * @license    http://kohanaphp.com/license.html
  */
-class Model_Auth_Role extends ORM {
-
+class Model_Auth_Role extends ORM
+{
 	// Relationships
 	protected $_has_many = array(
 		'users' => array('model' => 'User','through' => 'roles_users'),

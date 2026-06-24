@@ -1,4 +1,7 @@
-<?php declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
+<?php
+
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct script access.');
 /**
  * Response wrapper. Created as the result of any [Request] execution
  * or utility method (i.e. Redirect). Implements standard HTTP
@@ -11,8 +14,8 @@
  * @license    http://kohanaframework.org/license
  * @since      3.1.0
  */
-class Kohana_Response implements HTTP_Response {
-
+class Kohana_Response implements HTTP_Response
+{
 	/**
 	 * Factory method to create a new [Response]. Pass properties
 	 * in using an associative array.
@@ -119,18 +122,13 @@ class Kohana_Response implements HTTP_Response {
 	 */
 	public function __construct(array $config = array())
 	{
-		$this->_header = new HTTP_Header;
+		$this->_header = new HTTP_Header();
 
-		foreach ($config as $key => $value)
-		{
-			if (property_exists($this, $key))
-			{
-				if ($key == '_header')
-				{
+		foreach ($config as $key => $value) {
+			if (property_exists($this, $key)) {
+				if ($key == '_header') {
 					$this->headers($value);
-				}
-				else
-				{
+				} else {
 					$this->$key = $value;
 				}
 			}
@@ -152,10 +150,11 @@ class Kohana_Response implements HTTP_Response {
 	 *
 	 * @return  mixed
 	 */
-	public function body($content = NULL)
+	public function body($content = null)
 	{
-		if ($content === NULL)
+		if ($content === null) {
 			return $this->_body;
+		}
 
 		$this->_body = (string) $content;
 		return $this;
@@ -168,16 +167,14 @@ class Kohana_Response implements HTTP_Response {
 	 * @param   string   $protocol Protocol to set to the request/response
 	 * @return  mixed
 	 */
-	public function protocol($protocol = NULL)
+	public function protocol($protocol = null)
 	{
-		if ($protocol)
-		{
+		if ($protocol) {
 			$this->_protocol = strtoupper($protocol);
 			return $this;
 		}
 
-		if ($this->_protocol === NULL)
-		{
+		if ($this->_protocol === null) {
 			$this->_protocol = HTTP::$protocol;
 		}
 
@@ -197,19 +194,14 @@ class Kohana_Response implements HTTP_Response {
 	 * @param   integer  $status Status to set to this response
 	 * @return  mixed
 	 */
-	public function status($status = NULL)
+	public function status($status = null)
 	{
-		if ($status === NULL)
-		{
+		if ($status === null) {
 			return $this->_status;
-		}
-		elseif (array_key_exists($status, Response::$messages))
-		{
+		} elseif (array_key_exists($status, Response::$messages)) {
 			$this->_status = (int) $status;
 			return $this;
-		}
-		else
-		{
+		} else {
 			throw new Kohana_Exception(__METHOD__.' unknown status value : :value', array(':value' => $status));
 		}
 	}
@@ -235,23 +227,16 @@ class Kohana_Response implements HTTP_Response {
 	 * @param string $value
 	 * @return mixed
 	 */
-	public function headers($key = NULL, $value = NULL)
+	public function headers($key = null, $value = null)
 	{
-		if ($key === NULL)
-		{
+		if ($key === null) {
 			return $this->_header;
-		}
-		elseif (is_array($key))
-		{
+		} elseif (is_array($key)) {
 			$this->_header->exchangeArray($key);
 			return $this;
-		}
-		elseif ($value === NULL)
-		{
+		} elseif ($value === null) {
 			return Arr::get($this->_header, $key);
-		}
-		else
-		{
+		} else {
 			$this->_header[$key] = $value;
 			return $this;
 		}
@@ -286,33 +271,27 @@ class Kohana_Response implements HTTP_Response {
 	 * @return  void
 	 * @return  [Response]
 	 */
-	public function cookie($key = NULL, $value = NULL)
+	public function cookie($key = null, $value = null)
 	{
 		// Handle the get cookie calls
-		if ($key === NULL)
+		if ($key === null) {
 			return $this->_cookies;
-		elseif ( ! is_array($key) AND ! $value)
+		} elseif (! is_array($key) and ! $value) {
 			return Arr::get($this->_cookies, $key);
+		}
 
 		// Handle the set cookie calls
-		if (is_array($key))
-		{
-			foreach ($key as $_key => $_value)
-			{
+		if (is_array($key)) {
+			foreach ($key as $_key => $_value) {
 				$this->cookie($_key, $_value);
 			}
-		}
-		else
-		{
-			if ( ! is_array($value))
-			{
+		} else {
+			if (! is_array($value)) {
 				$value = array(
 					'value' => $value,
 					'expiration' => Cookie::$expiration
 				);
-			}
-			elseif ( ! isset($value['expiration']))
-			{
+			} elseif (! isset($value['expiration'])) {
 				$value['expiration'] = Cookie::$expiration;
 			}
 
@@ -352,7 +331,7 @@ class Kohana_Response implements HTTP_Response {
 	 * @param   callback    $callback   function to handle header output
 	 * @return  mixed
 	 */
-	public function send_headers($replace = FALSE, $callback = NULL)
+	public function send_headers($replace = false, $callback = null)
 	{
 		return $this->_header->send_headers($this, $replace, $callback);
 	}
@@ -389,26 +368,22 @@ class Kohana_Response implements HTTP_Response {
 	 * @uses    File::mime
 	 * @uses    Request::send_headers
 	 */
-	public function send_file($filename, $download = NULL, array $options = NULL)
+	public function send_file($filename, $download = null, array $options = null)
 	{
-		if ( ! empty($options['mime_type']))
-		{
+		if (! empty($options['mime_type'])) {
 			// The mime-type has been manually set
 			$mime = $options['mime_type'];
 		}
 
-		if ($filename === TRUE)
-		{
-			if (empty($download))
-			{
+		if ($filename === true) {
+			if (empty($download)) {
 				throw new Kohana_Exception('Download name must be provided for streaming files');
 			}
 
 			// Temporary files will automatically be deleted
-			$options['delete'] = FALSE;
+			$options['delete'] = false;
 
-			if ( ! isset($mime))
-			{
+			if (! isset($mime)) {
 				// Guess the mime using the file extension
 				$mime = File::mime_by_ext(strtolower(pathinfo($download, PATHINFO_EXTENSION)));
 			}
@@ -427,14 +402,11 @@ class Kohana_Response implements HTTP_Response {
 
 			// File data is no longer needed
 			unset($file_data);
-		}
-		else
-		{
+		} else {
 			// Get the complete file path
 			$filename = realpath($filename);
 
-			if (empty($download))
-			{
+			if (empty($download)) {
 				// Use the file name as the download file name
 				$download = pathinfo($filename, PATHINFO_BASENAME);
 			}
@@ -442,8 +414,7 @@ class Kohana_Response implements HTTP_Response {
 			// Get the file size
 			$size = filesize($filename);
 
-			if ( ! isset($mime))
-			{
+			if (! isset($mime)) {
 				// Get the mime type from the extension of the download file
 				$mime = File::mime_by_ext(pathinfo($download, PATHINFO_EXTENSION));
 			}
@@ -452,8 +423,7 @@ class Kohana_Response implements HTTP_Response {
 			$file = fopen($filename, 'rb');
 		}
 
-		if ( ! is_resource($file))
-		{
+		if (! is_resource($file)) {
 			throw new Kohana_Exception('Could not read file to send: :file', array(
 				':file' => $download,
 			));
@@ -465,10 +435,8 @@ class Kohana_Response implements HTTP_Response {
 		// Calculate byte range to download.
 		list($start, $end) = $this->_calculate_byte_range($size);
 
-		if ( ! empty($options['resumable']))
-		{
-			if ($start > 0 OR $end < ($size - 1))
-			{
+		if (! empty($options['resumable'])) {
+			if ($start > 0 or $end < ($size - 1)) {
 				// Partial Content
 				$this->_status = 206;
 			}
@@ -483,17 +451,14 @@ class Kohana_Response implements HTTP_Response {
 		$this->_header['content-type']        = $mime;
 		$this->_header['content-length']      = (string) (($end - $start) + 1);
 
-		if (Request::user_agent('browser') === 'Internet Explorer')
-		{
+		if (Request::user_agent('browser') === 'Internet Explorer') {
 			// Naturally, IE does not act like a real browser...
-			if (Request::$initial->secure())
-			{
+			if (Request::$initial->secure()) {
 				// http://support.microsoft.com/kb/316431
 				$this->_header['pragma'] = $this->_header['cache-control'] = 'public';
 			}
 
-			if (version_compare(Request::user_agent('version'), '8.0', '>='))
-			{
+			if (version_compare(Request::user_agent('version'), '8.0', '>=')) {
 				// http://ajaxian.com/archives/ie-8-security
 				$this->_header['x-content-type-options'] = 'nosniff';
 			}
@@ -502,17 +467,15 @@ class Kohana_Response implements HTTP_Response {
 		// Send all headers now
 		$this->send_headers();
 
-		while (ob_get_level())
-		{
+		while (ob_get_level()) {
 			// Flush all output buffers
 			ob_end_flush();
 		}
 
 		// Manually stop execution
-		ignore_user_abort(TRUE);
+		ignore_user_abort(true);
 
-		if ( ! Kohana::$safe_mode)
-		{
+		if (! Kohana::$safe_mode) {
 			// Keep the script running forever
 			set_time_limit(0);
 		}
@@ -522,13 +485,12 @@ class Kohana_Response implements HTTP_Response {
 
 		fseek($file, $start);
 
-		while ( ! feof($file) AND ($pos = ftell($file)) <= $end)
-		{
-			if (connection_aborted())
+		while (! feof($file) and ($pos = ftell($file)) <= $end) {
+			if (connection_aborted()) {
 				break;
+			}
 
-			if ($pos + $block > $end)
-			{
+			if ($pos + $block > $end) {
 				// Don't read past the buffer.
 				$block = $end - $pos + 1;
 			}
@@ -543,20 +505,15 @@ class Kohana_Response implements HTTP_Response {
 		// Close the file
 		fclose($file);
 
-		if ( ! empty($options['delete']))
-		{
-			try
-			{
+		if (! empty($options['delete'])) {
+			try {
 				// Attempt to remove the file
 				unlink($filename);
-			}
-			catch (Exception $e)
-			{
+			} catch (Exception $e) {
 				// Create a text version of the exception
 				$error = Kohana_Exception::text($e);
 
-				if (is_object(Kohana::$log))
-				{
+				if (is_object(Kohana::$log)) {
 					// Add this exception to the log
 					Kohana::$log->add(Log::ERROR, $error);
 
@@ -583,8 +540,7 @@ class Kohana_Response implements HTTP_Response {
 	 */
 	public function render()
 	{
-		if ( ! $this->_header->offsetExists('content-type'))
-		{
+		if (! $this->_header->offsetExists('content-type')) {
 			// Add the default Content-Type header if required
 			$this->_header['content-type'] = Kohana::$content_type.'; charset='.Kohana::$charset;
 		}
@@ -593,28 +549,22 @@ class Kohana_Response implements HTTP_Response {
 		$this->headers('content-length', (string) $this->content_length());
 
 		// If Kohana expose, set the user-agent
-		if (Kohana::$expose)
-		{
+		if (Kohana::$expose) {
 			$this->headers('user-agent', Kohana::version());
 		}
 
 		// Prepare cookies
-		if ($this->_cookies)
-		{
-			if (extension_loaded('http'))
-			{
+		if ($this->_cookies) {
+			if (extension_loaded('http')) {
 				$cookies = version_compare(phpversion('http'), '2.0.0', '>=') ?
 					(string) new \http\Cookie($this->_cookies) :
 					http_build_cookie($this->_cookies);
 				$this->_header['set-cookie'] = $cookies;
-			}
-			else
-			{
+			} else {
 				$cookies = array();
 
 				// Parse each
-				foreach ($this->_cookies as $key => $value)
-				{
+				foreach ($this->_cookies as $key => $value) {
 					$string = $key.'='.$value['value'].'; expires='.date('l, d M Y H:i:s T', $value['expiration']);
 					$cookies[] = $string;
 				}
@@ -640,8 +590,7 @@ class Kohana_Response implements HTTP_Response {
 	 */
 	public function generate_etag()
 	{
-	    if ($this->_body === '')
-		{
+		if ($this->_body === '') {
 			throw new Request_Exception('No response yet associated with request - cannot auto generate resource ETag');
 		}
 
@@ -658,9 +607,8 @@ class Kohana_Response implements HTTP_Response {
 	 */
 	protected function _parse_byte_range()
 	{
-		if ( ! isset($_SERVER['HTTP_RANGE']))
-		{
-			return FALSE;
+		if (! isset($_SERVER['HTTP_RANGE'])) {
+			return false;
 		}
 
 		// TODO, speed this up with the use of string functions.
@@ -682,20 +630,17 @@ class Kohana_Response implements HTTP_Response {
 		$start = 0;
 		$end = $size - 1;
 
-		if ($range = $this->_parse_byte_range())
-		{
+		if ($range = $this->_parse_byte_range()) {
 			// We have a byte range from HTTP_RANGE
 			$start = $range[1];
 
-			if ($start[0] === '-')
-			{
+			if ($start[0] === '-') {
 				// A negative value means we start from the end, so -500 would be the
 				// last 500 bytes.
 				$start = $size - abs($start);
 			}
 
-			if (isset($range[2]))
-			{
+			if (isset($range[2])) {
 				// Set the end range
 				$end = $range[2];
 			}

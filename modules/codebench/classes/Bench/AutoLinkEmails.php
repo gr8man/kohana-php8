@@ -1,20 +1,20 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') or die('No direct access allowed.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct access allowed.');
 /**
  * @package    Kohana/Codebench
  * @category   Tests
  * @author     Geert De Deckere <geert@idoe.be>
  */
-class Bench_AutoLinkEmails extends Codebench {
-
+class Bench_AutoLinkEmails extends Codebench
+{
 	public $description =
 		'Fixing <a href="http://dev.kohanaphp.com/issues/2772">#2772</a>, and comparing some possibilities.';
 
 	public $loops = 1000;
 
-	public $subjects = array
-	(
+	public $subjects = array(
 		'<ul>
 		    <li>voorzitter@xxxx.com</li>
 		    <li>vicevoorzitter@xxxx.com</li>
@@ -24,10 +24,8 @@ class Bench_AutoLinkEmails extends Codebench {
 	// The original function, with str_replace replaced by preg_replace. Looks clean.
 	public function bench_match_all_loop($subject)
 	{
-		if (preg_match_all('~\b(?<!href="mailto:|">|58;)(?!\.)[-+_a-z0-9.]++(?<!\.)@(?![-.])[-a-z0-9.]+(?<!\.)\.[a-z]{2,6}\b~i', $subject, $matches))
-		{
-			foreach ($matches[0] as $match)
-			{
+		if (preg_match_all('~\b(?<!href="mailto:|">|58;)(?!\.)[-+_a-z0-9.]++(?<!\.)@(?![-.])[-a-z0-9.]+(?<!\.)\.[a-z]{2,6}\b~i', $subject, $matches)) {
+			foreach ($matches[0] as $match) {
 				$subject = preg_replace('!\b'.preg_quote($match).'\b!', HTML::mailto($match), $subject);
 			}
 		}
@@ -40,7 +38,7 @@ class Bench_AutoLinkEmails extends Codebench {
 	{
 		return preg_replace_callback(
 			'~\b(?<!href="mailto:|">|58;)(?!\.)[-+_a-z0-9.]++(?<!\.)@(?![-.])[-a-z0-9.]+(?<!\.)\.[a-z]{2,6}\b~i',
-			fn($matches) => HTML::mailto($matches[0]),
+			fn ($matches) => HTML::mailto($matches[0]),
 			$subject
 		);
 	}
@@ -64,7 +62,7 @@ class Bench_AutoLinkEmails extends Codebench {
 	{
 		return preg_replace_callback(
 			'~\b(?<!href="mailto:|">|58;)(?!\.)[-+_a-z0-9.]++(?<!\.)@(?![-.])[-a-z0-9.]+(?<!\.)\.[a-z]{2,6}\b~i',
-			fn($matches) => HTML::mailto($matches[0]),
+			fn ($matches) => HTML::mailto($matches[0]),
 			$subject
 		);
 	}

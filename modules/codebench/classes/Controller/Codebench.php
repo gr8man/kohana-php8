@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') or die('No direct access allowed.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct access allowed.');
 /**
  * Codebench — A benchmarking module.
  *
@@ -10,8 +11,8 @@ declare(strict_types=1); defined('SYSPATH') or die('No direct access allowed.');
  * @copyright  (c) 2009 Kohana Team
  * @license    http://kohanaphp.com/license.html
  */
-class Controller_Codebench extends Kohana_Controller_Template {
-
+class Controller_Codebench extends Kohana_Controller_Template
+{
 	// The codebench view
 	public $template = 'codebench';
 
@@ -20,8 +21,7 @@ class Controller_Codebench extends Kohana_Controller_Template {
 		$class = $this->request->param('class');
 
 		// Convert submitted class name to URI segment
-		if (isset($_POST['class']))
-		{
+		if (isset($_POST['class'])) {
 			throw HTTP_Exception::factory(302)->location('codebench/'.trim($_POST['class']));
 		}
 
@@ -29,9 +29,8 @@ class Controller_Codebench extends Kohana_Controller_Template {
 		$this->template->class = (string) $class;
 
 		// Try to load the class, then run it
-		if (Kohana::auto_load($class) === TRUE)
-		{
-			$codebench = new $class;
+		if (Kohana::auto_load($class) === true) {
+			$codebench = new $class();
 			$this->template->codebench = $codebench->run();
 		}
 	}

@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('Kohana bootstrap needs to be included before tests run');
+declare(strict_types=1);
+defined('SYSPATH') or die('Kohana bootstrap needs to be included before tests run');
 
 /**
  * Tests Kohana Core
@@ -21,7 +22,6 @@ declare(strict_types=1); defined('SYSPATH') OR die('Kohana bootstrap needs to be
 #[AllowDynamicProperties]
 class Kohana_DebugTest extends Unittest_TestCase
 {
-
 	/**
 	 * Provides test data for test_debug()
 	 *
@@ -92,10 +92,10 @@ class Kohana_DebugTest extends Unittest_TestCase
 		return array(
 			array('foobar', 128, 10, '<small>string</small><span>(6)</span> "foobar"'),
 			array('foobar', 2, 10, '<small>string</small><span>(6)</span> "fo&nbsp;&hellip;"'),
-			array(NULL, 128, 10, '<small>NULL</small>'),
-			array(TRUE, 128, 10, '<small>bool</small> TRUE'),
+			array(null, 128, 10, '<small>NULL</small>'),
+			array(true, 128, 10, '<small>bool</small> TRUE'),
 			array(array('foobar'), 128, 10, "<small>array</small><span>(1)</span> <span>(\n    0 => <small>string</small><span>(6)</span> \"foobar\"\n)</span>"),
-			array(new StdClass, 128, 10, "<small>object</small> <span>stdClass(0)</span> <code>{\n}</code>"),
+			array(new StdClass(), 128, 10, "<small>object</small> <span>stdClass(0)</span> <code>{\n}</code>"),
 			array("fo\x6F\xFF\x00bar\x8F\xC2\xB110", 128, 10, '<small>string</small><span>(10)</span> "foobar±10"'),
 			array(array('level1' => array('level2' => array('level3' => array('level4' => array('value' => 'something'))))), 128, 4,
 '<small>array</small><span>(1)</span> <span>(
@@ -288,7 +288,7 @@ class Kohana_DebugTest extends Unittest_TestCase
 	 */
 	public function test_dump_false()
 	{
-		$result = Debug::dump(FALSE);
+		$result = Debug::dump(false);
 		$this->assertStringContainsString('bool', $result);
 		$this->assertStringContainsString('FALSE', $result);
 	}
@@ -312,7 +312,7 @@ class Kohana_DebugTest extends Unittest_TestCase
 	 */
 	public function test_vars_multiple_arguments()
 	{
-		$result = Debug::vars('hello', 42, NULL);
+		$result = Debug::vars('hello', 42, null);
 		$this->assertStringContainsString('hello', $result);
 		$this->assertStringContainsString('42', $result);
 		$this->assertStringContainsString('NULL', $result);

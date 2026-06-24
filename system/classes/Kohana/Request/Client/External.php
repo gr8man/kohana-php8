@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct script access.');
 /**
  * [Request_Client_External] provides a wrapper for all external request
  * processing. This class should be extended by all drivers handling external
@@ -31,8 +32,8 @@ declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
  * @license    http://kohanaframework.org/license
  * @uses       [PECL HTTP](http://php.net/manual/en/book.http.php)
  */
-abstract class Kohana_Request_Client_External extends Request_Client {
-
+abstract class Kohana_Request_Client_External extends Request_Client
+{
 	/**
 	 * Use:
 	 *  - Request_Client_Curl (default)
@@ -55,17 +56,15 @@ abstract class Kohana_Request_Client_External extends Request_Client {
 	 * @return  Request_Client_External
 	 * @throws  Request_Exception
 	 */
-	public static function factory(array $params = array(), $client = NULL)
+	public static function factory(array $params = array(), $client = null)
 	{
-		if ($client === NULL)
-		{
+		if ($client === null) {
 			$client = Request_Client_External::$client;
 		}
 
 		$client = new $client($params);
 
-		if ( ! $client instanceof Request_Client_External)
-		{
+		if (! $client instanceof Request_Client_External) {
 			throw new Request_Exception('Selected client is not a Request_Client_External object.');
 		}
 
@@ -103,13 +102,11 @@ abstract class Kohana_Request_Client_External extends Request_Client {
 	 */
 	public function execute_request(Request $request, Response $response)
 	{
-		if (Kohana::$profiling)
-		{
+		if (Kohana::$profiling) {
 			// Set the benchmark name
 			$benchmark = '"'.$request->uri().'"';
 
-			if ($request !== Request::$initial AND Request::$current)
-			{
+			if ($request !== Request::$initial and Request::$current) {
 				// Add the parent request uri
 				$benchmark .= ' « "'.Request::$current->uri().'"';
 			}
@@ -123,8 +120,7 @@ abstract class Kohana_Request_Client_External extends Request_Client {
 		Request::$current = $request;
 
 		// Resolve the POST fields
-		if ($post = $request->post())
-		{
+		if ($post = $request->post()) {
 			$request->body(http_build_query($post, '', '&'))
 				->headers('content-type', 'application/x-www-form-urlencoded; charset='.Kohana::$charset);
 		}
@@ -132,22 +128,17 @@ abstract class Kohana_Request_Client_External extends Request_Client {
 		$request->headers('content-length', (string) $request->content_length());
 
 		// If Kohana expose, set the user-agent
-		if (Kohana::$expose)
-		{
+		if (Kohana::$expose) {
 			$request->headers('user-agent', Kohana::version());
 		}
 
-		try
-		{
+		try {
 			$response = $this->_send_message($request, $response);
-		}
-		catch (Exception $e)
-		{
+		} catch (Exception $e) {
 			// Restore the previous request
 			Request::$current = $previous;
 
-			if (isset($benchmark))
-			{
+			if (isset($benchmark)) {
 				// Delete the benchmark, it is invalid
 				Profiler::delete($benchmark);
 			}
@@ -159,8 +150,7 @@ abstract class Kohana_Request_Client_External extends Request_Client {
 		// Restore the previous request
 		Request::$current = $previous;
 
-		if (isset($benchmark))
-		{
+		if (isset($benchmark)) {
 			// Stop the benchmark
 			Profiler::stop($benchmark);
 		}
@@ -177,21 +167,17 @@ abstract class Kohana_Request_Client_External extends Request_Client {
 	 * @return  mixed
 	 * @return  Request_Client_External
 	 */
-	public function options($key = NULL, $value = NULL)
+	public function options($key = null, $value = null)
 	{
-		if ($key === NULL)
+		if ($key === null) {
 			return $this->_options;
+		}
 
-		if (is_array($key))
-		{
+		if (is_array($key)) {
 			$this->_options = $key;
-		}
-		elseif ($value === NULL)
-		{
+		} elseif ($value === null) {
 			return Arr::get($this->_options, $key);
-		}
-		else
-		{
+		} else {
 			$this->_options[$key] = $value;
 		}
 

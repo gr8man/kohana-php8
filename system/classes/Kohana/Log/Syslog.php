@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct script access.');
 /**
  * Syslog log writer.
  *
@@ -10,8 +11,8 @@ declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
  * @copyright  (c) 2012 Kohana Team
  * @license    http://kohanaframework.org/license
  */
-class Kohana_Log_Syslog extends Log_Writer {
-
+class Kohana_Log_Syslog extends Log_Writer
+{
 	/**
 	 * Creates a new syslog logger.
 	 *
@@ -35,12 +36,10 @@ class Kohana_Log_Syslog extends Log_Writer {
 	 */
 	public function write(array $messages)
 	{
-		foreach ($messages as $message)
-		{
+		foreach ($messages as $message) {
 			syslog($message['level'], $message['body']);
 
-			if (isset($message['additional']['exception']))
-			{
+			if (isset($message['additional']['exception'])) {
 				syslog(Log_Writer::$strace_level, $message['additional']['exception']->getTraceAsString());
 			}
 		}

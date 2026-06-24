@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('No direct access allowed.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct access allowed.');
 /**
  * Default auth user
  *
@@ -9,8 +10,8 @@ declare(strict_types=1); defined('SYSPATH') OR die('No direct access allowed.');
  * @copyright  (c) 2007-2012 Kohana Team
  * @license    http://kohanaframework.org/license
  */
-class Model_Auth_User extends ORM {
-
+class Model_Auth_User extends ORM
+{
 	/**
 	 * A user has many tokens and roles
 	 *
@@ -84,8 +85,7 @@ class Model_Auth_User extends ORM {
 	 */
 	public function complete_login()
 	{
-		if ($this->_loaded)
-		{
+		if ($this->_loaded) {
 			// Update the number of logins
 			$this->logins = new Database_Expression('logins + 1');
 
@@ -104,10 +104,9 @@ class Model_Auth_User extends ORM {
 	 * @param   string   field name
 	 * @return  boolean
 	 */
-	public function unique_key_exists($value, $field = NULL)
+	public function unique_key_exists($value, $field = null)
 	{
-		if ($field === NULL)
-		{
+		if ($field === null) {
 			// Automatically determine field by looking at the value
 			$field = $this->unique_key($value);
 		}
@@ -190,10 +189,9 @@ class Model_Auth_User extends ORM {
 	 * @param array $expected
 	 * @throws ORM_Validation_Exception
 	 */
-	public function update_user($values, $expected = NULL)
+	public function update_user($values, $expected = null)
 	{
-		if (empty($values['password']))
-		{
+		if (empty($values['password'])) {
 			unset($values['password'], $values['password_confirm']);
 		}
 

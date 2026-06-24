@@ -1,5 +1,8 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct script access.');
 
-class Log_StdErr extends Kohana_Log_StdErr {}
+class Log_StdErr extends Kohana_Log_StdErr
+{
+}

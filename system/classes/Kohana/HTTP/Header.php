@@ -1,4 +1,7 @@
-<?php declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
+<?php
+
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct script access.');
 /**
  * The Kohana_HTTP_Header class provides an Object-Orientated interface
  * to HTTP headers. This can parse header arrays returned from the
@@ -12,10 +15,10 @@
  * @copyright  (c) 2008-2014 Kohana Team
  * @license    http://kohanaframework.org/license
  */
-class Kohana_HTTP_Header extends ArrayObject {
-
+class Kohana_HTTP_Header extends ArrayObject
+{
 	// Default Accept-* quality value if none supplied
-	const DEFAULT_QUALITY = 1;
+	public const DEFAULT_QUALITY = 1;
 
 	/**
 	 * Parses an Accept(-*) header and detects the quality
@@ -30,23 +33,18 @@ class Kohana_HTTP_Header extends ArrayObject {
 
 		// Resource light iteration
 		$parts_keys = array_keys($parts);
-		foreach ($parts_keys as $key)
-		{
+		foreach ($parts_keys as $key) {
 			$value = trim(str_replace(array("\r", "\n"), '', $parts[$key]));
 
 			$pattern = '~\b(\;\s*+)?q\s*+=\s*+([.0-9]+)~';
 
 			// If there is no quality directive, return default
-			if ( ! preg_match($pattern, $value, $quality))
-			{
+			if (! preg_match($pattern, $value, $quality)) {
 				$parsed[$value] = (float) HTTP_Header::DEFAULT_QUALITY;
-			}
-			else
-			{
+			} else {
 				$quality = $quality[2];
 
-				if ($quality[0] === '.')
-				{
+				if ($quality[0] === '.') {
 					$quality = '0'.$quality;
 				}
 
@@ -67,13 +65,14 @@ class Kohana_HTTP_Header extends ArrayObject {
 	 * @return  array
 	 * @since   3.2.0
 	 */
-	public static function parse_accept_header($accepts = NULL)
+	public static function parse_accept_header($accepts = null)
 	{
 		$accepts = explode(',', (string) $accepts);
 
 		// If there is no accept, lets accept everything
-		if ($accepts === NULL)
+		if ($accepts === null) {
 			return array('*' => array('*' => (float) HTTP_Header::DEFAULT_QUALITY));
+		}
 
 		// Parse the accept header qualities
 		$accepts = HTTP_Header::accept_quality($accepts);
@@ -82,14 +81,14 @@ class Kohana_HTTP_Header extends ArrayObject {
 
 		// This method of iteration uses less resource
 		$keys = array_keys($accepts);
-		foreach ($keys as $key)
-		{
+		foreach ($keys as $key) {
 			// Extract the parts
 			$parts = explode('/', $key, 2);
 
 			// Invalid content type- bail
-			if ( ! isset($parts[1]))
+			if (! isset($parts[1])) {
 				continue;
+			}
 
 			// Set the parsed output
 			$parsed_accept[$parts[0]][$parts[1]] = $accepts[$key];
@@ -107,10 +106,9 @@ class Kohana_HTTP_Header extends ArrayObject {
 	 * @return  array
 	 * @since   3.2.0
 	 */
-	public static function parse_charset_header($charset = NULL)
+	public static function parse_charset_header($charset = null)
 	{
-		if ($charset === NULL)
-		{
+		if ($charset === null) {
 			return array('*' => (float) HTTP_Header::DEFAULT_QUALITY);
 		}
 
@@ -126,19 +124,14 @@ class Kohana_HTTP_Header extends ArrayObject {
 	 * @return  array
 	 * @since   3.2.0
 	 */
-	public static function parse_encoding_header($encoding = NULL)
+	public static function parse_encoding_header($encoding = null)
 	{
 		// Accept everything
-		if ($encoding === NULL)
-		{
+		if ($encoding === null) {
 			return array('*' => (float) HTTP_Header::DEFAULT_QUALITY);
-		}
-		elseif ($encoding === '')
-		{
+		} elseif ($encoding === '') {
 			return array('identity' => (float) HTTP_Header::DEFAULT_QUALITY);
-		}
-		else
-		{
+		} else {
 			return HTTP_Header::accept_quality(explode(',', (string) $encoding));
 		}
 	}
@@ -152,10 +145,9 @@ class Kohana_HTTP_Header extends ArrayObject {
 	 * @return  array
 	 * @since   3.2.0
 	 */
-	public static function parse_language_header($language = NULL)
+	public static function parse_language_header($language = null)
 	{
-		if ($language === NULL)
-		{
+		if ($language === null) {
 			return array('*' => array('*' => (float) HTTP_Header::DEFAULT_QUALITY));
 		}
 
@@ -164,18 +156,14 @@ class Kohana_HTTP_Header extends ArrayObject {
 		$parsed_language = array();
 
 		$keys = array_keys($language);
-		foreach ($keys as $key)
-		{
+		foreach ($keys as $key) {
 			// Extract the parts
 			$parts = explode('-', $key, 2);
 
 			// Invalid content type- bail
-			if ( ! isset($parts[1]))
-			{
+			if (! isset($parts[1])) {
 				$parsed_language[$parts[0]]['*'] = $language[$key];
-			}
-			else
-			{
+			} else {
 				// Set the parsed output
 				$parsed_language[$parts[0]][$parts[1]] = $language[$key];
 			}
@@ -206,8 +194,7 @@ class Kohana_HTTP_Header extends ArrayObject {
 	{
 		$parts = array();
 
-		foreach ($cache_control as $key => $value)
-		{
+		foreach ($cache_control as $key => $value) {
 			$parts[] = (is_int($key)) ? $value : ($key.'='.$value);
 		}
 
@@ -235,21 +222,18 @@ class Kohana_HTTP_Header extends ArrayObject {
 	{
 		$directives = explode(',', strtolower($cache_control));
 
-		if ($directives === FALSE)
-			return FALSE;
+		if ($directives === false) {
+			return false;
+		}
 
 		$output = array();
 
-		foreach ($directives as $directive)
-		{
-			if (strpos($directive, '=') !== FALSE)
-			{
+		foreach ($directives as $directive) {
+			if (strpos($directive, '=') !== false) {
 				list($key, $value) = explode('=', trim($directive), 2);
 
 				$output[$key] = ctype_digit((string) $value) ? (int) $value : $value;
-			}
-			else
-			{
+			} else {
 				$output[] = trim($directive);
 			}
 		}
@@ -257,47 +241,47 @@ class Kohana_HTTP_Header extends ArrayObject {
 		return $output;
 	}
 
-/**
- * @var     array    Accept: (content) types
- */
-protected $_accept_content;
-
-/**
- * @var     array    Accept-Charset: parsed header
- */
-protected $_accept_charset;
-
-/**
- * @var     array    Accept-Encoding: parsed header
- */
-protected $_accept_encoding;
-
-/**
- * @var     array    Accept-Language: parsed header
- */
-protected $_accept_language;
-
-/**
- * Constructor method for [Kohana_HTTP_Header]. Uses the standard constructor
- * of the parent `ArrayObject` class.
- *
- *     $header_object = new HTTP_Header(array('x-powered-by' => 'Kohana 3.1.x', 'expires' => '...'));
- *
- * @param   mixed   $input          Input array
- * @param   int     $flags          Flags
- * @param   string  $iterator_class The iterator class to use
- */
-public function __construct(array $input = array(), $flags = 0, $iterator_class = 'ArrayIterator')
-{
 	/**
-	 * @link http://www.w3.org/Protocols/rfc2616/rfc2616.html
-	 *
-	 * HTTP header declarations should be treated as case-insensitive
+	 * @var     array    Accept: (content) types
 	 */
-	$input = array_change_key_case( (array) $input, CASE_LOWER);
+	protected $_accept_content;
 
-	parent::__construct($input, $flags, $iterator_class);
-}
+	/**
+	 * @var     array    Accept-Charset: parsed header
+	 */
+	protected $_accept_charset;
+
+	/**
+	 * @var     array    Accept-Encoding: parsed header
+	 */
+	protected $_accept_encoding;
+
+	/**
+	 * @var     array    Accept-Language: parsed header
+	 */
+	protected $_accept_language;
+
+	/**
+	 * Constructor method for [Kohana_HTTP_Header]. Uses the standard constructor
+	 * of the parent `ArrayObject` class.
+	 *
+	 *     $header_object = new HTTP_Header(array('x-powered-by' => 'Kohana 3.1.x', 'expires' => '...'));
+	 *
+	 * @param   mixed   $input          Input array
+	 * @param   int     $flags          Flags
+	 * @param   string  $iterator_class The iterator class to use
+	 */
+	public function __construct(array $input = array(), $flags = 0, $iterator_class = 'ArrayIterator')
+	{
+		/**
+		 * @link http://www.w3.org/Protocols/rfc2616/rfc2616.html
+		 *
+		 * HTTP header declarations should be treated as case-insensitive
+		 */
+		$input = array_change_key_case((array) $input, CASE_LOWER);
+
+		parent::__construct($input, $flags, $iterator_class);
+	}
 
 	/**
 	 * Returns the header object as a string, including
@@ -312,17 +296,13 @@ public function __construct(array $input = array(), $flags = 0, $iterator_class 
 	{
 		$header = '';
 
-		foreach ($this as $key => $value)
-		{
+		foreach ($this as $key => $value) {
 			// Put the keys back the Case-Convention expected
 			$key = Text::ucfirst($key);
 
-			if (is_array($value))
-			{
+			if (is_array($value)) {
 				$header .= $key.': '.(implode(', ', $value))."\r\n";
-			}
-			else
-			{
+			} else {
 				$header .= $key.': '.$value."\r\n";
 			}
 		}
@@ -342,25 +322,21 @@ public function __construct(array $input = array(), $flags = 0, $iterator_class 
 	 * @return  void
 	 * @since   3.2.0
 	 */
-	public function offsetSet(mixed $index, mixed $newval, bool $replace = TRUE): void
+	public function offsetSet(mixed $index, mixed $newval, bool $replace = true): void
 	{
 		// Ensure the index is lowercase
 		$index = strtolower((string) $index);
 
-		if ($replace OR ! $this->offsetExists($index))
-		{
+		if ($replace or ! $this->offsetExists($index)) {
 			parent::offsetSet($index, $newval);
 			return;
 		}
 
 		$current_value = $this->offsetGet($index);
 
-		if (is_array($current_value))
-		{
+		if (is_array($current_value)) {
 			$current_value[] = $newval;
-		}
-		else
-		{
+		} else {
 			$current_value = array($current_value, $newval);
 		}
 
@@ -421,7 +397,7 @@ public function __construct(array $input = array(), $flags = 0, $iterator_class 
 		 *
 		 * HTTP header declarations should be treated as case-insensitive
 		 */
-		$input = array_change_key_case( (array) $input, CASE_LOWER);
+		$input = array_change_key_case((array) $input, CASE_LOWER);
 
 		return parent::exchangeArray($input);
 	}
@@ -441,11 +417,9 @@ public function __construct(array $input = array(), $flags = 0, $iterator_class 
 	{
 		$headers = array();
 
-		if (preg_match_all('/(\w[^\s:]*):[ ]*([^\r\n]*(?:\r\n[ \t][^\r\n]*)*)/', $header_line, $matches))
-		{
-			foreach ($matches[0] as $key => $value)
-			{
-				$this->offsetSet($matches[1][$key], $matches[2][$key], FALSE);
+		if (preg_match_all('/(\w[^\s:]*):[ ]*([^\r\n]*(?:\r\n[ \t][^\r\n]*)*)/', $header_line, $matches)) {
+			foreach ($matches[0] as $key => $value) {
+				$this->offsetSet($matches[1][$key], $matches[2][$key], false);
 			}
 		}
 
@@ -472,17 +446,13 @@ public function __construct(array $input = array(), $flags = 0, $iterator_class 
 	 * @return  mixed
 	 * @since   3.2.0
 	 */
-	public function accepts_at_quality($type, $explicit = FALSE)
+	public function accepts_at_quality($type, $explicit = false)
 	{
 		// Parse Accept header if required
-		if ($this->_accept_content === NULL)
-		{
-			if ($this->offsetExists('Accept'))
-			{
+		if ($this->_accept_content === null) {
+			if ($this->offsetExists('Accept')) {
 				$accept = $this->offsetGet('Accept');
-			}
-			else
-			{
+			} else {
 				$accept = '*/*';
 			}
 
@@ -490,17 +460,16 @@ public function __construct(array $input = array(), $flags = 0, $iterator_class 
 		}
 
 		// If not a real mime, try and find it in config
-		if (strpos($type, '/') === FALSE)
-		{
+		if (strpos($type, '/') === false) {
 			$mime = Kohana::$config->load('mimes.'.$type);
 
-			if ($mime === NULL)
-				return FALSE;
+			if ($mime === null) {
+				return false;
+			}
 
-			$quality = FALSE;
+			$quality = false;
 
-			foreach ($mime as $_type)
-			{
+			foreach ($mime as $_type) {
 				$quality_check = $this->accepts_at_quality($_type, $explicit);
 				$quality = ($quality_check > $quality) ? $quality_check : $quality;
 			}
@@ -510,27 +479,17 @@ public function __construct(array $input = array(), $flags = 0, $iterator_class 
 
 		$parts = explode('/', $type, 2);
 
-		if (isset($this->_accept_content[$parts[0]][$parts[1]]))
-		{
+		if (isset($this->_accept_content[$parts[0]][$parts[1]])) {
 			return $this->_accept_content[$parts[0]][$parts[1]];
-		}
-		elseif ($explicit === TRUE)
-		{
-			return FALSE;
-		}
-		else
-		{
-			if (isset($this->_accept_content[$parts[0]]['*']))
-			{
+		} elseif ($explicit === true) {
+			return false;
+		} else {
+			if (isset($this->_accept_content[$parts[0]]['*'])) {
 				return $this->_accept_content[$parts[0]]['*'];
-			}
-			elseif (isset($this->_accept_content['*']['*']))
-			{
+			} elseif (isset($this->_accept_content['*']['*'])) {
 				return $this->_accept_content['*']['*'];
-			}
-			else
-			{
-				return FALSE;
+			} else {
+				return false;
 			}
 		}
 	}
@@ -559,17 +518,15 @@ public function __construct(array $input = array(), $flags = 0, $iterator_class 
 	 * @return  string  name of the preferred content type
 	 * @since   3.2.0
 	 */
-	public function preferred_accept(array $types, $explicit = FALSE)
+	public function preferred_accept(array $types, $explicit = false)
 	{
-		$preferred = FALSE;
+		$preferred = false;
 		$ceiling = 0;
 
-		foreach ($types as $type)
-		{
+		foreach ($types as $type) {
 			$quality = $this->accepts_at_quality($type, $explicit);
 
-			if ($quality > $ceiling)
-			{
+			if ($quality > $ceiling) {
 				$preferred = $type;
 				$ceiling = $quality;
 			}
@@ -593,31 +550,22 @@ public function __construct(array $input = array(), $flags = 0, $iterator_class 
 	 */
 	public function accepts_charset_at_quality($charset)
 	{
-		if ($this->_accept_charset === NULL)
-		{
-			if ($this->offsetExists('Accept-Charset'))
-			{
+		if ($this->_accept_charset === null) {
+			if ($this->offsetExists('Accept-Charset')) {
 				$charset_header = strtolower($this->offsetGet('Accept-Charset'));
 				$this->_accept_charset = HTTP_Header::parse_charset_header($charset_header);
-			}
-			else
-			{
-				$this->_accept_charset = HTTP_Header::parse_charset_header(NULL);
+			} else {
+				$this->_accept_charset = HTTP_Header::parse_charset_header(null);
 			}
 		}
 
 		$charset = strtolower($charset);
 
-		if (isset($this->_accept_charset[$charset]))
-		{
+		if (isset($this->_accept_charset[$charset])) {
 			return $this->_accept_charset[$charset];
-		}
-		elseif (isset($this->_accept_charset['*']))
-		{
+		} elseif (isset($this->_accept_charset['*'])) {
 			return $this->_accept_charset['*'];
-		}
-		elseif ($charset === 'iso-8859-1')
-		{
+		} elseif ($charset === 'iso-8859-1') {
 			return (float) 1;
 		}
 
@@ -639,15 +587,13 @@ public function __construct(array $input = array(), $flags = 0, $iterator_class 
 	 */
 	public function preferred_charset(array $charsets)
 	{
-		$preferred = FALSE;
+		$preferred = false;
 		$ceiling = 0;
 
-		foreach ($charsets as $charset)
-		{
+		foreach ($charsets as $charset) {
 			$quality = $this->accepts_charset_at_quality($charset);
 
-			if ($quality > $ceiling)
-			{
+			if ($quality > $ceiling) {
 				$preferred = $charset;
 				$ceiling = $quality;
 			}
@@ -671,17 +617,13 @@ public function __construct(array $input = array(), $flags = 0, $iterator_class 
 	 * @return  float
 	 * @since   3.2.0
 	 */
-	public function accepts_encoding_at_quality($encoding, $explicit = FALSE)
+	public function accepts_encoding_at_quality($encoding, $explicit = false)
 	{
-		if ($this->_accept_encoding === NULL)
-		{
-			if ($this->offsetExists('Accept-Encoding'))
-			{
+		if ($this->_accept_encoding === null) {
+			if ($this->offsetExists('Accept-Encoding')) {
 				$encoding_header = $this->offsetGet('Accept-Encoding');
-			}
-			else
-			{
-				$encoding_header = NULL;
+			} else {
+				$encoding_header = null;
 			}
 
 			$this->_accept_encoding = HTTP_Header::parse_encoding_header($encoding_header);
@@ -690,19 +632,14 @@ public function __construct(array $input = array(), $flags = 0, $iterator_class 
 		// Normalize the encoding
 		$encoding = strtolower($encoding);
 
-		if (isset($this->_accept_encoding[$encoding]))
-		{
+		if (isset($this->_accept_encoding[$encoding])) {
 			return $this->_accept_encoding[$encoding];
 		}
 
-		if ($explicit === FALSE)
-		{
-			if (isset($this->_accept_encoding['*']))
-			{
+		if ($explicit === false) {
+			if (isset($this->_accept_encoding['*'])) {
 				return $this->_accept_encoding['*'];
-			}
-			elseif ($encoding === 'identity')
-			{
+			} elseif ($encoding === 'identity') {
 				return (float) HTTP_Header::DEFAULT_QUALITY;
 			}
 		}
@@ -726,17 +663,15 @@ public function __construct(array $input = array(), $flags = 0, $iterator_class 
 	 * @return  mixed
 	 * @since   3.2.0
 	 */
-	public function preferred_encoding(array $encodings, $explicit = FALSE)
+	public function preferred_encoding(array $encodings, $explicit = false)
 	{
 		$ceiling = 0;
-		$preferred = FALSE;
+		$preferred = false;
 
-		foreach ($encodings as $encoding)
-		{
+		foreach ($encodings as $encoding) {
 			$quality = $this->accepts_encoding_at_quality($encoding, $explicit);
 
-			if ($quality > $ceiling)
-			{
+			if ($quality > $ceiling) {
 				$ceiling = $quality;
 				$preferred = $encoding;
 			}
@@ -765,17 +700,13 @@ public function __construct(array $input = array(), $flags = 0, $iterator_class 
 	 * @return  float
 	 * @since   3.2.0
 	 */
-	public function accepts_language_at_quality($language, $explicit = FALSE)
+	public function accepts_language_at_quality($language, $explicit = false)
 	{
-		if ($this->_accept_language === NULL)
-		{
-			if ($this->offsetExists('Accept-Language'))
-			{
+		if ($this->_accept_language === null) {
+			if ($this->offsetExists('Accept-Language')) {
 				$language_header = strtolower($this->offsetGet('Accept-Language'));
-			}
-			else
-			{
-				$language_header = NULL;
+			} else {
+				$language_header = null;
 			}
 
 			$this->_accept_language = HTTP_Header::parse_language_header($language_header);
@@ -784,27 +715,19 @@ public function __construct(array $input = array(), $flags = 0, $iterator_class 
 		// Normalize the language
 		$language_parts = explode('-', strtolower($language), 2);
 
-		if (isset($this->_accept_language[$language_parts[0]]))
-		{
-			if (isset($language_parts[1]))
-			{
-				if (isset($this->_accept_language[$language_parts[0]][$language_parts[1]]))
-				{
+		if (isset($this->_accept_language[$language_parts[0]])) {
+			if (isset($language_parts[1])) {
+				if (isset($this->_accept_language[$language_parts[0]][$language_parts[1]])) {
 					return $this->_accept_language[$language_parts[0]][$language_parts[1]];
-				}
-				elseif ($explicit === FALSE AND isset($this->_accept_language[$language_parts[0]]['*']))
-				{
+				} elseif ($explicit === false and isset($this->_accept_language[$language_parts[0]]['*'])) {
 					return $this->_accept_language[$language_parts[0]]['*'];
 				}
-			}
-			elseif (isset($this->_accept_language[$language_parts[0]]['*']))
-			{
+			} elseif (isset($this->_accept_language[$language_parts[0]]['*'])) {
 				return $this->_accept_language[$language_parts[0]]['*'];
 			}
 		}
 
-		if ($explicit === FALSE AND isset($this->_accept_language['*']))
-		{
+		if ($explicit === false and isset($this->_accept_language['*'])) {
 			return $this->_accept_language['*'];
 		}
 
@@ -825,17 +748,15 @@ public function __construct(array $input = array(), $flags = 0, $iterator_class 
 	 * @return  mixed
 	 * @since   3.2.0
 	 */
-	public function preferred_language(array $languages, $explicit = FALSE)
+	public function preferred_language(array $languages, $explicit = false)
 	{
 		$ceiling = 0;
-		$preferred = FALSE;
+		$preferred = false;
 
-		foreach ($languages as $language)
-		{
+		foreach ($languages as $language) {
 			$quality = $this->accepts_language_at_quality($language, $explicit);
 
-			if ($quality > $ceiling)
-			{
+			if ($quality > $ceiling) {
 				$ceiling = $quality;
 				$preferred = $language;
 			}
@@ -858,7 +779,7 @@ public function __construct(array $input = array(), $flags = 0, $iterator_class 
 	 * @return  mixed
 	 * @since   3.2.0
 	 */
-	public function send_headers(HTTP_Response $response = NULL, $replace = FALSE, $callback = NULL)
+	public function send_headers(HTTP_Response $response = null, $replace = false, $callback = null)
 	{
 		$protocol = $response->protocol();
 		$status = $response->status();
@@ -869,39 +790,31 @@ public function __construct(array $input = array(), $flags = 0, $iterator_class 
 		// Get the headers array
 		$headers = $response->headers()->getArrayCopy();
 
-		foreach ($headers as $header => $value)
-		{
-			if (is_array($value))
-			{
+		foreach ($headers as $header => $value) {
+			if (is_array($value)) {
 				$value = implode(', ', $value);
 			}
 
 			$processed_headers[] = Text::ucfirst($header).': '.$value;
 		}
 
-		if ( ! isset($headers['content-type']))
-		{
+		if (! isset($headers['content-type'])) {
 			$processed_headers[] = 'Content-Type: '.Kohana::$content_type.'; charset='.Kohana::$charset;
 		}
 
-		if (Kohana::$expose AND ! isset($headers['x-powered-by']))
-		{
+		if (Kohana::$expose and ! isset($headers['x-powered-by'])) {
 			$processed_headers[] = 'X-Powered-By: '.Kohana::version();
 		}
 
 		// Get the cookies and apply
-		if ($cookies = $response->cookie())
-		{
+		if ($cookies = $response->cookie()) {
 			$processed_headers['Set-Cookie'] = $cookies;
 		}
 
-		if (is_callable($callback))
-		{
+		if (is_callable($callback)) {
 			// Use the callback method to set header
 			return call_user_func($callback, $response, $processed_headers, $replace);
-		}
-		else
-		{
+		} else {
 			$this->_send_headers_to_php($processed_headers, $replace);
 			return $response;
 		}
@@ -919,16 +832,14 @@ public function __construct(array $input = array(), $flags = 0, $iterator_class 
 	protected function _send_headers_to_php(array $headers, $replace)
 	{
 		// If the headers have been sent, get out
-		if (headers_sent())
+		if (headers_sent()) {
 			return $this;
+		}
 
-		foreach ($headers as $key => $line)
-		{
-			if ($key == 'Set-Cookie' AND is_array($line))
-			{
+		foreach ($headers as $key => $line) {
+			if ($key == 'Set-Cookie' and is_array($line)) {
 				// Send cookies
-				foreach ($line as $name => $value)
-				{
+				foreach ($line as $name => $value) {
 					Cookie::set($name, $value['value'], $value['expiration']);
 				}
 

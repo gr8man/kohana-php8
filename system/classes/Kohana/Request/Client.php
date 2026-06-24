@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct script access.');
 /**
  * Request Client. Processes a [Request] and handles [HTTP_Caching] if
  * available. Will usually return a [Response] object as a result of the
@@ -13,8 +14,8 @@ declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
  * @license    http://kohanaframework.org/license
  * @since      3.1.0
  */
-abstract class Kohana_Request_Client {
-
+abstract class Kohana_Request_Client
+{
 	/**
 	 * @var    Cache  Caching library for request caching
 	 */
@@ -23,7 +24,7 @@ abstract class Kohana_Request_Client {
 	/**
 	 * @var  bool  Should redirects be followed?
 	 */
-	protected $_follow = FALSE;
+	protected $_follow = false;
 
 	/**
 	 * @var  array  Headers to preserve when following a redirect
@@ -33,7 +34,7 @@ abstract class Kohana_Request_Client {
 	/**
 	 * @var  bool  Follow 302 redirect with original request method?
 	 */
-	protected $_strict_redirect = TRUE;
+	protected $_strict_redirect = true;
 
 	/**
 	 * @var array  Callbacks to use when response contains given headers
@@ -65,10 +66,8 @@ abstract class Kohana_Request_Client {
 	 */
 	public function __construct(array $params = array())
 	{
-		foreach ($params as $key => $value)
-		{
-			if (method_exists($this, $key))
-			{
+		foreach ($params as $key => $value) {
+			if (method_exists($this, $key)) {
 				$this->$key($value);
 			}
 		}
@@ -99,47 +98,46 @@ abstract class Kohana_Request_Client {
 	public function execute(Request $request)
 	{
 		// Prevent too much recursion of header callback requests
-		if ($this->callback_depth() > $this->max_callback_depth())
+		if ($this->callback_depth() > $this->max_callback_depth()) {
 			throw new Request_Client_Recursion_Exception(
-					"Could not execute request to :uri - too many recursions after :depth requests",
-					array(
+				"Could not execute request to :uri - too many recursions after :depth requests",
+				array(
 						':uri' => $request->uri(),
 						':depth' => $this->callback_depth() - 1,
-					));
+					)
+			);
+		}
 
 		// Execute the request and pass the currently used protocol
 		$orig_response = $response = Response::factory(array('_protocol' => $request->protocol()));
 
-		if (($cache = $this->cache()) instanceof HTTP_Cache)
+		if (($cache = $this->cache()) instanceof HTTP_Cache) {
 			return $cache->execute($this, $request, $response);
+		}
 
 		$response = $this->execute_request($request, $response);
 
 		// Execute response callbacks
-		foreach ($this->header_callbacks() as $header => $callback)
-		{
-			if ($response->headers($header))
-			{
+		foreach ($this->header_callbacks() as $header => $callback) {
+			if ($response->headers($header)) {
 				$cb_result = call_user_func($callback, $request, $response, $this);
 
-				if ($cb_result instanceof Request)
-				{
+				if ($cb_result instanceof Request) {
 					// If the callback returns a request, automatically assign client params
 					$this->assign_client_properties($cb_result->client());
 					$cb_result->client()->callback_depth($this->callback_depth() + 1);
 
 					// Execute the request
 					$response = $cb_result->execute();
-				}
-				elseif ($cb_result instanceof Response)
-				{
+				} elseif ($cb_result instanceof Response) {
 					// Assign the returned response
 					$response = $cb_result;
 				}
 
 				// If the callback has created a new response, do not process any further
-				if ($response !== $orig_response)
+				if ($response !== $orig_response) {
 					break;
+				}
 			}
 		}
 
@@ -167,10 +165,11 @@ abstract class Kohana_Request_Client {
 	 * @return  HTTP_Cache
 	 * @return  Request_Client
 	 */
-	public function cache(HTTP_Cache $cache = NULL)
+	public function cache(HTTP_Cache $cache = null)
 	{
-		if ($cache === NULL)
+		if ($cache === null) {
 			return $this->_cache;
+		}
 
 		$this->_cache = $cache;
 		return $this;
@@ -184,10 +183,11 @@ abstract class Kohana_Request_Client {
 	 * @return  bool
 	 * @return  Request_Client
 	 */
-	public function follow($follow = NULL)
+	public function follow($follow = null)
 	{
-		if ($follow === NULL)
+		if ($follow === null) {
 			return $this->_follow;
+		}
 
 		$this->_follow = $follow;
 
@@ -202,10 +202,11 @@ abstract class Kohana_Request_Client {
 	 * @return  array
 	 * @return  Request_Client
 	 */
-	public function follow_headers($follow_headers = NULL)
+	public function follow_headers($follow_headers = null)
 	{
-		if ($follow_headers === NULL)
+		if ($follow_headers === null) {
 			return $this->_follow_headers;
+		}
 
 		$this->_follow_headers = array_map('strtolower', $follow_headers);
 
@@ -225,10 +226,11 @@ abstract class Kohana_Request_Client {
 	 * @param  bool  $strict_redirect  Boolean indicating if 302 redirects should be followed with the original method
 	 * @return Request_Client
 	 */
-	public function strict_redirect($strict_redirect = NULL)
+	public function strict_redirect($strict_redirect = null)
 	{
-		if ($strict_redirect === NULL)
+		if ($strict_redirect === null) {
 			return $this->_strict_redirect;
+		}
 
 		$this->_strict_redirect = $strict_redirect;
 
@@ -254,10 +256,11 @@ abstract class Kohana_Request_Client {
 	 * @param array $header_callbacks	Array of callbacks to trigger on presence of given headers
 	 * @return Request_Client
 	 */
-	public function header_callbacks($header_callbacks = NULL)
+	public function header_callbacks($header_callbacks = null)
 	{
-		if ($header_callbacks === NULL)
+		if ($header_callbacks === null) {
 			return $this->_header_callbacks;
+		}
 
 		$this->_header_callbacks = $header_callbacks;
 
@@ -275,10 +278,11 @@ abstract class Kohana_Request_Client {
 	 * @param int $depth  Maximum number of callback requests to execute before aborting
 	 * @return Request_Client|int
 	 */
-	public function max_callback_depth($depth = NULL)
+	public function max_callback_depth($depth = null)
 	{
-		if ($depth === NULL)
+		if ($depth === null) {
 			return $this->_max_callback_depth;
+		}
 
 		$this->_max_callback_depth = $depth;
 
@@ -292,10 +296,11 @@ abstract class Kohana_Request_Client {
 	 * @param int $depth  Current recursion depth
 	 * @return Request_Client|int
 	 */
-	public function callback_depth($depth = NULL)
+	public function callback_depth($depth = null)
 	{
-		if ($depth === NULL)
+		if ($depth === null) {
 			return $this->_callback_depth;
+		}
 
 		$this->_callback_depth = $depth;
 
@@ -324,26 +329,24 @@ abstract class Kohana_Request_Client {
 	 * @param mixed $value
 	 * @return Request_Client|mixed
 	 */
-	public function callback_params($param = NULL, $value = NULL)
+	public function callback_params($param = null, $value = null)
 	{
 		// Getter for full array
-		if ($param === NULL)
+		if ($param === null) {
 			return $this->_callback_params;
+		}
 
 		// Setter for full array
-		if (is_array($param))
-		{
+		if (is_array($param)) {
 			$this->_callback_params = $param;
 			return $this;
 		}
 		// Getter for single value
-		elseif ($value === NULL)
-		{
+		elseif ($value === null) {
 			return Arr::get($this->_callback_params, $param);
 		}
 		// Setter for single value
-		else
-		{
+		else {
 			$this->_callback_params[$param] = $value;
 			return $this;
 		}
@@ -380,11 +383,9 @@ abstract class Kohana_Request_Client {
 	public static function on_header_location(Request $request, Response $response, Request_Client $client)
 	{
 		// Do we need to follow a Location header ?
-		if ($client->follow() AND in_array($response->status(), array(201, 301, 302, 303, 307)))
-		{
+		if ($client->follow() and in_array($response->status(), array(201, 301, 302, 303, 307))) {
 			// Figure out which method to use for the follow request
-			switch ($response->status())
-			{
+			switch ($response->status()) {
 				default:
 				case 301:
 				case 307:
@@ -396,12 +397,9 @@ abstract class Kohana_Request_Client {
 					break;
 				case 302:
 					// Cater for sites with broken HTTP redirect implementations
-					if ($client->strict_redirect())
-					{
+					if ($client->strict_redirect()) {
 						$follow_method = $request->method();
-					}
-					else
-					{
+					} else {
 						$follow_method = Request::GET;
 					}
 					break;
@@ -413,18 +411,17 @@ abstract class Kohana_Request_Client {
 			$follow_headers = \Arr::extract($orig_headers, $follow_header_keys);
 
 			$follow_request = Request::factory($response->headers('Location'))
-			                         ->method($follow_method)
-			                         ->headers($follow_headers);
+									 ->method($follow_method)
+									 ->headers($follow_headers);
 
-			if ($follow_method !== Request::GET)
-			{
+			if ($follow_method !== Request::GET) {
 				$follow_request->body($request->body());
 			}
 
 			return $follow_request;
 		}
 
-		return NULL;
+		return null;
 	}
 
 }

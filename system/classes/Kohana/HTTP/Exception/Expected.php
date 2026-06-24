@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct script access.');
 /**
  * "Expected" HTTP exception class. Used for all [HTTP_Exception]'s where a standard
  * Kohana error page should never be shown.
@@ -13,8 +14,8 @@ declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
  * @copyright  (c) 2008-2012 Kohana Team
  * @license    http://kohanaframework.org/license
  */
-abstract class Kohana_HTTP_Exception_Expected extends HTTP_Exception {
-
+abstract class Kohana_HTTP_Exception_Expected extends HTTP_Exception
+{
 	/**
 	 * @var  Response   Response Object
 	 */
@@ -30,7 +31,7 @@ abstract class Kohana_HTTP_Exception_Expected extends HTTP_Exception {
 	 * @param   array   $variables  translation variables
 	 * @return  void
 	 */
-	public function __construct($message = NULL, array $variables = NULL, Exception $previous = NULL)
+	public function __construct($message = null, array $variables = null, Exception $previous = null)
 	{
 		parent::__construct($message, $variables, $previous);
 
@@ -47,12 +48,13 @@ abstract class Kohana_HTTP_Exception_Expected extends HTTP_Exception {
 	 * @param   string  $value
 	 * @return  mixed
 	 */
-	public function headers($key = NULL, $value = NULL)
+	public function headers($key = null, $value = null)
 	{
 		$result = $this->_response->headers($key, $value);
 
-		if ( ! $result instanceof Response)
+		if (! $result instanceof Response) {
 			return $result;
+		}
 
 		return $this;
 	}
@@ -65,7 +67,7 @@ abstract class Kohana_HTTP_Exception_Expected extends HTTP_Exception {
 	 */
 	public function check()
 	{
-		return TRUE;
+		return true;
 	}
 
 	/**

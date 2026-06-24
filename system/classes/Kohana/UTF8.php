@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-defined('SYSPATH') OR die('No direct script access.');
+defined('SYSPATH') or die('No direct script access.');
 /**
  * A port of [phputf8](http://phputf8.sourceforge.net/) to a unified set
  * of files. Provides multi-byte aware replacement string functions.
@@ -25,12 +25,12 @@ defined('SYSPATH') OR die('No direct script access.');
  * @copyright  (c) 2005 Harry Fuecks
  * @license    http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt
  */
-class Kohana_UTF8 {
-
+class Kohana_UTF8
+{
 	/**
 	 * @var  boolean  Does the server support UTF-8 natively?
 	 */
-	public static $server_utf8 = NULL;
+	public static $server_utf8 = null;
 
 	/**
 	 * @var  array  List of called methods that have had their required file included.
@@ -51,29 +51,23 @@ class Kohana_UTF8 {
 	 * @uses    UTF8::strip_ascii_ctrl
 	 * @uses    UTF8::is_ascii
 	 */
-	public static function clean($var, $charset = NULL)
+	public static function clean($var, $charset = null)
 	{
-		if ( ! $charset)
-		{
+		if (! $charset) {
 			// Use the application character set
 			$charset = Kohana::$charset;
 		}
 
-		if (is_array($var) OR is_object($var))
-		{
-			foreach ($var as $key => $val)
-			{
+		if (is_array($var) or is_object($var)) {
+			foreach ($var as $key => $val) {
 				// Recursion!
 				$var[UTF8::clean($key)] = UTF8::clean($val);
 			}
-		}
-		elseif (is_string($var) AND $var !== '')
-		{
+		} elseif (is_string($var) and $var !== '') {
 			// Remove control characters
 			$var = UTF8::strip_ascii_ctrl($var);
 
-			if ( ! UTF8::is_ascii($var))
-			{
+			if (! UTF8::is_ascii($var)) {
 				// Temporarily save the mb_substitute_character() value into a variable
 				$mb_substitute_character = mb_substitute_character();
 
@@ -102,8 +96,7 @@ class Kohana_UTF8 {
 	 */
 	public static function is_ascii($str)
 	{
-		if (is_array($str))
-		{
+		if (is_array($str)) {
 			$str = implode($str);
 		}
 
@@ -148,12 +141,11 @@ class Kohana_UTF8 {
 	 */
 	public static function transliterate_to_ascii($str, $case = 0)
 	{
-		if ( ! isset(UTF8::$called[__FUNCTION__]))
-		{
+		if (! isset(UTF8::$called[__FUNCTION__])) {
 			require Kohana::find_file('utf8', __FUNCTION__);
 
 			// Function has been called
-			UTF8::$called[__FUNCTION__] = TRUE;
+			UTF8::$called[__FUNCTION__] = true;
 		}
 
 		return _transliterate_to_ascii($str, $case);
@@ -172,15 +164,15 @@ class Kohana_UTF8 {
 	 */
 	public static function strlen($str)
 	{
-		if (UTF8::$server_utf8)
+		if (UTF8::$server_utf8) {
 			return mb_strlen((string) $str, Kohana::$charset);
+		}
 
-		if ( ! isset(UTF8::$called[__FUNCTION__]))
-		{
+		if (! isset(UTF8::$called[__FUNCTION__])) {
 			require Kohana::find_file('utf8', __FUNCTION__);
 
 			// Function has been called
-			UTF8::$called[__FUNCTION__] = TRUE;
+			UTF8::$called[__FUNCTION__] = true;
 		}
 
 		return _strlen((string) $str);
@@ -203,15 +195,15 @@ class Kohana_UTF8 {
 	 */
 	public static function strpos($str, $search, $offset = 0)
 	{
-		if (UTF8::$server_utf8)
+		if (UTF8::$server_utf8) {
 			return mb_strpos((string) $str, (string) $search, $offset, Kohana::$charset);
+		}
 
-		if ( ! isset(UTF8::$called[__FUNCTION__]))
-		{
+		if (! isset(UTF8::$called[__FUNCTION__])) {
 			require Kohana::find_file('utf8', __FUNCTION__);
 
 			// Function has been called
-			UTF8::$called[__FUNCTION__] = TRUE;
+			UTF8::$called[__FUNCTION__] = true;
 		}
 
 		return _strpos((string) $str, (string) $search, $offset);
@@ -233,15 +225,15 @@ class Kohana_UTF8 {
 	 */
 	public static function strrpos($str, $search, $offset = 0)
 	{
-		if (UTF8::$server_utf8)
+		if (UTF8::$server_utf8) {
 			return mb_strrpos((string) $str, (string) $search, $offset, Kohana::$charset);
+		}
 
-		if ( ! isset(UTF8::$called[__FUNCTION__]))
-		{
+		if (! isset(UTF8::$called[__FUNCTION__])) {
 			require Kohana::find_file('utf8', __FUNCTION__);
 
 			// Function has been called
-			UTF8::$called[__FUNCTION__] = TRUE;
+			UTF8::$called[__FUNCTION__] = true;
 		}
 
 		return _strrpos((string) $str, (string) $search, $offset);
@@ -261,19 +253,19 @@ class Kohana_UTF8 {
 	 * @uses    UTF8::$server_utf8
 	 * @uses    Kohana::$charset
 	 */
-	public static function substr($str, $offset, $length = NULL)
+	public static function substr($str, $offset, $length = null)
 	{
-		if (UTF8::$server_utf8)
-			return ($length === NULL)
+		if (UTF8::$server_utf8) {
+			return ($length === null)
 				? mb_substr((string) $str, $offset, mb_strlen((string) $str), Kohana::$charset)
 				: mb_substr((string) $str, $offset, $length, Kohana::$charset);
+		}
 
-		if ( ! isset(UTF8::$called[__FUNCTION__]))
-		{
+		if (! isset(UTF8::$called[__FUNCTION__])) {
 			require Kohana::find_file('utf8', __FUNCTION__);
 
 			// Function has been called
-			UTF8::$called[__FUNCTION__] = TRUE;
+			UTF8::$called[__FUNCTION__] = true;
 		}
 
 		return _substr((string) $str, $offset, $length);
@@ -291,14 +283,13 @@ class Kohana_UTF8 {
 	 * @param   integer $offset         offset
 	 * @return  string
 	 */
-	public static function substr_replace($str, $replacement, $offset, $length = NULL)
+	public static function substr_replace($str, $replacement, $offset, $length = null)
 	{
-		if ( ! isset(UTF8::$called[__FUNCTION__]))
-		{
+		if (! isset(UTF8::$called[__FUNCTION__])) {
 			require Kohana::find_file('utf8', __FUNCTION__);
 
 			// Function has been called
-			UTF8::$called[__FUNCTION__] = TRUE;
+			UTF8::$called[__FUNCTION__] = true;
 		}
 
 		return _substr_replace($str, $replacement, $offset, $length);
@@ -318,15 +309,15 @@ class Kohana_UTF8 {
 	 */
 	public static function strtolower($str)
 	{
-		if (UTF8::$server_utf8)
+		if (UTF8::$server_utf8) {
 			return mb_strtolower((string) $str, Kohana::$charset);
+		}
 
-		if ( ! isset(UTF8::$called[__FUNCTION__]))
-		{
+		if (! isset(UTF8::$called[__FUNCTION__])) {
 			require Kohana::find_file('utf8', __FUNCTION__);
 
 			// Function has been called
-			UTF8::$called[__FUNCTION__] = TRUE;
+			UTF8::$called[__FUNCTION__] = true;
 		}
 
 		return _strtolower((string) $str);
@@ -344,15 +335,15 @@ class Kohana_UTF8 {
 	 */
 	public static function strtoupper($str)
 	{
-		if (UTF8::$server_utf8)
+		if (UTF8::$server_utf8) {
 			return mb_strtoupper((string) $str, Kohana::$charset);
+		}
 
-		if ( ! isset(UTF8::$called[__FUNCTION__]))
-		{
+		if (! isset(UTF8::$called[__FUNCTION__])) {
 			require Kohana::find_file('utf8', __FUNCTION__);
 
 			// Function has been called
-			UTF8::$called[__FUNCTION__] = TRUE;
+			UTF8::$called[__FUNCTION__] = true;
 		}
 
 		return _strtoupper((string) $str);
@@ -370,12 +361,11 @@ class Kohana_UTF8 {
 	 */
 	public static function ucfirst($str)
 	{
-		if ( ! isset(UTF8::$called[__FUNCTION__]))
-		{
+		if (! isset(UTF8::$called[__FUNCTION__])) {
 			require Kohana::find_file('utf8', __FUNCTION__);
 
 			// Function has been called
-			UTF8::$called[__FUNCTION__] = TRUE;
+			UTF8::$called[__FUNCTION__] = true;
 		}
 
 		return _ucfirst($str);
@@ -393,12 +383,11 @@ class Kohana_UTF8 {
 	 */
 	public static function ucwords($str)
 	{
-		if ( ! isset(UTF8::$called[__FUNCTION__]))
-		{
+		if (! isset(UTF8::$called[__FUNCTION__])) {
 			require Kohana::find_file('utf8', __FUNCTION__);
 
 			// Function has been called
-			UTF8::$called[__FUNCTION__] = TRUE;
+			UTF8::$called[__FUNCTION__] = true;
 		}
 
 		return _ucwords($str);
@@ -419,12 +408,11 @@ class Kohana_UTF8 {
 	 */
 	public static function strcasecmp($str1, $str2)
 	{
-		if ( ! isset(UTF8::$called[__FUNCTION__]))
-		{
+		if (! isset(UTF8::$called[__FUNCTION__])) {
 			require Kohana::find_file('utf8', __FUNCTION__);
 
 			// Function has been called
-			UTF8::$called[__FUNCTION__] = TRUE;
+			UTF8::$called[__FUNCTION__] = true;
 		}
 
 		return _strcasecmp($str1, $str2);
@@ -446,14 +434,13 @@ class Kohana_UTF8 {
 	 * @return  string  if the input was a string
 	 * @return  array   if the input was an array
 	 */
-	public static function str_ireplace($search, $replace, $str, & $count = NULL)
+	public static function str_ireplace($search, $replace, $str, & $count = null)
 	{
-		if ( ! isset(UTF8::$called[__FUNCTION__]))
-		{
+		if (! isset(UTF8::$called[__FUNCTION__])) {
 			require Kohana::find_file('utf8', __FUNCTION__);
 
 			// Function has been called
-			UTF8::$called[__FUNCTION__] = TRUE;
+			UTF8::$called[__FUNCTION__] = true;
 		}
 
 		return _str_ireplace($search, $replace, $str, $count);
@@ -474,12 +461,11 @@ class Kohana_UTF8 {
 	 */
 	public static function stristr($str, $search)
 	{
-		if ( ! isset(UTF8::$called[__FUNCTION__]))
-		{
+		if (! isset(UTF8::$called[__FUNCTION__])) {
 			require Kohana::find_file('utf8', __FUNCTION__);
 
 			// Function has been called
-			UTF8::$called[__FUNCTION__] = TRUE;
+			UTF8::$called[__FUNCTION__] = true;
 		}
 
 		return _stristr($str, $search);
@@ -498,14 +484,13 @@ class Kohana_UTF8 {
 	 * @param   integer $length length of the string to examine
 	 * @return  integer length of the initial segment that contains characters in the mask
 	 */
-	public static function strspn($str, $mask, $offset = NULL, $length = NULL)
+	public static function strspn($str, $mask, $offset = null, $length = null)
 	{
-		if ( ! isset(UTF8::$called[__FUNCTION__]))
-		{
+		if (! isset(UTF8::$called[__FUNCTION__])) {
 			require Kohana::find_file('utf8', __FUNCTION__);
 
 			// Function has been called
-			UTF8::$called[__FUNCTION__] = TRUE;
+			UTF8::$called[__FUNCTION__] = true;
 		}
 
 		return _strspn($str, $mask, $offset, $length);
@@ -524,14 +509,13 @@ class Kohana_UTF8 {
 	 * @param   integer $length length of the string to examine
 	 * @return  integer length of the initial segment that contains characters not in the mask
 	 */
-	public static function strcspn($str, $mask, $offset = NULL, $length = NULL)
+	public static function strcspn($str, $mask, $offset = null, $length = null)
 	{
-		if ( ! isset(UTF8::$called[__FUNCTION__]))
-		{
+		if (! isset(UTF8::$called[__FUNCTION__])) {
 			require Kohana::find_file('utf8', __FUNCTION__);
 
 			// Function has been called
-			UTF8::$called[__FUNCTION__] = TRUE;
+			UTF8::$called[__FUNCTION__] = true;
 		}
 
 		return _strcspn($str, $mask, $offset, $length);
@@ -552,12 +536,11 @@ class Kohana_UTF8 {
 	 */
 	public static function str_pad($str, $final_str_length, $pad_str = ' ', $pad_type = STR_PAD_RIGHT)
 	{
-		if ( ! isset(UTF8::$called[__FUNCTION__]))
-		{
+		if (! isset(UTF8::$called[__FUNCTION__])) {
 			require Kohana::find_file('utf8', __FUNCTION__);
 
 			// Function has been called
-			UTF8::$called[__FUNCTION__] = TRUE;
+			UTF8::$called[__FUNCTION__] = true;
 		}
 
 		return _str_pad($str, $final_str_length, $pad_str, $pad_type);
@@ -576,12 +559,11 @@ class Kohana_UTF8 {
 	 */
 	public static function str_split($str, $split_length = 1)
 	{
-		if ( ! isset(UTF8::$called[__FUNCTION__]))
-		{
+		if (! isset(UTF8::$called[__FUNCTION__])) {
 			require Kohana::find_file('utf8', __FUNCTION__);
 
 			// Function has been called
-			UTF8::$called[__FUNCTION__] = TRUE;
+			UTF8::$called[__FUNCTION__] = true;
 		}
 
 		return _str_split($str, $split_length);
@@ -598,12 +580,11 @@ class Kohana_UTF8 {
 	 */
 	public static function strrev($str)
 	{
-		if ( ! isset(UTF8::$called[__FUNCTION__]))
-		{
+		if (! isset(UTF8::$called[__FUNCTION__])) {
 			require Kohana::find_file('utf8', __FUNCTION__);
 
 			// Function has been called
-			UTF8::$called[__FUNCTION__] = TRUE;
+			UTF8::$called[__FUNCTION__] = true;
 		}
 
 		return _strrev($str);
@@ -620,14 +601,13 @@ class Kohana_UTF8 {
 	 * @param   string  $charlist   string of characters to remove
 	 * @return  string
 	 */
-	public static function trim($str, $charlist = NULL)
+	public static function trim($str, $charlist = null)
 	{
-		if ( ! isset(UTF8::$called[__FUNCTION__]))
-		{
+		if (! isset(UTF8::$called[__FUNCTION__])) {
 			require Kohana::find_file('utf8', __FUNCTION__);
 
 			// Function has been called
-			UTF8::$called[__FUNCTION__] = TRUE;
+			UTF8::$called[__FUNCTION__] = true;
 		}
 
 		return _trim($str, $charlist);
@@ -644,14 +624,13 @@ class Kohana_UTF8 {
 	 * @param   string  $charlist   string of characters to remove
 	 * @return  string
 	 */
-	public static function ltrim($str, $charlist = NULL)
+	public static function ltrim($str, $charlist = null)
 	{
-		if ( ! isset(UTF8::$called[__FUNCTION__]))
-		{
+		if (! isset(UTF8::$called[__FUNCTION__])) {
 			require Kohana::find_file('utf8', __FUNCTION__);
 
 			// Function has been called
-			UTF8::$called[__FUNCTION__] = TRUE;
+			UTF8::$called[__FUNCTION__] = true;
 		}
 
 		return _ltrim($str, $charlist);
@@ -668,14 +647,13 @@ class Kohana_UTF8 {
 	 * @param   string  $charlist   string of characters to remove
 	 * @return  string
 	 */
-	public static function rtrim($str, $charlist = NULL)
+	public static function rtrim($str, $charlist = null)
 	{
-		if ( ! isset(UTF8::$called[__FUNCTION__]))
-		{
+		if (! isset(UTF8::$called[__FUNCTION__])) {
 			require Kohana::find_file('utf8', __FUNCTION__);
 
 			// Function has been called
-			UTF8::$called[__FUNCTION__] = TRUE;
+			UTF8::$called[__FUNCTION__] = true;
 		}
 
 		return _rtrim($str, $charlist);
@@ -693,12 +671,11 @@ class Kohana_UTF8 {
 	 */
 	public static function ord($chr)
 	{
-		if ( ! isset(UTF8::$called[__FUNCTION__]))
-		{
+		if (! isset(UTF8::$called[__FUNCTION__])) {
 			require Kohana::find_file('utf8', __FUNCTION__);
 
 			// Function has been called
-			UTF8::$called[__FUNCTION__] = TRUE;
+			UTF8::$called[__FUNCTION__] = true;
 		}
 
 		return _ord($chr);
@@ -723,12 +700,11 @@ class Kohana_UTF8 {
 	 */
 	public static function to_unicode($str)
 	{
-		if ( ! isset(UTF8::$called[__FUNCTION__]))
-		{
+		if (! isset(UTF8::$called[__FUNCTION__])) {
 			require Kohana::find_file('utf8', __FUNCTION__);
 
 			// Function has been called
-			UTF8::$called[__FUNCTION__] = TRUE;
+			UTF8::$called[__FUNCTION__] = true;
 		}
 
 		return _to_unicode($str);
@@ -753,12 +729,11 @@ class Kohana_UTF8 {
 	 */
 	public static function from_unicode($arr)
 	{
-		if ( ! isset(UTF8::$called[__FUNCTION__]))
-		{
+		if (! isset(UTF8::$called[__FUNCTION__])) {
 			require Kohana::find_file('utf8', __FUNCTION__);
 
 			// Function has been called
-			UTF8::$called[__FUNCTION__] = TRUE;
+			UTF8::$called[__FUNCTION__] = true;
 		}
 
 		return _from_unicode($arr);
@@ -766,8 +741,7 @@ class Kohana_UTF8 {
 
 }
 
-if (Kohana_UTF8::$server_utf8 === NULL)
-{
+if (Kohana_UTF8::$server_utf8 === null) {
 	// Determine if this server supports UTF-8 natively
 	Kohana_UTF8::$server_utf8 = extension_loaded('mbstring');
 }

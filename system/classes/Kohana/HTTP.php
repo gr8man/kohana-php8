@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-defined('SYSPATH') OR die('No direct script access.');
+defined('SYSPATH') or die('No direct script access.');
 /**
  * Contains the most low-level helpers methods in Kohana:
  *
@@ -18,8 +18,8 @@ defined('SYSPATH') OR die('No direct script access.');
  * @copyright  (c) 2008-2014 Kohana Team
  * @license    http://kohanaframework.org/license
  */
-abstract class Kohana_HTTP {
-
+abstract class Kohana_HTTP
+{
 	/**
 	 * @var  The default protocol to use if it cannot be detected
 	 */
@@ -36,10 +36,11 @@ abstract class Kohana_HTTP {
 	{
 		$e = HTTP_Exception::factory($code);
 
-		if ( ! $e instanceof HTTP_Exception_Redirect)
+		if (! $e instanceof HTTP_Exception_Redirect) {
 			throw new Kohana_Exception('Invalid redirect code \':code\'', array(
 				':code' => $code
 			));
+		}
 
 		throw $e->location($uri);
 	}
@@ -55,11 +56,10 @@ abstract class Kohana_HTTP {
 	 * @throws HTTP_Exception_304
 	 * @return Response
 	 */
-	public static function check_cache(Request $request, Response $response, $etag = NULL)
+	public static function check_cache(Request $request, Response $response, $etag = null)
 	{
 		// Generate an etag if necessary
-		if ($etag == NULL)
-		{
+		if ($etag == null) {
 			$etag = $response->generate_etag();
 		}
 
@@ -68,18 +68,14 @@ abstract class Kohana_HTTP {
 
 		// Add the Cache-Control header if it is not already set
 		// This allows etags to be used with max-age, etc
-		if ($response->headers('cache-control'))
-		{
+		if ($response->headers('cache-control')) {
 			$response->headers('cache-control', $response->headers('cache-control').', must-revalidate');
-		}
-		else
-		{
+		} else {
 			$response->headers('cache-control', 'must-revalidate');
 		}
 
 		// Check if we have a matching etag
-		if ($request->headers('if-none-match') AND (string) $request->headers('if-none-match') === $etag)
-		{
+		if ($request->headers('if-none-match') and (string) $request->headers('if-none-match') === $etag) {
 			// No need to send data again
 			throw HTTP_Exception::factory(304)->headers('etag', $etag);
 		}
@@ -96,8 +92,7 @@ abstract class Kohana_HTTP {
 	public static function parse_header_string($header_string)
 	{
 		// If the PECL HTTP extension is loaded
-		if (extension_loaded('http'))
-		{
+		if (extension_loaded('http')) {
 			// Use the fast method to parse header string
 			$headers = version_compare(phpversion('http'), '2.0.0', '>=') ?
 				\http\Header::parse($header_string) :
@@ -109,29 +104,23 @@ abstract class Kohana_HTTP {
 		$headers = array();
 
 		// Match all HTTP headers
-		if (preg_match_all('/(\w[^\s:]*):[ ]*([^\r\n]*(?:\r\n[ \t][^\r\n]*)*)/', $header_string, $matches))
-		{
+		if (preg_match_all('/(\w[^\s:]*):[ ]*([^\r\n]*(?:\r\n[ \t][^\r\n]*)*)/', $header_string, $matches)) {
 			// Parse each matched header
-			foreach ($matches[0] as $key => $value)
-			{
+			foreach ($matches[0] as $key => $value) {
 				// If the header has not already been set
-				if ( ! isset($headers[$matches[1][$key]]))
-				{
+				if (! isset($headers[$matches[1][$key]])) {
 					// Apply the header directly
 					$headers[$matches[1][$key]] = $matches[2][$key];
 				}
 				// Otherwise there is an existing entry
-				else
-				{
+				else {
 					// If the entry is an array
-					if (is_array($headers[$matches[1][$key]]))
-					{
+					if (is_array($headers[$matches[1][$key]])) {
 						// Apply the new entry to the array
 						$headers[$matches[1][$key]][] = $matches[2][$key];
 					}
 					// Otherwise create a new array with the entries
-					else
-					{
+					else {
 						$headers[$matches[1][$key]] = array(
 							$headers[$matches[1][$key]],
 							$matches[2][$key],
@@ -158,14 +147,12 @@ abstract class Kohana_HTTP {
 	public static function request_headers()
 	{
 		// If running on apache server
-		if (function_exists('apache_request_headers'))
-		{
+		if (function_exists('apache_request_headers')) {
 			// Return the much faster method
 			return new HTTP_Header(apache_request_headers());
 		}
 		// If the PECL HTTP tools are installed
-		elseif (extension_loaded('http'))
-		{
+		elseif (extension_loaded('http')) {
 			// Return the much faster method
 			$headers = version_compare(phpversion('http'), '2.0.0', '>=') ?
 				\http\Env::getRequestHeader() :
@@ -177,22 +164,18 @@ abstract class Kohana_HTTP {
 		$headers = array();
 
 		// Parse the content type
-		if ( ! empty($_SERVER['CONTENT_TYPE']))
-		{
+		if (! empty($_SERVER['CONTENT_TYPE'])) {
 			$headers['content-type'] = $_SERVER['CONTENT_TYPE'];
 		}
 
 		// Parse the content length
-		if ( ! empty($_SERVER['CONTENT_LENGTH']))
-		{
+		if (! empty($_SERVER['CONTENT_LENGTH'])) {
 			$headers['content-length'] = $_SERVER['CONTENT_LENGTH'];
 		}
 
-		foreach ($_SERVER as $key => $value)
-		{
+		foreach ($_SERVER as $key => $value) {
 			// If there is no HTTP header here, skip
-			if (strpos($key, 'HTTP_') !== 0)
-			{
+			if (strpos($key, 'HTTP_') !== 0) {
 				continue;
 			}
 
@@ -212,13 +195,13 @@ abstract class Kohana_HTTP {
 	 */
 	public static function www_form_urlencode(array $params = array())
 	{
-		if ( ! $params)
+		if (! $params) {
 			return;
+		}
 
 		$encoded = array();
 
-		foreach ($params as $key => $value)
-		{
+		foreach ($params as $key => $value) {
 			$encoded[] = $key.'='.rawurlencode($value);
 		}
 

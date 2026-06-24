@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('Kohana bootstrap needs to be included before tests run');
+declare(strict_types=1);
+defined('SYSPATH') or die('Kohana bootstrap needs to be included before tests run');
 
 /**
  * Tests Kohana Exception Class
@@ -29,20 +30,20 @@ class Kohana_ExceptionTest extends Unittest_TestCase
 			array(array(''), '', 0),
 			array(array(':a'), ':a', 0),
 
-			array(array(':a', NULL), ':a', 0),
+			array(array(':a', null), ':a', 0),
 			array(array(':a', array()), ':a', 0),
 			array(array(':a', array(':a' => 'b')), 'b', 0),
 			array(array(':a :b', array(':a' => 'c', ':b' => 'd')), 'c d', 0),
 
-			array(array(':a', NULL, 5), ':a', 5),
+			array(array(':a', null, 5), ':a', 5),
 			// #3358
-			array(array(':a', NULL, '3F000'), ':a', '3F000'),
+			array(array(':a', null, '3F000'), ':a', '3F000'),
 			// #3404
-			array(array(':a', NULL, '42S22'), ':a', '42S22'),
+			array(array(':a', null, '42S22'), ':a', '42S22'),
 			// #3927
-			array(array(':a', NULL, 'b'), ':a', 'b'),
+			array(array(':a', null, 'b'), ':a', 'b'),
 			// #4039
-			array(array(':a', NULL, '25P01'), ':a', '25P01'),
+			array(array(':a', null, '25P01'), ':a', '25P01'),
 		);
 	}
 
@@ -58,14 +59,13 @@ class Kohana_ExceptionTest extends Unittest_TestCase
 	 */
 	public function test_constructor($arguments, $expected_message, $expected_code)
 	{
-		switch (count($arguments))
-		{
+		switch (count($arguments)) {
 			case 1:
 				$exception = new Kohana_Exception(reset($arguments));
-			break;
+				break;
 			case 2:
 				$exception = new Kohana_Exception(reset($arguments), next($arguments));
-			break;
+				break;
 			default:
 				$exception = new Kohana_Exception(reset($arguments), next($arguments), next($arguments));
 		}
@@ -127,7 +127,7 @@ class Kohana_ExceptionTest extends Unittest_TestCase
 		Kohana_Exception::log($exception, Log::ERROR);
 
 		// Should not throw, log is written to Kohana::$log
-		$this->assertTrue(TRUE);
+		$this->assertTrue(true);
 	}
 
 	/**

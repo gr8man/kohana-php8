@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct script access.');
 /**
  * Base Config source Interface
  *
@@ -13,4 +14,6 @@ declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
  * @license    http://kohanaframework.org/license
  */
 
-interface Kohana_Config_Source {}
+interface Kohana_Config_Source
+{
+}

@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct script access.');
 
 /**
  * Interface for config readers
@@ -13,7 +14,6 @@ declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
  */
 interface Kohana_Config_Reader extends Kohana_Config_Source
 {
-
 	/**
 	 * Tries to load the specified configuration group
 	 *

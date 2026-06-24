@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('Kohana bootstrap needs to be included before tests run');
+declare(strict_types=1);
+defined('SYSPATH') or die('Kohana bootstrap needs to be included before tests run');
 
 /**
  * Tests Kohana_Security
@@ -71,10 +72,9 @@ class Kohana_SecurityTest extends Unittest_TestCase
 	public function provider_csrf_token()
 	{
 		$array = array();
-		for ($i = 0; $i <= 4; $i++)
-		{
+		for ($i = 0; $i <= 4; $i++) {
 			Security::$token_name = 'token_'.$i;
-			$array[] = array(Security::token(TRUE), Security::check(Security::token(FALSE)), $i);
+			$array[] = array(Security::token(true), Security::check(Security::token(false)), $i);
 		}
 		return $array;
 	}
@@ -90,8 +90,8 @@ class Kohana_SecurityTest extends Unittest_TestCase
 	{
 		//@todo: the Security::token tests need to be reviewed to check how much of the logic they're actually covering
 		Security::$token_name = 'token_'.$iteration;
-		$this->assertSame(TRUE, $input);
-		$this->assertSame($expected, Security::token(FALSE));
+		$this->assertSame(true, $input);
+		$this->assertSame($expected, Security::token(false));
 		Session::instance()->delete(Security::$token_name);
 	}
 }

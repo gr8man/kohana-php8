@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('Kohana bootstrap needs to be included before tests run');
+declare(strict_types=1);
+defined('SYSPATH') or die('Kohana bootstrap needs to be included before tests run');
 
 /**
  * This test only really exists for code coverage.
@@ -29,11 +30,10 @@ class Kohana_ModelTest extends Unittest_TestCase
 	{
 		$foobar = Model::factory('Foobar');
 
-		$this->assertEquals(TRUE, $foobar instanceof Model);
+		$this->assertEquals(true, $foobar instanceof Model);
 	}
 }
 
 class Model_Foobar extends Model
 {
-
 }

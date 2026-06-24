@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('Kohana bootstrap needs to be included before tests run');
+declare(strict_types=1);
+defined('SYSPATH') or die('Kohana bootstrap needs to be included before tests run');
 
 /**
  * Tests Kohana Core
@@ -88,7 +89,7 @@ class Kohana_CoreTest extends Unittest_TestCase
 	public function test_find_file_no_extension()
 	{
 		// EXT is manually appened to the _file name_, not passed as the extension
-		$path = Kohana::find_file('classes', $file = 'Kohana/Core'.EXT, FALSE);
+		$path = Kohana::find_file('classes', $file = 'Kohana/Core'.EXT, false);
 
 		$this->assertInternalType('string', $path);
 
@@ -107,7 +108,7 @@ class Kohana_CoreTest extends Unittest_TestCase
 	{
 		$this->assertFalse(Kohana::find_file('configy', 'zebra'));
 
-		$this->assertSame(array(), Kohana::find_file('configy', 'zebra', NULL, TRUE));
+		$this->assertSame(array(), Kohana::find_file('configy', 'zebra', null, true));
 	}
 
 	/**
@@ -155,8 +156,8 @@ class Kohana_CoreTest extends Unittest_TestCase
 		return array(
 			// $value, $result
 			array('foo', 'hello, world', 10),
-			array('bar', NULL, 10),
-			array('bar', NULL, -10),
+			array('bar', null, 10),
+			array('bar', null, -10),
 		);
 	}
 
@@ -185,12 +186,12 @@ class Kohana_CoreTest extends Unittest_TestCase
 	{
 		return array(
 			array('no_message_file', 'anything', 'default', 'default'),
-			array('no_message_file', NULL, 'anything', array()),
+			array('no_message_file', null, 'anything', array()),
 			array('kohana_core_message_tests', 'bottom_only', 'anything', 'inherited bottom message'),
 			array('kohana_core_message_tests', 'cfs_replaced', 'anything', 'overriding cfs_replaced message'),
 			array('kohana_core_message_tests', 'top_only', 'anything', 'top only message'),
 			array('kohana_core_message_tests', 'missing', 'default', 'default'),
-			array('kohana_core_message_tests', NULL, 'anything',
+			array('kohana_core_message_tests', null, 'anything',
 				array(
 					'bottom_only'  => 'inherited bottom message',
 					'cfs_replaced' => 'overriding cfs_replaced message',
@@ -246,12 +247,9 @@ class Kohana_CoreTest extends Unittest_TestCase
 	{
 		$error_level = error_reporting();
 		error_reporting(E_ALL);
-		try
-		{
+		try {
 			Kohana::error_handler($code, $error, $file, $line);
-		}
-		catch (Exception $e)
-		{
+		} catch (Exception $e) {
 			$this->assertEquals($code, $e->getCode());
 			$this->assertEquals($error, $e->getMessage());
 		}
@@ -285,12 +283,9 @@ class Kohana_CoreTest extends Unittest_TestCase
 		$this->expectException('Kohana_Exception');
 		$modules = Kohana::modules();
 
-		try
-		{
+		try {
 			Kohana::modules($source);
-		}
-		catch(Exception $e)
-		{
+		} catch (Exception $e) {
 			// Restore modules
 			Kohana::modules($modules);
 
@@ -326,12 +321,9 @@ class Kohana_CoreTest extends Unittest_TestCase
 	{
 		$modules = Kohana::modules();
 
-		try
-		{
+		try {
 			$this->assertEquals($expected, Kohana::modules($source));
-		}
-		catch(Exception $e)
-		{
+		} catch (Exception $e) {
 			Kohana::modules($modules);
 
 			throw $e;
@@ -378,8 +370,7 @@ class Kohana_CoreTest extends Unittest_TestCase
 		$this->assertSame(APPPATH, reset($include_paths));
 		$this->assertSame(SYSPATH, end($include_paths));
 
-		foreach ($modules as $module)
-		{
+		foreach ($modules as $module) {
 			$this->assertContains($module, $include_paths);
 		}
 	}
@@ -481,7 +472,7 @@ class Kohana_CoreTest extends Unittest_TestCase
 	public function test_cache_delete()
 	{
 		Kohana::cache('delete_test_key', 'value', 10);
-		$result = Kohana::cache('delete_test_key', NULL, -1);
+		$result = Kohana::cache('delete_test_key', null, -1);
 		$this->assertNull(Kohana::cache('delete_test_key'));
 	}
 
@@ -534,4 +525,3 @@ class Kohana_CoreTest extends Unittest_TestCase
 		$this->assertSame(array(), Kohana::list_files('invalid_dir_name'));
 	}
 }
-

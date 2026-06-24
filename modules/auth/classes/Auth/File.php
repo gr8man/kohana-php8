@@ -1,5 +1,8 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('No direct access allowed.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct access allowed.');
 
-class Auth_File extends Kohana_Auth_File { }
+class Auth_File extends Kohana_Auth_File
+{
+}

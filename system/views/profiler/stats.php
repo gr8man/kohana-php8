@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.') ?>
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct script access.') ?>
 
 <style type="text/css">
 <?php include Kohana::find_file('views', 'profiler/style', 'css') ?>

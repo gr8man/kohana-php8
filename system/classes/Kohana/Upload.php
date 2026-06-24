@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-defined('SYSPATH') OR die('No direct script access.');
+defined('SYSPATH') or die('No direct script access.');
 /**
  * Upload helper class for working with uploaded files and [Validation].
  *
@@ -22,12 +22,12 @@ defined('SYSPATH') OR die('No direct script access.');
  * @copyright  (c) 2007-2012 Kohana Team
  * @license    http://kohanaframework.org/license
  */
-class Kohana_Upload {
-
+class Kohana_Upload
+{
 	/**
 	 * @var  boolean  remove spaces in uploaded files
 	 */
-	public static $remove_spaces = TRUE;
+	public static $remove_spaces = true;
 
 	/**
 	 * @var  string  default upload directory
@@ -53,45 +53,40 @@ class Kohana_Upload {
 	 * @return  string  on success, full path to new file
 	 * @return  FALSE   on failure
 	 */
-	public static function save(array $file, $filename = NULL, $directory = NULL, $chmod = 0644)
+	public static function save(array $file, $filename = null, $directory = null, $chmod = 0644)
 	{
-		if ( ! isset($file['tmp_name']) OR ! is_uploaded_file($file['tmp_name']))
-		{
+		if (! isset($file['tmp_name']) or ! is_uploaded_file($file['tmp_name'])) {
 			// Ignore corrupted uploads
-			return FALSE;
+			return false;
 		}
 
-		if ($filename === NULL)
-		{
+		if ($filename === null) {
 			// Use the default filename, with a timestamp pre-pended
 			$filename = uniqid().$file['name'];
 		}
 
-		if (Upload::$remove_spaces === TRUE)
-		{
+		if (Upload::$remove_spaces === true) {
 			// Remove spaces from the filename
 			$filename = preg_replace('/\s+/u', '_', $filename);
 		}
 
-		if ($directory === NULL)
-		{
+		if ($directory === null) {
 			// Use the pre-configured upload directory
 			$directory = Upload::$default_directory;
 		}
 
-		if ( ! is_dir($directory) OR ! is_writable(realpath($directory)))
-		{
-			throw new Kohana_Exception('Directory :dir must be writable',
-				array(':dir' => Debug::path($directory)));
+		if (! is_dir($directory) or ! is_writable(realpath($directory))) {
+			throw new Kohana_Exception(
+				'Directory :dir must be writable',
+				array(':dir' => Debug::path($directory))
+			);
 		}
 
 		// Make the filename into a complete path
 		$filename = realpath($directory).DIRECTORY_SEPARATOR.$filename;
 
-		if (move_uploaded_file($file['tmp_name'], $filename))
-		{
-			if ($chmod !== FALSE)
-			{
+		if (move_uploaded_file($file['tmp_name'], $filename)) {
+			if ($chmod !== false) {
 				// Set permissions on filename
 				chmod($filename, $chmod);
 			}
@@ -100,7 +95,7 @@ class Kohana_Upload {
 			return $filename;
 		}
 
-		return FALSE;
+		return false;
 	}
 
 	/**
@@ -116,10 +111,10 @@ class Kohana_Upload {
 	public static function valid($file)
 	{
 		return (isset($file['error'])
-			AND isset($file['name'])
-			AND isset($file['type'])
-			AND isset($file['tmp_name'])
-			AND isset($file['size']));
+			and isset($file['name'])
+			and isset($file['type'])
+			and isset($file['tmp_name'])
+			and isset($file['size']));
 	}
 
 	/**
@@ -133,9 +128,9 @@ class Kohana_Upload {
 	public static function not_empty(array $file)
 	{
 		return (isset($file['error'])
-			AND isset($file['tmp_name'])
-			AND $file['error'] === UPLOAD_ERR_OK
-			AND is_uploaded_file($file['tmp_name']));
+			and isset($file['tmp_name'])
+			and $file['error'] === UPLOAD_ERR_OK
+			and is_uploaded_file($file['tmp_name']));
 	}
 
 	/**
@@ -149,8 +144,9 @@ class Kohana_Upload {
 	 */
 	public static function type(array $file, array $allowed)
 	{
-		if ($file['error'] !== UPLOAD_ERR_OK)
-			return TRUE;
+		if ($file['error'] !== UPLOAD_ERR_OK) {
+			return true;
+		}
 
 		$ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
 
@@ -172,16 +168,14 @@ class Kohana_Upload {
 	 */
 	public static function size(array $file, $size)
 	{
-		if ($file['error'] === UPLOAD_ERR_INI_SIZE)
-		{
+		if ($file['error'] === UPLOAD_ERR_INI_SIZE) {
 			// Upload is larger than PHP allowed size (upload_max_filesize)
-			return FALSE;
+			return false;
 		}
 
-		if ($file['error'] !== UPLOAD_ERR_OK)
-		{
+		if ($file['error'] !== UPLOAD_ERR_OK) {
 			// The upload failed, no size to check
-			return TRUE;
+			return true;
 		}
 
 		// Convert the provided size to bytes for comparison
@@ -210,51 +204,41 @@ class Kohana_Upload {
 	 * @param   boolean $exact      match width and height exactly?
 	 * @return  boolean
 	 */
-	public static function image(array $file, $max_width = NULL, $max_height = NULL, $exact = FALSE)
+	public static function image(array $file, $max_width = null, $max_height = null, $exact = false)
 	{
-		if (Upload::not_empty($file))
-		{
-			try
-			{
+		if (Upload::not_empty($file)) {
+			try {
 				// Get the width and height from the uploaded image
 				list($width, $height) = getimagesize($file['tmp_name']);
-			}
-			catch (ErrorException $e)
-			{
+			} catch (ErrorException $e) {
 				// Ignore read errors
 			}
 
-			if (empty($width) OR empty($height))
-			{
+			if (empty($width) or empty($height)) {
 				// Cannot get image size, cannot validate
-				return FALSE;
+				return false;
 			}
 
-			if ( ! $max_width)
-			{
+			if (! $max_width) {
 				// No limit, use the image width
 				$max_width = $width;
 			}
 
-			if ( ! $max_height)
-			{
+			if (! $max_height) {
 				// No limit, use the image height
 				$max_height = $height;
 			}
 
-			if ($exact)
-			{
+			if ($exact) {
 				// Check if dimensions match exactly
-				return ($width === $max_width AND $height === $max_height);
-			}
-			else
-			{
+				return ($width === $max_width and $height === $max_height);
+			} else {
 				// Check if size is within maximum dimensions
-				return ($width <= $max_width AND $height <= $max_height);
+				return ($width <= $max_width and $height <= $max_height);
 			}
 		}
 
-		return FALSE;
+		return false;
 	}
 
 }

@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct script access.');
 /**
  * UTF8::strspn
  *
@@ -10,16 +11,17 @@ declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
  * @copyright  (c) 2005 Harry Fuecks
  * @license    http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt
  */
-function _strspn($str, $mask, $offset = NULL, $length = NULL)
+function _strspn($str, $mask, $offset = null, $length = null)
 {
-	if ($str == '' OR $mask == '')
+	if ($str == '' or $mask == '') {
 		return 0;
+	}
 
-	if (UTF8::is_ascii($str) AND UTF8::is_ascii($mask))
-		return ($offset === NULL) ? strspn($str, $mask) : (($length === NULL) ? strspn($str, $mask, $offset) : strspn($str, $mask, $offset, $length));
+	if (UTF8::is_ascii($str) and UTF8::is_ascii($mask)) {
+		return ($offset === null) ? strspn($str, $mask) : (($length === null) ? strspn($str, $mask, $offset) : strspn($str, $mask, $offset, $length));
+	}
 
-	if ($offset !== NULL OR $length !== NULL)
-	{
+	if ($offset !== null or $length !== null) {
 		$str = UTF8::substr($str, $offset, $length);
 	}
 

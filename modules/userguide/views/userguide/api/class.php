@@ -1,7 +1,3 @@
-<?php
-
-declare(strict_types=1);
-
 <h1>
 	<?php echo $doc->modifiers, $doc->class->name ?>
 	<?php foreach ($doc->parents as $parent): ?>

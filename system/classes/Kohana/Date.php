@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-defined('SYSPATH') OR die('No direct script access.');
+defined('SYSPATH') or die('No direct script access.');
 /**
  * Date helper.
  *
@@ -12,19 +12,19 @@ defined('SYSPATH') OR die('No direct script access.');
  * @copyright  (c) 2007-2012 Kohana Team
  * @license    http://kohanaframework.org/license
  */
-class Kohana_Date {
-
+class Kohana_Date
+{
 	// Second amounts for various time increments
-	const YEAR   = 31556926;
-	const MONTH  = 2629744;
-	const WEEK   = 604800;
-	const DAY    = 86400;
-	const HOUR   = 3600;
-	const MINUTE = 60;
+	public const YEAR   = 31556926;
+	public const MONTH  = 2629744;
+	public const WEEK   = 604800;
+	public const DAY    = 86400;
+	public const HOUR   = 3600;
+	public const MINUTE = 60;
 
 	// Available formats for Date::months()
-	const MONTHS_LONG  = '%B';
-	const MONTHS_SHORT = '%b';
+	public const MONTHS_LONG  = '%B';
+	public const MONTHS_SHORT = '%b';
 
 	/**
 	 * Default timestamp format for formatted_time
@@ -53,16 +53,14 @@ class Kohana_Date {
 	 * @param   mixed   $now    UNIX timestamp or date string
 	 * @return  integer
 	 */
-	public static function offset($remote, $local = NULL, $now = NULL)
+	public static function offset($remote, $local = null, $now = null)
 	{
-		if ($local === NULL)
-		{
+		if ($local === null) {
 			// Use the default timezone
 			$local = date_default_timezone_get();
 		}
 
-		if (is_int($now))
-		{
+		if (is_int($now)) {
 			// Convert the timestamp into a string
 			$now = date(DateTime::RFC2822, $now);
 		}
@@ -99,8 +97,7 @@ class Kohana_Date {
 
 		$seconds = array();
 
-		for ($i = $start; $i < $end; $i += $step)
-		{
+		for ($i = $start; $i < $end; $i += $step) {
 			$seconds[$i] = sprintf('%02d', $i);
 		}
 
@@ -137,7 +134,7 @@ class Kohana_Date {
 	 * @param   integer $start  the hour to start at
 	 * @return  array   A mirrored (foo => foo) array from start-12 or start-23.
 	 */
-	public static function hours($step = 1, $long = FALSE, $start = NULL)
+	public static function hours($step = 1, $long = false, $start = null)
 	{
 		// Default values
 		$step = (int) $step;
@@ -145,18 +142,16 @@ class Kohana_Date {
 		$hours = array();
 
 		// Set the default start if none was specified.
-		if ($start === NULL)
-		{
-			$start = ($long === FALSE) ? 1 : 0;
+		if ($start === null) {
+			$start = ($long === false) ? 1 : 0;
 		}
 
 		$hours = array();
 
 		// 24-hour time has 24 hours, instead of 12
-		$size = ($long === TRUE) ? 23 : 12;
+		$size = ($long === true) ? 23 : 12;
 
-		for ($i = $start; $i <= $size; $i += $step)
-		{
+		for ($i = $start; $i <= $size; $i += $step) {
 			$hours[$i] = (string) $i;
 		}
 
@@ -194,20 +189,17 @@ class Kohana_Date {
 		$hour = (int) $hour;
 		$ampm = strtolower($ampm);
 
-		switch ($ampm)
-		{
+		switch ($ampm) {
 			case 'am':
-				if ($hour == 12)
-				{
+				if ($hour == 12) {
 					$hour = 0;
 				}
-			break;
+				break;
 			case 'pm':
-				if ($hour < 12)
-				{
+				if ($hour < 12) {
 					$hour += 12;
 				}
-			break;
+				break;
 		}
 
 		return sprintf('%02d', $hour);
@@ -223,12 +215,11 @@ class Kohana_Date {
 	 * @param   integer $year   number of year to check month, defaults to the current year
 	 * @return  array   A mirrored (foo => foo) array of the days.
 	 */
-	public static function days($month, $year = FALSE)
+	public static function days($month, $year = false)
 	{
 		static $months;
 
-		if ($year === FALSE)
-		{
+		if ($year === false) {
 			// Use the current year by default
 			$year = date('Y');
 		}
@@ -238,15 +229,13 @@ class Kohana_Date {
 		$year  = (int) $year;
 
 		// We use caching for months, because time functions are used
-		if (empty($months[$year][$month]))
-		{
+		if (empty($months[$year][$month])) {
 			$months[$year][$month] = array();
 
 			// Use date to find the number of days in the given month
 			$total = date('t', mktime(1, 0, 0, $month, 1, $year)) + 1;
 
-			for ($i = 1; $i < $total; $i++)
-			{
+			for ($i = 1; $i < $total; $i++) {
 				$months[$year][$month][$i] = (string) $i;
 			}
 		}
@@ -277,20 +266,16 @@ class Kohana_Date {
 	 * @param   string  $format The format to use for months
 	 * @return  array   An array of months based on the specified format
 	 */
-	public static function months($format = NULL)
+	public static function months($format = null)
 	{
 		$months = array();
 
-		if ($format === Date::MONTHS_LONG OR $format === Date::MONTHS_SHORT)
-		{
+		if ($format === Date::MONTHS_LONG or $format === Date::MONTHS_SHORT) {
 			$date_format = ($format === Date::MONTHS_LONG) ? 'F' : 'M';
-			for ($i = 1; $i <= 12; ++$i)
-			{
+			for ($i = 1; $i <= 12; ++$i) {
 				$months[$i] = date($date_format, mktime(0, 0, 0, $i, 1));
 			}
-		}
-		else
-		{
+		} else {
 			$months = Date::hours();
 		}
 
@@ -308,16 +293,15 @@ class Kohana_Date {
 	 * @param   integer $end    ending year (default is current year + 5)
 	 * @return  array
 	 */
-	public static function years($start = FALSE, $end = FALSE)
+	public static function years($start = false, $end = false)
 	{
 		// Default values
-		$start = ($start === FALSE) ? (date('Y') - 5) : (int) $start;
-		$end   = ($end   === FALSE) ? (date('Y') + 5) : (int) $end;
+		$start = ($start === false) ? (date('Y') - 5) : (int) $start;
+		$end   = ($end   === false) ? (date('Y') + 5) : (int) $end;
 
 		$years = array();
 
-		for ($i = $start; $i <= $end; $i++)
-		{
+		for ($i = $start; $i <= $end; $i++) {
 			$years[$i] = (string) $i;
 		}
 
@@ -338,15 +322,14 @@ class Kohana_Date {
 	 * @return  string   when only a single output is requested
 	 * @return  array    associative list of all outputs requested
 	 */
-	public static function span($remote, $local = NULL, $output = 'years,months,weeks,days,hours,minutes,seconds')
+	public static function span($remote, $local = null, $output = 'years,months,weeks,days,hours,minutes,seconds')
 	{
 		// Normalize output
-		$output = trim(strtolower( (string) $output));
+		$output = trim(strtolower((string) $output));
 
-		if ( ! $output)
-		{
+		if (! $output) {
 			// Invalid output
-			return FALSE;
+			return false;
 		}
 
 		// Array with the output formats
@@ -358,8 +341,7 @@ class Kohana_Date {
 		// Make the output values into keys
 		extract(array_flip($output), EXTR_SKIP);
 
-		if ($local === NULL)
-		{
+		if ($local === null) {
 			// Calculate the span from the current time
 			$local = time();
 		}
@@ -367,44 +349,36 @@ class Kohana_Date {
 		// Calculate timespan (seconds)
 		$timespan = abs($remote - $local);
 
-		if (isset($output['years']))
-		{
+		if (isset($output['years'])) {
 			$timespan -= Date::YEAR * ($output['years'] = (int) floor($timespan / Date::YEAR));
 		}
 
-		if (isset($output['months']))
-		{
+		if (isset($output['months'])) {
 			$timespan -= Date::MONTH * ($output['months'] = (int) floor($timespan / Date::MONTH));
 		}
 
-		if (isset($output['weeks']))
-		{
+		if (isset($output['weeks'])) {
 			$timespan -= Date::WEEK * ($output['weeks'] = (int) floor($timespan / Date::WEEK));
 		}
 
-		if (isset($output['days']))
-		{
+		if (isset($output['days'])) {
 			$timespan -= Date::DAY * ($output['days'] = (int) floor($timespan / Date::DAY));
 		}
 
-		if (isset($output['hours']))
-		{
+		if (isset($output['hours'])) {
 			$timespan -= Date::HOUR * ($output['hours'] = (int) floor($timespan / Date::HOUR));
 		}
 
-		if (isset($output['minutes']))
-		{
+		if (isset($output['minutes'])) {
 			$timespan -= Date::MINUTE * ($output['minutes'] = (int) floor($timespan / Date::MINUTE));
 		}
 
 		// Seconds ago, 1
-		if (isset($output['seconds']))
-		{
+		if (isset($output['seconds'])) {
 			$output['seconds'] = $timespan;
 		}
 
-		if (count($output) === 1)
-		{
+		if (count($output) === 1) {
 			// Only a single output was requested, return it
 			return array_pop($output);
 		}
@@ -428,101 +402,59 @@ class Kohana_Date {
 	 * @param   integer $local_timestamp    "local" timestamp, defaults to time()
 	 * @return  string
 	 */
-	public static function fuzzy_span($timestamp, $local_timestamp = NULL)
+	public static function fuzzy_span($timestamp, $local_timestamp = null)
 	{
-		$local_timestamp = ($local_timestamp === NULL) ? time() : (int) $local_timestamp;
+		$local_timestamp = ($local_timestamp === null) ? time() : (int) $local_timestamp;
 
 		// Determine the difference in seconds
 		$offset = abs($local_timestamp - $timestamp);
 
-		if ($offset <= Date::MINUTE)
-		{
+		if ($offset <= Date::MINUTE) {
 			$span = 'moments';
-		}
-		elseif ($offset < (Date::MINUTE * 20))
-		{
+		} elseif ($offset < (Date::MINUTE * 20)) {
 			$span = 'a few minutes';
-		}
-		elseif ($offset < Date::HOUR)
-		{
+		} elseif ($offset < Date::HOUR) {
 			$span = 'less than an hour';
-		}
-		elseif ($offset < (Date::HOUR * 4))
-		{
+		} elseif ($offset < (Date::HOUR * 4)) {
 			$span = 'a couple of hours';
-		}
-		elseif ($offset < Date::DAY)
-		{
+		} elseif ($offset < Date::DAY) {
 			$span = 'less than a day';
-		}
-		elseif ($offset < (Date::DAY * 2))
-		{
+		} elseif ($offset < (Date::DAY * 2)) {
 			$span = 'about a day';
-		}
-		elseif ($offset < (Date::DAY * 4))
-		{
+		} elseif ($offset < (Date::DAY * 4)) {
 			$span = 'a couple of days';
-		}
-		elseif ($offset < Date::WEEK)
-		{
+		} elseif ($offset < Date::WEEK) {
 			$span = 'less than a week';
-		}
-		elseif ($offset < (Date::WEEK * 2))
-		{
+		} elseif ($offset < (Date::WEEK * 2)) {
 			$span = 'about a week';
-		}
-		elseif ($offset < Date::MONTH)
-		{
+		} elseif ($offset < Date::MONTH) {
 			$span = 'less than a month';
-		}
-		elseif ($offset < (Date::MONTH * 2))
-		{
+		} elseif ($offset < (Date::MONTH * 2)) {
 			$span = 'about a month';
-		}
-		elseif ($offset < (Date::MONTH * 4))
-		{
+		} elseif ($offset < (Date::MONTH * 4)) {
 			$span = 'a couple of months';
-		}
-		elseif ($offset < Date::YEAR)
-		{
+		} elseif ($offset < Date::YEAR) {
 			$span = 'less than a year';
-		}
-		elseif ($offset < (Date::YEAR * 2))
-		{
+		} elseif ($offset < (Date::YEAR * 2)) {
 			$span = 'about a year';
-		}
-		elseif ($offset < (Date::YEAR * 4))
-		{
+		} elseif ($offset < (Date::YEAR * 4)) {
 			$span = 'a couple of years';
-		}
-		elseif ($offset < (Date::YEAR * 8))
-		{
+		} elseif ($offset < (Date::YEAR * 8)) {
 			$span = 'a few years';
-		}
-		elseif ($offset < (Date::YEAR * 12))
-		{
+		} elseif ($offset < (Date::YEAR * 12)) {
 			$span = 'about a decade';
-		}
-		elseif ($offset < (Date::YEAR * 24))
-		{
+		} elseif ($offset < (Date::YEAR * 24)) {
 			$span = 'a couple of decades';
-		}
-		elseif ($offset < (Date::YEAR * 64))
-		{
+		} elseif ($offset < (Date::YEAR * 64)) {
 			$span = 'several decades';
-		}
-		else
-		{
+		} else {
 			$span = 'a long time';
 		}
 
-		if ($timestamp <= $local_timestamp)
-		{
+		if ($timestamp <= $local_timestamp) {
 			// This is in the past
 			return $span.' ago';
-		}
-		else
-		{
+		} else {
 			// This in the future
 			return 'in '.$span;
 		}
@@ -538,12 +470,11 @@ class Kohana_Date {
 	 * @param   integer $timestamp  UNIX timestamp
 	 * @return  integer
 	 */
-	public static function unix2dos($timestamp = FALSE)
+	public static function unix2dos($timestamp = false)
 	{
-		$timestamp = ($timestamp === FALSE) ? getdate() : getdate($timestamp);
+		$timestamp = ($timestamp === false) ? getdate() : getdate($timestamp);
 
-		if ($timestamp['year'] < 1980)
-		{
+		if ($timestamp['year'] < 1980) {
 			return (1 << 21 | 1 << 16);
 		}
 
@@ -552,8 +483,8 @@ class Kohana_Date {
 		// What voodoo is this? I have no idea... Geert can explain it though,
 		// and that's good enough for me.
 		return ($timestamp['year']    << 25 | $timestamp['mon']     << 21 |
-		        $timestamp['mday']    << 16 | $timestamp['hours']   << 11 |
-		        $timestamp['minutes'] << 5  | $timestamp['seconds'] >> 1);
+				$timestamp['mday']    << 16 | $timestamp['hours']   << 11 |
+				$timestamp['minutes'] << 5  | $timestamp['seconds'] >> 1);
 	}
 
 	/**
@@ -566,7 +497,7 @@ class Kohana_Date {
 	 * @param   integer $timestamp  DOS timestamp
 	 * @return  integer
 	 */
-	public static function dos2unix($timestamp = FALSE)
+	public static function dos2unix($timestamp = false)
 	{
 		$sec  = 2 * ($timestamp & 0x1f);
 		$min  = ($timestamp >>  5) & 0x3f;
@@ -589,10 +520,10 @@ class Kohana_Date {
 	 * @param   string  $timezone           timezone identifier
 	 * @return  string
 	 */
-	public static function formatted_time($datetime_str = 'now', $timestamp_format = NULL, $timezone = NULL)
+	public static function formatted_time($datetime_str = 'now', $timestamp_format = null, $timezone = null)
 	{
-		$timestamp_format = ($timestamp_format == NULL) ? Date::$timestamp_format : $timestamp_format;
-		$timezone         = ($timezone === NULL) ? Date::$timezone : $timezone;
+		$timestamp_format = ($timestamp_format == null) ? Date::$timestamp_format : $timestamp_format;
+		$timezone         = ($timezone === null) ? Date::$timezone : $timezone;
 
 		$tz   = new DateTimeZone($timezone ? $timezone : date_default_timezone_get());
 		$time = new DateTime($datetime_str, $tz);

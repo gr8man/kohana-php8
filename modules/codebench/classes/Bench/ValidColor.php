@@ -1,13 +1,14 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') or die('No direct access allowed.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct access allowed.');
 /**
  * @package    Kohana/Codebench
  * @category   Tests
  * @author     Geert De Deckere <geert@idoe.be>
  */
-class Bench_ValidColor extends Codebench {
-
+class Bench_ValidColor extends Codebench
+{
 	public $description =
 		'Optimization for <code>Validate::color()</code>.
 		 See: http://forum.kohanaphp.com/comments.php?DiscussionID=2192.
@@ -19,8 +20,7 @@ class Bench_ValidColor extends Codebench {
 
 	public $loops = 10000;
 
-	public $subjects = array
-	(
+	public $subjects = array(
 		// Valid colors
 		'aaA',
 		'123',
@@ -91,28 +91,26 @@ class Bench_ValidColor extends Codebench {
 	// A solution without regex
 	public function bench_geert_str($subject)
 	{
-		if ($subject[0] === '#')
-		{
+		if ($subject[0] === '#') {
 			$subject = substr($subject, 1);
 		}
 
 		$strlen = strlen($subject);
-		return (($strlen === 3 OR $strlen === 6) AND ctype_xdigit($subject));
+		return (($strlen === 3 or $strlen === 6) and ctype_xdigit($subject));
 	}
 
 	// An ugly, but fast, solution without regex
 	public function bench_salathe_str($subject)
 	{
-		if ($subject[0] === '#')
-		{
+		if ($subject[0] === '#') {
 			$subject = substr($subject, 1);
 		}
 
 		// TRUE if:
 		// 1. $subject is 6 or 3 chars long
 		// 2. $subject contains only hexadecimal digits
-		return (((isset($subject[5]) AND ! isset($subject[6])) OR
-			(isset($subject[2]) AND ! isset($subject[3])))
-			AND ctype_xdigit($subject));
+		return (((isset($subject[5]) and ! isset($subject[6])) or
+			(isset($subject[2]) and ! isset($subject[3])))
+			and ctype_xdigit($subject));
 	}
 }

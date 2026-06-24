@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('Kohana bootstrap needs to be included before tests run');
+declare(strict_types=1);
+defined('SYSPATH') or die('Kohana bootstrap needs to be included before tests run');
 
 /**
  * Tests Date class
@@ -19,7 +20,7 @@ declare(strict_types=1); defined('SYSPATH') OR die('Kohana bootstrap needs to be
 #[AllowDynamicProperties]
 class Kohana_DateTest extends Unittest_TestCase
 {
-	protected $_original_timezone = NULL;
+	protected $_original_timezone = null;
 	protected $default_locale;
 
 	/**
@@ -32,10 +33,10 @@ class Kohana_DateTest extends Unittest_TestCase
 		parent::setUp();
 
 		$this->_original_timezone = date_default_timezone_get();
-		$this->default_locale = setlocale(LC_ALL, 0);
+		$this->default_locale = setlocale(LC_ALL, '0');
 
 		date_default_timezone_set('America/Chicago');
-		setlocale(LC_ALL, 'en_US.utf8');
+		setlocale(LC_ALL, 'en_US.utf8', 'en_US.UTF-8', 'en_US', 'C.UTF-8');
 	}
 
 	/**
@@ -74,7 +75,7 @@ class Kohana_DateTest extends Unittest_TestCase
 	 * @param string  $local    Local TZ
 	 * @param integer $now      Current timestamp
 	 */
-	public function test_offset($expected, $remote, $local, $now = NULL)
+	public function test_offset($expected, $remote, $local, $now = null)
 	{
 		$this->assertSame($expected, Date::offset($remote, $local, $now));
 	}
@@ -202,16 +203,16 @@ class Kohana_DateTest extends Unittest_TestCase
 	{
 		return array(
 			// According to "the rhyme" these should be the same every year
-			array(9, FALSE, 30),
-			array(4, FALSE, 30),
-			array(6, FALSE, 30),
-			array(11, FALSE, 30),
-			array(1, FALSE, 31),
-			array(3, FALSE, 31),
-			array(5, FALSE, 31),
-			array(7, FALSE, 31),
-			array(8, FALSE, 31),
-			array(10, FALSE, 31),
+			array(9, false, 30),
+			array(4, false, 30),
+			array(6, false, 30),
+			array(11, false, 30),
+			array(1, false, 31),
+			array(3, false, 31),
+			array(5, false, 31),
+			array(7, false, 31),
+			array(8, false, 31),
+			array(10, false, 31),
 			// February is such a pain
 			array(2, 2001, 28),
 			array(2, 2000, 29),
@@ -239,11 +240,10 @@ class Kohana_DateTest extends Unittest_TestCase
 		);
 
 		// This should be a mirrored array, days => days
-		for ($i = 1; $i <= $expected; ++$i)
-		{
+		for ($i = 1; $i <= $expected; ++$i) {
 			$this->assertArrayHasKey($i, $days);
 			// Combining the type check into this saves about 400-500 assertions!
-			$this->assertSame( (string) $i, $days[$i]);
+			$this->assertSame((string) $i, $days[$i]);
 		}
 	}
 
@@ -279,7 +279,7 @@ class Kohana_DateTest extends Unittest_TestCase
 	 * @param string|null    $timestamp_format The output format
 	 * @param string|null    $timezone         The timezone identifier
 	 */
-	public function test_formatted_time($expected, $datetime_str, $timestamp_format = NULL, $timezone = NULL)
+	public function test_formatted_time($expected, $datetime_str, $timestamp_format = null, $timezone = null)
 	{
 		$timestamp = Date::formatted_time($datetime_str, $timestamp_format, $timezone);
 
@@ -309,7 +309,7 @@ class Kohana_DateTest extends Unittest_TestCase
 					11 => "11",
 					12 => "12"
 				),
-				NULL
+				null
 			),
 			array(
 				array(
@@ -395,7 +395,7 @@ class Kohana_DateTest extends Unittest_TestCase
 				$time,
 				$time,
 				'',
-				FALSE
+				false
 			),
 			// Test that providing only one output just returns that output
 			array(
@@ -426,8 +426,8 @@ class Kohana_DateTest extends Unittest_TestCase
 			),
 			array(
 				// Add a bit of extra time to account for phpunit processing
-				$time + (14 * 31 * 24* 60 * 60) + (79 * 80),
-				NULL,
+				$time + (14 * 31 * 24 * 60 * 60) + (79 * 80),
+				null,
 				'months,years',
 				array('months' => 2, 'years' => 1),
 			),
@@ -470,62 +470,62 @@ class Kohana_DateTest extends Unittest_TestCase
 			array('moments ago', $now - 30, $now),
 			array('in moments', $now + 30, $now),
 
-			array('a few minutes ago', $now - 10*60, $now),
-			array('in a few minutes', $now + 10*60, $now),
+			array('a few minutes ago', $now - 10 * 60, $now),
+			array('in a few minutes', $now + 10 * 60, $now),
 
-			array('less than an hour ago', $now - 45*60, $now),
-			array('in less than an hour', $now + 45*60, $now),
+			array('less than an hour ago', $now - 45 * 60, $now),
+			array('in less than an hour', $now + 45 * 60, $now),
 
-			array('a couple of hours ago', $now - 2*60*60, $now),
-			array('in a couple of hours', $now + 2*60*60, $now),
+			array('a couple of hours ago', $now - 2 * 60 * 60, $now),
+			array('in a couple of hours', $now + 2 * 60 * 60, $now),
 
-			array('less than a day ago', $now - 12*60*60, $now),
-			array('in less than a day', $now + 12*60*60, $now),
+			array('less than a day ago', $now - 12 * 60 * 60, $now),
+			array('in less than a day', $now + 12 * 60 * 60, $now),
 
-			array('about a day ago', $now - 30*60*60, $now),
-			array('in about a day', $now + 30*60*60, $now),
+			array('about a day ago', $now - 30 * 60 * 60, $now),
+			array('in about a day', $now + 30 * 60 * 60, $now),
 
-			array('a couple of days ago', $now - 3*24*60*60, $now),
-			array('in a couple of days', $now + 3*24*60*60, $now),
+			array('a couple of days ago', $now - 3 * 24 * 60 * 60, $now),
+			array('in a couple of days', $now + 3 * 24 * 60 * 60, $now),
 
-			array('less than a week ago', $now - 5*24*60*60, $now),
-			array('in less than a week', $now + 5*24*60*60, $now),
+			array('less than a week ago', $now - 5 * 24 * 60 * 60, $now),
+			array('in less than a week', $now + 5 * 24 * 60 * 60, $now),
 
-			array('about a week ago', $now - 9*24*60*60, $now),
-			array('in about a week', $now + 9*24*60*60, $now),
+			array('about a week ago', $now - 9 * 24 * 60 * 60, $now),
+			array('in about a week', $now + 9 * 24 * 60 * 60, $now),
 
-			array('less than a month ago', $now - 20*24*60*60, $now),
-			array('in less than a month', $now + 20*24*60*60, $now),
+			array('less than a month ago', $now - 20 * 24 * 60 * 60, $now),
+			array('in less than a month', $now + 20 * 24 * 60 * 60, $now),
 
-			array('about a month ago', $now - 40*24*60*60, $now),
-			array('in about a month', $now + 40*24*60*60, $now),
+			array('about a month ago', $now - 40 * 24 * 60 * 60, $now),
+			array('in about a month', $now + 40 * 24 * 60 * 60, $now),
 
-			array('a couple of months ago', $now - 3*30*24*60*60, $now),
-			array('in a couple of months', $now + 3*30*24*60*60, $now),
+			array('a couple of months ago', $now - 3 * 30 * 24 * 60 * 60, $now),
+			array('in a couple of months', $now + 3 * 30 * 24 * 60 * 60, $now),
 
-			array('less than a year ago', $now - 7*31*24*60*60, $now),
-			array('in less than a year', $now + 7*31*24*60*60, $now),
+			array('less than a year ago', $now - 7 * 31 * 24 * 60 * 60, $now),
+			array('in less than a year', $now + 7 * 31 * 24 * 60 * 60, $now),
 
-			array('about a year ago', $now - 18*31*24*60*60, $now),
-			array('in about a year', $now + 18*31*24*60*60, $now),
+			array('about a year ago', $now - 18 * 31 * 24 * 60 * 60, $now),
+			array('in about a year', $now + 18 * 31 * 24 * 60 * 60, $now),
 
-			array('a couple of years ago', $now - 3*12*31*24*60*60, $now),
-			array('in a couple of years', $now + 3*12*31*24*60*60, $now),
+			array('a couple of years ago', $now - 3 * 12 * 31 * 24 * 60 * 60, $now),
+			array('in a couple of years', $now + 3 * 12 * 31 * 24 * 60 * 60, $now),
 
-			array('a few years ago', $now - 5*12*31*24*60*60, $now),
-			array('in a few years', $now + 5*12*31*24*60*60, $now),
+			array('a few years ago', $now - 5 * 12 * 31 * 24 * 60 * 60, $now),
+			array('in a few years', $now + 5 * 12 * 31 * 24 * 60 * 60, $now),
 
-			array('about a decade ago', $now - 11*12*31*24*60*60, $now),
-			array('in about a decade', $now + 11*12*31*24*60*60, $now),
+			array('about a decade ago', $now - 11 * 12 * 31 * 24 * 60 * 60, $now),
+			array('in about a decade', $now + 11 * 12 * 31 * 24 * 60 * 60, $now),
 
-			array('a couple of decades ago', $now - 20*12*31*24*60*60, $now),
-			array('in a couple of decades', $now + 20*12*31*24*60*60, $now),
+			array('a couple of decades ago', $now - 20 * 12 * 31 * 24 * 60 * 60, $now),
+			array('in a couple of decades', $now + 20 * 12 * 31 * 24 * 60 * 60, $now),
 
-			array('several decades ago', $now - 50*12*31*24*60*60, $now),
-			array('in several decades', $now + 50*12*31*24*60*60, $now),
+			array('several decades ago', $now - 50 * 12 * 31 * 24 * 60 * 60, $now),
+			array('in several decades', $now + 50 * 12 * 31 * 24 * 60 * 60, $now),
 
-			array('a long time ago', $now - pow(10,10), $now),
-			array('in a long time', $now + pow(10,10), $now),
+			array('a long time ago', $now - pow(10, 10), $now),
+			array('in a long time', $now + pow(10, 10), $now),
 		);
 	}
 
@@ -555,15 +555,15 @@ class Kohana_DateTest extends Unittest_TestCase
 	{
 		return array(
 			array(
-				array (
+				array(
 					2005 => '2005',
 					2006 => '2006',
 					2007 => '2007',
-				    2008 => '2008',
-				    2009 => '2009',
-				    2010 => '2010',
-				    2011 => '2011',
-				    2012 => '2012',
+					2008 => '2008',
+					2009 => '2009',
+					2010 => '2010',
+					2011 => '2011',
+					2012 => '2012',
 					2013 => '2013',
 					2014 => '2014',
 					2015 => '2015',
@@ -580,7 +580,7 @@ class Kohana_DateTest extends Unittest_TestCase
 	 * @test
 	 * @dataProvider provider_years
 	 */
-	public function test_years($expected, $start = FALSE, $end = FALSE)
+	public function test_years($expected, $start = false, $end = false)
 	{
 		$this->assertSame(
 			$expected,
@@ -616,7 +616,7 @@ class Kohana_DateTest extends Unittest_TestCase
 	 * @test
 	 * @dataProvider provider_hours
 	 */
-	public function test_hours($expected, $step = 1, $long = FALSE, $start = NULL)
+	public function test_hours($expected, $step = 1, $long = false, $start = null)
 	{
 		$this->assertSame(
 			$expected,
@@ -634,7 +634,7 @@ class Kohana_DateTest extends Unittest_TestCase
 		return array(
 			array(
 				// Thank god for var_export()
-				array (
+				array(
 					0 => '00', 1 => '01', 2 => '02', 3 => '03', 4 => '04',
 					5 => '05', 6 => '06', 7 => '07', 8 => '08', 9 => '09',
 					10 => '10', 11 => '11', 12 => '12', 13 => '13', 14 => '14',

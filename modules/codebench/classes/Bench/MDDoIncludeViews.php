@@ -1,21 +1,21 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') or die('No direct script access.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct script access.');
 /**
  * @package    Kohana/Codebench
  * @category   Tests
  * @author     Geert De Deckere <geert@idoe.be>
  */
-class Bench_MDDoIncludeViews extends Codebench {
-
+class Bench_MDDoIncludeViews extends Codebench
+{
 	public $description =
 		'Optimization for the <code>doIncludeViews()</code> method of <code>Kohana_Kodoc_Markdown</code>
 		 for the Kohana Userguide.';
 
 	public $loops = 10000;
 
-	public $subjects = array
-	(
+	public $subjects = array(
 		// Valid matches
 		'{{one}} two {{three}}',
 		'{{userguide/examples/hello_world_error}}',

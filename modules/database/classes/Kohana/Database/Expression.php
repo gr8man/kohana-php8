@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct script access.');
 /**
  * Database expressions can be used to add unescaped SQL fragments to a
  * [Database_Query_Builder] object.
@@ -11,22 +12,23 @@ declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
  *     $query = DB::select(array(DB::expr('CONCAT(first_name, last_name)'), 'full_name')));
  *
  * More examples are available on the [Query Builder](database/query/builder#database-expressions) page
- * 
+ *
  * @package    Kohana/Database
  * @category   Base
  * @author     Kohana Team
  * @copyright  (c) 2009 Kohana Team
  * @license    http://kohanaphp.com/license
  */
-class Kohana_Database_Expression {
-
+class Kohana_Database_Expression
+{
 	/**
 	 * PHP 8 Constructor Property Promotion
 	 */
 	public function __construct(
 		protected string $_value,
-		protected array $_parameters = []
-	) {}
+		protected array $_parameters = array()
+	) {
+	}
 
 	/**
 	 * Bind a variable to a parameter.
@@ -37,7 +39,7 @@ class Kohana_Database_Expression {
 	 */
 	public function bind($param, & $var)
 	{
-		$this->_parameters[$param] =& $var;
+		$this->_parameters[$param] = & $var;
 
 		return $this;
 	}
@@ -101,17 +103,15 @@ class Kohana_Database_Expression {
 	 * @param   mixed    Database instance or name of instance
 	 * @return  string
 	 */
-	public function compile($db = NULL): string
+	public function compile($db = null): string
 	{
-		if ( ! is_object($db))
-		{
+		if (! is_object($db)) {
 			$db = Database::instance($db);
 		}
 
 		$value = $this->value();
 
-		if ( ! empty($this->_parameters))
-		{
+		if (! empty($this->_parameters)) {
 			$params = array_map(array($db, 'quote'), $this->_parameters);
 			$value = strtr($value, $params);
 		}

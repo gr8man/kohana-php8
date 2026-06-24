@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct script access.');
 /**
  * Database query builder for DELETE statements. See [Query Builder](/database/query/builder) for usage and examples.
  *
@@ -10,8 +11,8 @@ declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
  * @copyright  (c) 2008-2009 Kohana Team
  * @license    http://kohanaphp.com/license
  */
-class Kohana_Database_Query_Builder_Delete extends Database_Query_Builder_Where {
-
+class Kohana_Database_Query_Builder_Delete extends Database_Query_Builder_Where
+{
 	// DELETE FROM ...
 	protected $_table;
 
@@ -21,10 +22,9 @@ class Kohana_Database_Query_Builder_Delete extends Database_Query_Builder_Where 
 	 * @param   mixed  $table  table name or array($table, $alias) or object
 	 * @return  void
 	 */
-	public function __construct($table = NULL)
+	public function __construct($table = null)
 	{
-		if ($table)
-		{
+		if ($table) {
 			// Set the inital table name
 			$this->_table = $table;
 		}
@@ -52,10 +52,9 @@ class Kohana_Database_Query_Builder_Delete extends Database_Query_Builder_Where 
 	 * @param   mixed  $db  Database instance or name of instance
 	 * @return  string
 	 */
-	public function compile($db = NULL)
+	public function compile($db = null)
 	{
-		if ( ! is_object($db))
-		{
+		if (! is_object($db)) {
 			// Get the database instance
 			$db = Database::instance($db);
 		}
@@ -63,20 +62,17 @@ class Kohana_Database_Query_Builder_Delete extends Database_Query_Builder_Where 
 		// Start a deletion query
 		$query = 'DELETE FROM '.$db->quote_table($this->_table);
 
-		if ( ! empty($this->_where))
-		{
+		if (! empty($this->_where)) {
 			// Add deletion conditions
 			$query .= ' WHERE '.$this->_compile_conditions($db, $this->_where);
 		}
 
-		if ( ! empty($this->_order_by))
-		{
+		if (! empty($this->_order_by)) {
 			// Add sorting
 			$query .= ' '.$this->_compile_order_by($db, $this->_order_by);
 		}
 
-		if ($this->_limit !== NULL)
-		{
+		if ($this->_limit !== null) {
 			// Add limiting
 			$query .= ' LIMIT '.$this->_limit;
 		}
@@ -88,12 +84,12 @@ class Kohana_Database_Query_Builder_Delete extends Database_Query_Builder_Where 
 
 	public function reset()
 	{
-		$this->_table = NULL;
+		$this->_table = null;
 		$this->_where = array();
 
 		$this->_parameters = array();
 
-		$this->_sql = NULL;
+		$this->_sql = null;
 
 		return $this;
 	}

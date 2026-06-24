@@ -53,8 +53,7 @@ class Route_Holder
 	 */
 	public static function required_parameters_are_needed($uri)
 	{
-		if (substr($uri, 0, 5) == 'admin')
-		{
+		if (substr($uri, 0, 5) == 'admin') {
 			return array(
 				'controller' => 'foo',
 				'action' => 'bar',
@@ -69,8 +68,7 @@ class Route_Holder
 	 */
 	public static function reverse_routing_returns_routes_uri_if_route_is_static($uri)
 	{
-		if ($uri == 'info/about_us')
-		{
+		if ($uri == 'info/about_us') {
 			return array(
 
 			);
@@ -96,7 +94,7 @@ class Route_Holder
 	 */
 	public static function route_filter_modify_params_false(Route $route, $params)
 	{
-		return FALSE;
+		return false;
 	}
 
 }

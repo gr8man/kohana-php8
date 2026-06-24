@@ -1,4 +1,7 @@
-<?php declare(strict_types=1); defined('SYSPATH') or die('No direct script access.');
+<?php
+
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct script access.');
 /**
  * Minion exception
  *
@@ -8,7 +11,8 @@
  * @copyright  (c) 2009-2011 Kohana Team
  * @license    http://kohanaframework.org/license
  */
-class Kohana_Minion_Exception extends Kohana_Exception {
+class Kohana_Minion_Exception extends Kohana_Exception
+{
 	/**
 	 * Inline exception handler, displays the error message, source of the
 	 * exception, and the stack trace of the error.
@@ -21,32 +25,25 @@ class Kohana_Minion_Exception extends Kohana_Exception {
 	 */
 	public static function handler(Throwable $e)
 	{
-		try
-		{
+		try {
 			// Log the exception
 			Kohana_Exception::log($e);
 
-			if ($e instanceof Minion_Exception)
-			{
+			if ($e instanceof Minion_Exception) {
 				echo $e->format_for_cli();
-			}
-			else
-			{
+			} else {
 				echo Kohana_Exception::text($e);
 			}
 
 			$exit_code = $e->getCode();
 
 			// Never exit "0" after an exception.
-			if ($exit_code == 0)
-			{
+			if ($exit_code == 0) {
 				$exit_code = 1;
 			}
 
 			exit($exit_code);
-		}
-		catch (Throwable $e)
-		{
+		} catch (Throwable $e) {
 			// Clean the output buffer if one exists
 			ob_get_level() and ob_clean();
 

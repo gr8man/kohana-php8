@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('Kohana bootstrap needs to be included before tests run');
+declare(strict_types=1);
+defined('SYSPATH') or die('Kohana bootstrap needs to be included before tests run');
 
 /**
  * Tests Kohana inflector class
@@ -21,18 +22,18 @@ class Kohana_InflectorTest extends Unittest_TestCase
 {
 	/**
 	 * Provides test data for test_lang()
-	 * 
+	 *
 	 * @return array
 	 */
 	public function provider_uncountable()
 	{
 		return array(
 			// $value, $result
-			array('fish', TRUE),
-			array('cat', FALSE),
-			array('deer', TRUE),
-			array('bison', TRUE),
-			array('friend', FALSE),
+			array('fish', true),
+			array('cat', false),
+			array('deer', true),
+			array('bison', true),
+			array('friend', false),
 		);
 	}
 
@@ -51,24 +52,24 @@ class Kohana_InflectorTest extends Unittest_TestCase
 
 	/**
 	 * Provides test data for test_lang()
-	 * 
+	 *
 	 * @return array
 	 */
 	public function provider_singular()
 	{
 		return array(
 			// $value, $result
-			array('fish', NULL, 'fish'),
-			array('cats', NULL, 'cat'),
+			array('fish', null, 'fish'),
+			array('cats', null, 'cat'),
 			array('cats', 2, 'cats'),
 			array('cats', '2', 'cats'),
-			array('children', NULL, 'child'),
+			array('children', null, 'child'),
 			array('meters', 0.6, 'meters'),
 			array('meters', 1.6, 'meters'),
 			array('meters', 1.0, 'meter'),
-			array('status', NULL, 'status'),
-			array('statuses', NULL, 'status'),
-			array('heroes', NULL, 'hero'),
+			array('status', null, 'status'),
+			array('statuses', null, 'status'),
+			array('heroes', null, 'hero'),
 		);
 	}
 
@@ -87,24 +88,24 @@ class Kohana_InflectorTest extends Unittest_TestCase
 
 	/**
 	 * Provides test data for test_lang()
-	 * 
+	 *
 	 * @return array
 	 */
 	public function provider_plural()
 	{
 		return array(
 			// $value, $result
-			array('fish', NULL, 'fish'),
-			array('cat', NULL, 'cats'),
+			array('fish', null, 'fish'),
+			array('cat', null, 'cats'),
 			array('cats', 1, 'cats'),
 			array('cats', '1', 'cats'),
-			array('movie', NULL, 'movies'),
+			array('movie', null, 'movies'),
 			array('meter', 0.6, 'meters'),
 			array('meter', 1.6, 'meters'),
 			array('meter', 1.0, 'meter'),
-			array('hero', NULL, 'heroes'),
-			array('Dog', NULL, 'Dogs'), // Titlecase
-			array('DOG', NULL, 'DOGS'), // Uppercase
+			array('hero', null, 'heroes'),
+			array('Dog', null, 'Dogs'), // Titlecase
+			array('DOG', null, 'DOGS'), // Uppercase
 		);
 	}
 
@@ -123,7 +124,7 @@ class Kohana_InflectorTest extends Unittest_TestCase
 
 	/**
 	 * Provides test data for test_camelize()
-	 * 
+	 *
 	 * @return array
 	 */
 	public function provider_camelize()

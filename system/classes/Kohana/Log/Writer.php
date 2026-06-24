@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct script access.');
 /**
  * Log writer abstract class. All [Log] writers must extend this class.
  *
@@ -10,8 +11,8 @@ declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
  * @copyright  (c) 2008-2012 Kohana Team
  * @license    http://kohanaframework.org/license
  */
-abstract class Kohana_Log_Writer {
-
+abstract class Kohana_Log_Writer
+{
 	/**
 	 * @var  string  timestamp format for log entries.
 	 *
@@ -77,13 +78,12 @@ abstract class Kohana_Log_Writer {
 	 */
 	public function format_message(array $message, $format = "time --- level: body in file:line")
 	{
-		$message['time'] = Date::formatted_time('@'.$message['time'], Log_Writer::$timestamp, Log_Writer::$timezone, TRUE);
+		$message['time'] = Date::formatted_time('@'.$message['time'], Log_Writer::$timestamp, Log_Writer::$timezone, true);
 		$message['level'] = $this->_log_levels[$message['level']];
 
 		$string = strtr($format, array_filter($message, 'is_scalar'));
 
-		if (isset($message['additional']['exception']))
-		{
+		if (isset($message['additional']['exception'])) {
 			// Re-use as much as possible, just resetting the body to the trace
 			$message['body'] = $message['additional']['exception']->getTraceAsString();
 			$message['level'] = $this->_log_levels[Log_Writer::$strace_level];

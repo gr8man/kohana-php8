@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('Kohana bootstrap needs to be included before tests run');
+declare(strict_types=1);
+defined('SYSPATH') or die('Kohana bootstrap needs to be included before tests run');
 
 /**
  * Test for feed helper
@@ -19,7 +20,6 @@ declare(strict_types=1); defined('SYSPATH') OR die('Kohana bootstrap needs to be
 #[AllowDynamicProperties]
 class Kohana_FeedTest extends Unittest_TestCase
 {
-
 	/**
 	 * Sets up the environment
 	 */
@@ -57,8 +57,7 @@ class Kohana_FeedTest extends Unittest_TestCase
 	public function test_parse($source, $expected_titles)
 	{
 		$titles = array();
-		foreach (Feed::parse($source) as $item)
-		{
+		foreach (Feed::parse($source) as $item) {
 			$titles[] = $item['title'];
 		}
 
@@ -76,7 +75,7 @@ class Kohana_FeedTest extends Unittest_TestCase
 
 		return array(
 			// $source, $expected
-			array($info, array('foo' => array('foo' => 'bar', 'pubDate' => 123, 'link' => 'foo')), array('_SERVER' => array('HTTP_HOST' => 'localhost')+$_SERVER),
+			array($info, array('foo' => array('foo' => 'bar', 'pubDate' => 123, 'link' => 'foo')), array('_SERVER' => array('HTTP_HOST' => 'localhost') + $_SERVER),
 				array(
 					'tag' => 'channel',
 					'descendant' => array(
@@ -133,11 +132,10 @@ class Kohana_FeedTest extends Unittest_TestCase
 	{
 		$this->setEnvironment($enviroment);
 
-		$this->assertTag($matcher_item, Feed::create($info, $items), '', FALSE);
+		$this->assertTag($matcher_item, Feed::create($info, $items), '', false);
 
-		foreach ($matchers_image as $matcher_image)
-		{
-			$this->assertTag($matcher_image, Feed::create($info, $items), '', FALSE);
+		foreach ($matchers_image as $matcher_image) {
+			$this->assertTag($matcher_image, Feed::create($info, $items), '', false);
 		}
 	}
 }

@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct script access.');
 
 /**
  * Transparent extension of the Kohana_Config_Database_Reader class
@@ -13,5 +14,4 @@ declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
  */
 class Config_Database_Reader extends Kohana_Config_Database_Reader
 {
-	
 }

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-defined('SYSPATH') OR die('No direct script access.');
+defined('SYSPATH') or die('No direct script access.');
 /**
  * Number helper class. Provides additional formatting methods that for working
  * with numbers.
@@ -13,18 +13,17 @@ defined('SYSPATH') OR die('No direct script access.');
  * @copyright  (c) 2009-2012 Kohana Team
  * @license    http://kohanaframework.org/license
  */
-class Kohana_Num {
-
-	const ROUND_HALF_UP		= 1;
-	const ROUND_HALF_DOWN	= 2;
-	const ROUND_HALF_EVEN	= 3;
-	const ROUND_HALF_ODD	= 4;
+class Kohana_Num
+{
+	public const ROUND_HALF_UP		= 1;
+	public const ROUND_HALF_DOWN	= 2;
+	public const ROUND_HALF_EVEN	= 3;
+	public const ROUND_HALF_ODD	= 4;
 
 	/**
 	 * @var  array  Valid byte units => power of 2 that defines the unit's size
 	 */
-	public static $byte_units = array
-	(
+	public static $byte_units = array(
 		'B'   => 0,
 		'K'   => 10,
 		'Ki'  => 10,
@@ -72,13 +71,11 @@ class Kohana_Num {
 	 */
 	public static function ordinal($number)
 	{
-		if ($number % 100 > 10 AND $number % 100 < 14)
-		{
+		if ($number % 100 > 10 and $number % 100 < 14) {
 			return 'th';
 		}
 
-		switch ($number % 10)
-		{
+		switch ($number % 10) {
 			case 1:
 				return 'st';
 			case 2:
@@ -109,17 +106,14 @@ class Kohana_Num {
 	 * @return  string
 	 * @since   3.0.2
 	 */
-	public static function format($number, $places, $monetary = FALSE)
+	public static function format($number, $places, $monetary = false)
 	{
 		$info = localeconv();
 
-		if ($monetary)
-		{
+		if ($monetary) {
 			$decimal   = $info['mon_decimal_point'];
 			$thousands = $info['mon_thousands_sep'];
-		}
-		else
-		{
+		} else {
 			$decimal   = $info['decimal_point'];
 			$thousands = $info['thousands_sep'];
 		}
@@ -136,58 +130,44 @@ class Kohana_Num {
 	 * @param boolean $native Set to false to force use of the userland implementation
 	 * @return float Rounded number
 	 */
-	public static function round($value, $precision = 0, $mode = self::ROUND_HALF_UP, $native = TRUE)
+	public static function round($value, $precision = 0, $mode = self::ROUND_HALF_UP, $native = true)
 	{
-		if (version_compare(PHP_VERSION, '5.3', '>=') AND $native)
-		{
+		if (version_compare(PHP_VERSION, '5.3', '>=') and $native) {
 			return round($value, $precision, $mode);
 		}
 
-		if ($mode === self::ROUND_HALF_UP)
-		{
+		if ($mode === self::ROUND_HALF_UP) {
 			return round($value, $precision);
-		}
-		else
-		{
+		} else {
 			$factor = ($precision === 0) ? 1 : pow(10, $precision);
 
-			switch ($mode)
-			{
+			switch ($mode) {
 				case self::ROUND_HALF_DOWN:
 				case self::ROUND_HALF_EVEN:
 				case self::ROUND_HALF_ODD:
 					// Check if we have a rounding tie, otherwise we can just call round()
-					if (($value * $factor) - floor($value * $factor) === 0.5)
-					{
-						if ($mode === self::ROUND_HALF_DOWN)
-						{
+					if (($value * $factor) - floor($value * $factor) === 0.5) {
+						if ($mode === self::ROUND_HALF_DOWN) {
 							// Round down operation, so we round down unless the value
 							// is -ve because up is down and down is up down there. ;)
 							$up = ($value < 0);
-						}
-						else
-						{
+						} else {
 							// Round up if the integer is odd and the round mode is set to even
 							// or the integer is even and the round mode is set to odd.
 							// Any other instance round down.
-							$up = ( ! ( ! (floor($value * $factor) & 1)) === ($mode === self::ROUND_HALF_EVEN));
+							$up = (! (! (floor($value * $factor) & 1)) === ($mode === self::ROUND_HALF_EVEN));
 						}
 
-						if ($up)
-						{
+						if ($up) {
 							$value = ceil($value * $factor);
-						}
-						else
-						{
+						} else {
 							$value = floor($value * $factor);
 						}
 						return $value / $factor;
-					}
-					else
-					{
+					} else {
 						return round($value, $precision);
 					}
-				break;
+					break;
 			}
 		}
 	}
@@ -209,7 +189,7 @@ class Kohana_Num {
 	public static function bytes($size)
 	{
 		// Prepare the size
-		$size = trim( (string) $size);
+		$size = trim((string) $size);
 
 		// Construct an OR list of byte units for the regex
 		$accepted = implode('|', array_keys(Num::$byte_units));
@@ -218,10 +198,11 @@ class Kohana_Num {
 		$pattern = '/^([0-9]+(?:\.[0-9]+)?)('.$accepted.')?$/Di';
 
 		// Verify the size format and store the matching parts
-		if ( ! preg_match($pattern, $size, $matches))
+		if (! preg_match($pattern, $size, $matches)) {
 			throw new Kohana_Exception('The byte unit size, ":size", is improperly formatted.', array(
 				':size' => $size,
 			));
+		}
 
 		// Find the float value of the size
 		$size = (float) $matches[1];

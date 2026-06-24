@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct script access.');
 /**
  * Database result wrapper.  See [Results](/database/results) for usage and examples.
  *
@@ -10,8 +11,8 @@ declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
  * @copyright  (c) 2008-2009 Kohana Team
  * @license    http://kohanaphp.com/license
  */
-abstract class Kohana_Database_Result implements Countable, Iterator, SeekableIterator, ArrayAccess {
-
+abstract class Kohana_Database_Result implements Countable, Iterator, SeekableIterator, ArrayAccess
+{
 	// Executed SQL for this result
 	protected $_query;
 
@@ -26,7 +27,7 @@ abstract class Kohana_Database_Result implements Countable, Iterator, SeekableIt
 	protected $_as_object;
 
 	// Parameters for __construct when using object results
-	protected $_object_params = NULL;
+	protected $_object_params = null;
 
 	/**
 	 * Sets the total number of rows and stores the result locally.
@@ -37,7 +38,7 @@ abstract class Kohana_Database_Result implements Countable, Iterator, SeekableIt
 	 * @param   array   $params
 	 * @return  void
 	 */
-	public function __construct($result, $sql, $as_object = FALSE, array $params = NULL)
+	public function __construct($result, $sql, $as_object = false, array $params = null)
 	{
 		// Store the result locally
 		$this->_result = $result;
@@ -45,8 +46,7 @@ abstract class Kohana_Database_Result implements Countable, Iterator, SeekableIt
 		// Store the SQL locally
 		$this->_query = $sql;
 
-		if (is_object($as_object))
-		{
+		if (is_object($as_object)) {
 			// Get the object class name
 			$as_object = get_class($as_object);
 		}
@@ -54,8 +54,7 @@ abstract class Kohana_Database_Result implements Countable, Iterator, SeekableIt
 		// Results as objects or associative arrays
 		$this->_as_object = $as_object;
 
-		if ($params)
-		{
+		if ($params) {
 			// Object constructor params
 			$this->_object_params = $params;
 		}
@@ -97,72 +96,49 @@ abstract class Kohana_Database_Result implements Countable, Iterator, SeekableIt
 	 * @param   string  $value  column for values
 	 * @return  array
 	 */
-	public function as_array($key = NULL, $value = NULL)
+	public function as_array($key = null, $value = null)
 	{
 		$results = array();
 
-		if ($key === NULL AND $value === NULL)
-		{
+		if ($key === null and $value === null) {
 			// Indexed rows
 
-			foreach ($this as $row)
-			{
+			foreach ($this as $row) {
 				$results[] = $row;
 			}
-		}
-		elseif ($key === NULL)
-		{
+		} elseif ($key === null) {
 			// Indexed columns
 
-			if ($this->_as_object)
-			{
-				foreach ($this as $row)
-				{
+			if ($this->_as_object) {
+				foreach ($this as $row) {
 					$results[] = $row->$value;
 				}
-			}
-			else
-			{
-				foreach ($this as $row)
-				{
+			} else {
+				foreach ($this as $row) {
 					$results[] = $row[$value];
 				}
 			}
-		}
-		elseif ($value === NULL)
-		{
+		} elseif ($value === null) {
 			// Associative rows
 
-			if ($this->_as_object)
-			{
-				foreach ($this as $row)
-				{
+			if ($this->_as_object) {
+				foreach ($this as $row) {
 					$results[$row->$key] = $row;
 				}
-			}
-			else
-			{
-				foreach ($this as $row)
-				{
+			} else {
+				foreach ($this as $row) {
 					$results[$row[$key]] = $row;
 				}
 			}
-		}
-		else
-		{
+		} else {
 			// Associative columns
 
-			if ($this->_as_object)
-			{
-				foreach ($this as $row)
-				{
+			if ($this->_as_object) {
+				foreach ($this as $row) {
 					$results[$row->$key] = $row->$value;
 				}
-			}
-			else
-			{
-				foreach ($this as $row)
-				{
+			} else {
+				foreach ($this as $row) {
 					$results[$row[$key]] = $row[$value];
 				}
 			}
@@ -183,19 +159,18 @@ abstract class Kohana_Database_Result implements Countable, Iterator, SeekableIt
 	 * @param   mixed   $default  default value if the column does not exist
 	 * @return  mixed
 	 */
-	public function get($name, $default = NULL)
+	public function get($name, $default = null)
 	{
 		$row = $this->current();
 
-		if ($this->_as_object)
-		{
-			if (isset($row->$name))
+		if ($this->_as_object) {
+			if (isset($row->$name)) {
 				return $row->$name;
-		}
-		else
-		{
-			if (isset($row[$name]))
+			}
+		} else {
+			if (isset($row[$name])) {
 				return $row[$name];
+			}
 		}
 
 		return $default;
@@ -226,7 +201,7 @@ abstract class Kohana_Database_Result implements Countable, Iterator, SeekableIt
 	 */
 	public function offsetExists($offset): bool
 	{
-		return ($offset >= 0 AND $offset < $this->_total_rows);
+		return ($offset >= 0 and $offset < $this->_total_rows);
 	}
 
 	/**
@@ -239,13 +214,12 @@ abstract class Kohana_Database_Result implements Countable, Iterator, SeekableIt
 	 */
 	public function offsetGet($offset): mixed
 	{
-		if ($this->offsetExists($offset))
-		{
+		if ($this->offsetExists($offset)) {
 			$this->seek($offset);
 			return $this->current();
 		}
 
-		return NULL;
+		return null;
 	}
 
 	/**

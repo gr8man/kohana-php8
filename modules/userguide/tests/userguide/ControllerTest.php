@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('Kohana bootstrap needs to be included before tests run');
+declare(strict_types=1);
+defined('SYSPATH') or die('Kohana bootstrap needs to be included before tests run');
 
 /**
  * Unit tests for internal methods of userguide controller
@@ -17,14 +18,13 @@ declare(strict_types=1); defined('SYSPATH') OR die('Kohana bootstrap needs to be
  */
 class Userguide_ControllerTest extends Unittest_TestCase
 {
-
 	public function provider_file_finds_markdown_files()
 	{
 		return array(
 			array('userguide/adding', 'guide/userguide/adding.md'),
 			array('userguide/adding.md', 'guide/userguide/adding.md'),
 			array('userguide/adding.markdown', 'guide/userguide/adding.md'),
-			array('userguide/does_not_exist.md', FALSE)
+			array('userguide/does_not_exist.md', false)
 		);
 	}
 
@@ -35,7 +35,7 @@ class Userguide_ControllerTest extends Unittest_TestCase
 	 */
 	public function test_file_finds_markdown_files($page, $expected_file)
 	{
-		$controller = $this->getMock('Controller_Userguide', array('__construct'), array(), '', FALSE);
+		$controller = $this->getMock('Controller_Userguide', array('__construct'), array(), '', false);
 		$path = $controller->file($page);
 
 		// Only verify trailing segments to avoid problems if file overwritten in CFS

@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('Kohana bootstrap needs to be included before tests run');
+declare(strict_types=1);
+defined('SYSPATH') or die('Kohana bootstrap needs to be included before tests run');
 
 /**
  * Tests the Valid class
@@ -19,7 +20,6 @@ declare(strict_types=1); defined('SYSPATH') OR die('Kohana bootstrap needs to be
 #[AllowDynamicProperties]
 class Kohana_ValidTest extends Unittest_TestCase
 {
-
 	/**
 	 * Provides test data for test_alpha()
 	 * @return array
@@ -27,17 +27,17 @@ class Kohana_ValidTest extends Unittest_TestCase
 	public function provider_alpha()
 	{
 		return array(
-			array('asdavafaiwnoabwiubafpowf', TRUE),
-			array('!aidhfawiodb', FALSE),
-			array('51535oniubawdawd78', FALSE),
-			array('!"£$(G$W£(HFW£F(HQ)"n', FALSE),
+			array('asdavafaiwnoabwiubafpowf', true),
+			array('!aidhfawiodb', false),
+			array('51535oniubawdawd78', false),
+			array('!"£$(G$W£(HFW£F(HQ)"n', false),
 			// UTF-8 tests
-			array('あいうえお', TRUE, TRUE),
-			array('¥', FALSE, TRUE),
+			array('あいうえお', true, true),
+			array('¥', false, true),
 			// Empty test
-			array('', FALSE, FALSE),
-			array(NULL, FALSE, FALSE),
-			array(FALSE, FALSE, FALSE),
+			array('', false, false),
+			array(null, false, false),
+			array(false, false, false),
 		);
 	}
 
@@ -51,7 +51,7 @@ class Kohana_ValidTest extends Unittest_TestCase
 	 * @param string  $string
 	 * @param boolean $expected
 	 */
-	public function test_alpha($string, $expected, $utf8 = FALSE)
+	public function test_alpha($string, $expected, $utf8 = false)
 	{
 		$this->assertSame(
 			$expected,
@@ -65,18 +65,18 @@ class Kohana_ValidTest extends Unittest_TestCase
 	public function provide_alpha_numeric()
 	{
 		return array(
-			array('abcd1234',  TRUE),
-			array('abcd',      TRUE),
-			array('1234',      TRUE),
-			array('abc123&^/-', FALSE),
+			array('abcd1234',  true),
+			array('abcd',      true),
+			array('1234',      true),
+			array('abc123&^/-', false),
 			// UTF-8 tests
-			array('あいうえお', TRUE, TRUE),
-			array('零一二三四五', TRUE, TRUE),
-			array('あい四五£^£^', FALSE, TRUE),
+			array('あいうえお', true, true),
+			array('零一二三四五', true, true),
+			array('あい四五£^£^', false, true),
 			// Empty test
-			array('', FALSE, FALSE),
-			array(NULL, FALSE, FALSE),
-			array(FALSE, FALSE, FALSE),
+			array('', false, false),
+			array(null, false, false),
+			array(false, false, false),
 		);
 	}
 
@@ -90,7 +90,7 @@ class Kohana_ValidTest extends Unittest_TestCase
 	 * @param string  $input     The string to test
 	 * @param boolean $expected  Is $input valid
 	 */
-	public function test_alpha_numeric($input, $expected, $utf8 = FALSE)
+	public function test_alpha_numeric($input, $expected, $utf8 = false)
 	{
 		$this->assertSame(
 			$expected,
@@ -104,15 +104,15 @@ class Kohana_ValidTest extends Unittest_TestCase
 	public function provider_alpha_dash()
 	{
 		return array(
-			array('abcdef',     TRUE),
-			array('12345',      TRUE),
-			array('abcd1234',   TRUE),
-			array('abcd1234-',  TRUE),
-			array('abc123&^/-', FALSE),
+			array('abcdef',     true),
+			array('12345',      true),
+			array('abcd1234',   true),
+			array('abcd1234-',  true),
+			array('abc123&^/-', false),
 			// Empty test
-			array('', FALSE),
-			array(NULL, FALSE),
-			array(FALSE, FALSE),
+			array('', false),
+			array(null, false),
+			array(false, false),
 		);
 	}
 
@@ -127,10 +127,9 @@ class Kohana_ValidTest extends Unittest_TestCase
 	 * @param boolean $contains_utf8  Does the string contain utf8 specific characters
 	 * @param boolean $expected       Is $input valid?
 	 */
-	public function test_alpha_dash($input, $expected, $contains_utf8 = FALSE)
+	public function test_alpha_dash($input, $expected, $contains_utf8 = false)
 	{
-		if ( ! $contains_utf8)
-		{
+		if (! $contains_utf8) {
 			$this->assertSame(
 				$expected,
 				Valid::alpha_dash($input)
@@ -139,7 +138,7 @@ class Kohana_ValidTest extends Unittest_TestCase
 
 		$this->assertSame(
 			$expected,
-			Valid::alpha_dash($input, TRUE)
+			Valid::alpha_dash($input, true)
 		);
 	}
 
@@ -149,21 +148,21 @@ class Kohana_ValidTest extends Unittest_TestCase
 	public function provider_date()
 	{
 		return array(
-			array('now',TRUE),
-			array('10 September 2010',TRUE),
-			array('+1 day',TRUE),
-			array('+1 week',TRUE),
-			array('+1 week 2 days 4 hours 2 seconds',TRUE),
-			array('next Thursday',TRUE),
-			array('last Monday',TRUE),
+			array('now',true),
+			array('10 September 2010',true),
+			array('+1 day',true),
+			array('+1 week',true),
+			array('+1 week 2 days 4 hours 2 seconds',true),
+			array('next Thursday',true),
+			array('last Monday',true),
 
-			array('blarg',FALSE),
-			array('in the year 2000',FALSE),
-			array('324824',FALSE),
+			array('blarg',false),
+			array('in the year 2000',false),
+			array('324824',false),
 			// Empty test
-			array('', FALSE),
-			array(NULL, FALSE),
-			array(FALSE, FALSE),
+			array('', false),
+			array(null, false),
+			array(false, false),
 		);
 	}
 
@@ -190,15 +189,15 @@ class Kohana_ValidTest extends Unittest_TestCase
 	{
 		return array(
 			// Empty test
-			array('', 2, NULL, FALSE),
-			array(NULL, 2, NULL, FALSE),
-			array(FALSE, 2, NULL, FALSE),
-			array('45.1664', 3, NULL, FALSE),
-			array('45.1664', 4, NULL, TRUE),
-			array('45.1664', 4, 2, TRUE),
-			array('-45.1664', 4, NULL, TRUE),
-			array('+45.1664', 4, NULL, TRUE),
-			array('-45.1664', 3, NULL, FALSE),
+			array('', 2, null, false),
+			array(null, 2, null, false),
+			array(false, 2, null, false),
+			array('45.1664', 3, null, false),
+			array('45.1664', 4, null, true),
+			array('45.1664', 4, 2, true),
+			array('-45.1664', 4, null, true),
+			array('+45.1664', 4, null, true),
+			array('-45.1664', 3, null, false),
 		);
 	}
 
@@ -228,16 +227,16 @@ class Kohana_ValidTest extends Unittest_TestCase
 	public function provider_digit()
 	{
 		return array(
-			array('12345',    TRUE),
-			array('10.5',     FALSE),
-			array('abcde',    FALSE),
-			array('abcd1234', FALSE),
-			array('-5',       FALSE),
-			array(-5,         FALSE),
+			array('12345',    true),
+			array('10.5',     false),
+			array('abcde',    false),
+			array('abcd1234', false),
+			array('-5',       false),
+			array(-5,         false),
 			// Empty test
-			array('',         FALSE),
-			array(NULL,       FALSE),
-			array(FALSE,      FALSE),
+			array('',         false),
+			array(null,       false),
+			array(false,      false),
 		);
 	}
 
@@ -249,10 +248,9 @@ class Kohana_ValidTest extends Unittest_TestCase
 	 * @param mixed   $input     Input to validate
 	 * @param boolean $expected  Is $input valid
 	 */
-	public function test_digit($input, $expected, $contains_utf8 = FALSE)
+	public function test_digit($input, $expected, $contains_utf8 = false)
 	{
-		if ( ! $contains_utf8)
-		{
+		if (! $contains_utf8) {
 			$this->assertSame(
 				$expected,
 				Valid::digit($input)
@@ -261,7 +259,7 @@ class Kohana_ValidTest extends Unittest_TestCase
 
 		$this->assertSame(
 			$expected,
-			Valid::digit($input, TRUE)
+			Valid::digit($input, true)
 		);
 
 	}
@@ -272,21 +270,21 @@ class Kohana_ValidTest extends Unittest_TestCase
 	public function provider_color()
 	{
 		return array(
-			array('#000000', TRUE),
-			array('#GGGGGG', FALSE),
-			array('#AbCdEf', TRUE),
-			array('#000', TRUE),
-			array('#abc', TRUE),
-			array('#DEF', TRUE),
-			array('000000', TRUE),
-			array('GGGGGG', FALSE),
-			array('AbCdEf', TRUE),
-			array('000', TRUE),
-			array('DEF', TRUE),
+			array('#000000', true),
+			array('#GGGGGG', false),
+			array('#AbCdEf', true),
+			array('#000', true),
+			array('#abc', true),
+			array('#DEF', true),
+			array('000000', true),
+			array('GGGGGG', false),
+			array('AbCdEf', true),
+			array('000', true),
+			array('DEF', true),
 			// Empty test
-			array('', FALSE),
-			array(NULL, FALSE),
-			array(FALSE, FALSE),
+			array('', false),
+			array(null, false),
+			array(false, false),
 		);
 	}
 
@@ -312,19 +310,19 @@ class Kohana_ValidTest extends Unittest_TestCase
 	public function provider_credit_card()
 	{
 		return array(
-			array('4222222222222',    'visa',       TRUE),
-			array('4012888888881881', 'visa',       TRUE),
-			array('4012888888881881', NULL,         TRUE),
-			array('4012888888881881', array('mastercard', 'visa'), TRUE),
-			array('4012888888881881', array('discover', 'mastercard'), FALSE),
-			array('4012888888881881', 'mastercard', FALSE),
-			array('5105105105105100', 'mastercard', TRUE),
-			array('6011111111111117', 'discover',   TRUE),
-			array('6011111111111117', 'visa',       FALSE),
+			array('4222222222222',    'visa',       true),
+			array('4012888888881881', 'visa',       true),
+			array('4012888888881881', null,         true),
+			array('4012888888881881', array('mastercard', 'visa'), true),
+			array('4012888888881881', array('discover', 'mastercard'), false),
+			array('4012888888881881', 'mastercard', false),
+			array('5105105105105100', 'mastercard', true),
+			array('6011111111111117', 'discover',   true),
+			array('6011111111111117', 'visa',       false),
 			// Empty test
-			array('', NULL, FALSE),
-			array(NULL, NULL, FALSE),
-			array(FALSE, NULL, FALSE),
+			array('', null, false),
+			array(null, null, false),
+			array(false, null, false),
 		);
 	}
 
@@ -352,18 +350,18 @@ class Kohana_ValidTest extends Unittest_TestCase
 	public function provider_luhn()
 	{
 		return array(
-			array('4222222222222', TRUE),
-			array('4012888888881881', TRUE),
-			array('5105105105105100', TRUE),
-			array('6011111111111117', TRUE),
-			array('60111111111111.7', FALSE),
-			array('6011111111111117X', FALSE),
-			array('6011111111111117 ', FALSE),
-			array('WORD ', FALSE),
+			array('4222222222222', true),
+			array('4012888888881881', true),
+			array('5105105105105100', true),
+			array('6011111111111117', true),
+			array('60111111111111.7', false),
+			array('6011111111111117X', false),
+			array('6011111111111117 ', false),
+			array('WORD ', false),
 			// Empty test
-			array('', FALSE),
-			array(NULL, FALSE),
-			array(FALSE, FALSE),
+			array('', false),
+			array(null, false),
+			array(false, false),
 		);
 	}
 
@@ -392,24 +390,24 @@ class Kohana_ValidTest extends Unittest_TestCase
 	public function provider_email()
 	{
 		return array(
-			array('foo', TRUE,  FALSE),
-			array('foo', FALSE, FALSE),
+			array('foo', true,  false),
+			array('foo', false, false),
 
-			array('foo@bar', TRUE, TRUE),
+			array('foo@bar', true, true),
 			// RFC is less strict than the normal regex, presumably to allow
 			//  admin@localhost, therefore we IGNORE IT!!!
-			array('foo@bar', FALSE, FALSE),
-			array('foo@bar.com', FALSE, TRUE),
-			array('foo@barcom:80', FALSE, FALSE),
-			array('foo@bar.sub.com', FALSE, TRUE),
-			array('foo+asd@bar.sub.com', FALSE, TRUE),
-			array('foo.asd@bar.sub.com', FALSE, TRUE),
+			array('foo@bar', false, false),
+			array('foo@bar.com', false, true),
+			array('foo@barcom:80', false, false),
+			array('foo@bar.sub.com', false, true),
+			array('foo+asd@bar.sub.com', false, true),
+			array('foo.asd@bar.sub.com', false, true),
 			// RFC says 254 length max #4011
-			array(Text::random(NULL, 200).'@'.Text::random(NULL, 50).'.com', FALSE, FALSE),
+			array(Text::random(null, 200).'@'.Text::random(null, 50).'.com', false, false),
 			// Empty test
-			array('', TRUE, FALSE),
-			array(NULL, TRUE, FALSE),
-			array(FALSE, TRUE, FALSE),
+			array('', true, false),
+			array(null, true, false),
+			array(false, true, false),
 		);
 	}
 
@@ -440,13 +438,13 @@ class Kohana_ValidTest extends Unittest_TestCase
 	public function provider_email_domain()
 	{
 		return array(
-			array('google.com', TRUE),
+			array('google.com', true),
 			// Don't anybody dare register this...
-			array('DAWOMAWIDAIWNDAIWNHDAWIHDAIWHDAIWOHDAIOHDAIWHD.com', FALSE),
+			array('DAWOMAWIDAIWNDAIWNHDAWIHDAIWHDAIWOHDAIOHDAIWHD.com', false),
 			// Empty test
-			array('', FALSE),
-			array(NULL, FALSE),
-			array(FALSE, FALSE),
+			array('', false),
+			array(null, false),
+			array(false, false),
 		);
 	}
 
@@ -465,20 +463,16 @@ class Kohana_ValidTest extends Unittest_TestCase
 	 */
 	public function test_email_domain($email, $correct)
 	{
-		if ( ! $this->hasInternet())
-		{
+		if (! $this->hasInternet()) {
 			$this->markTestSkipped('An internet connection is required for this test');
 		}
 
-		if ( ! Kohana::$is_windows OR version_compare(PHP_VERSION, '5.3.0', '>='))
-		{
+		if (! Kohana::$is_windows or version_compare(PHP_VERSION, '5.3.0', '>=')) {
 			$this->assertSame(
 				$correct,
 				Valid::email_domain($email)
 			);
-		}
-		else
-		{
+		} else {
 			$this->markTestSkipped('checkdnsrr() was not added on windows until PHP 5.3');
 		}
 	}
@@ -491,16 +485,16 @@ class Kohana_ValidTest extends Unittest_TestCase
 	public function provider_exact_length()
 	{
 		return array(
-			array('somestring', 10, TRUE),
-			array('somestring', 11, FALSE),
-			array('anotherstring', 13, TRUE),
+			array('somestring', 10, true),
+			array('somestring', 11, false),
+			array('anotherstring', 13, true),
 			// Empty test
-			array('', 10, FALSE),
-			array(NULL, 10, FALSE),
-			array(FALSE, 10, FALSE),
+			array('', 10, false),
+			array(null, 10, false),
+			array(false, 10, false),
 			// Test array of allowed lengths
-			array('somestring', array(1, 3, 5, 7, 9, 10), TRUE),
-			array('somestring', array(1, 3, 5, 7, 9), FALSE),
+			array('somestring', array(1, 3, 5, 7, 9, 10), true),
+			array('somestring', array(1, 3, 5, 7, 9), false),
 		);
 	}
 
@@ -534,14 +528,14 @@ class Kohana_ValidTest extends Unittest_TestCase
 	public function provider_equals()
 	{
 		return array(
-			array('foo', 'foo', TRUE),
-			array('1', '1', TRUE),
-			array(1, '1', FALSE),
-			array('011', 011, FALSE),
+			array('foo', 'foo', true),
+			array('1', '1', true),
+			array(1, '1', false),
+			array('011', 011, false),
 			// Empty test
-			array('', 123, FALSE),
-			array(NULL, 123, FALSE),
-			array(FALSE, 123, FALSE),
+			array('', 123, false),
+			array(null, 123, false),
+			array(false, 123, false),
 		);
 	}
 
@@ -571,17 +565,17 @@ class Kohana_ValidTest extends Unittest_TestCase
 	public function provider_ip()
 	{
 		return array(
-			array('75.125.175.50',   FALSE, TRUE),
+			array('75.125.175.50',   false, true),
 			// PHP 5.3.6 fixed a bug that allowed 127.0.0.1 as a public ip: http://bugs.php.net/53150
-			array('127.0.0.1',       FALSE, version_compare(PHP_VERSION, '5.3.6', '<')),
-			array('256.257.258.259', FALSE, FALSE),
-			array('255.255.255.255', FALSE, FALSE),
-			array('192.168.0.1',     FALSE, FALSE),
-			array('192.168.0.1',     TRUE,  TRUE),
+			array('127.0.0.1',       false, version_compare(PHP_VERSION, '5.3.6', '<')),
+			array('256.257.258.259', false, false),
+			array('255.255.255.255', false, false),
+			array('192.168.0.1',     false, false),
+			array('192.168.0.1',     true,  true),
 			// Empty test
-			array('', TRUE, FALSE),
-			array(NULL, TRUE, FALSE),
-			array(FALSE, TRUE, FALSE),
+			array('', true, false),
+			array(null, true, false),
+			array(false, true, false),
 		);
 	}
 
@@ -611,15 +605,15 @@ class Kohana_ValidTest extends Unittest_TestCase
 	{
 		return array(
 			// Border line
-			array('some', 4, TRUE),
+			array('some', 4, true),
 			// Exceeds
-			array('KOHANARULLLES', 2, FALSE),
+			array('KOHANARULLLES', 2, false),
 			// Under
-			array('CakeSucks', 10, TRUE),
+			array('CakeSucks', 10, true),
 			// Empty test
-			array('', -10, FALSE),
-			array(NULL, -10, FALSE),
-			array(FALSE, -10, FALSE),
+			array('', -10, false),
+			array(null, -10, false),
+			array(false, -10, false),
 		);
 	}
 
@@ -636,7 +630,7 @@ class Kohana_ValidTest extends Unittest_TestCase
 	 */
 	public function test_max_length($string, $maxlength, $correct)
 	{
-		 $this->assertSame(
+		$this->assertSame(
 			$correct,
 			Valid::max_length($string, $maxlength)
 		);
@@ -650,13 +644,13 @@ class Kohana_ValidTest extends Unittest_TestCase
 	public function provider_min_length()
 	{
 		return array(
-			array('This is obviously long enough', 10, TRUE),
-			array('This is not', 101, FALSE),
-			array('This is on the borderline', 25, TRUE),
+			array('This is obviously long enough', 10, true),
+			array('This is not', 101, false),
+			array('This is on the borderline', 25, true),
 			// Empty test
-			array('', 10, FALSE),
-			array(NULL, 10, FALSE),
-			array(FALSE, 10, FALSE),
+			array('', 10, false),
+			array(null, 10, false),
+			array(false, 10, false),
 		);
 	}
 
@@ -687,22 +681,22 @@ class Kohana_ValidTest extends Unittest_TestCase
 	public function provider_not_empty()
 	{
 		// Create a blank arrayObject
-		$ao = new ArrayObject;
+		$ao = new ArrayObject();
 
 		// arrayObject with value
-		$ao1 = new ArrayObject;
+		$ao1 = new ArrayObject();
 		$ao1['test'] = 'value';
 
 		return array(
-			array(array(),      FALSE),
-			array(NULL,         FALSE),
-			array('',           FALSE),
-			array($ao,          FALSE),
-			array($ao1,         TRUE),
-			array(array(NULL),  TRUE),
-			array(0,            TRUE),
-			array('0',          TRUE),
-			array('Something',  TRUE),
+			array(array(),      false),
+			array(null,         false),
+			array('',           false),
+			array($ao,          false),
+			array($ao1,         true),
+			array(array(null),  true),
+			array(0,            true),
+			array('0',          true),
+			array('Something',  true),
 		);
 	}
 
@@ -730,27 +724,27 @@ class Kohana_ValidTest extends Unittest_TestCase
 	public function provider_numeric()
 	{
 		return array(
-			array(12345,   TRUE),
-			array(123.45,  TRUE),
-			array('12345', TRUE),
-			array('10.5',  TRUE),
-			array('-10.5', TRUE),
-			array('10.5a', FALSE),
+			array(12345,   true),
+			array(123.45,  true),
+			array('12345', true),
+			array('10.5',  true),
+			array('-10.5', true),
+			array('10.5a', false),
 			// @issue 3240
-			array(.4,      TRUE),
-			array(-.4,     TRUE),
-			array(4.,      TRUE),
-			array(-4.,     TRUE),
-			array('.5',    TRUE),
-			array('-.5',   TRUE),
-			array('5.',    TRUE),
-			array('-5.',   TRUE),
-			array('.',     FALSE),
-			array('1.2.3', FALSE),
+			array(.4,      true),
+			array(-.4,     true),
+			array(4.,      true),
+			array(-4.,     true),
+			array('.5',    true),
+			array('-.5',   true),
+			array('5.',    true),
+			array('-5.',   true),
+			array('.',     false),
+			array('1.2.3', false),
 			// Empty test
-			array('', FALSE),
-			array(NULL, FALSE),
-			array(FALSE, FALSE),
+			array('', false),
+			array(null, false),
+			array(false, false),
 		);
 	}
 
@@ -777,20 +771,20 @@ class Kohana_ValidTest extends Unittest_TestCase
 	public function provider_phone()
 	{
 		return array(
-			array('0163634840',       NULL, TRUE),
-			array('+27173634840',     NULL, TRUE),
-			array('123578',           NULL, FALSE),
+			array('0163634840',       null, true),
+			array('+27173634840',     null, true),
+			array('123578',           null, false),
 			// Some uk numbers
-			array('01234456778',      NULL, TRUE),
-			array('+0441234456778',   NULL, FALSE),
+			array('01234456778',      null, true),
+			array('+0441234456778',   null, false),
 			// Google UK case you're interested
-			array('+44 20-7031-3000', array(12), TRUE),
+			array('+44 20-7031-3000', array(12), true),
 			// BT Corporate
-			array('020 7356 5000',	  NULL, TRUE),
+			array('020 7356 5000',	  null, true),
 			// Empty test
-			array('', NULL, FALSE),
-			array(NULL, NULL, FALSE),
-			array(FALSE, NULL, FALSE),
+			array('', null, false),
+			array(null, null, false),
+			array(false, null, false),
 		);
 	}
 
@@ -816,14 +810,14 @@ class Kohana_ValidTest extends Unittest_TestCase
 	public function provider_regex()
 	{
 		return array(
-			array('hello world', '/[a-zA-Z\s]++/', TRUE),
-			array('123456789', '/[0-9]++/', TRUE),
-			array('£$%£%', '/[abc]/', FALSE),
-			array('Good evening',  '/hello/',  FALSE),
+			array('hello world', '/[a-zA-Z\s]++/', true),
+			array('123456789', '/[0-9]++/', true),
+			array('£$%£%', '/[abc]/', false),
+			array('Good evening',  '/hello/',  false),
 			// Empty test
-			array('', '/hello/', FALSE),
-			array(NULL, '/hello/', FALSE),
-			array(FALSE, '/hello/', FALSE),
+			array('', '/hello/', false),
+			array(null, '/hello/', false),
+			array(false, '/hello/', false),
 		);
 	}
 
@@ -852,28 +846,28 @@ class Kohana_ValidTest extends Unittest_TestCase
 	public function provider_range()
 	{
 		return array(
-			array(1,  0,  2, NULL, TRUE),
-			array(-1, -5, 0, NULL, TRUE),
-			array(-1, 0,  1, NULL, FALSE),
-			array(1,  0,  0, NULL, FALSE),
-			array(2147483647, 0, 200000000000000, NULL, TRUE),
-			array(-2147483647, -2147483655, 2147483645, NULL, TRUE),
+			array(1,  0,  2, null, true),
+			array(-1, -5, 0, null, true),
+			array(-1, 0,  1, null, false),
+			array(1,  0,  0, null, false),
+			array(2147483647, 0, 200000000000000, null, true),
+			array(-2147483647, -2147483655, 2147483645, null, true),
 			// #4043
-			array(2, 0, 10, 2, TRUE),
-			array(3, 0, 10, 2, FALSE),
+			array(2, 0, 10, 2, true),
+			array(3, 0, 10, 2, false),
 			// #4672
-			array(0, 0, 10, NULL, TRUE),
-			array(10, 0, 10, NULL, TRUE),
-			array(-10, -10, 10, NULL, TRUE),
-			array(-10, -1, 1, NULL, FALSE),
-			array(0, 0, 10, 2, TRUE), // with $step
-			array(10, 0, 10, 2, TRUE),
-			array(10, 0, 10, 3, FALSE), // max outside $step
-			array(12, 0, 12, 3, TRUE),
+			array(0, 0, 10, null, true),
+			array(10, 0, 10, null, true),
+			array(-10, -10, 10, null, true),
+			array(-10, -1, 1, null, false),
+			array(0, 0, 10, 2, true), // with $step
+			array(10, 0, 10, 2, true),
+			array(10, 0, 10, 3, false), // max outside $step
+			array(12, 0, 12, 3, true),
 			// Empty test
-			array('', 5, 10, NULL, FALSE),
-			array(NULL, 5, 10, NULL, FALSE),
-			array(FALSE, 5, 10, NULL, FALSE),
+			array('', 5, 10, null, false),
+			array(null, 5, 10, null, false),
+			array(false, 5, 10, null, false),
 		);
 	}
 
@@ -905,40 +899,40 @@ class Kohana_ValidTest extends Unittest_TestCase
 	public function provider_url()
 	{
 		$data = array(
-			array('http://google.com', TRUE),
-			array('http://google.com/', TRUE),
-			array('http://google.com/?q=abc', TRUE),
-			array('http://google.com/#hash', TRUE),
-			array('http://localhost', TRUE),
-			array('http://hello-world.pl', TRUE),
-			array('http://hello--world.pl', TRUE),
-			array('http://h.e.l.l.0.pl', TRUE),
-			array('http://server.tld/get/info', TRUE),
-			array('http://127.0.0.1', TRUE),
-			array('http://127.0.0.1:80', TRUE),
-			array('http://user@127.0.0.1', TRUE),
-			array('http://user:pass@127.0.0.1', TRUE),
-			array('ftp://my.server.com', TRUE),
-			array('rss+xml://rss.example.com', TRUE),
+			array('http://google.com', true),
+			array('http://google.com/', true),
+			array('http://google.com/?q=abc', true),
+			array('http://google.com/#hash', true),
+			array('http://localhost', true),
+			array('http://hello-world.pl', true),
+			array('http://hello--world.pl', true),
+			array('http://h.e.l.l.0.pl', true),
+			array('http://server.tld/get/info', true),
+			array('http://127.0.0.1', true),
+			array('http://127.0.0.1:80', true),
+			array('http://user@127.0.0.1', true),
+			array('http://user:pass@127.0.0.1', true),
+			array('ftp://my.server.com', true),
+			array('rss+xml://rss.example.com', true),
 
-			array('http://google.2com', FALSE),
-			array('http://google.com?q=abc', FALSE),
-			array('http://google.com#hash', FALSE),
-			array('http://hello-.pl', FALSE),
-			array('http://hel.-lo.world.pl', FALSE),
-			array('http://ww£.google.com', FALSE),
-			array('http://127.0.0.1234', FALSE),
-			array('http://127.0.0.1.1', FALSE),
-			array('http://user:@127.0.0.1', FALSE),
-			array("http://finalnewline.com\n", FALSE),
+			array('http://google.2com', false),
+			array('http://google.com?q=abc', false),
+			array('http://google.com#hash', false),
+			array('http://hello-.pl', false),
+			array('http://hel.-lo.world.pl', false),
+			array('http://ww£.google.com', false),
+			array('http://127.0.0.1234', false),
+			array('http://127.0.0.1.1', false),
+			array('http://user:@127.0.0.1', false),
+			array("http://finalnewline.com\n", false),
 			// Empty test
-			array('', FALSE),
-			array(NULL, FALSE),
-			array(FALSE, FALSE),
+			array('', false),
+			array(null, false),
+			array(false, false),
 		);
 
-		$data[] = array('http://'.str_repeat('123456789.', 25).'com/', TRUE); // 253 chars
-		$data[] = array('http://'.str_repeat('123456789.', 25).'info/', FALSE); // 254 chars
+		$data[] = array('http://'.str_repeat('123456789.', 25).'com/', true); // 253 chars
+		$data[] = array('http://'.str_repeat('123456789.', 25).'info/', false); // 254 chars
 
 		return $data;
 	}
@@ -965,13 +959,13 @@ class Kohana_ValidTest extends Unittest_TestCase
 	public function provider_matches()
 	{
 		return array(
-			array(array('a' => 'hello', 'b' => 'hello'), 'a', 'b', TRUE),
-			array(array('a' => 'hello', 'b' => 'hello '), 'a', 'b', FALSE),
-			array(array('a' => '1', 'b' => 1), 'a', 'b', FALSE),
+			array(array('a' => 'hello', 'b' => 'hello'), 'a', 'b', true),
+			array(array('a' => 'hello', 'b' => 'hello '), 'a', 'b', false),
+			array(array('a' => '1', 'b' => 1), 'a', 'b', false),
 			// Empty test
-			array(array('a' => '', 'b' => 'hello'), 'a', 'b', FALSE),
-			array(array('a' => NULL, 'b' => 'hello'), 'a', 'b', FALSE),
-			array(array('a' => FALSE, 'b' => 'hello'), 'a', 'b', FALSE),
+			array(array('a' => '', 'b' => 'hello'), 'a', 'b', false),
+			array(array('a' => null, 'b' => 'hello'), 'a', 'b', false),
+			array(array('a' => false, 'b' => 'hello'), 'a', 'b', false),
 		);
 	}
 

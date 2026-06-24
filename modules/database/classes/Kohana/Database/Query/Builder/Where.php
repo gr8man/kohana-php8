@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct script access.');
 /**
  * Database query builder for WHERE statements. See [Query Builder](/database/query/builder) for usage and examples.
  *
@@ -10,8 +11,8 @@ declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
  * @copyright  (c) 2008-2009 Kohana Team
  * @license    http://kohanaphp.com/license
  */
-abstract class Kohana_Database_Query_Builder_Where extends Database_Query_Builder {
-
+abstract class Kohana_Database_Query_Builder_Where extends Database_Query_Builder
+{
 	// WHERE ...
 	protected $_where = array();
 
@@ -19,7 +20,7 @@ abstract class Kohana_Database_Query_Builder_Where extends Database_Query_Builde
 	protected $_order_by = array();
 
 	// LIMIT ...
-	protected $_limit = NULL;
+	protected $_limit = null;
 
 	/**
 	 * Alias of and_where()
@@ -118,8 +119,7 @@ abstract class Kohana_Database_Query_Builder_Where extends Database_Query_Builde
 	{
 		$group = end($this->_where);
 
-		if ($group AND reset($group) === '(')
-		{
+		if ($group and reset($group) === '(') {
 			array_pop($this->_where);
 
 			return $this;
@@ -159,7 +159,7 @@ abstract class Kohana_Database_Query_Builder_Where extends Database_Query_Builde
 	 * @param   string  $direction  direction of sorting
 	 * @return  $this
 	 */
-	public function order_by($column, $direction = NULL)
+	public function order_by($column, $direction = null)
 	{
 		$this->_order_by[] = array($column, $direction);
 
@@ -174,7 +174,7 @@ abstract class Kohana_Database_Query_Builder_Where extends Database_Query_Builde
 	 */
 	public function limit($number)
 	{
-		$this->_limit = ($number === NULL) ? NULL : (int) $number;
+		$this->_limit = ($number === null) ? null : (int) $number;
 
 		return $this;
 	}

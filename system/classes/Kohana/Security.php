@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-defined('SYSPATH') OR die('No direct script access.');
+defined('SYSPATH') or die('No direct script access.');
 /**
  * Security helper class.
  *
@@ -12,8 +12,8 @@ defined('SYSPATH') OR die('No direct script access.');
  * @copyright  (c) 2007-2012 Kohana Team
  * @license    http://kohanaframework.org/license
  */
-class Kohana_Security {
-
+class Kohana_Security
+{
 	/**
 	 * @var  string  key name used for token storage
 	 */
@@ -42,26 +42,22 @@ class Kohana_Security {
 	 * @return  string
 	 * @uses    Session::instance
 	 */
-	public static function token($new = FALSE)
+	public static function token($new = false)
 	{
 		$session = Session::instance();
 
 		// Get the current token
 		$token = $session->get(Security::$token_name);
 
-		if ($new === TRUE OR ! $token)
-		{
+		if ($new === true or ! $token) {
 			// Generate a new unique token
-			if (function_exists('openssl_random_pseudo_bytes'))
-			{
+			if (function_exists('openssl_random_pseudo_bytes')) {
 				// Generate a random pseudo bytes token if openssl_random_pseudo_bytes is available
 				// This is more secure than uniqid, because uniqid relies on microtime, which is predictable
 				$token = base64_encode(openssl_random_pseudo_bytes(32));
-			}
-			else
-			{
+			} else {
 				// Otherwise, fall back to a hashed uniqid
-				$token = sha1(uniqid(NULL, TRUE));
+				$token = sha1(uniqid(null, true));
 			}
 
 			// Store the new token
@@ -87,38 +83,36 @@ class Kohana_Security {
 	{
 		return Security::slow_equals(Security::token(), $token);
 	}
-	
-	
-	
+
+
+
 	/**
 	 * Compare two hashes in a time-invariant manner.
 	 * Prevents cryptographic side-channel attacks (timing attacks, specifically)
-	 * 
+	 *
 	 * SECURITY: Uses PHP's hash_equals() when available (PHP 5.6+)
-	 * 
+	 *
 	 * @param string $a cryptographic hash
 	 * @param string $b cryptographic hash
 	 * @return boolean
 	 */
-	public static function slow_equals($a, $b) 
+	public static function slow_equals($a, $b)
 	{
-		if (function_exists('hash_equals'))
-		{
+		if (function_exists('hash_equals')) {
 			return hash_equals((string) $a, (string) $b);
 		}
-		
+
 		$diff = strlen((string) $a) ^ strlen((string) $b);
-		for($i = 0; $i < strlen((string) $a) AND $i < strlen((string) $b); $i++)
-		{
+		for ($i = 0; $i < strlen((string) $a) and $i < strlen((string) $b); $i++) {
 			$diff |= ord($a[$i]) ^ ord($b[$i]);
 		}
-		return $diff === 0; 
+		return $diff === 0;
 	}
 
 
 	/**
 	 * SECURITY: Remove image tags from a string and return the image URL.
-	 * 
+	 *
 	 * SECURITY FIX: Properly escapes the URL to prevent XSS attacks
 	 * See https://github.com/kohana/kohana/issues/107
 	 *
@@ -131,9 +125,9 @@ class Kohana_Security {
 	{
 		// SECURITY: Properly extract and escape the image source URL
 		// This prevents XSS attacks via malformed img tags
-		$str = preg_replace_callback('#<img\s+([^>]*)>#is', function($matches) {
+		$str = preg_replace_callback('#<img\s+([^>]*)>#is', function ($matches) {
 			$attrs = $matches[1];
-			
+
 			// Extract src attribute with proper handling of quotes
 			if (preg_match('/src\s*=\s*["\']([^"\']+)["\']/', $attrs, $srcMatch)) {
 				$url = $srcMatch[1];
@@ -145,11 +139,11 @@ class Kohana_Security {
 				// SECURITY: HTML entity encode the URL
 				return HTML::chars($url);
 			}
-			
+
 			// No src found, return empty string
 			return '';
 		}, $str);
-		
+
 		return $str;
 	}
 

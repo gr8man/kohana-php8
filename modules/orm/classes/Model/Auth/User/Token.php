@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('No direct access allowed.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct access allowed.');
 /**
  * Default auth user toke
  *
@@ -9,16 +10,16 @@ declare(strict_types=1); defined('SYSPATH') OR die('No direct access allowed.');
  * @copyright  (c) 2007-2012 Kohana Team
  * @license    http://kohanaframework.org/license
  */
-class Model_Auth_User_Token extends ORM {
-
+class Model_Auth_User_Token extends ORM
+{
 	// Relationships
 	protected $_belongs_to = array(
 		'user' => array('model' => 'User'),
 	);
-	
+
 	protected $_created_column = array(
 		'column' => 'created',
-		'format' => TRUE,
+		'format' => true,
 	);
 
 	/**
@@ -26,18 +27,16 @@ class Model_Auth_User_Token extends ORM {
 	 *
 	 * @return  void
 	 */
-	public function __construct($id = NULL)
+	public function __construct($id = null)
 	{
 		parent::__construct($id);
 
-		if (mt_rand(1, 100) === 1)
-		{
+		if (mt_rand(1, 100) === 1) {
 			// Do garbage collection
 			$this->delete_expired();
 		}
 
-		if ($this->expires < time() AND $this->_loaded)
-		{
+		if ($this->expires < time() and $this->_loaded) {
 			// This object has expired
 			$this->delete();
 		}
@@ -58,7 +57,7 @@ class Model_Auth_User_Token extends ORM {
 		return $this;
 	}
 
-	public function create(Validation $validation = NULL)
+	public function create(Validation $validation = null)
 	{
 		$this->token = $this->create_token();
 
@@ -67,11 +66,9 @@ class Model_Auth_User_Token extends ORM {
 
 	protected function create_token()
 	{
-		do
-		{
-			$token = sha1(uniqid(Text::random('alnum', 32), TRUE));
-		}
-		while (ORM::factory('User_Token', array('token' => $token))->loaded());
+		do {
+			$token = sha1(uniqid(Text::random('alnum', 32), true));
+		} while (ORM::factory('User_Token', array('token' => $token))->loaded());
 
 		return $token;
 	}

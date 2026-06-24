@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct script access.');
 /**
  * File log writer. Writes out messages and stores them in a YYYY/MM directory.
  *
@@ -10,8 +11,8 @@ declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
  * @copyright  (c) 2008-2012 Kohana Team
  * @license    http://kohanaframework.org/license
  */
-class Kohana_Log_File extends Log_Writer {
-
+class Kohana_Log_File extends Log_Writer
+{
 	/**
 	 * @var  string  Directory to place log files in
 	 */
@@ -27,10 +28,11 @@ class Kohana_Log_File extends Log_Writer {
 	 */
 	public function __construct(string $directory)
 	{
-		if ( ! is_dir($directory) OR ! is_writable($directory))
-		{
-			throw new Kohana_Exception('Directory :dir must be writable',
-				array(':dir' => Debug::path($directory)));
+		if (! is_dir($directory) or ! is_writable($directory)) {
+			throw new Kohana_Exception(
+				'Directory :dir must be writable',
+				array(':dir' => Debug::path($directory))
+			);
 		}
 
 		$this->_directory = realpath($directory).DIRECTORY_SEPARATOR;
@@ -51,8 +53,7 @@ class Kohana_Log_File extends Log_Writer {
 		// Set the yearly directory name
 		$directory = $this->_directory.date('Y');
 
-		if ( ! is_dir($directory))
-		{
+		if (! is_dir($directory)) {
 			// Create the yearly directory
 			mkdir($directory, 02777);
 
@@ -63,8 +64,7 @@ class Kohana_Log_File extends Log_Writer {
 		// Add the month to the directory
 		$directory .= DIRECTORY_SEPARATOR.date('m');
 
-		if ( ! is_dir($directory))
-		{
+		if (! is_dir($directory)) {
 			// Create the monthly directory
 			mkdir($directory, 02777);
 
@@ -75,8 +75,7 @@ class Kohana_Log_File extends Log_Writer {
 		// Set the name of the log file
 		$filename = $directory.DIRECTORY_SEPARATOR.date('d').EXT;
 
-		if ( ! file_exists($filename))
-		{
+		if (! file_exists($filename)) {
 			// Create the log file
 			file_put_contents($filename, Kohana::FILE_SECURITY.' ?>'.PHP_EOL);
 
@@ -84,8 +83,7 @@ class Kohana_Log_File extends Log_Writer {
 			chmod($filename, 0666);
 		}
 
-		foreach ($messages as $message)
-		{
+		foreach ($messages as $message) {
 			// Write each message into the log file
 			file_put_contents($filename, PHP_EOL.$this->format_message($message), FILE_APPEND);
 		}

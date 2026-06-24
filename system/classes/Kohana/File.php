@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-defined('SYSPATH') OR die('No direct script access.');
+defined('SYSPATH') or die('No direct script access.');
 /**
  * File helper class.
  *
@@ -12,8 +12,8 @@ defined('SYSPATH') OR die('No direct script access.');
  * @copyright  (c) 2007-2012 Kohana Team
  * @license    http://kohanaframework.org/license
  */
-class Kohana_File {
-
+class Kohana_File
+{
 	/**
 	 * Attempt to get the mime type from a file. This method is horribly
 	 * unreliable, due to PHP being horribly unreliable when it comes to
@@ -33,36 +33,32 @@ class Kohana_File {
 		// Get the extension from the filename
 		$extension = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
 
-		if (preg_match('/^(?:jpe?g|png|[gt]if|bmp|swf)$/', $extension))
-		{
+		if (preg_match('/^(?:jpe?g|png|[gt]if|bmp|swf)$/', $extension)) {
 			// Use getimagesize() to find the mime type on images
 			$file = getimagesize($filename);
 
-			if (isset($file['mime']))
+			if (isset($file['mime'])) {
 				return $file['mime'];
+			}
 		}
 
-		if (class_exists('finfo', FALSE))
-		{
-			if ($info = new finfo(defined('FILEINFO_MIME_TYPE') ? FILEINFO_MIME_TYPE : FILEINFO_MIME))
-			{
+		if (class_exists('finfo', false)) {
+			if ($info = new finfo(defined('FILEINFO_MIME_TYPE') ? FILEINFO_MIME_TYPE : FILEINFO_MIME)) {
 				return $info->file($filename);
 			}
 		}
 
-		if (ini_get('mime_magic.magicfile') AND function_exists('mime_content_type'))
-		{
+		if (ini_get('mime_magic.magicfile') and function_exists('mime_content_type')) {
 			// The mime_content_type function is only useful with a magic file
 			return mime_content_type($filename);
 		}
 
-		if ( ! empty($extension))
-		{
+		if (! empty($extension)) {
 			return File::mime_by_ext($extension);
 		}
 
 		// Unable to find the mime-type
-		return FALSE;
+		return false;
 	}
 
 	/**
@@ -79,7 +75,7 @@ class Kohana_File {
 		// Load all of the mime types
 		$mimes = Kohana::$config->load('mimes');
 
-		return isset($mimes[$extension]) ? $mimes[$extension][0] : FALSE;
+		return isset($mimes[$extension]) ? $mimes[$extension][0] : false;
 	}
 
 	/**
@@ -94,7 +90,7 @@ class Kohana_File {
 		// Load all of the mime types
 		$mimes = Kohana::$config->load('mimes');
 
-		return isset($mimes[$extension]) ? ( (array) $mimes[$extension]) : array();
+		return isset($mimes[$extension]) ? ((array) $mimes[$extension]) : array();
 	}
 
 	/**
@@ -108,31 +104,24 @@ class Kohana_File {
 		static $types = array();
 
 		// Fill the static array
-		if (empty($types))
-		{
-			foreach (Kohana::$config->load('mimes') as $ext => $mimes)
-			{
-				foreach ($mimes as $mime)
-				{
-					if ($mime == 'application/octet-stream')
-					{
+		if (empty($types)) {
+			foreach (Kohana::$config->load('mimes') as $ext => $mimes) {
+				foreach ($mimes as $mime) {
+					if ($mime == 'application/octet-stream') {
 						// octet-stream is a generic binary
 						continue;
 					}
 
-					if ( ! isset($types[$mime]))
-					{
+					if (! isset($types[$mime])) {
 						$types[$mime] = array( (string) $ext);
-					}
-					elseif ( ! in_array($ext, $types[$mime]))
-					{
+					} elseif (! in_array($ext, $types[$mime])) {
 						$types[$mime][] = (string) $ext;
 					}
 				}
 			}
 		}
 
-		return isset($types[$type]) ? $types[$type] : FALSE;
+		return isset($types[$type]) ? $types[$type] : false;
 	}
 
 	/**
@@ -170,8 +159,7 @@ class Kohana_File {
 		// Total number of pieces
 		$pieces = 0;
 
-		while ( ! feof($file))
-		{
+		while (! feof($file)) {
 			// Create another piece
 			$pieces += 1;
 
@@ -182,15 +170,13 @@ class Kohana_File {
 			// Number of bytes read
 			$read = 0;
 
-			do
-			{
+			do {
 				// Transfer the data in blocks
 				fwrite($piece, fread($file, $block_size));
 
 				// Another block has been read
 				$read += $block_size;
-			}
-			while ($read < $piece_size);
+			} while ($read < $piece_size);
 
 			// Close the piece
 			fclose($piece);
@@ -221,16 +207,14 @@ class Kohana_File {
 		// Total number of pieces
 		$pieces = 0;
 
-		while (is_file($piece = $filename.'.'.str_pad((string) ($pieces + 1), 3, '0', STR_PAD_LEFT)))
-		{
+		while (is_file($piece = $filename.'.'.str_pad((string) ($pieces + 1), 3, '0', STR_PAD_LEFT))) {
 			// Read another piece
 			$pieces += 1;
 
 			// Open the piece for reading
 			$piece = fopen($piece, 'rb');
 
-			while ( ! feof($piece))
-			{
+			while (! feof($piece)) {
 				// Transfer the data in blocks
 				fwrite($file, fread($piece, $block_size));
 			}

@@ -1,10 +1,11 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') or die('No direct script access.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct script access.');
 
 /**
  * Interface that all minion tasks must implement
  */
-abstract class Minion_Task extends Kohana_Minion_Task {
-
+abstract class Minion_Task extends Kohana_Minion_Task
+{
 }

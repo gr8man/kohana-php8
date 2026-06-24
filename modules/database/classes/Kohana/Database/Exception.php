@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct script access.');
 /**
  * Database exceptions.
  *
@@ -10,4 +11,6 @@ declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
  * @copyright  (c) 2009 Kohana Team
  * @license    http://kohanaphp.com/license
  */
-class Kohana_Database_Exception extends Kohana_Exception {}
+class Kohana_Database_Exception extends Kohana_Exception
+{
+}

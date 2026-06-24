@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct script access.');
 /**
  * Unit Tests for Kohana_HTTP_Header
  *
@@ -9,7 +10,7 @@ declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
  * @group kohana.core.http
  * @group kohana.core.http.header
  * @group kohana.core.http.header
- * 
+ *
  * @package    Kohana
  * @category   Tests
  * @author     Kohana Team
@@ -17,8 +18,8 @@ declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
  * @license    http://kohanaframework.org/license
  */
 #[AllowDynamicProperties]
-class Kohana_HTTP_HeaderTest extends Unittest_TestCase {
-
+class Kohana_HTTP_HeaderTest extends Unittest_TestCase
+{
 	/**
 	 * Provides data for test_accept_quality
 	 *
@@ -59,7 +60,7 @@ class Kohana_HTTP_HeaderTest extends Unittest_TestCase {
 	/**
 	 * Tests the `accept_quality` method parses the quality values
 	 * correctly out of header parts
-	 * 
+	 *
 	 * @dataProvider provider_accept_quality
 	 *
 	 * @param   array  $parts     input
@@ -70,8 +71,7 @@ class Kohana_HTTP_HeaderTest extends Unittest_TestCase {
 	{
 		$out = HTTP_Header::accept_quality($parts);
 
-		foreach ($out as $key => $value)
-		{
+		foreach ($out as $key => $value) {
 			$this->assertInternalType('float', $value);
 		}
 
@@ -121,7 +121,7 @@ class Kohana_HTTP_HeaderTest extends Unittest_TestCase {
 	/**
 	 * Tests the `parse_accept_header` method parses the Accept: header
 	 * correctly and returns expected output
-	 * 
+	 *
 	 * @dataProvider provider_parse_accept_header
 	 *
 	 * @param   string  $accept    accept in
@@ -147,7 +147,7 @@ class Kohana_HTTP_HeaderTest extends Unittest_TestCase {
 					'utf-8'     => (float) 1,
 					'utf-10'    => (float) 1,
 					'utf-16'    => (float) 1,
-					'iso-8859-1'=> (float) 1
+					'iso-8859-1' => (float) 1
 				)
 			),
 			array(
@@ -156,11 +156,11 @@ class Kohana_HTTP_HeaderTest extends Unittest_TestCase {
 					'utf-8'     => (float) 1,
 					'utf-10'    => 0.9,
 					'utf-16'    => 0.5,
-					'iso-8859-1'=> 0.75
+					'iso-8859-1' => 0.75
 				)
 			),
 			array(
-				NULL,
+				null,
 				array(
 					'*'         => (float) 1
 				)
@@ -171,11 +171,11 @@ class Kohana_HTTP_HeaderTest extends Unittest_TestCase {
 	/**
 	 * Tests the `parse_charset_header` method parsed the Accept-Charset header
 	 * correctly
-	 * 
+	 *
 	 * @dataProvider provider_parse_charset_header
 	 *
-	 * @param   string  $accept    accept 
-	 * @param   array   $expected  expected 
+	 * @param   string  $accept    accept
+	 * @param   array   $expected  expected
 	 * @return  void
 	 */
 	public function test_parse_charset_header($accept, array $expected)
@@ -208,7 +208,7 @@ class Kohana_HTTP_HeaderTest extends Unittest_TestCase {
 				)
 			),
 			array(
-				NULL,
+				null,
 				array(
 					'*'         => (float) 1
 				)
@@ -225,11 +225,11 @@ class Kohana_HTTP_HeaderTest extends Unittest_TestCase {
 	/**
 	 * Tests the `parse_encoding_header` method parses the Accept-Encoding header
 	 * correctly
-	 * 
+	 *
 	 * @dataProvider provider_parse_encoding_header
 	 *
-	 * @param   string  $accept    accept 
-	 * @param   array   $expected  expected 
+	 * @param   string  $accept    accept
+	 * @param   array   $expected  expected
 	 * @return  void
 	 */
 	public function test_parse_encoding_header($accept, array $expected)
@@ -281,7 +281,7 @@ class Kohana_HTTP_HeaderTest extends Unittest_TestCase {
 				)
 			),
 			array(
-				NULL,
+				null,
 				array(
 					'*'  => array(
 						'*' => (float) 1
@@ -294,11 +294,11 @@ class Kohana_HTTP_HeaderTest extends Unittest_TestCase {
 	/**
 	 * Tests the `parse_language_header` method parses the Accept-Language header
 	 * correctly
-	 * 
+	 *
 	 * @dataProvider provider_parse_language_header
-	 * 
-	 * @param   string  $accept    accept 
-	 * @param   array   $expected  expected 
+	 *
+	 * @param   string  $accept    accept
+	 * @param   array   $expected  expected
 	 * @return  void
 	 */
 	public function test_parse_language_header($accept, array $expected)
@@ -347,11 +347,11 @@ class Kohana_HTTP_HeaderTest extends Unittest_TestCase {
 	/**
 	 * Tests that `create_cache_control()` outputs the correct cache control
 	 * string from the supplied input
-	 * 
+	 *
 	 * @dataProvider provider_create_cache_control
 	 *
-	 * @param   array   $input     input 
-	 * @param   string  $expected  expected 
+	 * @param   array   $input     input
+	 * @param   string  $expected  expected
 	 * @return  void
 	 */
 	public function test_create_cache_control(array $input, $expected)
@@ -402,9 +402,9 @@ class Kohana_HTTP_HeaderTest extends Unittest_TestCase {
 	 * parsed data from the input string
 	 *
 	 * @dataProvider provider_parse_cache_control
-	 * 
-	 * @param   string  $input     input 
-	 * @param   array   $expected  expected 
+	 *
+	 * @param   string  $input     input
+	 * @param   array   $expected  expected
 	 * @return  void
 	 */
 	public function test_parse_cache_control($input, array $expected)
@@ -413,14 +413,10 @@ class Kohana_HTTP_HeaderTest extends Unittest_TestCase {
 
 		$this->assertInternalType('array', $parsed);
 
-		foreach ($expected as $key => $value)
-		{
-			if (is_int($key))
-			{
+		foreach ($expected as $key => $value) {
+			if (is_int($key)) {
 				$this->assertTrue(in_array($value, $parsed));
-			}
-			else
-			{
+			} else {
 				$this->assertTrue(array_key_exists($key, $parsed));
 				$this->assertSame($value, $parsed[$key]);
 			}
@@ -447,7 +443,7 @@ class Kohana_HTTP_HeaderTest extends Unittest_TestCase {
 					array(
 						'Accept-Encoding',
 						'compress, gzip',
-						FALSE
+						false
 					)
 				),
 				array(
@@ -467,12 +463,12 @@ class Kohana_HTTP_HeaderTest extends Unittest_TestCase {
 					array(
 						'Accept-Encoding',
 						'compress, gzip',
-						FALSE
+						false
 					),
 					array(
 						'Accept-Encoding',
 						'bzip',
-						FALSE
+						false
 					)
 				),
 				array(
@@ -495,17 +491,17 @@ class Kohana_HTTP_HeaderTest extends Unittest_TestCase {
 					array(
 						'Accept-Encoding',
 						'compress, gzip',
-						FALSE
+						false
 					),
 					array(
 						'Accept-Encoding',
 						'bzip',
-						TRUE
+						true
 					),
 					array(
 						'Accept',
 						'text/*',
-						FALSE
+						false
 					)
 				),
 				array(
@@ -525,9 +521,9 @@ class Kohana_HTTP_HeaderTest extends Unittest_TestCase {
 	 * Ensures that offsetSet normalizes the array keys
 	 *
 	 * @dataProvider provider_offsetSet
-	 * 
+	 *
 	 * @param   array  $constructor  constructor
-	 * @param   array  $to_set       to_set 
+	 * @param   array  $to_set       to_set
 	 * @param   array  $expected     expected
 	 * @return  void
 	 */
@@ -540,8 +536,7 @@ class Kohana_HTTP_HeaderTest extends Unittest_TestCase {
 		$reflection = new ReflectionClass($http_header);
 		$method = $reflection->getMethod('offsetSet');
 
-		foreach ($to_set as $args)
-		{
+		foreach ($to_set as $args) {
 			$method->invokeArgs($http_header, $args);
 		}
 
@@ -562,7 +557,7 @@ class Kohana_HTTP_HeaderTest extends Unittest_TestCase {
 				array(
 					'FoO'   => 'bar',
 					'START' => 'end',
-					'true'  => TRUE
+					'true'  => true
 				),
 				'FOO',
 				'bar'
@@ -571,25 +566,25 @@ class Kohana_HTTP_HeaderTest extends Unittest_TestCase {
 				array(
 					'FoO'   => 'bar',
 					'START' => 'end',
-					'true'  => TRUE
+					'true'  => true
 				),
 				'true',
-				TRUE
+				true
 			),
 			array(
 				array(
 					'FoO'   => 'bar',
 					'START' => 'end',
-					'true'  => TRUE
+					'true'  => true
 				),
 				'True',
-				TRUE
+				true
 			),
 			array(
 				array(
 					'FoO'   => 'bar',
 					'START' => 'end',
-					'true'  => TRUE
+					'true'  => true
 				),
 				'Start',
 				'end'
@@ -608,7 +603,7 @@ class Kohana_HTTP_HeaderTest extends Unittest_TestCase {
 
 	/**
 	 * Ensures that offsetGet normalizes the array keys
-	 * 
+	 *
 	 * @dataProvider provider_offsetGet
 	 *
 	 * @param   array     start state
@@ -642,7 +637,7 @@ class Kohana_HTTP_HeaderTest extends Unittest_TestCase {
 					'Content-Type' => 'application/x-www-form-urlencoded'
 				),
 				'Content-Type',
-				TRUE
+				true
 			),
 			array(
 				array(
@@ -651,7 +646,7 @@ class Kohana_HTTP_HeaderTest extends Unittest_TestCase {
 					'Content-Type' => 'application/x-www-form-urlencoded'
 				),
 				'CONTENT-TYPE',
-				TRUE
+				true
 			),
 			array(
 				array(
@@ -660,7 +655,7 @@ class Kohana_HTTP_HeaderTest extends Unittest_TestCase {
 					'Content-Type' => 'application/x-www-form-urlencoded'
 				),
 				'accept-language',
-				TRUE
+				true
 			),
 			array(
 				array(
@@ -669,19 +664,19 @@ class Kohana_HTTP_HeaderTest extends Unittest_TestCase {
 					'Content-Type' => 'application/x-www-form-urlencoded'
 				),
 				'x-powered-by',
-				FALSE
+				false
 			)
 		);
 	}
 
 	/**
 	 * Ensures that offsetExists normalizes the array key
-	 * 
+	 *
 	 * @dataProvider provider_offsetExists
 	 *
-	 * @param   array    $state     state 
-	 * @param   string   $key       key 
-	 * @param   boolean  $expected  expected 
+	 * @param   array    $state     state
+	 * @param   string   $key       key
+	 * @param   boolean  $expected  expected
 	 * @return  void
 	 */
 	// @codingStandardsIgnoreStart
@@ -747,9 +742,9 @@ class Kohana_HTTP_HeaderTest extends Unittest_TestCase {
 	 *
 	 * @dataProvider provider_offsetUnset
 	 *
-	 * @param   array   $state     state 
-	 * @param   string  $remove    remove 
-	 * @param   array   $expected  expected 
+	 * @param   array   $state     state
+	 * @param   string  $remove    remove
+	 * @param   array   $expected  expected
 	 * @return  void
 	 */
 	// @codingStandardsIgnoreStart
@@ -803,21 +798,20 @@ class Kohana_HTTP_HeaderTest extends Unittest_TestCase {
 
 	/**
 	 * Tests that `parse_header_string` performs as expected
-	 * 
+	 *
 	 * @dataProvider provider_parse_header_string
 	 *
-	 * @param   array    headers 
-	 * @param   array    expected 
+	 * @param   array    headers
+	 * @param   array    expected
 	 * @return  void
 	 */
 	public function test_parse_header_string(array $headers, array $expected)
 	{
 		$http_header = new HTTP_Header(array());
 
-		foreach ($headers as $header)
-		{
-			
-			$this->assertEquals(strlen($header), $http_header->parse_header_string(NULL, $header));
+		foreach ($headers as $header) {
+
+			$this->assertEquals(strlen($header), $http_header->parse_header_string(null, $header));
 		}
 
 		$this->assertSame($expected, $http_header->getArrayCopy());
@@ -836,7 +830,7 @@ class Kohana_HTTP_HeaderTest extends Unittest_TestCase {
 					'Accept' => 'application/json, text/html; q=.5, text/*; q=.1, */*'
 				),
 				'application/json',
-				FALSE,
+				false,
 				1.0
 			),
 			array(
@@ -844,7 +838,7 @@ class Kohana_HTTP_HeaderTest extends Unittest_TestCase {
 					'Accept' => 'application/json, text/html; q=.5, text/*; q=.1, */*'
 				),
 				'text/html',
-				FALSE,
+				false,
 				0.5
 			),
 			array(
@@ -852,7 +846,7 @@ class Kohana_HTTP_HeaderTest extends Unittest_TestCase {
 					'Accept' => 'application/json, text/html; q=.5, text/*; q=.1, */*'
 				),
 				'text/plain',
-				FALSE,
+				false,
 				0.1
 			),
 			array(
@@ -860,15 +854,15 @@ class Kohana_HTTP_HeaderTest extends Unittest_TestCase {
 					'Accept' => 'application/json, text/html; q=.5, text/*; q=.1, */*'
 				),
 				'text/plain',
-				TRUE,
-				FALSE
+				true,
+				false
 			),
 			array(
 				array(
 					'Accept' => 'application/json, text/html; q=.5, text/*; q=.1, */*'
 				),
 				'application/xml',
-				FALSE,
+				false,
 				1.0
 			),
 			array(
@@ -876,27 +870,27 @@ class Kohana_HTTP_HeaderTest extends Unittest_TestCase {
 					'Accept' => 'application/json, text/html; q=.5, text/*; q=.1, */*'
 				),
 				'application/xml',
-				TRUE,
-				FALSE
+				true,
+				false
 			),
 			array(
 				array(),
 				'application/xml',
-				FALSE,
+				false,
 				1.0
 			),
 			array(
 				array(),
 				'application/xml',
-				TRUE,
-				FALSE
+				true,
+				false
 			)
 		);
 	}
 
 	/**
 	 * Tests `accepts_at_quality` parsed the Accept: header as expected
-	 * 
+	 *
 	 * @dataProvider provider_accepts_at_quality
 	 *
 	 * @param   array     starting state
@@ -925,11 +919,11 @@ class Kohana_HTTP_HeaderTest extends Unittest_TestCase {
 					'Accept' => 'application/json, text/html; q=.5, text/*; q=.1, */*'
 				),
 				array(
-					'text/html', 
-					'application/json', 
+					'text/html',
+					'application/json',
 					'text/plain'
 				),
-				FALSE,
+				false,
 				'application/json'
 			),
 			array(
@@ -941,7 +935,7 @@ class Kohana_HTTP_HeaderTest extends Unittest_TestCase {
 					'application/xml',
 					'image/jpeg'
 				),
-				FALSE,
+				false,
 				'application/xml'
 			),
 			array(
@@ -953,7 +947,7 @@ class Kohana_HTTP_HeaderTest extends Unittest_TestCase {
 					'application/xml',
 					'image/jpeg'
 				),
-				FALSE,
+				false,
 				'text/plain'
 			),
 			array(
@@ -965,22 +959,22 @@ class Kohana_HTTP_HeaderTest extends Unittest_TestCase {
 					'application/xml',
 					'image/jpeg'
 				),
-				TRUE,
-				FALSE
+				true,
+				false
 			),
-			
+
 		);
 	}
 
 	/**
 	 * Tests `preferred_accept` returns the correct preferred type
-	 * 
+	 *
 	 * @dataProvider provider_preferred_accept
 	 *
-	 * @param   array     state 
-	 * @param   array     accepts 
-	 * @param   string    explicit 
-	 * @param   string    expected 
+	 * @param   array     state
+	 * @param   array     accepts
+	 * @param   string    explicit
+	 * @param   string    expected
 	 * @return  void
 	 */
 	public function test_preferred_accept(array $state, array $accepts, $explicit, $expected)
@@ -1032,12 +1026,12 @@ class Kohana_HTTP_HeaderTest extends Unittest_TestCase {
 	/**
 	 * Tests `accepts_charset_at_quality` works as expected, returning the correct
 	 * quality value
-	 * 
+	 *
 	 * @dataProvider provider_accepts_charset_at_quality
 	 *
-	 * @param   array     state 
-	 * @param   string    charset 
-	 * @param   string    expected 
+	 * @param   array     state
+	 * @param   string    charset
+	 * @param   string    expected
 	 * @return  void
 	 */
 	public function test_accepts_charset_at_quality(array $state, $charset, $expected)
@@ -1080,12 +1074,12 @@ class Kohana_HTTP_HeaderTest extends Unittest_TestCase {
 	/**
 	 * Tests `preferred_charset` works as expected, returning the correct charset
 	 * from the list supplied
-	 * 
+	 *
 	 * @dataProvider provider_preferred_charset
 	 *
-	 * @param   array     state 
-	 * @param   array     charsets 
-	 * @param   string    expected 
+	 * @param   array     state
+	 * @param   array     charsets
+	 * @param   string    expected
 	 * @return  void
 	 */
 	public function test_preferred_charset(array $state, array $charsets, $expected)
@@ -1108,7 +1102,7 @@ class Kohana_HTTP_HeaderTest extends Unittest_TestCase {
 					'accept-encoding' => 'compress, gzip, blowfish; q=.7, *; q=.5'
 				),
 				'gzip',
-				FALSE,
+				false,
 				1.0
 			),
 			array(
@@ -1116,7 +1110,7 @@ class Kohana_HTTP_HeaderTest extends Unittest_TestCase {
 					'accept-encoding' => 'compress, gzip, blowfish; q=.7, *; q=.5'
 				),
 				'gzip',
-				TRUE,
+				true,
 				1.0
 			),
 			array(
@@ -1124,7 +1118,7 @@ class Kohana_HTTP_HeaderTest extends Unittest_TestCase {
 					'accept-encoding' => 'compress, gzip, blowfish; q=.7, *; q=.5'
 				),
 				'blowfish',
-				FALSE,
+				false,
 				0.7
 			),
 			array(
@@ -1132,7 +1126,7 @@ class Kohana_HTTP_HeaderTest extends Unittest_TestCase {
 					'accept-encoding' => 'compress, gzip, blowfish; q=.7, *; q=.5'
 				),
 				'bzip',
-				FALSE,
+				false,
 				0.5
 			),
 			array(
@@ -1140,7 +1134,7 @@ class Kohana_HTTP_HeaderTest extends Unittest_TestCase {
 					'accept-encoding' => 'compress, gzip, blowfish; q=.7, *; q=.5'
 				),
 				'bzip',
-				TRUE,
+				true,
 				(float) 0
 			)
 		);
@@ -1149,13 +1143,13 @@ class Kohana_HTTP_HeaderTest extends Unittest_TestCase {
 	/**
 	 * Tests `accepts_encoding_at_quality` parses and returns the correct
 	 * quality value for Accept-Encoding headers
-	 * 
+	 *
 	 * @dataProvider provider_accepts_encoding_at_quality
 	 *
-	 * @param   array     state 
-	 * @param   string    encoding 
-	 * @param   boolean   explicit 
-	 * @param   float     expected 
+	 * @param   array     state
+	 * @param   string    encoding
+	 * @param   boolean   explicit
+	 * @param   float     expected
 	 * @return  void
 	 */
 	public function test_accepts_encoding_at_quality(array $state, $encoding, $explicit, $expected)
@@ -1177,7 +1171,7 @@ class Kohana_HTTP_HeaderTest extends Unittest_TestCase {
 					'accept-encoding' => 'compress, gzip, blowfish; q=.7, *; q=.5'
 				),
 				array('gzip', 'blowfish', 'bzip'),
-				FALSE,
+				false,
 				'gzip'
 			),
 			array(
@@ -1185,7 +1179,7 @@ class Kohana_HTTP_HeaderTest extends Unittest_TestCase {
 					'accept-encoding' => 'compress, gzip, blowfish; q=.7, *; q=.5'
 				),
 				array('bzip', 'ROT-13'),
-				FALSE,
+				false,
 				'bzip'
 			),
 			array(
@@ -1193,15 +1187,15 @@ class Kohana_HTTP_HeaderTest extends Unittest_TestCase {
 					'accept-encoding' => 'compress, gzip, blowfish; q=.7, *; q=.5'
 				),
 				array('bzip', 'ROT-13'),
-				TRUE,
-				FALSE
+				true,
+				false
 			),
 			array(
 				array(
 					'accept-encoding' => 'compress, gzip, blowfish; q=.2, *; q=.5'
 				),
 				array('ROT-13', 'blowfish'),
-				FALSE,
+				false,
 				'ROT-13'
 			),
 		);
@@ -1210,11 +1204,11 @@ class Kohana_HTTP_HeaderTest extends Unittest_TestCase {
 	/**
 	 * Tests that `preferred_encoding` parses and returns the correct
 	 * encoding type
-	 * 
+	 *
 	 * @dataProvider provider_preferred_encoding
 	 *
 	 * @param   array     state in
-	 * @param   array     encodings to interrogate 
+	 * @param   array     encodings to interrogate
 	 * @param   boolean   explicit check
 	 * @param   string    expected output
 	 * @return  void
@@ -1238,7 +1232,7 @@ class Kohana_HTTP_HeaderTest extends Unittest_TestCase {
 					'accept-language'  => 'en-us; q=.9, en-gb; q=.7, en; q=.5, fr-fr; q=.9, fr; q=.8'
 				),
 				'en',
-				FALSE,
+				false,
 				0.5
 			),
 			array(
@@ -1246,7 +1240,7 @@ class Kohana_HTTP_HeaderTest extends Unittest_TestCase {
 					'accept-language'  => 'en-us; q=.9, en-gb; q=.7, en; q=.5, fr-fr; q=.9, fr; q=.8'
 				),
 				'en-gb',
-				FALSE,
+				false,
 				0.7
 			),
 			array(
@@ -1254,7 +1248,7 @@ class Kohana_HTTP_HeaderTest extends Unittest_TestCase {
 					'accept-language'  => 'en-us; q=.9, en-gb; q=.7, en; q=.5, fr-fr; q=.9, fr; q=.8'
 				),
 				'en',
-				TRUE,
+				true,
 				0.5
 			),
 			array(
@@ -1262,7 +1256,7 @@ class Kohana_HTTP_HeaderTest extends Unittest_TestCase {
 					'accept-language'  => 'en-us; q=.9, en-gb; q=.7, en; q=.5, fr-fr; q=.9, fr; q=.8'
 				),
 				'fr-ni',
-				FALSE,
+				false,
 				0.8
 			),
 			array(
@@ -1270,7 +1264,7 @@ class Kohana_HTTP_HeaderTest extends Unittest_TestCase {
 					'accept-language'  => 'en-us; q=.9, en-gb; q=.7, en; q=.5, fr-fr; q=.9, fr; q=.8'
 				),
 				'fr-ni',
-				TRUE,
+				true,
 				(float) 0
 			),
 			array(
@@ -1278,9 +1272,9 @@ class Kohana_HTTP_HeaderTest extends Unittest_TestCase {
 					'accept-language'  => 'en-US'
 				),
 				'en-us',
-				TRUE,
+				true,
 				(float) 1
-			),			
+			),
 		);
 	}
 
@@ -1289,7 +1283,7 @@ class Kohana_HTTP_HeaderTest extends Unittest_TestCase {
 	 * correctly and identifies the correct quality supplied, explicit or not
 	 *
 	 * @dataProvider provider_accepts_language_at_quality
-	 * 
+	 *
 	 * @param   array    state in
 	 * @param   string   language to interrogate
 	 * @param   boolean  explicit check
@@ -1319,7 +1313,7 @@ class Kohana_HTTP_HeaderTest extends Unittest_TestCase {
 					'fr',
 					'en-gb'
 				),
-				FALSE,
+				false,
 				'fr'
 			),
 			array(
@@ -1331,7 +1325,7 @@ class Kohana_HTTP_HeaderTest extends Unittest_TestCase {
 					'fr',
 					'en-gb'
 				),
-				TRUE,
+				true,
 				'fr'
 			),
 			array(
@@ -1343,7 +1337,7 @@ class Kohana_HTTP_HeaderTest extends Unittest_TestCase {
 					'fr-ni',
 					'fr'
 				),
-				FALSE,
+				false,
 				'fr-ni'
 			),
 			array(
@@ -1355,7 +1349,7 @@ class Kohana_HTTP_HeaderTest extends Unittest_TestCase {
 					'fr-ni',
 					'fr'
 				),
-				TRUE,
+				true,
 				'fr'
 			),
 			array(
@@ -1365,16 +1359,16 @@ class Kohana_HTTP_HeaderTest extends Unittest_TestCase {
 				array(
 					'en-us'
 				),
-				TRUE,
+				true,
 				'en-us'
-			),			
+			),
 		);
 	}
 
 	/**
 	 * Tests that `preferred_language` correctly identifies the right
 	 * language based on the Accept-Language header and `$explicit` setting
-	 * 
+	 *
 	 * @dataProvider provider_preferred_language
 	 *
 	 * @param   array    state in
@@ -1405,7 +1399,7 @@ class Kohana_HTTP_HeaderTest extends Unittest_TestCase {
 					'HTTP/1.1 200 OK',
 					'Content-Type: '.$content_type,
 				),
-				FALSE,
+				false,
 			),
 			array(
 				array(),
@@ -1414,7 +1408,7 @@ class Kohana_HTTP_HeaderTest extends Unittest_TestCase {
 					'Content-Type: '.$content_type,
 					'X-Powered-By: '.Kohana::version(),
 				),
-				TRUE,
+				true,
 			),
 			array(
 				array(
@@ -1431,7 +1425,7 @@ class Kohana_HTTP_HeaderTest extends Unittest_TestCase {
 					'Accept-Language: en, en-gb, en-us',
 					'Content-Type: '.$content_type,
 				),
-				FALSE
+				false
 			),
 			array(
 				array(
@@ -1453,14 +1447,14 @@ class Kohana_HTTP_HeaderTest extends Unittest_TestCase {
 					'X-Powered-By: Mohana',
 					'X-Ssl-Enabled: TRUE'
 				),
-				TRUE
+				true
 			)
 		);
 	}
 
 	/**
 	 * Tests that send headers processes the headers sent to PHP correctly
-	 * 
+	 *
 	 * @dataProvider provider_send_headers
 	 *
 	 * @param   array     state in
@@ -1471,20 +1465,20 @@ class Kohana_HTTP_HeaderTest extends Unittest_TestCase {
 	{
 		Kohana::$expose = $expose;
 
-		$response = new Response;
+		$response = new Response();
 		$response->headers($state);
 
 		$this->assertSame(
 			$expected,
-			$response->send_headers(FALSE, array($this, 'send_headers_handler'))
+			$response->send_headers(false, array($this, 'send_headers_handler'))
 		);
 	}
 
 	/**
 	 * Callback handler for send headers
 	 *
-	 * @param   array     headers 
-	 * @param   boolean   replace 
+	 * @param   array     headers
+	 * @param   boolean   replace
 	 * @return  array
 	 */
 	public function send_headers_handler($response, $headers, $replace)

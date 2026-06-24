@@ -1,11 +1,12 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct script access.');
 
 return array(
 
 	'platform' => array(
-		'windows nt 10.0'=> 'Windows 10',
+		'windows nt 10.0' => 'Windows 10',
 		'windows nt 6.3' => 'Windows 8.1',
 		'windows nt 6.2' => 'Windows 8',
 		'windows nt 6.1' => 'Windows 7',

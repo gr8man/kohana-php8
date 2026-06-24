@@ -1,9 +1,10 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct script access.');
 
-class Kohana_HTTP_Exception_305 extends HTTP_Exception_Expected {
-
+class Kohana_HTTP_Exception_305 extends HTTP_Exception_Expected
+{
 	/**
 	 * @var   integer    HTTP 305 Use Proxy
 	 */
@@ -14,10 +15,11 @@ class Kohana_HTTP_Exception_305 extends HTTP_Exception_Expected {
 	 *
 	 * @param  string  $location  URI of the proxy
 	 */
-	public function location($uri = NULL)
+	public function location($uri = null)
 	{
-		if ($uri === NULL)
+		if ($uri === null) {
 			return $this->headers('Location');
+		}
 
 		$this->headers('Location', $uri);
 
@@ -32,13 +34,15 @@ class Kohana_HTTP_Exception_305 extends HTTP_Exception_Expected {
 	 */
 	public function check()
 	{
-		if ($location = $this->headers('location') === NULL)
+		if ($location = $this->headers('location') === null) {
 			throw new Kohana_Exception('A \'location\' must be specified for a redirect');
+		}
 
-		if (strpos($location, '://') === FALSE)
+		if (strpos($location, '://') === false) {
 			throw new Kohana_Exception('An absolute URI to the proxy server must be specified');
+		}
 
-		return TRUE;
+		return true;
 	}
 
 }

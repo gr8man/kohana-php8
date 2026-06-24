@@ -36,8 +36,8 @@ define('EXT', '.php');
 /**
  * Set the path to the document root
  *
- * This assumes that this file is stored 2 levels below the DOCROOT, if you move 
- * this bootstrap file somewhere else then you'll need to modify this value to 
+ * This assumes that this file is stored 2 levels below the DOCROOT, if you move
+ * this bootstrap file somewhere else then you'll need to modify this value to
  * compensate.
  */
 define('DOCROOT', realpath(dirname(__FILE__).'/../../').DIRECTORY_SEPARATOR);
@@ -55,7 +55,7 @@ define('DOCROOT', realpath(dirname(__FILE__).'/../../').DIRECTORY_SEPARATOR);
  * When using a legacy application with PHP >= 5.3, it is recommended to disable
  * deprecated notices. Disable with: E_ALL & ~E_DEPRECATED
  */
-error_reporting(E_ALL | E_STRICT);
+error_reporting(E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED);
 
 /**
  * End of standard configuration! Changing any of the code below should only be
@@ -65,20 +65,17 @@ error_reporting(E_ALL | E_STRICT);
  */
 
 // Make the application relative to the docroot
-if ( ! is_dir($application) AND is_dir(DOCROOT.$application))
-{
+if (! is_dir($application) and is_dir(DOCROOT.$application)) {
 	$application = DOCROOT.$application;
 }
 
 // Make the modules relative to the docroot
-if ( ! is_dir($modules) AND is_dir(DOCROOT.$modules))
-{
+if (! is_dir($modules) and is_dir(DOCROOT.$modules)) {
 	$modules = DOCROOT.$modules;
 }
 
 // Make the system relative to the docroot
-if ( ! is_dir($system) AND is_dir(DOCROOT.$system))
-{
+if (! is_dir($system) and is_dir(DOCROOT.$system)) {
 	$system = DOCROOT.$system;
 }
 
@@ -93,39 +90,35 @@ unset($application, $modules, $system);
 /**
  * Define the start time of the application, used for profiling.
  */
-if ( ! defined('KOHANA_START_TIME'))
-{
-	define('KOHANA_START_TIME', microtime(TRUE));
+if (! defined('KOHANA_START_TIME')) {
+	define('KOHANA_START_TIME', microtime(true));
 }
 
 /**
  * Define the memory usage at the start of the application, used for profiling.
  */
-if ( ! defined('KOHANA_START_MEMORY'))
-{
+if (! defined('KOHANA_START_MEMORY')) {
 	define('KOHANA_START_MEMORY', memory_get_usage());
 }
 
-if ( ! function_exists('http_support'))
-{
+if (! function_exists('http_support')) {
 	define('HTTP_SUPPORT', 1);
 	define('HTTP_SUPPORT_REQUESTS', 1);
-	function http_support($type = NULL) { return FALSE; }
+	function http_support($type = null)
+	{
+		return false;
+	}
 }
 
 // Bootstrap the application
 require APPPATH.'bootstrap'.EXT;
 
 // Disable output buffering
-if (($ob_len = ob_get_length()) !== FALSE)
-{
+if (($ob_len = ob_get_length()) !== false) {
 	// flush_end on an empty buffer causes headers to be sent. Only flush if needed.
-	if ($ob_len > 0)
-	{
+	if ($ob_len > 0) {
 		ob_end_flush();
-	}
-	else
-	{
+	} else {
 		ob_end_clean();
 	}
 }
@@ -133,13 +126,13 @@ if (($ob_len = ob_get_length()) !== FALSE)
 // Enable the unittest module if it is not already loaded - use the absolute path
 $modules = Kohana::modules();
 $unittest_path = realpath(__DIR__).DIRECTORY_SEPARATOR;
-if ( ! in_array($unittest_path, $modules)) {
+if (! in_array($unittest_path, $modules)) {
 	$modules['unittest'] = $unittest_path;
 }
 
 // Enable auth module for Auth tests
 $auth_path = DOCROOT.'modules'.DIRECTORY_SEPARATOR.'auth'.DIRECTORY_SEPARATOR;
-if ( ! in_array($auth_path, $modules) AND is_dir($auth_path)) {
+if (! in_array($auth_path, $modules) and is_dir($auth_path)) {
 	$modules['auth'] = $auth_path;
 }
 

@@ -1,12 +1,13 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct script access.');
 
 /**
  * Database writer for the config system
  *
  * Schema for configuration table:
- * 
+ *
  *    CREATE TABLE IF NOT EXISTS `config` (
  *      `group_name` varchar(128) NOT NULL,
  *      `config_key` varchar(128) NOT NULL,
@@ -36,8 +37,7 @@ class Kohana_Config_Database_Writer extends Config_Database_Reader implements Ko
 	{
 		$config = parent::load($group);
 
-		if ($config !== FALSE)
-		{
+		if ($config !== false) {
 			$this->_loaded_keys[$group] = array_combine(array_keys($config), array_keys($config));
 		}
 
@@ -47,7 +47,7 @@ class Kohana_Config_Database_Writer extends Config_Database_Reader implements Ko
 	/**
 	 * Writes the passed config for $group
 	 *
-	 * Returns chainable instance on success or throws 
+	 * Returns chainable instance on success or throws
 	 * Kohana_Config_Exception on failure
 	 *
 	 * @param string      $group  The config group
@@ -60,27 +60,21 @@ class Kohana_Config_Database_Writer extends Config_Database_Reader implements Ko
 		$config = serialize($config);
 
 		// Check to see if we've loaded the config from the table already
-		if (isset($this->_loaded_keys[$group][$key]))
-		{
+		if (isset($this->_loaded_keys[$group][$key])) {
 			$this->_update($group, $key, $config);
-		}
-		else
-		{
+		} else {
 			// Attempt to run an insert query
 			// This may fail if the config key already exists in the table
 			// and we don't know about it
-			try
-			{
+			try {
 				$this->_insert($group, $key, $config);
-			}
-			catch (Database_Exception $e)
-			{
+			} catch (Database_Exception $e) {
 				// Attempt to run an update instead
 				$this->_update($group, $key, $config);
 			}
 		}
 
-		return TRUE;
+		return true;
 	}
 
 	/**

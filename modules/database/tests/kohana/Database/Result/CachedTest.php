@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('Kohana bootstrap needs to be included before tests run');
+declare(strict_types=1);
+defined('SYSPATH') or die('Kohana bootstrap needs to be included before tests run');
 
 /**
  * Tests Database_Result_Cached - the array-based database result class.
@@ -33,8 +34,8 @@ class Kohana_Database_Result_CachedTest extends Unittest_TestCase
 			),
 			array(
 				array(
-					array('id' => 10, 'title' => 'First', 'active' => TRUE),
-					array('id' => 20, 'title' => 'Second', 'active' => FALSE),
+					array('id' => 10, 'title' => 'First', 'active' => true),
+					array('id' => 20, 'title' => 'Second', 'active' => false),
 				),
 			),
 			array(
@@ -53,7 +54,7 @@ class Kohana_Database_Result_CachedTest extends Unittest_TestCase
 			array(
 				array(array('id' => 1, 'name' => 'John')),
 				'name',
-				NULL,
+				null,
 				'John',
 			),
 			// non-existing column with default
@@ -67,8 +68,8 @@ class Kohana_Database_Result_CachedTest extends Unittest_TestCase
 			array(
 				array(array('id' => 1, 'name' => 'John')),
 				'age',
-				NULL,
-				NULL,
+				null,
+				null,
 			),
 		);
 	}
@@ -412,7 +413,7 @@ class Kohana_Database_Result_CachedTest extends Unittest_TestCase
 		);
 		$expected = array('John', 'Jane');
 		$result = new Database_Result_Cached($data, 'SELECT * FROM test');
-		$this->assertSame($expected, $result->as_array(NULL, 'name'));
+		$this->assertSame($expected, $result->as_array(null, 'name'));
 	}
 
 	/**
@@ -489,8 +490,7 @@ class Kohana_Database_Result_CachedTest extends Unittest_TestCase
 		);
 		$result = new Database_Result_Cached($data, 'SELECT * FROM test');
 		$iterated = array();
-		foreach ($result as $key => $row)
-		{
+		foreach ($result as $key => $row) {
 			$iterated[$key] = $row;
 		}
 		$this->assertSame($data, $iterated);
@@ -509,13 +509,11 @@ class Kohana_Database_Result_CachedTest extends Unittest_TestCase
 		);
 		$result = new Database_Result_Cached($data, 'SELECT * FROM test');
 		$first = array();
-		foreach ($result as $row)
-		{
+		foreach ($result as $row) {
 			$first[] = $row;
 		}
 		$second = array();
-		foreach ($result as $row)
-		{
+		foreach ($result as $row) {
 			$second[] = $row;
 		}
 		$this->assertSame($first, $second);
@@ -534,8 +532,7 @@ class Kohana_Database_Result_CachedTest extends Unittest_TestCase
 			array('id' => 3),
 		);
 		$result = new Database_Result_Cached($data, 'SELECT * FROM test');
-		foreach ($result as $row)
-		{
+		foreach ($result as $row) {
 			// just iterate
 		}
 		$this->assertCount(3, $result);

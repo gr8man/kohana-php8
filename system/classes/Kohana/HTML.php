@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-defined('SYSPATH') OR die('No direct script access.');
+defined('SYSPATH') or die('No direct script access.');
 /**
  * HTML helper class. Provides generic methods for generating various HTML
  * tags and making output HTML safe.
@@ -13,13 +13,12 @@ defined('SYSPATH') OR die('No direct script access.');
  * @copyright  (c) 2007-2012 Kohana Team
  * @license    http://kohanaframework.org/license
  */
-class Kohana_HTML {
-
+class Kohana_HTML
+{
 	/**
 	 * @var  array  preferred order of attributes
 	 */
-	public static $attribute_order = array
-	(
+	public static $attribute_order = array(
 		'action',
 		'method',
 		'type',
@@ -53,12 +52,12 @@ class Kohana_HTML {
 	/**
 	 * @var  boolean  use strict XHTML mode?
 	 */
-	public static $strict = TRUE;
+	public static $strict = true;
 
 	/**
 	 * @var  boolean  automatically target external URLs to a new window?
 	 */
-	public static $windowed_urls = FALSE;
+	public static $windowed_urls = false;
 
 	/**
 	 * Convert special characters to HTML entities. All untrusted content
@@ -70,9 +69,9 @@ class Kohana_HTML {
 	 * @param   boolean $double_encode  encode existing entities
 	 * @return  string
 	 */
-	public static function chars($value, $double_encode = TRUE)
+	public static function chars($value, $double_encode = true)
 	{
-		return htmlspecialchars( (string) $value, ENT_QUOTES, Kohana::$charset, $double_encode);
+		return htmlspecialchars((string) $value, ENT_QUOTES, Kohana::$charset, $double_encode);
 	}
 
 	/**
@@ -86,9 +85,9 @@ class Kohana_HTML {
 	 * @param   boolean $double_encode  encode existing entities
 	 * @return  string
 	 */
-	public static function entities($value, $double_encode = TRUE)
+	public static function entities($value, $double_encode = true)
 	{
-		return htmlentities( (string) $value, ENT_QUOTES, Kohana::$charset, $double_encode);
+		return htmlentities((string) $value, ENT_QUOTES, Kohana::$charset, $double_encode);
 	}
 
 	/**
@@ -107,31 +106,23 @@ class Kohana_HTML {
 	 * @uses    URL::site
 	 * @uses    HTML::attributes
 	 */
-	public static function anchor($uri, $title = NULL, array $attributes = NULL, $protocol = NULL, $index = TRUE)
+	public static function anchor($uri, $title = null, array $attributes = null, $protocol = null, $index = true)
 	{
-		if ($title === NULL)
-		{
+		if ($title === null) {
 			// Use the URI as the title
 			$title = $uri;
 		}
 
-		if ($uri === '')
-		{
+		if ($uri === '') {
 			// Only use the base URL
 			$uri = URL::base($protocol, $index);
-		}
-		else
-		{
-			if (strpos($uri, '://') !== FALSE)
-			{
-				if (HTML::$windowed_urls === TRUE AND empty($attributes['target']))
-				{
+		} else {
+			if (strpos($uri, '://') !== false) {
+				if (HTML::$windowed_urls === true and empty($attributes['target'])) {
 					// Make the link open in a new window
 					$attributes['target'] = '_blank';
 				}
-			}
-			elseif ($uri[0] !== '#' AND $uri[0] !== '?')
-			{
+			} elseif ($uri[0] !== '#' and $uri[0] !== '?') {
 				// Make the URI absolute for non-fragment and non-query anchors
 				$uri = URL::site($uri, $protocol, $index);
 			}
@@ -158,10 +149,9 @@ class Kohana_HTML {
 	 * @uses    URL::base
 	 * @uses    HTML::attributes
 	 */
-	public static function file_anchor($file, $title = NULL, array $attributes = NULL, $protocol = NULL, $index = FALSE)
+	public static function file_anchor($file, $title = null, array $attributes = null, $protocol = null, $index = false)
 	{
-		if ($title === NULL)
-		{
+		if ($title === null) {
 			// Use the file name as the title
 			$title = basename($file);
 		}
@@ -184,10 +174,9 @@ class Kohana_HTML {
 	 * @return  string
 	 * @uses    HTML::attributes
 	 */
-	public static function mailto($email, $title = NULL, array $attributes = NULL)
+	public static function mailto($email, $title = null, array $attributes = null)
 	{
-		if ($title === NULL)
-		{
+		if ($title === null) {
 			// Use the email address as the title
 			$title = $email;
 		}
@@ -208,10 +197,9 @@ class Kohana_HTML {
 	 * @uses    URL::base
 	 * @uses    HTML::attributes
 	 */
-	public static function style($file, array $attributes = NULL, $protocol = NULL, $index = FALSE)
+	public static function style($file, array $attributes = null, $protocol = null, $index = false)
 	{
-		if (strpos($file, '://') === FALSE AND strpos($file, '//') !== 0)
-		{
+		if (strpos($file, '://') === false and strpos($file, '//') !== 0) {
 			// Add the base URL
 			$file = URL::site($file, $protocol, $index);
 		}
@@ -241,10 +229,9 @@ class Kohana_HTML {
 	 * @uses    URL::base
 	 * @uses    HTML::attributes
 	 */
-	public static function script($file, array $attributes = NULL, $protocol = NULL, $index = FALSE)
+	public static function script($file, array $attributes = null, $protocol = null, $index = false)
 	{
-		if (strpos($file, '://') === FALSE AND strpos($file, '//') !== 0)
-		{
+		if (strpos($file, '://') === false and strpos($file, '//') !== 0) {
 			// Add the base URL
 			$file = URL::site($file, $protocol, $index);
 		}
@@ -271,10 +258,9 @@ class Kohana_HTML {
 	 * @uses    URL::base
 	 * @uses    HTML::attributes
 	 */
-	public static function image($file, array $attributes = NULL, $protocol = NULL, $index = FALSE)
+	public static function image($file, array $attributes = null, $protocol = null, $index = false)
 	{
-		if (strpos($file, '://') === FALSE)
-		{
+		if (strpos($file, '://') === false) {
 			// Add the base URL
 			$file = URL::site($file, $protocol, $index);
 		}
@@ -294,16 +280,15 @@ class Kohana_HTML {
 	 * @param   array   $attributes attribute list
 	 * @return  string
 	 */
-	public static function attributes(array $attributes = NULL)
+	public static function attributes(array $attributes = null)
 	{
-		if (empty($attributes))
+		if (empty($attributes)) {
 			return '';
+		}
 
 		$sorted = array();
-		foreach (HTML::$attribute_order as $key)
-		{
-			if (isset($attributes[$key]))
-			{
+		foreach (HTML::$attribute_order as $key) {
+			if (isset($attributes[$key])) {
 				// Add the attribute to the sorted list
 				$sorted[$key] = $attributes[$key];
 			}
@@ -313,31 +298,26 @@ class Kohana_HTML {
 		$attributes = $sorted + $attributes;
 
 		$compiled = '';
-		foreach ($attributes as $key => $value)
-		{
-			if ($value === NULL)
-			{
+		foreach ($attributes as $key => $value) {
+			if ($value === null) {
 				// Skip attributes that have NULL values
 				continue;
 			}
 
-			if (is_int($key))
-			{
+			if (is_int($key)) {
 				// Assume non-associative keys are mirrored attributes
 				$key = $value;
 
-				if ( ! HTML::$strict)
-				{
+				if (! HTML::$strict) {
 					// Just use a key
-					$value = FALSE;
+					$value = false;
 				}
 			}
 
 			// Add the attribute key
 			$compiled .= ' '.$key;
 
-			if ($value OR HTML::$strict)
-			{
+			if ($value or HTML::$strict) {
 				// Add the attribute value
 				$compiled .= '="'.HTML::chars($value).'"';
 			}

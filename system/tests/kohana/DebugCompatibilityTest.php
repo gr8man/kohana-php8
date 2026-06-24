@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-defined('SYSPATH') OR die('Kohana bootstrap needs to be included before tests run');
+defined('SYSPATH') or die('Kohana bootstrap needs to be included before tests run');
 
 /**
  * Tests for Debug class PHP 8.3 compatibility fixes
@@ -20,9 +20,9 @@ class Kohana_DebugCompatibilityTest extends Unittest_TestCase
 	public function provider_debug_dump_types()
 	{
 		return array(
-			array(NULL, '<small>NULL</small>'),
-			array(TRUE, '<small>bool</small> TRUE'),
-			array(FALSE, '<small>bool</small> FALSE'),
+			array(null, '<small>NULL</small>'),
+			array(true, '<small>bool</small> TRUE'),
+			array(false, '<small>bool</small> FALSE'),
 			array(0, '<small>int</small> 0'),
 			array(42, '<small>int</small> 42'),
 			array(3.14, '<small>float</small>'),
@@ -42,7 +42,7 @@ class Kohana_DebugCompatibilityTest extends Unittest_TestCase
 	public function test_debug_dump_handles_php_types($value, $expected_pattern)
 	{
 		$result = Debug::dump($value);
-		
+
 		$this->assertIsString($result);
 		$this->assertStringContainsString('<small>', $result);
 	}
@@ -51,7 +51,7 @@ class Kohana_DebugCompatibilityTest extends Unittest_TestCase
 	{
 		$str = 'Hello World';
 		$result = Debug::dump($str);
-		
+
 		$this->assertStringContainsString('Hello World', $result);
 		$this->assertStringContainsString('string', $result);
 	}
@@ -60,7 +60,7 @@ class Kohana_DebugCompatibilityTest extends Unittest_TestCase
 	{
 		$arr = array('key' => 'value', 'num' => 123);
 		$result = Debug::dump($arr);
-		
+
 		$this->assertStringContainsString('array', $result);
 		$this->assertStringContainsString('key', $result);
 		$this->assertStringContainsString('value', $result);
@@ -71,7 +71,7 @@ class Kohana_DebugCompatibilityTest extends Unittest_TestCase
 		$obj = new stdClass();
 		$obj->property = 'value';
 		$result = Debug::dump($obj);
-		
+
 		$this->assertStringContainsString('object', $result);
 		$this->assertStringContainsString('stdClass', $result);
 	}
@@ -85,9 +85,9 @@ class Kohana_DebugCompatibilityTest extends Unittest_TestCase
 				),
 			),
 		);
-		
+
 		$result = Debug::dump($data);
-		
+
 		$this->assertStringContainsString('level1', $result);
 		$this->assertStringContainsString('level2', $result);
 		$this->assertStringContainsString('deep', $result);
@@ -96,7 +96,7 @@ class Kohana_DebugCompatibilityTest extends Unittest_TestCase
 	public function test_debug_vars()
 	{
 		$result = Debug::vars('test1', 'test2', 123);
-		
+
 		$this->assertStringContainsString('test1', $result);
 		$this->assertStringContainsString('test2', $result);
 		$this->assertStringContainsString('123', $result);
@@ -107,9 +107,9 @@ class Kohana_DebugCompatibilityTest extends Unittest_TestCase
 	{
 		$obj = new stdClass();
 		$obj->name = 'test';
-		
+
 		$result = Debug::vars($obj);
-		
+
 		$this->assertStringContainsString('stdClass', $result);
 		$this->assertStringContainsString('name', $result);
 		$this->assertStringContainsString('test', $result);
@@ -118,7 +118,7 @@ class Kohana_DebugCompatibilityTest extends Unittest_TestCase
 	public function test_debug_vars_empty()
 	{
 		$result = Debug::vars();
-		
+
 		$this->assertNull($result);
 	}
 
@@ -126,10 +126,9 @@ class Kohana_DebugCompatibilityTest extends Unittest_TestCase
 	{
 		try {
 			throw new Exception('Test exception');
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			$trace = Debug::trace();
-			
+
 			$this->assertIsArray($trace);
 			$this->assertNotEmpty($trace);
 		}
@@ -144,9 +143,9 @@ class Kohana_DebugCompatibilityTest extends Unittest_TestCase
 				'line' => 10,
 			),
 		);
-		
+
 		$result = Debug::trace($custom_trace);
-		
+
 		$this->assertIsArray($result);
 		$this->assertCount(1, $result);
 	}
@@ -154,14 +153,14 @@ class Kohana_DebugCompatibilityTest extends Unittest_TestCase
 	public function test_debug_source_file_not_found()
 	{
 		$result = Debug::source('/nonexistent/file.php', 1);
-		
+
 		$this->assertFalse($result);
 	}
 
 	public function test_debug_source_with_valid_file()
 	{
 		$result = Debug::source(__FILE__, 5, 2);
-		
+
 		$this->assertIsString($result);
 		$this->assertStringContainsString('source', $result);
 	}
@@ -169,8 +168,8 @@ class Kohana_DebugCompatibilityTest extends Unittest_TestCase
 	public function test_debug_source_with_padding()
 	{
 		$result = Debug::source(__FILE__, 5, 5);
-		
-		if ($result !== FALSE) {
+
+		if ($result !== false) {
 			$this->assertStringContainsString('source', $result);
 		}
 	}
@@ -179,7 +178,7 @@ class Kohana_DebugCompatibilityTest extends Unittest_TestCase
 	{
 		$path = APPPATH . 'classes/Controller/Welcome.php';
 		$result = Debug::path($path);
-		
+
 		$this->assertStringContainsString('APPPATH', $result);
 	}
 
@@ -187,7 +186,7 @@ class Kohana_DebugCompatibilityTest extends Unittest_TestCase
 	{
 		$path = SYSPATH . 'classes/Kohana/Core.php';
 		$result = Debug::path($path);
-		
+
 		$this->assertStringContainsString('SYSPATH', $result);
 	}
 
@@ -195,9 +194,9 @@ class Kohana_DebugCompatibilityTest extends Unittest_TestCase
 	{
 		$arr = array('a');
 		$arr[] = &$arr;
-		
+
 		$result = Debug::dump($arr);
-		
+
 		$this->assertStringContainsString('*RECURSION*', $result);
 	}
 
@@ -207,18 +206,18 @@ class Kohana_DebugCompatibilityTest extends Unittest_TestCase
 		$obj2 = new stdClass();
 		$obj1->ref = $obj2;
 		$obj2->ref = $obj1;
-		
+
 		$result = Debug::dump($obj1);
-		
+
 		$this->assertIsString($result);
 	}
 
 	public function test_debug_dump_depth_limit()
 	{
 		$deep_array = array('level1' => array('level2' => array('level3' => array())));
-		
+
 		$result = Debug::dump($deep_array, 128, 1);
-		
+
 		$this->assertIsString($result);
 	}
 
@@ -226,7 +225,7 @@ class Kohana_DebugCompatibilityTest extends Unittest_TestCase
 	{
 		$long_string = str_repeat('a', 200);
 		$result = Debug::dump($long_string, 50);
-		
+
 		$this->assertStringContainsString('&hellip;', $result);
 		$this->assertStringContainsString('string', $result);
 		$this->assertStringContainsString('(200)', $result);
@@ -246,9 +245,9 @@ class Kohana_DebugCompatibilityTest extends Unittest_TestCase
 				'line' => 2,
 			),
 		);
-		
+
 		$result = Debug::trace($trace);
-		
+
 		$this->assertIsArray($result);
 	}
 
@@ -263,9 +262,9 @@ class Kohana_DebugCompatibilityTest extends Unittest_TestCase
 				'line' => 10,
 			),
 		);
-		
+
 		$result = Debug::trace($trace);
-		
+
 		$this->assertIsArray($result);
 		$this->assertStringContainsString('TestClass', $result[0]['function']);
 	}
@@ -281,9 +280,9 @@ class Kohana_DebugCompatibilityTest extends Unittest_TestCase
 				'line' => 10,
 			),
 		);
-		
+
 		$result = Debug::trace($trace);
-		
+
 		$this->assertIsArray($result);
 	}
 
@@ -296,9 +295,9 @@ class Kohana_DebugCompatibilityTest extends Unittest_TestCase
 				'line' => 10,
 			),
 		);
-		
+
 		$result = Debug::trace($trace);
-		
+
 		$this->assertIsArray($result);
 	}
 }

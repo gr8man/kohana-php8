@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct script access.');
 /**
  * UTF8::to_unicode
  *
@@ -23,45 +24,34 @@ function _to_unicode($str)
 
 	$len = strlen($str);
 
-	for ($i = 0; $i < $len; $i++)
-	{
+	for ($i = 0; $i < $len; $i++) {
 		$in = ord($str[$i]);
 
-		if ($m_state == 0)
-		{
+		if ($m_state == 0) {
 			// When m_state is zero we expect either a US-ASCII character or a multi-octet sequence.
-			if (0 == (0x80 & $in))
-			{
+			if (0 == (0x80 & $in)) {
 				// US-ASCII, pass straight through.
 				$out[] = $in;
 				$m_bytes = 1;
-			}
-			elseif (0xC0 == (0xE0 & $in))
-			{
+			} elseif (0xC0 == (0xE0 & $in)) {
 				// First octet of 2 octet sequence
 				$m_ucs4 = $in;
 				$m_ucs4 = ($m_ucs4 & 0x1F) << 6;
 				$m_state = 1;
 				$m_bytes = 2;
-			}
-			elseif (0xE0 == (0xF0 & $in))
-			{
+			} elseif (0xE0 == (0xF0 & $in)) {
 				// First octet of 3 octet sequence
 				$m_ucs4 = $in;
 				$m_ucs4 = ($m_ucs4 & 0x0F) << 12;
 				$m_state = 2;
 				$m_bytes = 3;
-			}
-			elseif (0xF0 == (0xF8 & $in))
-			{
+			} elseif (0xF0 == (0xF8 & $in)) {
 				// First octet of 4 octet sequence
 				$m_ucs4 = $in;
 				$m_ucs4 = ($m_ucs4 & 0x07) << 18;
 				$m_state = 3;
 				$m_bytes = 4;
-			}
-			elseif (0xF8 == (0xFC & $in))
-			{
+			} elseif (0xF8 == (0xFC & $in)) {
 				/** First octet of 5 octet sequence.
 				 *
 				 * This is illegal because the encoded codepoint must be either
@@ -74,27 +64,20 @@ function _to_unicode($str)
 				$m_ucs4 = ($m_ucs4 & 0x03) << 24;
 				$m_state = 4;
 				$m_bytes = 5;
-			}
-			elseif (0xFC == (0xFE & $in))
-			{
+			} elseif (0xFC == (0xFE & $in)) {
 				// First octet of 6 octet sequence, see comments for 5 octet sequence.
 				$m_ucs4 = $in;
 				$m_ucs4 = ($m_ucs4 & 1) << 30;
 				$m_state = 5;
 				$m_bytes = 6;
-			}
-			else
-			{
+			} else {
 				// Current octet is neither in the US-ASCII range nor a legal first octet of a multi-octet sequence.
 				trigger_error('UTF8::to_unicode: Illegal sequence identifier in UTF-8 at byte '.$i, E_USER_WARNING);
-				return FALSE;
+				return false;
 			}
-		}
-		else
-		{
+		} else {
 			// When m_state is non-zero, we expect a continuation of the multi-octet sequence
-			if (0x80 == (0xC0 & $in))
-			{
+			if (0x80 == (0xC0 & $in)) {
 				// Legal continuation
 				$shift = ($m_state - 1) * 6;
 				$tmp = $in;
@@ -102,26 +85,23 @@ function _to_unicode($str)
 				$m_ucs4 |= $tmp;
 
 				// End of the multi-octet sequence. mUcs4 now contains the final Unicode codepoint to be output
-				if (0 == --$m_state)
-				{
+				if (0 == --$m_state) {
 					// Check for illegal sequences and codepoints
 
 					// From Unicode 3.1, non-shortest form is illegal
-					if (((2 == $m_bytes) AND ($m_ucs4 < 0x0080)) OR
-						((3 == $m_bytes) AND ($m_ucs4 < 0x0800)) OR
-						((4 == $m_bytes) AND ($m_ucs4 < 0x10000)) OR
-						(4 < $m_bytes) OR
+					if (((2 == $m_bytes) and ($m_ucs4 < 0x0080)) or
+						((3 == $m_bytes) and ($m_ucs4 < 0x0800)) or
+						((4 == $m_bytes) and ($m_ucs4 < 0x10000)) or
+						(4 < $m_bytes) or
 						// From Unicode 3.2, surrogate characters are illegal
-						(($m_ucs4 & 0xFFFFF800) == 0xD800) OR
+						(($m_ucs4 & 0xFFFFF800) == 0xD800) or
 						// Codepoints outside the Unicode range are illegal
-						($m_ucs4 > 0x10FFFF))
-					{
+						($m_ucs4 > 0x10FFFF)) {
 						trigger_error('UTF8::to_unicode: Illegal sequence or codepoint in UTF-8 at byte '.$i, E_USER_WARNING);
-						return FALSE;
+						return false;
 					}
 
-					if (0xFEFF != $m_ucs4)
-					{
+					if (0xFEFF != $m_ucs4) {
 						// BOM is legal but we don't want to output it
 						$out[] = $m_ucs4;
 					}
@@ -131,9 +111,7 @@ function _to_unicode($str)
 					$m_ucs4  = 0;
 					$m_bytes = 1;
 				}
-			}
-			else
-			{
+			} else {
 				// ((0xC0 & (*in) != 0x80) AND (m_state != 0))
 				// Incomplete multi-octet sequence
 				throw new UTF8_Exception("UTF8::to_unicode: Incomplete multi-octet sequence in UTF-8 at byte ':byte'", array(

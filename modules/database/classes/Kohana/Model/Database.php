@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct script access.');
 /**
  * Database Model base class.
  *
@@ -10,8 +11,8 @@ declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
  * @copyright  (c) 2008-2012 Kohana Team
  * @license    http://kohanaframework.org/license
  */
-abstract class Kohana_Model_Database extends Model {
-
+abstract class Kohana_Model_Database extends Model
+{
 	/**
 	 * Create a new model instance. A [Database] instance or configuration
 	 * group name can be passed to the model. If no database is defined, the
@@ -23,7 +24,7 @@ abstract class Kohana_Model_Database extends Model {
 	 * @param   mixed    $db    Database instance object or string
 	 * @return  Model
 	 */
-	public static function factory($name, $db = NULL)
+	public static function factory($name, $db = null)
 	{
 		// Add the model prefix
 		$class = 'Model_'.$name;
@@ -42,21 +43,17 @@ abstract class Kohana_Model_Database extends Model {
 	 * @param   mixed  $db  Database instance object or string
 	 * @return  void
 	 */
-	public function __construct($db = NULL)
+	public function __construct($db = null)
 	{
-		if ($db)
-		{
+		if ($db) {
 			// Set the instance or name
 			$this->_db = $db;
-		}
-		elseif ( ! $this->_db)
-		{
+		} elseif (! $this->_db) {
 			// Use the default name
 			$this->_db = Database::$default;
 		}
 
-		if (is_string($this->_db))
-		{
+		if (is_string($this->_db)) {
 			// Load the database
 			$this->_db = Database::instance($this->_db);
 		}

@@ -1,19 +1,17 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') or die('No direct script access.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct script access.');
 
 // -- Environment setup --------------------------------------------------------
 
 // Load the core Kohana class
 require SYSPATH.'classes/Kohana/Core'.EXT;
 
-if (is_file(APPPATH.'classes/Kohana'.EXT))
-{
+if (is_file(APPPATH.'classes/Kohana'.EXT)) {
 	// Application extends the core
 	require APPPATH.'classes/Kohana'.EXT;
-}
-else
-{
+} else {
 	// Load empty core extension
 	require SYSPATH.'classes/Kohana'.EXT;
 }
@@ -72,8 +70,7 @@ mb_substitute_character('none');
  */
 I18n::lang('en-us');
 
-if (isset($_SERVER['SERVER_PROTOCOL']))
-{
+if (isset($_SERVER['SERVER_PROTOCOL'])) {
 	// Replace the default protocol.
 	HTTP::$protocol = $_SERVER['SERVER_PROTOCOL'];
 }
@@ -84,8 +81,7 @@ if (isset($_SERVER['SERVER_PROTOCOL']))
  * Note: If you supply an invalid environment name, a PHP warning will be thrown
  * saying "Couldn't find constant Kohana::<INVALID_ENV_NAME>"
  */
-if (isset($_SERVER['KOHANA_ENV']))
-{
+if (isset($_SERVER['KOHANA_ENV'])) {
 	Kohana::$environment = constant('Kohana::'.strtoupper($_SERVER['KOHANA_ENV']));
 }
 
@@ -117,7 +113,7 @@ Kohana::$log->attach(new Log_File(APPPATH.'logs'));
 /**
  * Attach a file reader to config. Multiple readers are supported.
  */
-Kohana::$config->attach(new Config_File);
+Kohana::$config->attach(new Config_File());
 
 /**
  * Enable modules. Modules are referenced by a relative or absolute path.
@@ -137,7 +133,7 @@ Kohana::modules(array(
 /**
  * Cookie Salt
  * @see  http://kohanaframework.org/3.3/guide/kohana/cookies
- * 
+ *
  * If you have not defined a cookie salt in your Cookie class then
  * uncomment the line below and define a preferrably long salt.
  */

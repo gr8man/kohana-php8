@@ -1,9 +1,10 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct script access.');
 
-abstract class Kohana_HTTP_Exception extends Kohana_Exception {
-
+abstract class Kohana_HTTP_Exception extends Kohana_Exception
+{
 	/**
 	 * Creates an HTTP_Exception of the specified type.
 	 *
@@ -12,7 +13,7 @@ abstract class Kohana_HTTP_Exception extends Kohana_Exception {
 	 * @param   array   $variables  translation variables
 	 * @return  HTTP_Exception
 	 */
-	public static function factory($code, $message = NULL, array $variables = NULL, Exception $previous = NULL)
+	public static function factory($code, $message = null, array $variables = null, Exception $previous = null)
 	{
 		$class = 'HTTP_Exception_'.$code;
 
@@ -39,7 +40,7 @@ abstract class Kohana_HTTP_Exception extends Kohana_Exception {
 	 * @param   array   $variables  translation variables
 	 * @return  void
 	 */
-	public function __construct($message = NULL, array $variables = NULL, Exception $previous = NULL)
+	public function __construct($message = null, array $variables = null, Exception $previous = null)
 	{
 		parent::__construct($message, $variables, $this->_code, $previous);
 	}
@@ -50,10 +51,11 @@ abstract class Kohana_HTTP_Exception extends Kohana_Exception {
 	 * @param   Request   $request  Request object that triggered this exception.
 	 * @return  HTTP_Exception
 	 */
-	public function request(Request $request = NULL)
+	public function request(Request $request = null)
 	{
-		if ($request === NULL)
+		if ($request === null) {
 			return $this->_request;
+		}
 
 		$this->_request = $request;
 

@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('Kohana bootstrap needs to be included before tests run');
+declare(strict_types=1);
+defined('SYSPATH') or die('Kohana bootstrap needs to be included before tests run');
 
 /**
  * Tests Kohana i18n class
@@ -17,8 +18,8 @@ declare(strict_types=1); defined('SYSPATH') OR die('Kohana bootstrap needs to be
  * @license    http://kohanaframework.org/license
  */
 #[AllowDynamicProperties]
-class Kohana_I18nTest extends Unittest_TestCase {
-
+class Kohana_I18nTest extends Unittest_TestCase
+{
 	/**
 	 * Default values for the environment, see setEnvironment
 	 * @var array
@@ -38,7 +39,7 @@ class Kohana_I18nTest extends Unittest_TestCase {
 	{
 		return array(
 			// $input, $expected_result
-			array(NULL, 'en-us'),
+			array(null, 'en-us'),
 			array('es-es', 'es-es'),
 		);
 	}
@@ -59,7 +60,7 @@ class Kohana_I18nTest extends Unittest_TestCase {
 
 	/**
 	 * Provides test data for test_get()
-	 * 
+	 *
 	 * @return array
 	 */
 	public function provider_get()

@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('Kohana bootstrap needs to be included before tests run');
+declare(strict_types=1);
+defined('SYSPATH') or die('Kohana bootstrap needs to be included before tests run');
 
 /**
  * Tests Kohana upload class
@@ -21,7 +22,7 @@ class Kohana_UploadTest extends Unittest_TestCase
 {
 	/**
 	 * Provides test data for test_size()
-	 * 
+	 *
 	 * @return array
 	 */
 	public function provider_size()
@@ -29,20 +30,20 @@ class Kohana_UploadTest extends Unittest_TestCase
 		return array(
 			// $field, $bytes, $environment, $expected
 			array(
-				'unit_test', 
-				5, 
-				array('_FILES' => array('unit_test' => array('error' => UPLOAD_ERR_INI_SIZE))), 
-				FALSE
+				'unit_test',
+				5,
+				array('_FILES' => array('unit_test' => array('error' => UPLOAD_ERR_INI_SIZE))),
+				false
 			),
 			array(
-				'unit_test', 
-				5, 
-				array('_FILES' => array('unit_test' => array('error' => UPLOAD_ERR_NO_FILE))), 
-				TRUE
+				'unit_test',
+				5,
+				array('_FILES' => array('unit_test' => array('error' => UPLOAD_ERR_NO_FILE))),
+				true
 			),
 			array(
-				'unit_test', 
-				'6K', 
+				'unit_test',
+				'6K',
 				array('_FILES' => array(
 					'unit_test' => array(
 						'error' => UPLOAD_ERR_OK,
@@ -52,12 +53,12 @@ class Kohana_UploadTest extends Unittest_TestCase
 						'size' => filesize(Kohana::find_file('tests', 'test_data/github', 'png')),
 						)
 					)
-				), 
-				TRUE
+				),
+				true
 			),
 			array(
-				'unit_test', 
-				'1B', 
+				'unit_test',
+				'1B',
 				array('_FILES' => array(
 						'unit_test' => array(
 							'error' => UPLOAD_ERR_OK,
@@ -67,8 +68,8 @@ class Kohana_UploadTest extends Unittest_TestCase
 							'size' => filesize(Kohana::find_file('tests', 'test_data/github', 'png')),
 						)
 					)
-				), 
-				FALSE
+				),
+				false
 			),
 		);
 	}
@@ -124,7 +125,7 @@ class Kohana_UploadTest extends Unittest_TestCase
 	{
 		return array(
 			array(
-				TRUE,
+				true,
 				array(
 					'error' => UPLOAD_ERR_OK,
 					'name' => 'Unit_Test File',
@@ -134,7 +135,7 @@ class Kohana_UploadTest extends Unittest_TestCase
 				)
 			),
 			array(
-				FALSE,
+				false,
 				array(
 					'name' => 'Unit_Test File',
 					'type' => 'image/png',
@@ -143,7 +144,7 @@ class Kohana_UploadTest extends Unittest_TestCase
 				)
 			),
 			array(
-				FALSE,
+				false,
 				array(
 					'error' => UPLOAD_ERR_OK,
 					'type' => 'image/png',
@@ -152,7 +153,7 @@ class Kohana_UploadTest extends Unittest_TestCase
 				)
 			),
 			array(
-				FALSE,
+				false,
 				array(
 					'name' => 'Unit_Test File',
 					'error' => UPLOAD_ERR_OK,
@@ -161,7 +162,7 @@ class Kohana_UploadTest extends Unittest_TestCase
 				)
 			),
 			array(
-				FALSE,
+				false,
 				array(
 					'error' => UPLOAD_ERR_OK,
 					'name' => 'Unit_Test File',
@@ -170,7 +171,7 @@ class Kohana_UploadTest extends Unittest_TestCase
 				)
 			),
 			array(
-				FALSE,
+				false,
 				array(
 					'error' => UPLOAD_ERR_OK,
 					'name' => 'Unit_Test File',
@@ -178,7 +179,7 @@ class Kohana_UploadTest extends Unittest_TestCase
 					'tmp_name' => Kohana::find_file('tests', 'test_data/github', 'png'),
 				)
 			),
-			
+
 		);
 	}
 
@@ -219,7 +220,7 @@ class Kohana_UploadTest extends Unittest_TestCase
 				)
 			)
 		));
-		
+
 		$this->assertTrue(Upload::type($_FILES['unit_test'], array('jpg', 'png', 'gif')));
 
 		$this->assertFalse(Upload::type($_FILES['unit_test'], array('docx')));

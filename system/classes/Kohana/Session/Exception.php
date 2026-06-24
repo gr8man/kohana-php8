@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct script access.');
 /**
  * @package    Kohana
  * @category   Exceptions
@@ -8,8 +9,8 @@ declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
  * @copyright  (c) 2009-2012 Kohana Team
  * @license    http://kohanaframework.org/license
  */
-class Kohana_Session_Exception extends Kohana_Exception {
-
-	const SESSION_CORRUPT = 1;
+class Kohana_Session_Exception extends Kohana_Exception
+{
+	public const SESSION_CORRUPT = 1;
 
 }

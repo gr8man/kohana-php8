@@ -1,20 +1,20 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') or die('No direct access allowed.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct access allowed.');
 /**
  * @package    Kohana/Codebench
  * @category   Tests
  * @author     Geert De Deckere <geert@idoe.be>
  */
-class Bench_StripNullBytes extends Codebench {
-
+class Bench_StripNullBytes extends Codebench
+{
 	public $description =
 		'String replacement comparisons related to <a href="http://dev.kohanaphp.com/issues/2676">#2676</a>.';
 
 	public $loops = 1000;
 
-	public $subjects = array
-	(
+	public $subjects = array(
 		"\0",
 		"\0\0\0\0\0\0\0\0\0\0",
 		"bla\0bla\0bla\0bla\0bla\0bla\0bla\0bla\0bla\0bla",

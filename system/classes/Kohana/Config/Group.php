@@ -1,4 +1,7 @@
-<?php declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
+<?php
+
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct script access.');
 
 /**
  * The group wrapper acts as an interface to all the config directives
@@ -14,8 +17,8 @@
  * @copyright  (c) 2012-2014 Kohana Team
  * @license    http://kohanaframework.org/license
  */
-class Kohana_Config_Group extends ArrayObject {
-
+class Kohana_Config_Group extends ArrayObject
+{
 	/**
 	 * Constructs the group object.  Kohana_Config passes the config group
 	 * and its config items to the object here.
@@ -73,7 +76,7 @@ class Kohana_Config_Group extends ArrayObject {
 	 * @param   mixed   $default    default value
 	 * @return  mixed
 	 */
-	public function get($key, $default = NULL)
+	public function get($key, $default = null)
 	{
 		return $this->offsetExists($key) ? $this->offsetGet($key) : $default;
 	}

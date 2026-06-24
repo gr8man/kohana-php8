@@ -1,25 +1,26 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') or die('No direct script access.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct script access.');
 
 /**
  * A version of the stock PHPUnit testcase that includes some extra helpers
  * and default settings
  */
-abstract class Kohana_Unittest_TestCase extends PHPUnit\Framework\TestCase {
-	
+abstract class Kohana_Unittest_TestCase extends PHPUnit\Framework\TestCase
+{
 	/**
 	 * Make sure PHPUnit backs up globals
 	 * @var boolean
 	 */
-	protected $backupGlobals = FALSE;
+	protected $backupGlobals = false;
 
 	/**
 	 * A set of unittest helpers that are shared between normal / database
 	 * testcases
 	 * @var Kohana_Unittest_Helpers
 	 */
-	protected $_helpers = NULL;
+	protected $_helpers = null;
 
 	/**
 	 * A default set of environment to be applied before each test
@@ -35,7 +36,7 @@ abstract class Kohana_Unittest_TestCase extends PHPUnit\Framework\TestCase {
 	 */
 	public function setUp(): void
 	{
-		$this->_helpers = new Unittest_Helpers;
+		$this->_helpers = new Unittest_Helpers();
 
 		$this->setEnvironment($this->environmentDefault);
 	}
@@ -48,8 +49,7 @@ abstract class Kohana_Unittest_TestCase extends PHPUnit\Framework\TestCase {
 	 */
 	public function tearDown(): void
 	{
-		if ($this->_helpers)
-		{
+		if ($this->_helpers) {
 			$this->_helpers->restore_environment();
 		}
 	}
@@ -59,8 +59,7 @@ abstract class Kohana_Unittest_TestCase extends PHPUnit\Framework\TestCase {
 	 */
 	public function assertInternalType(string $type, $actual, string $message = ''): void
 	{
-		switch ($type)
-		{
+		switch ($type) {
 			case 'array':
 				$this->assertIsArray($actual, $message);
 				break;
@@ -108,7 +107,7 @@ abstract class Kohana_Unittest_TestCase extends PHPUnit\Framework\TestCase {
 	{
 		$reflection = new ReflectionObject($actual);
 		$property = $reflection->getProperty($attributeName);
-		$property->setAccessible(TRUE);
+		$property->setAccessible(true);
 		$this->assertSame($expected, $property->getValue($actual), $message);
 	}
 
@@ -119,7 +118,7 @@ abstract class Kohana_Unittest_TestCase extends PHPUnit\Framework\TestCase {
 	{
 		$reflection = new ReflectionObject($actual);
 		$property = $reflection->getProperty($attributeName);
-		$property->setAccessible(TRUE);
+		$property->setAccessible(true);
 		$this->assertEquals($expected, $property->getValue($actual), $message);
 	}
 
@@ -130,7 +129,7 @@ abstract class Kohana_Unittest_TestCase extends PHPUnit\Framework\TestCase {
 	{
 		$reflection = new ReflectionObject($actual);
 		$property = $reflection->getProperty($attributeName);
-		$property->setAccessible(TRUE);
+		$property->setAccessible(true);
 		$this->assertNotSame($expected, $property->getValue($actual), $message);
 	}
 
@@ -141,7 +140,7 @@ abstract class Kohana_Unittest_TestCase extends PHPUnit\Framework\TestCase {
 	{
 		$reflection = new ReflectionObject($actual);
 		$property = $reflection->getProperty($attributeName);
-		$property->setAccessible(TRUE);
+		$property->setAccessible(true);
 		$this->assertContains($expected, $property->getValue($actual), $message);
 	}
 
@@ -152,7 +151,7 @@ abstract class Kohana_Unittest_TestCase extends PHPUnit\Framework\TestCase {
 	{
 		$reflection = new ReflectionObject($actual);
 		$property = $reflection->getProperty($attributeName);
-		$property->setAccessible(TRUE);
+		$property->setAccessible(true);
 		$this->assertNotContains($expected, $property->getValue($actual), $message);
 	}
 
@@ -161,12 +160,9 @@ abstract class Kohana_Unittest_TestCase extends PHPUnit\Framework\TestCase {
 	 */
 	public static function assertContains($needle, $haystack, string $message = ''): void
 	{
-		if (is_string($haystack))
-		{
+		if (is_string($haystack)) {
 			self::assertStringContainsString($needle, $haystack, $message);
-		}
-		else
-		{
+		} else {
 			parent::assertContains($needle, $haystack, $message);
 		}
 	}
@@ -176,12 +172,9 @@ abstract class Kohana_Unittest_TestCase extends PHPUnit\Framework\TestCase {
 	 */
 	public static function assertNotContains($needle, $haystack, string $message = ''): void
 	{
-		if (is_string($haystack))
-		{
+		if (is_string($haystack)) {
 			self::assertStringNotContainsString($needle, $haystack, $message);
-		}
-		else
-		{
+		} else {
 			parent::assertNotContains($needle, $haystack, $message);
 		}
 	}
@@ -191,26 +184,19 @@ abstract class Kohana_Unittest_TestCase extends PHPUnit\Framework\TestCase {
 	 */
 	public function assertTag(array $matcher, string $actual, string $message = ''): void
 	{
-		$tag = $matcher['tag'] ?? NULL;
-		$attributes = $matcher['attributes'] ?? [];
-		
-		if ($tag)
-		{
+		$tag = $matcher['tag'] ?? null;
+		$attributes = $matcher['attributes'] ?? array();
+
+		if ($tag) {
 			$this->assertStringContainsString('<' . $tag, $actual, $message);
 		}
-		
-		foreach ($attributes as $key => $value)
-		{
-			if ($value === TRUE)
-			{
+
+		foreach ($attributes as $key => $value) {
+			if ($value === true) {
 				$this->assertStringContainsString((string) $key, $actual, $message);
-			}
-			elseif ($value === FALSE)
-			{
+			} elseif ($value === false) {
 				$this->assertStringNotContainsString((string) $key, $actual, $message);
-			}
-			else
-			{
+			} else {
 				$this->assertStringContainsString($key . '="' . $value . '"', $actual, $message);
 			}
 		}
@@ -221,10 +207,9 @@ abstract class Kohana_Unittest_TestCase extends PHPUnit\Framework\TestCase {
 	 */
 	public function assertNotTag(array $matcher, string $actual, string $message = ''): void
 	{
-		$tag = $matcher['tag'] ?? NULL;
-		
-		if ($tag)
-		{
+		$tag = $matcher['tag'] ?? null;
+
+		if ($tag) {
 			$this->assertStringNotContainsString('<' . $tag, $actual, $message);
 		}
 	}
@@ -234,48 +219,41 @@ abstract class Kohana_Unittest_TestCase extends PHPUnit\Framework\TestCase {
 	 */
 	public function readAttribute($object, string $attributeName)
 	{
-		if (is_string($object))
-		{
+		if (is_string($object)) {
 			$reflection = new ReflectionClass($object);
 			$property = $reflection->getProperty($attributeName);
-			$property->setAccessible(TRUE);
+			$property->setAccessible(true);
 			return $property->getValue();
 		}
 
 		$reflection = new ReflectionObject($object);
 		$property = $reflection->getProperty($attributeName);
-		$property->setAccessible(TRUE);
+		$property->setAccessible(true);
 		return $property->getValue($object);
 	}
 
 	/**
 	 * Compatibility for removed getMock
 	 */
-	public function getMock($className, $methods = array(), array $arguments = array(), $mockClassName = '', $callOriginalConstructor = TRUE, $callOriginalClone = TRUE, $callAutoload = TRUE, $cloneArguments = FALSE, $callOriginalMethods = FALSE)
+	public function getMock($className, $methods = array(), array $arguments = array(), $mockClassName = '', $callOriginalConstructor = true, $callOriginalClone = true, $callAutoload = true, $cloneArguments = false, $callOriginalMethods = false)
 	{
 		$builder = $this->getMockBuilder($className);
-		if ($methods)
-		{
+		if ($methods) {
 			$builder->setMethods($methods);
 		}
-		if ( ! $callOriginalConstructor)
-		{
+		if (! $callOriginalConstructor) {
 			$builder->disableOriginalConstructor();
 		}
-		if ( ! $callOriginalClone)
-		{
+		if (! $callOriginalClone) {
 			$builder->disableOriginalClone();
 		}
-		if ( ! $callAutoload)
-		{
+		if (! $callAutoload) {
 			$builder->disableAutoload();
 		}
-		if ($arguments)
-		{
+		if ($arguments) {
 			$builder->setConstructorArgs($arguments);
 		}
-		if ($mockClassName)
-		{
+		if ($mockClassName) {
 			$builder->setMockClassName($mockClassName);
 		}
 		return $builder->getMock();
@@ -284,15 +262,13 @@ abstract class Kohana_Unittest_TestCase extends PHPUnit\Framework\TestCase {
 	/**
 	 * Compatibility for removed setExpectedException
 	 */
-	public function setExpectedException($exception, $message = '', $code = NULL): void
+	public function setExpectedException($exception, $message = '', $code = null): void
 	{
 		$this->expectException($exception);
-		if ($message)
-		{
+		if ($message) {
 			$this->expectExceptionMessage($message);
 		}
-		if ($code !== NULL)
-		{
+		if ($code !== null) {
 			$this->expectExceptionCode($code);
 		}
 	}

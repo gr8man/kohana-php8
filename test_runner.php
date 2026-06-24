@@ -8,7 +8,7 @@ $application = 'application';
 $modules = 'modules';
 $system = 'system';
 define('EXT', '.php');
-error_reporting(E_ALL | E_STRICT);
+error_reporting(E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED);
 
 define('DOCROOT', realpath(dirname(__FILE__)).DIRECTORY_SEPARATOR);
 

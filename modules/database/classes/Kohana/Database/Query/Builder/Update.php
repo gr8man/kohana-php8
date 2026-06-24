@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct script access.');
 /**
  * Database query builder for UPDATE statements. See [Query Builder](/database/query/builder) for usage and examples.
  *
@@ -10,8 +11,8 @@ declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
  * @copyright  (c) 2008-2009 Kohana Team
  * @license    http://kohanaphp.com/license
  */
-class Kohana_Database_Query_Builder_Update extends Database_Query_Builder_Where {
-
+class Kohana_Database_Query_Builder_Update extends Database_Query_Builder_Where
+{
 	// UPDATE ...
 	protected $_table;
 
@@ -24,10 +25,9 @@ class Kohana_Database_Query_Builder_Update extends Database_Query_Builder_Where 
 	 * @param   mixed  $table  table name or array($table, $alias) or object
 	 * @return  void
 	 */
-	public function __construct($table = NULL)
+	public function __construct($table = null)
 	{
-		if ($table)
-		{
+		if ($table) {
 			// Set the inital table name
 			$this->_table = $table;
 		}
@@ -57,8 +57,7 @@ class Kohana_Database_Query_Builder_Update extends Database_Query_Builder_Where 
 	 */
 	public function set(array $pairs)
 	{
-		foreach ($pairs as $column => $value)
-		{
+		foreach ($pairs as $column => $value) {
 			$this->_set[] = array($column, $value);
 		}
 
@@ -85,10 +84,9 @@ class Kohana_Database_Query_Builder_Update extends Database_Query_Builder_Where 
 	 * @param   mixed  $db  Database instance or name of instance
 	 * @return  string
 	 */
-	public function compile($db = NULL)
+	public function compile($db = null)
 	{
-		if ( ! is_object($db))
-		{
+		if (! is_object($db)) {
 			// Get the database instance
 			$db = Database::instance($db);
 		}
@@ -99,20 +97,17 @@ class Kohana_Database_Query_Builder_Update extends Database_Query_Builder_Where 
 		// Add the columns to update
 		$query .= ' SET '.$this->_compile_set($db, $this->_set);
 
-		if ( ! empty($this->_where))
-		{
+		if (! empty($this->_where)) {
 			// Add selection conditions
 			$query .= ' WHERE '.$this->_compile_conditions($db, $this->_where);
 		}
 
-		if ( ! empty($this->_order_by))
-		{
+		if (! empty($this->_order_by)) {
 			// Add sorting
 			$query .= ' '.$this->_compile_order_by($db, $this->_order_by);
 		}
 
-		if ($this->_limit !== NULL)
-		{
+		if ($this->_limit !== null) {
 			// Add limiting
 			$query .= ' LIMIT '.$this->_limit;
 		}
@@ -124,16 +119,16 @@ class Kohana_Database_Query_Builder_Update extends Database_Query_Builder_Where 
 
 	public function reset()
 	{
-		$this->_table = NULL;
+		$this->_table = null;
 
 		$this->_set   =
 		$this->_where = array();
 
-		$this->_limit = NULL;
+		$this->_limit = null;
 
 		$this->_parameters = array();
 
-		$this->_sql = NULL;
+		$this->_sql = null;
 
 		return $this;
 	}

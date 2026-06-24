@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('Kohana bootstrap needs to be included before tests run');
+declare(strict_types=1);
+defined('SYSPATH') or die('Kohana bootstrap needs to be included before tests run');
 
 /**
  * Tests the encrypt class
@@ -17,22 +18,20 @@ declare(strict_types=1); defined('SYSPATH') OR die('Kohana bootstrap needs to be
  * @license    http://kohanaframework.org/license
  */
 #[AllowDynamicProperties]
-class Kohana_EncryptTest extends Unittest_TestCase {
-
+class Kohana_EncryptTest extends Unittest_TestCase
+{
 	public function setUp(): void
 	{
 		parent::setUp();
 
-		if ( ! function_exists('mcrypt_encrypt'))
-		{
+		if (! function_exists('mcrypt_encrypt')) {
 			$this->markTestSkipped('Mcrypt extension is not available.');
 		}
 	}
 
 	public function test_instance_throw_exception_when_no_key_provided()
 	{
-		if ( ! function_exists('mcrypt_encrypt'))
-		{
+		if (! function_exists('mcrypt_encrypt')) {
 			$this->markTestSkipped('Mcrypt extension is not available.');
 		}
 

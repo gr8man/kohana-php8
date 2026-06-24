@@ -1,9 +1,10 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') or die('No direct script access.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct script access.');
 
-class Kohana_Minion_CLI {
-
+class Kohana_Minion_CLI
+{
 	public static $wait_msg = 'Press any key to continue...';
 
 	protected static $foreground_colors = array(
@@ -47,7 +48,7 @@ class Kohana_Minion_CLI {
 	 * @param   string  $options,...    option name
 	 * @return  array
 	 */
-	public static function options($options = NULL)
+	public static function options($options = null)
 	{
 		// Get all of the requested options
 		$options = func_get_args();
@@ -56,10 +57,8 @@ class Kohana_Minion_CLI {
 		$values = array();
 
 		// Skip the first option, it is always the file executed
-		for ($i = 1; $i < $_SERVER['argc']; $i++)
-		{
-			if ( ! isset($_SERVER['argv'][$i]))
-			{
+		for ($i = 1; $i < $_SERVER['argc']; $i++) {
+			if (! isset($_SERVER['argv'][$i])) {
 				// No more args left
 				break;
 			}
@@ -67,8 +66,7 @@ class Kohana_Minion_CLI {
 			// Get the option
 			$opt = $_SERVER['argv'][$i];
 
-			if (substr($opt, 0, 2) !== '--')
-			{
+			if (substr($opt, 0, 2) !== '--') {
 				// This is a positional argument
 				$values[] = $opt;
 				continue;
@@ -77,25 +75,19 @@ class Kohana_Minion_CLI {
 			// Remove the "--" prefix
 			$opt = substr($opt, 2);
 
-			if (strpos($opt, '='))
-			{
+			if (strpos($opt, '=')) {
 				// Separate the name and value
-				list ($opt, $value) = explode('=', $opt, 2);
-			}
-			else
-			{
-				$value = NULL;
+				list($opt, $value) = explode('=', $opt, 2);
+			} else {
+				$value = null;
 			}
 
 			$values[$opt] = $value;
 		}
 
-		if ($options)
-		{
-			foreach ($values as $opt => $value)
-			{
-				if ( ! in_array($opt, $options))
-				{
+		if ($options) {
+			foreach ($values as $opt => $value) {
+				if (! in_array($opt, $options)) {
 					// Set the given value
 					unset($values[$opt]);
 				}
@@ -123,12 +115,11 @@ class Kohana_Minion_CLI {
 	 * @param  array   $options array of options the user is shown
 	 * @return string  the user input
 	 */
-	public static function read($text = '', array $options = NULL)
+	public static function read($text = '', array $options = null)
 	{
 		// If a question has been asked with the read
 		$options_output = '';
-		if ( ! empty($options))
-		{
+		if (! empty($options)) {
 			$options_output = ' [ '.implode(', ', $options).' ]';
 		}
 
@@ -138,8 +129,7 @@ class Kohana_Minion_CLI {
 		$input = trim(fgets(STDIN));
 
 		// If options are provided and the choice is not in the array, tell them to try again
-		if ( ! empty($options) && ! in_array($input, $options))
-		{
+		if (! empty($options) && ! in_array($input, $options)) {
 			Minion_CLI::write('This is not a valid option. Please try again.');
 
 			$input = Minion_CLI::read($text, $options);
@@ -165,8 +155,7 @@ class Kohana_Minion_CLI {
 	{
 		$text .= ': ';
 
-		if (Kohana::$is_windows)
-		{
+		if (Kohana::$is_windows) {
 			$vbscript = sys_get_temp_dir().'Minion_CLI_Password.vbs';
 
 			// Create temporary file
@@ -176,9 +165,7 @@ class Kohana_Minion_CLI {
 
 			// Remove temporary file.
 			unlink($vbscript);
-		}
-		else
-		{
+		} else {
 			$password = shell_exec('/usr/bin/env bash -c \'read -s -p "'.escapeshellcmd($text).'" var && echo $var\'');
 		}
 
@@ -195,15 +182,11 @@ class Kohana_Minion_CLI {
 	 */
 	public static function write($text = '')
 	{
-		if (is_array($text))
-		{
-			foreach ($text as $line)
-			{
+		if (is_array($text)) {
+			foreach ($text as $line) {
 				Minion_CLI::write($line);
 			}
-		}
-		else
-		{
+		} else {
 			fwrite(STDOUT, $text.PHP_EOL);
 		}
 	}
@@ -224,7 +207,7 @@ class Kohana_Minion_CLI {
 	 * @param string  $text      the text to output
 	 * @param boolean $end_line  whether the line is done being replaced
 	 */
-	public static function write_replace($text = '', $end_line = FALSE)
+	public static function write_replace($text = '', $end_line = false)
 	{
 		// Append a newline if $end_line is TRUE
 		$text = $end_line ? $text.PHP_EOL : $text;
@@ -244,27 +227,20 @@ class Kohana_Minion_CLI {
 	 */
 	public static function wait($seconds = 0, $countdown = false)
 	{
-		if ($countdown === true)
-		{
+		if ($countdown === true) {
 			$time = $seconds;
 
-			while ($time > 0)
-			{
+			while ($time > 0) {
 				fwrite(STDOUT, $time.'... ');
 				sleep(1);
 				$time--;
 			}
 
 			Minion_CLI::write();
-		}
-		else
-		{
-			if ($seconds > 0)
-			{
+		} else {
+			if ($seconds > 0) {
 				sleep($seconds);
-			}
-			else
-			{
+			} else {
 				Minion_CLI::write(Minion_CLI::$wait_msg);
 				Minion_CLI::read();
 			}
@@ -287,25 +263,21 @@ class Kohana_Minion_CLI {
 	public static function color($text, $foreground, $background = null)
 	{
 
-		if (Kohana::$is_windows)
-		{
+		if (Kohana::$is_windows) {
 			return $text;
 		}
 
-		if (!array_key_exists($foreground, Minion_CLI::$foreground_colors))
-		{
+		if (!array_key_exists($foreground, Minion_CLI::$foreground_colors)) {
 			throw new Kohana_Exception('Invalid CLI foreground color: '.$foreground);
 		}
 
-		if ($background !== null and !array_key_exists($background, Minion_CLI::$background_colors))
-		{
+		if ($background !== null and !array_key_exists($background, Minion_CLI::$background_colors)) {
 			throw new Kohana_Exception('Invalid CLI background color: '.$background);
 		}
 
 		$string = "\033[".Minion_CLI::$foreground_colors[$foreground]."m";
 
-		if ($background !== null)
-		{
+		if ($background !== null) {
 			$string .= "\033[".Minion_CLI::$background_colors[$background]."m";
 		}
 

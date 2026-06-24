@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-defined('SYSPATH') OR die('No direct script access.');
+defined('SYSPATH') or die('No direct script access.');
 /**
  * Contains debugging and dumping tools.
  *
@@ -12,8 +12,8 @@ defined('SYSPATH') OR die('No direct script access.');
  * @copyright  (c) 2008-2014 Kohana Team
  * @license    http://kohanaframework.org/license
  */
-class Kohana_Debug {
-
+class Kohana_Debug
+{
 	/**
 	 * Returns an HTML string of debugging information about any number of
 	 * variables, each wrapped in a "pre" tag:
@@ -26,15 +26,15 @@ class Kohana_Debug {
 	 */
 	public static function vars()
 	{
-		if (func_num_args() === 0)
+		if (func_num_args() === 0) {
 			return;
+		}
 
 		// Get all passed variables
 		$variables = func_get_args();
 
 		$output = array();
-		foreach ($variables as $var)
-		{
+		foreach ($variables as $var) {
 			$output[] = Debug::_dump($var, 1024);
 		}
 
@@ -65,67 +65,47 @@ class Kohana_Debug {
 	 * @param   integer $level  current recursion level (internal usage only!)
 	 * @return  string
 	 */
-	protected static function _dump( & $var, $length = 128, $limit = 10, $level = 0)
+	protected static function _dump(& $var, $length = 128, $limit = 10, $level = 0)
 	{
-		if ($var === NULL)
-		{
+		if ($var === null) {
 			return '<small>NULL</small>';
-		}
-		elseif (is_bool($var))
-		{
+		} elseif (is_bool($var)) {
 			return '<small>bool</small> '.($var ? 'TRUE' : 'FALSE');
-		}
-		elseif (is_float($var))
-		{
+		} elseif (is_float($var)) {
 			return '<small>float</small> '.$var;
-		}
-		elseif (is_resource($var))
-		{
-			if (($type = get_resource_type($var)) === 'stream' AND $meta = stream_get_meta_data($var))
-			{
-				if (isset($meta['uri']))
-				{
+		} elseif (is_resource($var)) {
+			if (($type = get_resource_type($var)) === 'stream' and $meta = stream_get_meta_data($var)) {
+				if (isset($meta['uri'])) {
 					$file = $meta['uri'];
 
-					if (function_exists('stream_is_local'))
-					{
+					if (function_exists('stream_is_local')) {
 						// Only exists on PHP >= 5.2.4
-						if (stream_is_local($file))
-						{
+						if (stream_is_local($file)) {
 							$file = Debug::path($file);
 						}
 					}
 
 					return '<small>resource</small><span>('.$type.')</span> '.htmlspecialchars($file, ENT_NOQUOTES, Kohana::$charset);
 				}
-			}
-			else
-			{
+			} else {
 				return '<small>resource</small><span>('.$type.')</span>';
 			}
-		}
-		elseif (is_string($var))
-		{
+		} elseif (is_string($var)) {
 			// Clean invalid multibyte characters. iconv is only invoked
 			// if there are non ASCII characters in the string, so this
 			// isn't too much of a hit.
 			$var = UTF8::clean($var, Kohana::$charset);
 
-			if (UTF8::strlen($var) > $length)
-			{
+			if (UTF8::strlen($var) > $length) {
 				// Encode the truncated string
 				$str = htmlspecialchars(UTF8::substr($var, 0, $length), ENT_NOQUOTES, Kohana::$charset).'&nbsp;&hellip;';
-			}
-			else
-			{
+			} else {
 				// Encode the string
 				$str = htmlspecialchars($var, ENT_NOQUOTES, Kohana::$charset);
 			}
 
 			return '<small>string</small><span>('.strlen($var).')</span> "'.$str.'"';
-		}
-		elseif (is_array($var))
-		{
+		} elseif (is_array($var)) {
 			$output = array();
 
 			// Indentation for this variable
@@ -133,30 +113,24 @@ class Kohana_Debug {
 
 			static $marker;
 
-			if ($marker === NULL)
-			{
+			if ($marker === null) {
 				// Make a unique marker - force it to be alphanumeric so that it is always treated as a string array key
 				$marker = uniqid("\x00")."x";
 			}
 
-			if (empty($var))
-			{
+			if (empty($var)) {
 				// Do nothing
-			}
-			elseif (isset($var[$marker]))
-			{
+			} elseif (isset($var[$marker])) {
 				$output[] = "(\n$space$s*RECURSION*\n$space)";
-			}
-			elseif ($level < $limit)
-			{
+			} elseif ($level < $limit) {
 				$output[] = "<span>(";
 
-				$var[$marker] = TRUE;
-				foreach ($var as $key => & $val)
-				{
-					if ($key === $marker) continue;
-					if ( ! is_int($key))
-					{
+				$var[$marker] = true;
+				foreach ($var as $key => & $val) {
+					if ($key === $marker) {
+						continue;
+					}
+					if (! is_int($key)) {
 						$key = '"'.htmlspecialchars($key, ENT_NOQUOTES, Kohana::$charset).'"';
 					}
 
@@ -165,17 +139,13 @@ class Kohana_Debug {
 				unset($var[$marker]);
 
 				$output[] = "$space)</span>";
-			}
-			else
-			{
+			} else {
 				// Depth too great
 				$output[] = "(\n$space$s...\n$space)";
 			}
 
 			return '<small>array</small><span>('.count($var).')</span> '.implode("\n", $output);
-		}
-		elseif (is_object($var))
-		{
+		} elseif (is_object($var)) {
 			// Copy the object as an array
 			$array = (array) $var;
 
@@ -189,31 +159,22 @@ class Kohana_Debug {
 			// Objects that are being dumped
 			static $objects = array();
 
-			if (empty($var))
-			{
+			if (empty($var)) {
 				// Do nothing
-			}
-			elseif (isset($objects[$hash]))
-			{
+			} elseif (isset($objects[$hash])) {
 				$output[] = "{\n$space$s*RECURSION*\n$space}";
-			}
-			elseif ($level < $limit)
-			{
+			} elseif ($level < $limit) {
 				$output[] = "<code>{";
 
-				$objects[$hash] = TRUE;
-				foreach ($array as $key => & $val)
-				{
-					if ($key[0] === "\x00")
-					{
+				$objects[$hash] = true;
+				foreach ($array as $key => & $val) {
+					if ($key[0] === "\x00") {
 						// Determine if the access is protected or protected
 						$access = '<small>'.(($key[1] === '*') ? 'protected' : 'private').'</small>';
 
 						// Remove the access level from the variable name
 						$key = substr($key, strrpos($key, "\x00") + 1);
-					}
-					else
-					{
+					} else {
 						$access = '<small>public</small>';
 					}
 
@@ -222,18 +183,14 @@ class Kohana_Debug {
 				unset($objects[$hash]);
 
 				$output[] = "$space}</code>";
-			}
-			else
-			{
+			} else {
 				// Depth too great
 				$output[] = "{\n$space$s...\n$space}";
 			}
 
 			return '<small>object</small> <span>'.get_class($var).'('.count($array).')</span> '.implode("\n", $output);
-		}
-		else
-		{
-			return '<small>'.gettype($var).'</small> '.htmlspecialchars(print_r($var, TRUE), ENT_NOQUOTES, Kohana::$charset);
+		} else {
+			return '<small>'.gettype($var).'</small> '.htmlspecialchars(print_r($var, true), ENT_NOQUOTES, Kohana::$charset);
 		}
 	}
 
@@ -250,20 +207,13 @@ class Kohana_Debug {
 	 */
 	public static function path($file)
 	{
-		if (strpos($file, APPPATH) === 0)
-		{
+		if (strpos($file, APPPATH) === 0) {
 			$file = 'APPPATH'.DIRECTORY_SEPARATOR.substr($file, strlen(APPPATH));
-		}
-		elseif (strpos($file, SYSPATH) === 0)
-		{
+		} elseif (strpos($file, SYSPATH) === 0) {
 			$file = 'SYSPATH'.DIRECTORY_SEPARATOR.substr($file, strlen(SYSPATH));
-		}
-		elseif (strpos($file, MODPATH) === 0)
-		{
+		} elseif (strpos($file, MODPATH) === 0) {
 			$file = 'MODPATH'.DIRECTORY_SEPARATOR.substr($file, strlen(MODPATH));
-		}
-		elseif (strpos($file, DOCROOT) === 0)
-		{
+		} elseif (strpos($file, DOCROOT) === 0) {
 			$file = 'DOCROOT'.DIRECTORY_SEPARATOR.substr($file, strlen(DOCROOT));
 		}
 
@@ -285,10 +235,9 @@ class Kohana_Debug {
 	 */
 	public static function source($file, $line_number, $padding = 5)
 	{
-		if ( ! $file OR ! is_readable($file))
-		{
+		if (! $file or ! is_readable($file)) {
 			// Continuing will cause errors
-			return FALSE;
+			return false;
 		}
 
 		// Open the file and set the line position
@@ -302,27 +251,23 @@ class Kohana_Debug {
 		$format = '% '.strlen((string) $range['end']).'d';
 
 		$source = '';
-		while (($row = fgets($file)) !== FALSE)
-		{
+		while (($row = fgets($file)) !== false) {
 			// Increment the line number
-			if (++$line > $range['end'])
+			if (++$line > $range['end']) {
 				break;
+			}
 
-			if ($line >= $range['start'])
-			{
+			if ($line >= $range['start']) {
 				// Make the row safe for output
 				$row = htmlspecialchars($row, ENT_NOQUOTES, Kohana::$charset);
 
 				// Trim whitespace and sanitize the row
 				$row = '<span class="number">'.sprintf($format, $line).'</span> '.$row;
 
-				if ($line === $line_number)
-				{
+				if ($line === $line_number) {
 					// Apply highlighting to this row
 					$row = '<span class="line highlight">'.$row.'</span>';
-				}
-				else
-				{
+				} else {
 					$row = '<span class="line">'.$row.'</span>';
 				}
 
@@ -346,10 +291,9 @@ class Kohana_Debug {
 	 * @param   array   $trace
 	 * @return  string
 	 */
-	public static function trace(array $trace = NULL)
+	public static function trace(array $trace = null)
 	{
-		if ($trace === NULL)
-		{
+		if ($trace === null) {
 			// Start a new trace
 			$trace = debug_backtrace();
 		}
@@ -358,26 +302,21 @@ class Kohana_Debug {
 		$statements = array('include', 'include_once', 'require', 'require_once');
 
 		$output = array();
-		foreach ($trace as $step)
-		{
-			if ( ! isset($step['function']))
-			{
+		foreach ($trace as $step) {
+			if (! isset($step['function'])) {
 				// Invalid trace step
 				continue;
 			}
 
-			if (isset($step['file']) AND isset($step['line']))
-			{
+			if (isset($step['file']) and isset($step['line'])) {
 				// Include the source of this step
 				$source = Debug::source($step['file'], $step['line']);
 			}
 
-			if (isset($step['file']))
-			{
+			if (isset($step['file'])) {
 				$file = $step['file'];
 
-				if (isset($step['line']))
-				{
+				if (isset($step['line'])) {
 					$line = $step['line'];
 				}
 			}
@@ -385,41 +324,26 @@ class Kohana_Debug {
 			// function()
 			$function = $step['function'];
 
-			if (in_array((string) $step['function'], $statements))
-			{
-				if (empty($step['args']))
-				{
+			if (in_array((string) $step['function'], $statements)) {
+				if (empty($step['args'])) {
 					// No arguments
 					$args = array();
-				}
-				else
-				{
+				} else {
 					// Sanitize the file path
 					$args = array($step['args'][0]);
 				}
-			}
-			elseif (isset($step['args']))
-			{
-				if ( ! function_exists($step['function']) OR strpos($step['function'], '{closure}') !== FALSE)
-				{
+			} elseif (isset($step['args'])) {
+				if (! function_exists($step['function']) or strpos($step['function'], '{closure}') !== false) {
 					// Introspection on closures or language constructs in a stack trace is impossible
-					$params = NULL;
-				}
-				else
-				{
-					if (isset($step['class']))
-					{
-						if (method_exists($step['class'], $step['function']))
-						{
+					$params = null;
+				} else {
+					if (isset($step['class'])) {
+						if (method_exists($step['class'], $step['function'])) {
 							$reflection = new ReflectionMethod($step['class'], $step['function']);
-						}
-						else
-						{
+						} else {
 							$reflection = new ReflectionMethod($step['class'], '__call');
 						}
-					}
-					else
-					{
+					} else {
 						$reflection = new ReflectionFunction($step['function']);
 					}
 
@@ -429,33 +353,28 @@ class Kohana_Debug {
 
 				$args = array();
 
-				foreach ($step['args'] as $i => $arg)
-				{
-					if (isset($params[$i]))
-					{
+				foreach ($step['args'] as $i => $arg) {
+					if (isset($params[$i])) {
 						// Assign the argument by the parameter name
 						$args[$params[$i]->name] = $arg;
-					}
-					else
-					{
+					} else {
 						// Assign the argument by number
 						$args[$i] = $arg;
 					}
 				}
 			}
 
-			if (isset($step['class']))
-			{
+			if (isset($step['class'])) {
 				// Class->method() or Class::method()
 				$function = $step['class'].$step['type'].$step['function'];
 			}
 
 			$output[] = array(
 				'function' => $function,
-				'args'     => isset($args)   ? $args : NULL,
-				'file'     => isset($file)   ? $file : NULL,
-				'line'     => isset($line)   ? $line : NULL,
-				'source'   => isset($source) ? $source : NULL,
+				'args'     => isset($args) ? $args : null,
+				'file'     => isset($file) ? $file : null,
+				'line'     => isset($line) ? $line : null,
+				'source'   => isset($source) ? $source : null,
 			);
 
 			unset($function, $args, $file, $line, $source);

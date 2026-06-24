@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') or die('No direct script access.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct script access.');
 /**
  * Class method parameter documentation generator.
  *
@@ -10,8 +11,8 @@ declare(strict_types=1); defined('SYSPATH') or die('No direct script access.');
  * @copyright  (c) 2008-2013 Kohana Team
  * @license    http://kohanaframework.org/license
  */
-class Kohana_Kodoc_Method_Param extends Kodoc {
-
+class Kohana_Kodoc_Method_Param extends Kodoc
+{
 	/**
 	 * @var  object  ReflectionParameter for this property
 	 */
@@ -40,12 +41,12 @@ class Kohana_Kodoc_Method_Param extends Kodoc {
 	/**
 	 * @var  boolean  is the parameter passed by reference?
 	 */
-	public $reference = FALSE;
+	public $reference = false;
 
 	/**
 	 * @var  boolean  is the parameter optional?
 	 */
-	public $optional = FALSE;
+	public $optional = false;
 
 	public function __construct($method, $param)
 	{
@@ -53,19 +54,16 @@ class Kohana_Kodoc_Method_Param extends Kodoc {
 
 		$this->name = $this->param->name;
 
-		if ($this->param->isDefaultValueAvailable())
-		{
+		if ($this->param->isDefaultValueAvailable()) {
 			$this->default = Debug::dump($this->param->getDefaultValue());
 		}
 
-		if ($this->param->isPassedByReference())
-		{
-			$this->reference = TRUE;
+		if ($this->param->isPassedByReference()) {
+			$this->reference = true;
 		}
 
-		if ($this->param->isOptional())
-		{
-			$this->optional = TRUE;
+		if ($this->param->isOptional()) {
+			$this->optional = true;
 		}
 	}
 
@@ -73,27 +71,21 @@ class Kohana_Kodoc_Method_Param extends Kodoc {
 	{
 		$display = '';
 
-		if ($this->type)
-		{
+		if ($this->type) {
 			$display .= '<small>'.$this->type.'</small> ';
 		}
 
-		if ($this->reference)
-		{
+		if ($this->reference) {
 			$display .= '<small><abbr title="passed by reference">&</abbr></small> ';
 		}
 
-		if ($this->description)
-		{
+		if ($this->description) {
 			$display .= '<span class="param" title="'.preg_replace('/\s+/', ' ', $this->description).'">$'.$this->name.'</span> ';
-		}
-		else
-		{
+		} else {
 			$display .= '$'.$this->name.' ';
 		}
 
-		if ($this->default)
-		{
+		if ($this->default) {
 			$display .= '<small>= '.$this->default.'</small> ';
 		}
 

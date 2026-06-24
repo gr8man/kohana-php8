@@ -1,7 +1,3 @@
-<?php
-
-declare(strict_types=1);
-
 <div class="method">
 
 <?php $declares = $doc->method->getDeclaringClass(); ?>

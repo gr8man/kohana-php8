@@ -1,5 +1,8 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct script access.');
 
-class HTTP_Exception_407 extends Kohana_HTTP_Exception_407 {}
+class HTTP_Exception_407 extends Kohana_HTTP_Exception_407
+{
+}

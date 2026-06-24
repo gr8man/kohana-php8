@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') or die('No direct access allowed.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct access allowed.');
 
 return array(
 
@@ -13,6 +14,6 @@ return array(
 	/**
 	 * Expand all benchmark details by default.
 	 */
-	'expand_all' => FALSE,
+	'expand_all' => false,
 
 );

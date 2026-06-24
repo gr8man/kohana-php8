@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct script access.');
 /**
  * [Request_Client_External] Stream driver performs external requests using php
  * sockets. To use this driver, ensure the following is completed
@@ -18,8 +19,8 @@ declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
  * @license    http://kohanaframework.org/license
  * @uses       [PHP Streams](http://php.net/manual/en/book.stream.php)
  */
-class Kohana_Request_Client_Stream extends Request_Client_External {
-
+class Kohana_Request_Client_Stream extends Request_Client_External
+{
 	/**
 	 * Sends the HTTP message [Request] to a remote server and processes
 	 * the response.
@@ -35,16 +36,14 @@ class Kohana_Request_Client_Stream extends Request_Client_External {
 		$mode = ($request->method() === HTTP_Request::GET) ? 'r' : 'r+';
 
 		// Process cookies
-		if ($cookies = $request->cookie())
-		{
+		if ($cookies = $request->cookie()) {
 			$request->headers('cookie', http_build_query($cookies, '', '; '));
 		}
 
 		// Get the message body
 		$body = $request->body();
 
-		if (is_resource($body))
-		{
+		if (is_resource($body)) {
 			$body = stream_get_contents($body);
 		}
 
@@ -69,28 +68,24 @@ class Kohana_Request_Client_Stream extends Request_Client_External {
 
 		$uri = $request->uri();
 
-		if ($query = $request->query())
-		{
+		if ($query = $request->query()) {
 			$uri .= '?'.http_build_query($query, '', '&');
 		}
 
-		$stream = fopen($uri, $mode, FALSE, $context);
+		$stream = fopen($uri, $mode, false, $context);
 
 		$meta_data = stream_get_meta_data($stream);
 
 		// Get the HTTP response code
 		$http_response = array_shift($meta_data['wrapper_data']);
 
-		if (preg_match_all('/(\w+\/\d\.\d) (\d{3})/', $http_response, $matches) !== FALSE
-			AND ! empty($matches[1]))
-		{
+		if (preg_match_all('/(\w+\/\d\.\d) (\d{3})/', $http_response, $matches) !== false
+			and ! empty($matches[1])) {
 			$protocol = $matches[1][0];
 			$status   = (int) $matches[2][0];
-		}
-		else
-		{
-			$protocol = NULL;
-			$status   = NULL;
+		} else {
+			$protocol = null;
+			$status   = null;
 		}
 
 		// Get any exisiting response headers

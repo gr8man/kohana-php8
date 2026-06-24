@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') or die('No direct script access.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct script access.');
 /**
  * TestCase for testing a database
  *
@@ -10,21 +11,20 @@ declare(strict_types=1); defined('SYSPATH') or die('No direct script access.');
  * @copyright  (c) 2008-2009 Kohana Team
  * @license    http://kohanaphp.com/license
  */
-abstract class Kohana_Unittest_Database_TestCase extends PHPUnit_Extensions_Database_TestCase {
-
-
+abstract class Kohana_Unittest_Database_TestCase extends PHPUnit_Extensions_Database_TestCase
+{
 	/**
 	 * Make sure PHPUnit backs up globals
 	 * @var boolean
 	 */
-	protected $backupGlobals = FALSE;
+	protected $backupGlobals = false;
 
 	/**
 	 * A set of unittest helpers that are shared between normal / database
 	 * testcases
 	 * @var Kohana_Unittest_Helpers
 	 */
-	protected $_helpers = NULL;
+	protected $_helpers = null;
 
 	/**
 	 * A default set of environment to be applied before each test
@@ -46,7 +46,7 @@ abstract class Kohana_Unittest_Database_TestCase extends PHPUnit_Extensions_Data
 	 */
 	public function setUp()
 	{
-		$this->_helpers = new Kohana_Unittest_Helpers;
+		$this->_helpers = new Kohana_Unittest_Helpers();
 
 		$this->setEnvironment($this->environmentDefault);
 
@@ -76,31 +76,30 @@ abstract class Kohana_Unittest_Database_TestCase extends PHPUnit_Extensions_Data
 		// Get the unittesting db connection
 		$config = Kohana::$config->load('database.'.$this->_database_connection);
 
-		if(strtolower($config['type']) !== 'pdo')
-		{
+		if (strtolower($config['type']) !== 'pdo') {
 			$config['connection']['dsn'] = strtolower($config['type']).':'.
 			'host='.$config['connection']['hostname'].';'.
 			'dbname='.$config['connection']['database'];
 		}
 
 		$pdo = new PDO(
-			$config['connection']['dsn'], 
-			$config['connection']['username'], 
+			$config['connection']['dsn'],
+			$config['connection']['username'],
 			$config['connection']['password']
 		);
 
 		return $this->createDefaultDBConnection($pdo, $config['connection']['database']);
 	}
 
-    /**
-     * Gets a connection to the unittest database
-     *
-     * @return Kohana_Database The database connection
-     */
-    public function getKohanaConnection()
-    {
-        return Database::instance(Kohana::$config->load('unittest')->db_connection);
-    }
+	/**
+	 * Gets a connection to the unittest database
+	 *
+	 * @return Kohana_Database The database connection
+	 */
+	public function getKohanaConnection()
+	{
+		return Database::instance(Kohana::$config->load('unittest')->db_connection);
+	}
 
 	/**
 	 * Removes all kohana related cache files in the cache directory

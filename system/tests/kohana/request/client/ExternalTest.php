@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('Kohana bootstrap needs to be included before tests run');
+declare(strict_types=1);
+defined('SYSPATH') or die('Kohana bootstrap needs to be included before tests run');
 /**
  * Unit tests for external request client
  *
@@ -16,8 +17,8 @@ declare(strict_types=1); defined('SYSPATH') OR die('Kohana bootstrap needs to be
  * @license    http://kohanaframework.org/license
  */
 #[AllowDynamicProperties]
-class Kohana_Request_Client_ExternalTest extends Unittest_TestCase {
-
+class Kohana_Request_Client_ExternalTest extends Unittest_TestCase
+{
 	/**
 	 * Provider for test_factory()
 	 *
@@ -30,7 +31,7 @@ class Kohana_Request_Client_ExternalTest extends Unittest_TestCase {
 		$return = array(
 			array(
 				array(),
-				NULL,
+				null,
 				'Request_Client_Stream'
 			),
 			array(
@@ -40,8 +41,7 @@ class Kohana_Request_Client_ExternalTest extends Unittest_TestCase {
 			)
 		);
 
-		if (extension_loaded('curl'))
-		{
+		if (extension_loaded('curl')) {
 			$return[] = array(
 				array(),
 				'Request_Client_Curl',
@@ -49,8 +49,7 @@ class Kohana_Request_Client_ExternalTest extends Unittest_TestCase {
 			);
 		}
 
-		if (extension_loaded('http') AND defined('HTTP_VERSION'))
-		{
+		if (extension_loaded('http') and defined('HTTP_VERSION')) {
 			$return[] = array(
 				array(),
 				'Request_Client_HTTP',
@@ -63,18 +62,17 @@ class Kohana_Request_Client_ExternalTest extends Unittest_TestCase {
 
 	/**
 	 * Tests the [Request_Client_External::factory()] method
-	 * 
+	 *
 	 * @dataProvider provider_factory
 	 *
-	 * @param   array   $params  params 
-	 * @param   string  $client  client 
-	 * @param   Request_Client_External $expected expected 
+	 * @param   array   $params  params
+	 * @param   string  $client  client
+	 * @param   Request_Client_External $expected expected
 	 * @return  void
 	 */
 	public function test_factory($params, $client, $expected)
 	{
-		if ($client === 'Request_Client_HTTP' AND ! extension_loaded('http'))
-		{
+		if ($client === 'Request_Client_HTTP' and ! extension_loaded('http')) {
 			$this->markTestSkipped('HTTP extension is not available.');
 		}
 
@@ -90,13 +88,13 @@ class Kohana_Request_Client_ExternalTest extends Unittest_TestCase {
 	{
 		return array(
 			array(
-				NULL,
-				NULL,
+				null,
+				null,
 				array()
 			),
 			array(
 				array('foo' => 'bar', 'stfu' => 'snafu'),
-				NULL,
+				null,
 				array('foo' => 'bar', 'stfu' => 'snafu')
 			),
 			array(
@@ -116,16 +114,16 @@ class Kohana_Request_Client_ExternalTest extends Unittest_TestCase {
 	 * Tests the [Request_Client_External::options()] method
 	 *
 	 * @dataProvider provider_options
-	 * 
-	 * @param   mixed  $key  key 
-	 * @param   mixed  $value  value 
-	 * @param   array  $expected  expected 
+	 *
+	 * @param   mixed  $key  key
+	 * @param   mixed  $value  value
+	 * @param   array  $expected  expected
 	 * @return  void
 	 */
 	public function test_options($key, $value, $expected)
 	{
 		// Create a mock external client
-		$client = new Request_Client_Stream;
+		$client = new Request_Client_Stream();
 
 		$client->options($key, $value);
 		$this->assertSame($expected, $client->options());
@@ -167,13 +165,13 @@ class Kohana_Request_Client_ExternalTest extends Unittest_TestCase {
 	 * Tests the [Request_Client_External::_send_message()] method
 	 *
 	 * @dataProvider provider_execute
-	 * 
+	 *
 	 * @return  void
 	 */
 	public function test_execute($content_type, $body, $post, $expected)
 	{
 		$old_request = Request::$initial;
-		Request::$initial = TRUE;
+		Request::$initial = true;
 
 		// Create a mock Request
 		$request = new Request('http://kohanaframework.org/');

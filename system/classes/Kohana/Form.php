@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-defined('SYSPATH') OR die('No direct script access.');
+defined('SYSPATH') or die('No direct script access.');
 /**
  * Form helper class. Unless otherwise noted, all generated HTML will be made
  * safe using the [HTML::chars] method. This prevents against simple XSS
@@ -15,8 +15,8 @@ defined('SYSPATH') OR die('No direct script access.');
  * @copyright  (c) 2007-2012 Kohana Team
  * @license    http://kohanaframework.org/license
  */
-class Kohana_Form {
-
+class Kohana_Form
+{
 	/**
 	 * Generates an opening HTML form tag.
 	 *
@@ -36,21 +36,17 @@ class Kohana_Form {
 	 * @uses    URL::site
 	 * @uses    HTML::attributes
 	 */
-	public static function open($action = NULL, array $attributes = NULL)
+	public static function open($action = null, array $attributes = null)
 	{
-		if ($action instanceof Request)
-		{
+		if ($action instanceof Request) {
 			// Use the current URI
 			$action = $action->uri();
 		}
 
-		if ( ! $action)
-		{
+		if (! $action) {
 			// Allow empty form actions (submits back to the current url).
 			$action = '';
-		}
-		elseif (strpos($action, '://') === FALSE)
-		{
+		} elseif (strpos($action, '://') === false) {
 			// Make the URI absolute
 			$action = URL::site($action);
 		}
@@ -61,8 +57,7 @@ class Kohana_Form {
 		// Only accept the default character set
 		$attributes['accept-charset'] = Kohana::$charset;
 
-		if ( ! isset($attributes['method']))
-		{
+		if (! isset($attributes['method'])) {
 			// Use POST method
 			$attributes['method'] = 'post';
 		}
@@ -94,7 +89,7 @@ class Kohana_Form {
 	 * @return  string
 	 * @uses    HTML::attributes
 	 */
-	public static function input($name, $value = NULL, array $attributes = NULL)
+	public static function input($name, $value = null, array $attributes = null)
 	{
 		// Set the input name
 		$attributes['name'] = $name;
@@ -102,8 +97,7 @@ class Kohana_Form {
 		// Set the input value
 		$attributes['value'] = $value;
 
-		if ( ! isset($attributes['type']))
-		{
+		if (! isset($attributes['type'])) {
 			// Default type is text
 			$attributes['type'] = 'text';
 		}
@@ -122,7 +116,7 @@ class Kohana_Form {
 	 * @return  string
 	 * @uses    Form::input
 	 */
-	public static function hidden($name, $value = NULL, array $attributes = NULL)
+	public static function hidden($name, $value = null, array $attributes = null)
 	{
 		$attributes['type'] = 'hidden';
 
@@ -140,7 +134,7 @@ class Kohana_Form {
 	 * @return  string
 	 * @uses    Form::input
 	 */
-	public static function password($name, $value = NULL, array $attributes = NULL)
+	public static function password($name, $value = null, array $attributes = null)
 	{
 		$attributes['type'] = 'password';
 
@@ -157,11 +151,11 @@ class Kohana_Form {
 	 * @return  string
 	 * @uses    Form::input
 	 */
-	public static function file($name, array $attributes = NULL)
+	public static function file($name, array $attributes = null)
 	{
 		$attributes['type'] = 'file';
 
-		return Form::input($name, NULL, $attributes);
+		return Form::input($name, null, $attributes);
 	}
 
 	/**
@@ -176,12 +170,11 @@ class Kohana_Form {
 	 * @return  string
 	 * @uses    Form::input
 	 */
-	public static function checkbox($name, $value = NULL, $checked = FALSE, array $attributes = NULL)
+	public static function checkbox($name, $value = null, $checked = false, array $attributes = null)
 	{
 		$attributes['type'] = 'checkbox';
 
-		if ($checked === TRUE)
-		{
+		if ($checked === true) {
 			// Make the checkbox active
 			$attributes[] = 'checked';
 		}
@@ -202,12 +195,11 @@ class Kohana_Form {
 	 * @return  string
 	 * @uses    Form::input
 	 */
-	public static function radio($name, $value = NULL, $checked = FALSE, array $attributes = NULL)
+	public static function radio($name, $value = null, $checked = false, array $attributes = null)
 	{
 		$attributes['type'] = 'radio';
 
-		if ($checked === TRUE)
-		{
+		if ($checked === true) {
 			// Make the radio active
 			$attributes[] = 'checked';
 		}
@@ -228,7 +220,7 @@ class Kohana_Form {
 	 * @uses    HTML::attributes
 	 * @uses    HTML::chars
 	 */
-	public static function textarea($name, $body = '', array $attributes = NULL, $double_encode = TRUE)
+	public static function textarea($name, $body = '', array $attributes = null, $double_encode = true)
 	{
 		// Set the input name
 		$attributes['name'] = $name;
@@ -253,87 +245,72 @@ class Kohana_Form {
 	 * @return  string
 	 * @uses    HTML::attributes
 	 */
-	public static function select($name, array $options = NULL, $selected = NULL, array $attributes = NULL)
+	public static function select($name, array $options = null, $selected = null, array $attributes = null)
 	{
 		// Set the input name
 		$attributes['name'] = $name;
 
-		if (is_array($selected))
-		{
+		if (is_array($selected)) {
 			// This is a multi-select, god save us!
 			$attributes[] = 'multiple';
 		}
 
-		if ( ! is_array($selected))
-		{
-			if ($selected === NULL)
-			{
+		if (! is_array($selected)) {
+			if ($selected === null) {
 				// Use an empty array
 				$selected = array();
-			}
-			else
-			{
+			} else {
 				// Convert the selected options to an array
 				$selected = array( (string) $selected);
 			}
 		}
 
-		if (empty($options))
-		{
+		if (empty($options)) {
 			// There are no options
 			$options = '';
-		}
-		else
-		{
-			foreach ($options as $value => $name)
-			{
-				if (is_array($name))
-				{
+		} else {
+			foreach ($options as $value => $name) {
+				if (is_array($name)) {
 					// Create a new optgroup
 					$group = array('label' => $value);
 
 					// Create a new list of options
 					$_options = array();
 
-					foreach ($name as $_value => $_name)
-					{
+					foreach ($name as $_value => $_name) {
 						// Force value to be string
 						$_value = (string) $_value;
 
 						// Create a new attribute set for this option
 						$option = array('value' => $_value);
 
-						if (in_array($_value, $selected))
-						{
+						if (in_array($_value, $selected)) {
 							// This option is selected
 							$option[] = 'selected';
 						}
 
 						// Change the option to the HTML string
-						$_options[] = '<option'.HTML::attributes($option).'>'.HTML::chars($_name, FALSE).'</option>';
+						$_options[] = '<option'.HTML::attributes($option).'>'.HTML::chars($_name, false).'</option>';
 					}
 
 					// Compile the options into a string
 					$_options = "\n".implode("\n", $_options)."\n";
 
 					$options[$value] = '<optgroup'.HTML::attributes($group).'>'.$_options.'</optgroup>';
-				}
-				else
-				{
+				} else {
 					// Force value to be string
 					$value = (string) $value;
 
 					// Create a new attribute set for this option
 					$option = array('value' => $value);
 
-					if (in_array($value, $selected))
-					{
+					if (in_array($value, $selected)) {
 						// This option is selected
 						$option[] = 'selected';
 					}
 
 					// Change the option to the HTML string
-					$options[$value] = '<option'.HTML::attributes($option).'>'.HTML::chars($name, FALSE).'</option>';
+					$options[$value] = '<option'.HTML::attributes($option).'>'.HTML::chars($name, false).'</option>';
 				}
 			}
 
@@ -355,7 +332,7 @@ class Kohana_Form {
 	 * @return  string
 	 * @uses    Form::input
 	 */
-	public static function submit($name, $value, array $attributes = NULL)
+	public static function submit($name, $value, array $attributes = null)
 	{
 		$attributes['type'] = 'submit';
 
@@ -374,12 +351,10 @@ class Kohana_Form {
 	 * @return  string
 	 * @uses    Form::input
 	 */
-	public static function image($name, $value, array $attributes = NULL, $index = FALSE)
+	public static function image($name, $value, array $attributes = null, $index = false)
 	{
-		if ( ! empty($attributes['src']))
-		{
-			if (strpos($attributes['src'], '://') === FALSE)
-			{
+		if (! empty($attributes['src'])) {
+			if (strpos($attributes['src'], '://') === false) {
 				// Add the base URL
 				$attributes['src'] = URL::base($index).$attributes['src'];
 			}
@@ -402,7 +377,7 @@ class Kohana_Form {
 	 * @return  string
 	 * @uses    HTML::attributes
 	 */
-	public static function button($name, $body, array $attributes = NULL)
+	public static function button($name, $body, array $attributes = null)
 	{
 		// Set the input name
 		$attributes['name'] = $name;
@@ -421,10 +396,9 @@ class Kohana_Form {
 	 * @return  string
 	 * @uses    HTML::attributes
 	 */
-	public static function label($input, $text = NULL, array $attributes = NULL)
+	public static function label($input, $text = null, array $attributes = null)
 	{
-		if ($text === NULL)
-		{
+		if ($text === null) {
 			// Use the input name as the text
 			$text = ucwords(preg_replace('/[\W_]+/', ' ', $input));
 		}

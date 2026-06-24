@@ -42,6 +42,12 @@
     *   **NAPRAWIONO:** `Debug.php` line 304 - `strlen()` oczekuje stringa, ale otrzymuje int.
     *   **NAPRAWIONO:** `Debug.php` line 390 - `in_array()` porównuje string z integerami.
 
+6.  **Formatowanie i automatyzacja Git (PHP 8.4/8.5+):**
+    *   **NAPRAWIONO:** Szablony widoków (views) - usunięto z nich błędne tagi `strict_types` wywołujące błędy składniowe w linterze.
+    *   **ZAINSTALOWANO:** `php-cs-fixer` zainstalowany do katalogu `vendor`.
+    *   **SKONFIGUROWANO:** Plik `.php-cs-fixer.dist.php` skonfigurowany z zachowaniem tabulacji jako wcięć (styl Kohany).
+    *   **DODANO:** Git hook `pre-push` (`.git/hooks/pre-push`) automatyzujący proces na gałęzi `dev`: formatowanie (`php-cs-fixer`) -> testy jednostkowe (z wyciszeniem deprecacji PHP 8.4+) -> automatyczny merge do `master` i push na serwer.
+
 ## Naprawione błędy bezpieczeństwa:
 
 1.  **CVE-2019-8979 - SQL Injection w order_by():**

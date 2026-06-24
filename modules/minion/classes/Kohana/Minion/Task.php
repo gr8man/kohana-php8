@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') or die('No direct script access.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct script access.');
 /**
  * Interface that all minion tasks must implement
  *
@@ -10,8 +11,8 @@ declare(strict_types=1); defined('SYSPATH') or die('No direct script access.');
  * @copyright  (c) 2009-2011 Kohana Team
  * @license    http://kohanaframework.org/license
  */
-abstract class Kohana_Minion_Task {
-
+abstract class Kohana_Minion_Task
+{
 	/**
 	 * The separator used to separate different levels of tasks
 	 * @var string
@@ -28,8 +29,9 @@ abstract class Kohana_Minion_Task {
 	{
 		$task = trim($task);
 
-		if (empty($task))
+		if (empty($task)) {
 			return '';
+		}
 
 		return 'Task_'.implode('_', array_map('ucfirst', explode(Minion_Task::$task_separator, $task)));
 	}
@@ -42,8 +44,7 @@ abstract class Kohana_Minion_Task {
 	 */
 	public static function convert_class_to_task($class)
 	{
-		if (is_object($class))
-		{
+		if (is_object($class)) {
 			$class = get_class($class);
 		}
 
@@ -59,35 +60,28 @@ abstract class Kohana_Minion_Task {
 	 */
 	public static function factory($options)
 	{
-		if (($task = Arr::get($options, 'task')) !== NULL)
-		{
+		if (($task = Arr::get($options, 'task')) !== null) {
 			unset($options['task']);
-		}
-		else if (($task = Arr::get($options, 0)) !== NULL)
-		{
+		} elseif (($task = Arr::get($options, 0)) !== null) {
 			// The first positional argument (aka 0) may be the task name
 			unset($options[0]);
-		}
-		else
-		{
+		} else {
 			// If we didn't get a valid task, generate the help
 			$task = 'help';
 		}
 
 		$class = Minion_Task::convert_task_to_class_name($task);
 
-		if ( ! class_exists($class))
-		{
+		if (! class_exists($class)) {
 			throw new Minion_Exception_InvalidTask(
 				"Task ':task' is not a valid minion task",
 				array(':task' => $class)
 			);
 		}
 
-		$class = new $class;
+		$class = new $class();
 
-		if ( ! $class instanceof Minion_Task)
-		{
+		if (! $class instanceof Minion_Task) {
 			throw new Minion_Exception_InvalidTask(
 				"Task ':task' is not a valid minion task",
 				array(':task' => $class)
@@ -97,8 +91,7 @@ abstract class Kohana_Minion_Task {
 		$class->set_options($options);
 
 		// Show the help page for this task if requested
-		if (array_key_exists('help', $options))
-		{
+		if (array_key_exists('help', $options)) {
 			$class->_method = '_help';
 		}
 
@@ -146,10 +139,9 @@ abstract class Kohana_Minion_Task {
 	 */
 	public function __toString()
 	{
-		static $task_name = NULL;
+		static $task_name = null;
 
-		if ($task_name === NULL)
-		{
+		if ($task_name === null) {
 			$task_name = Minion_Task::convert_class_to_task($this);
 		}
 
@@ -164,8 +156,7 @@ abstract class Kohana_Minion_Task {
 	 */
 	public function set_options(array $options)
 	{
-		foreach ($options as $key => $value)
-		{
+		foreach ($options as $key => $value) {
 			$this->_options[$key] = $value;
 		}
 
@@ -208,8 +199,7 @@ abstract class Kohana_Minion_Task {
 	public function build_validation(Validation $validation)
 	{
 		// Add a rule to each key making sure it's in the task
-		foreach ($validation->data() as $key => $value)
-		{
+		foreach ($validation->data() as $key => $value) {
 			$validation->rule($key, array($this, 'valid_option'), array(':validation', ':field'));
 		}
 
@@ -239,14 +229,11 @@ abstract class Kohana_Minion_Task {
 		$validation = Validation::factory($options);
 		$validation = $this->build_validation($validation);
 
-		if ( $this->_method != '_help' AND ! $validation->check())
-		{
+		if ($this->_method != '_help' and ! $validation->check()) {
 			echo View::factory('minion/error/validation')
 				->set('task', Minion_Task::convert_class_to_task($this))
 				->set('errors', $validation->errors($this->get_errors_file()));
-		}
-		else
-		{
+		} else {
 			// Finally, run the task
 			$method = $this->_method;
 			echo $this->{$method}($options);
@@ -279,8 +266,7 @@ abstract class Kohana_Minion_Task {
 
 	public function valid_option(Validation $validation, $option)
 	{
-		if ( ! in_array($option, $this->_accepted_options))
-		{
+		if (! in_array($option, $this->_accepted_options)) {
 			$validation->error($option, 'minion_option');
 		}
 	}
@@ -304,14 +290,12 @@ abstract class Kohana_Minion_Task {
 		// Tag content
 		$tags        = array();
 
-		foreach ($comment as $i => $line)
-		{
+		foreach ($comment as $i => $line) {
 			// Remove all leading whitespace
 			$line = preg_replace('/^\s*\* ?/m', '', $line);
 
 			// Search this line for a tag
-			if (preg_match('/^@(\S+)(?:\s*(.+))?$/', $line, $matches))
-			{
+			if (preg_match('/^@(\S+)(?:\s*(.+))?$/', $line, $matches)) {
 				// This is a tag line
 				unset($comment[$i]);
 
@@ -319,9 +303,7 @@ abstract class Kohana_Minion_Task {
 				$text = isset($matches[2]) ? $matches[2] : '';
 
 				$tags[$name] = $text;
-			}
-			else
-			{
+			} else {
 				$comment[$i] = (string) $line;
 			}
 		}
@@ -342,21 +324,16 @@ abstract class Kohana_Minion_Task {
 	{
 		$output = array();
 
-		foreach ($files as $file => $path)
-		{
+		foreach ($files as $file => $path) {
 			$file = substr($file, strrpos($file, DIRECTORY_SEPARATOR) + 1);
 
-			if (is_array($path) AND count($path))
-			{
+			if (is_array($path) and count($path)) {
 				$task = $this->_compile_task_list($path, $prefix.$file.Minion_Task::$task_separator);
 
-				if ($task)
-				{
+				if ($task) {
 					$output = array_merge($output, $task);
 				}
-			}
-			else
-			{
+			} else {
 				$output[] = strtolower($prefix.substr($file, 0, -strlen(EXT)));
 			}
 		}

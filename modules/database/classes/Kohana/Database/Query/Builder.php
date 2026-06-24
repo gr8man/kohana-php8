@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct script access.');
 /**
  * Database query builder. See [Query Builder](/database/query/builder) for usage and examples.
  *
@@ -10,8 +11,8 @@ declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
  * @copyright  (c) 2008-2009 Kohana Team
  * @license    http://kohanaphp.com/license
  */
-abstract class Kohana_Database_Query_Builder extends Database_Query {
-
+abstract class Kohana_Database_Query_Builder extends Database_Query
+{
 	/**
 	 * Compiles an array of JOIN statements into an SQL partial.
 	 *
@@ -23,8 +24,7 @@ abstract class Kohana_Database_Query_Builder extends Database_Query {
 	{
 		$statements = array();
 
-		foreach ($joins as $join)
-		{
+		foreach ($joins as $join) {
 			// Compile each of the join statements
 			$statements[] = $join->compile($db);
 		}
@@ -42,32 +42,23 @@ abstract class Kohana_Database_Query_Builder extends Database_Query {
 	 */
 	protected function _compile_conditions(Database $db, array $conditions)
 	{
-		$last_condition = NULL;
+		$last_condition = null;
 
 		$sql = '';
-		foreach ($conditions as $group)
-		{
+		foreach ($conditions as $group) {
 			// Process groups of conditions
-			foreach ($group as $logic => $condition)
-			{
-				if ($condition === '(')
-				{
-					if ( ! empty($sql) AND $last_condition !== '(')
-					{
+			foreach ($group as $logic => $condition) {
+				if ($condition === '(') {
+					if (! empty($sql) and $last_condition !== '(') {
 						// Include logic operator
 						$sql .= ' '.$logic.' ';
 					}
 
 					$sql .= '(';
-				}
-				elseif ($condition === ')')
-				{
+				} elseif ($condition === ')') {
 					$sql .= ')';
-				}
-				else
-				{
-					if ( ! empty($sql) AND $last_condition !== '(')
-					{
+				} else {
+					if (! empty($sql) and $last_condition !== '(') {
 						// Add the logic operator
 						$sql .= ' '.$logic.' ';
 					}
@@ -75,15 +66,11 @@ abstract class Kohana_Database_Query_Builder extends Database_Query {
 					// Split the condition
 					list($column, $op, $value) = $condition;
 
-					if ($value === NULL)
-					{
-						if ($op === '=')
-						{
+					if ($value === null) {
+						if ($op === '=') {
 							// Convert "val = NULL" to "val IS NULL"
 							$op = 'IS';
-						}
-						elseif ($op === '!=' OR $op === '<>')
-						{
+						} elseif ($op === '!=' or $op === '<>') {
 							// Convert "val != NULL" to "valu IS NOT NULL"
 							$op = 'IS NOT';
 						}
@@ -92,41 +79,32 @@ abstract class Kohana_Database_Query_Builder extends Database_Query {
 					// Database operators are always uppercase
 					$op = strtoupper($op);
 
-					if ($op === 'BETWEEN' AND is_array($value))
-					{
+					if ($op === 'BETWEEN' and is_array($value)) {
 						// BETWEEN always has exactly two arguments
 						list($min, $max) = $value;
 
-						if ((is_string($min) AND array_key_exists($min, $this->_parameters)) === FALSE)
-						{
+						if ((is_string($min) and array_key_exists($min, $this->_parameters)) === false) {
 							// Quote the value, it is not a parameter
 							$min = $db->quote($min);
 						}
 
-						if ((is_string($max) AND array_key_exists($max, $this->_parameters)) === FALSE)
-						{
+						if ((is_string($max) and array_key_exists($max, $this->_parameters)) === false) {
 							// Quote the value, it is not a parameter
 							$max = $db->quote($max);
 						}
 
 						// Quote the min and max value
 						$value = $min.' AND '.$max;
-					}
-					elseif ((is_string($value) AND array_key_exists($value, $this->_parameters)) === FALSE)
-					{
+					} elseif ((is_string($value) and array_key_exists($value, $this->_parameters)) === false) {
 						// Quote the value, it is not a parameter
 						$value = $db->quote($value);
 					}
 
-					if ($column)
-					{
-						if (is_array($column))
-						{
+					if ($column) {
+						if (is_array($column)) {
 							// Use the column name
 							$column = $db->quote_identifier(reset($column));
-						}
-						else
-						{
+						} else {
 							// Apply proper quoting to the column
 							$column = $db->quote_column($column);
 						}
@@ -153,16 +131,14 @@ abstract class Kohana_Database_Query_Builder extends Database_Query {
 	protected function _compile_set(Database $db, array $values)
 	{
 		$set = array();
-		foreach ($values as $group)
-		{
+		foreach ($values as $group) {
 			// Split the set
-			list ($column, $value) = $group;
+			list($column, $value) = $group;
 
 			// Quote the column name
 			$column = $db->quote_column($column);
 
-			if ((is_string($value) AND array_key_exists($value, $this->_parameters)) === FALSE)
-			{
+			if ((is_string($value) and array_key_exists($value, $this->_parameters)) === false) {
 				// Quote the value, it is not a parameter
 				$value = $db->quote($value);
 			}
@@ -184,15 +160,11 @@ abstract class Kohana_Database_Query_Builder extends Database_Query {
 	{
 		$group = array();
 
-		foreach ($columns as $column)
-		{
-			if (is_array($column))
-			{
+		foreach ($columns as $column) {
+			if (is_array($column)) {
 				// Use the column alias
 				$column = $db->quote_identifier(end($column));
-			}
-			else
-			{
+			} else {
 				// Apply proper quoting to the column
 				$column = $db->quote_column($column);
 			}
@@ -213,35 +185,27 @@ abstract class Kohana_Database_Query_Builder extends Database_Query {
 	protected function _compile_order_by(Database $db, array $columns)
 	{
 		$sort = array();
-		foreach ($columns as $group)
-		{
-			list ($column, $direction) = $group;
+		foreach ($columns as $group) {
+			list($column, $direction) = $group;
 
-			if (is_array($column))
-			{
+			if (is_array($column)) {
 				// Use the column alias
 				$column = $db->quote_identifier(end($column));
-			}
-			else
-			{
+			} else {
 				// Apply proper quoting to the column
 				$column = $db->quote_column($column);
 			}
 
-			if ($direction)
-			{
+			if ($direction) {
 				// SECURITY FIX: Validate direction to prevent SQL injection (CVE-2019-8979)
 				// Only allow safe values: ASC, DESC, RAND(), RANDOM()
 				$direction_upper = strtoupper(trim((string) $direction));
-				
+
 				// Allow 'ASC', 'DESC', 'RAND()', 'RANDOM()' (case-insensitive)
-				if ( ! in_array($direction_upper, array('ASC', 'DESC', 'RAND()', 'RANDOM()'), TRUE))
-				{
+				if (! in_array($direction_upper, array('ASC', 'DESC', 'RAND()', 'RANDOM()'), true)) {
 					// Reject invalid directions - default to ASC
 					$direction = ' ASC';
-				}
-				else
-				{
+				} else {
 					$direction = ' '.$direction_upper;
 				}
 			}

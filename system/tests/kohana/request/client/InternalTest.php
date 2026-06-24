@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('Kohana bootstrap needs to be included before tests run');
+declare(strict_types=1);
+defined('SYSPATH') or die('Kohana bootstrap needs to be included before tests run');
 
 /**
  * Unit tests for internal request client
@@ -20,7 +21,6 @@ declare(strict_types=1); defined('SYSPATH') OR die('Kohana bootstrap needs to be
 #[AllowDynamicProperties]
 class Kohana_Request_Client_InternalTest extends Unittest_TestCase
 {
-
 	protected $_log_object;
 
 	// @codingStandardsIgnoreStart
@@ -31,7 +31,7 @@ class Kohana_Request_Client_InternalTest extends Unittest_TestCase
 
 		// temporarily save $log object
 		$this->_log_object = Kohana::$log;
-		Kohana::$log = NULL;
+		Kohana::$log = null;
 	}
 
 	// @codingStandardsIgnoreStart
@@ -91,7 +91,7 @@ class Kohana_Request_Client_InternalTest extends Unittest_TestCase
 			->method('method')
 			->withAnyParameters();
 
-		$internal_client = new Request_Client_Internal;
+		$internal_client = new Request_Client_Internal();
 
 		$response = $internal_client->execute($request);
 

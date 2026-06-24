@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct script access.');
 /**
  * Image manipulation support. Allows images to be resized, cropped, etc.
  *
@@ -10,19 +11,19 @@ declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
  * @copyright  (c) 2008-2009 Kohana Team
  * @license    http://kohanaphp.com/license.html
  */
-abstract class Kohana_Image {
-
+abstract class Kohana_Image
+{
 	// Resizing constraints
-	const NONE    = 0x01;
-	const WIDTH   = 0x02;
-	const HEIGHT  = 0x03;
-	const AUTO    = 0x04;
-	const INVERSE = 0x05;
-	const PRECISE = 0x06;
+	public const NONE    = 0x01;
+	public const WIDTH   = 0x02;
+	public const HEIGHT  = 0x03;
+	public const AUTO    = 0x04;
+	public const INVERSE = 0x05;
+	public const PRECISE = 0x06;
 
 	// Flipping directions
-	const HORIZONTAL = 0x11;
-	const VERTICAL   = 0x12;
+	public const HORIZONTAL = 0x11;
+	public const VERTICAL   = 0x12;
 
 	/**
 	 * @deprecated - provide an image.default_driver value in your configuration instead
@@ -31,7 +32,7 @@ abstract class Kohana_Image {
 	public static $default_driver = 'GD';
 
 	// Status of the driver check
-	protected static $_checked = FALSE;
+	protected static $_checked = false;
 
 	/**
 	 * Loads an image and prepares it for manipulation.
@@ -43,10 +44,9 @@ abstract class Kohana_Image {
 	 * @return  Image
 	 * @uses    Image::$default_driver
 	 */
-	public static function factory($file, $driver = NULL)
+	public static function factory($file, $driver = null)
 	{
-		if ($driver === NULL)
-		{
+		if ($driver === null) {
 			// Use the driver from configuration file or default one
 			$configured_driver = Kohana::$config->load('image.default_driver');
 			$driver = ($configured_driver) ? $configured_driver : Image::$default_driver;
@@ -93,23 +93,21 @@ abstract class Kohana_Image {
 	 */
 	public function __construct($file)
 	{
-		try
-		{
+		try {
 			// Get the real path to the file
 			$file = realpath($file);
 
 			// Get the image information
 			$info = getimagesize($file);
-		}
-		catch (Exception $e)
-		{
+		} catch (Exception $e) {
 			// Ignore all errors while reading the image
 		}
 
-		if (empty($file) OR empty($info))
-		{
-			throw new Kohana_Exception('Not an image or invalid image: :file',
-				array(':file' => Debug::path($file)));
+		if (empty($file) or empty($info)) {
+			throw new Kohana_Exception(
+				'Not an image or invalid image: :file',
+				array(':file' => Debug::path($file))
+			);
 		}
 
 		// Store the image information
@@ -132,15 +130,11 @@ abstract class Kohana_Image {
 	 */
 	public function __toString()
 	{
-		try
-		{
+		try {
 			// Render the current image
 			return $this->render();
-		}
-		catch (Exception $e)
-		{
-			if (is_object(Kohana::$log))
-			{
+		} catch (Exception $e) {
+			if (is_object(Kohana::$log)) {
 				// Get the text of the exception
 				$error = Kohana_Exception::text($e);
 
@@ -178,93 +172,76 @@ abstract class Kohana_Image {
 	 * @return  $this
 	 * @uses    Image::_do_resize
 	 */
-	public function resize($width = NULL, $height = NULL, $master = NULL)
+	public function resize($width = null, $height = null, $master = null)
 	{
-		if ($master === NULL)
-		{
+		if ($master === null) {
 			// Choose the master dimension automatically
 			$master = Image::AUTO;
 		}
 		// Image::WIDTH and Image::HEIGHT deprecated. You can use it in old projects,
 		// but in new you must pass empty value for non-master dimension
-		elseif ($master == Image::WIDTH AND ! empty($width))
-		{
+		elseif ($master == Image::WIDTH and ! empty($width)) {
 			$master = Image::AUTO;
 
 			// Set empty height for backward compatibility
-			$height = NULL;
-		}
-		elseif ($master == Image::HEIGHT AND ! empty($height))
-		{
+			$height = null;
+		} elseif ($master == Image::HEIGHT and ! empty($height)) {
 			$master = Image::AUTO;
 
 			// Set empty width for backward compatibility
-			$width = NULL;
+			$width = null;
 		}
 
-		if (empty($width))
-		{
-			if ($master === Image::NONE)
-			{
+		if (empty($width)) {
+			if ($master === Image::NONE) {
 				// Use the current width
 				$width = $this->width;
-			}
-			else
-			{
+			} else {
 				// If width not set, master will be height
 				$master = Image::HEIGHT;
 			}
 		}
 
-		if (empty($height))
-		{
-			if ($master === Image::NONE)
-			{
+		if (empty($height)) {
+			if ($master === Image::NONE) {
 				// Use the current height
 				$height = $this->height;
-			}
-			else
-			{
+			} else {
 				// If height not set, master will be width
 				$master = Image::WIDTH;
 			}
 		}
 
-		switch ($master)
-		{
+		switch ($master) {
 			case Image::AUTO:
 				// Choose direction with the greatest reduction ratio
 				$master = ($this->width / $width) > ($this->height / $height) ? Image::WIDTH : Image::HEIGHT;
-			break;
+				break;
 			case Image::INVERSE:
 				// Choose direction with the minimum reduction ratio
 				$master = ($this->width / $width) > ($this->height / $height) ? Image::HEIGHT : Image::WIDTH;
-			break;
+				break;
 		}
 
-		switch ($master)
-		{
+		switch ($master) {
 			case Image::WIDTH:
 				// Recalculate the height based on the width proportions
 				$height = $this->height * $width / $this->width;
-			break;
+				break;
 			case Image::HEIGHT:
 				// Recalculate the width based on the height proportions
 				$width = $this->width * $height / $this->height;
-			break;
+				break;
 			case Image::PRECISE:
 				// Resize to precise size
 				$ratio = $this->width / $this->height;
 
-				if ($width / $height > $ratio)
-				{
+				if ($width / $height > $ratio) {
 					$height = $this->height * $width / $this->width;
-				}
-				else
-				{
+				} else {
 					$width = $this->width * $height / $this->height;
 				}
-			break;
+				break;
 		}
 
 		// Convert the width and height to integers, minimum value is 1px
@@ -293,48 +270,36 @@ abstract class Kohana_Image {
 	 * @return  $this
 	 * @uses    Image::_do_crop
 	 */
-	public function crop($width, $height, $offset_x = NULL, $offset_y = NULL)
+	public function crop($width, $height, $offset_x = null, $offset_y = null)
 	{
-		if ($width > $this->width)
-		{
+		if ($width > $this->width) {
 			// Use the current width
 			$width = $this->width;
 		}
 
-		if ($height > $this->height)
-		{
+		if ($height > $this->height) {
 			// Use the current height
 			$height = $this->height;
 		}
 
-		if ($offset_x === NULL)
-		{
+		if ($offset_x === null) {
 			// Center the X offset
 			$offset_x = round(($this->width - $width) / 2);
-		}
-		elseif ($offset_x === TRUE)
-		{
+		} elseif ($offset_x === true) {
 			// Bottom the X offset
 			$offset_x = $this->width - $width;
-		}
-		elseif ($offset_x < 0)
-		{
+		} elseif ($offset_x < 0) {
 			// Set the X offset from the right
 			$offset_x = $this->width - $width + $offset_x;
 		}
 
-		if ($offset_y === NULL)
-		{
+		if ($offset_y === null) {
 			// Center the Y offset
 			$offset_y = round(($this->height - $height) / 2);
-		}
-		elseif ($offset_y === TRUE)
-		{
+		} elseif ($offset_y === true) {
 			// Bottom the Y offset
 			$offset_y = $this->height - $height;
-		}
-		elseif ($offset_y < 0)
-		{
+		} elseif ($offset_y < 0) {
 			// Set the Y offset from the bottom
 			$offset_y = $this->height - $height + $offset_y;
 		}
@@ -343,14 +308,12 @@ abstract class Kohana_Image {
 		$max_width  = $this->width  - $offset_x;
 		$max_height = $this->height - $offset_y;
 
-		if ($width > $max_width)
-		{
+		if ($width > $max_width) {
 			// Use the maximum available width
 			$width = $max_width;
 		}
 
-		if ($height > $max_height)
-		{
+		if ($height > $max_height) {
 			// Use the maximum available height
 			$height = $max_height;
 		}
@@ -378,24 +341,18 @@ abstract class Kohana_Image {
 		// Make the degrees an integer
 		$degrees = (int) $degrees;
 
-		if ($degrees > 180)
-		{
-			do
-			{
+		if ($degrees > 180) {
+			do {
 				// Keep subtracting full circles until the degrees have normalized
 				$degrees -= 360;
-			}
-			while ($degrees > 180);
+			} while ($degrees > 180);
 		}
 
-		if ($degrees < -180)
-		{
-			do
-			{
+		if ($degrees < -180) {
+			do {
 				// Keep adding full circles until the degrees have normalized
 				$degrees += 360;
-			}
-			while ($degrees < -180);
+			} while ($degrees < -180);
 		}
 
 		$this->_do_rotate($degrees);
@@ -418,8 +375,7 @@ abstract class Kohana_Image {
 	 */
 	public function flip($direction)
 	{
-		if ($direction !== Image::HORIZONTAL)
-		{
+		if ($direction !== Image::HORIZONTAL) {
 			// Flip vertically
 			$direction = Image::VERTICAL;
 		}
@@ -472,10 +428,9 @@ abstract class Kohana_Image {
 	 * @return  $this
 	 * @uses    Image::_do_reflection
 	 */
-	public function reflection($height = NULL, $opacity = 100, $fade_in = FALSE)
+	public function reflection($height = null, $opacity = 100, $fade_in = false)
 	{
-		if ($height === NULL OR $height > $this->height)
-		{
+		if ($height === null or $height > $this->height) {
 			// Use the current height
 			$height = $this->height;
 		}
@@ -506,36 +461,26 @@ abstract class Kohana_Image {
 	 * @return  $this
 	 * @uses    Image::_do_watermark
 	 */
-	public function watermark(Image $watermark, $offset_x = NULL, $offset_y = NULL, $opacity = 100)
+	public function watermark(Image $watermark, $offset_x = null, $offset_y = null, $opacity = 100)
 	{
-		if ($offset_x === NULL)
-		{
+		if ($offset_x === null) {
 			// Center the X offset
 			$offset_x = round(($this->width - $watermark->width) / 2);
-		}
-		elseif ($offset_x === TRUE)
-		{
+		} elseif ($offset_x === true) {
 			// Bottom the X offset
 			$offset_x = $this->width - $watermark->width;
-		}
-		elseif ($offset_x < 0)
-		{
+		} elseif ($offset_x < 0) {
 			// Set the X offset from the right
 			$offset_x = $this->width - $watermark->width + $offset_x;
 		}
 
-		if ($offset_y === NULL)
-		{
+		if ($offset_y === null) {
 			// Center the Y offset
 			$offset_y = round(($this->height - $watermark->height) / 2);
-		}
-		elseif ($offset_y === TRUE)
-		{
+		} elseif ($offset_y === true) {
 			// Bottom the Y offset
 			$offset_y = $this->height - $watermark->height;
-		}
-		elseif ($offset_y < 0)
-		{
+		} elseif ($offset_y < 0) {
 			// Set the Y offset from the bottom
 			$offset_y = $this->height - $watermark->height + $offset_y;
 		}
@@ -565,20 +510,18 @@ abstract class Kohana_Image {
 	 */
 	public function background($color, $opacity = 100)
 	{
-		if ($color[0] === '#')
-		{
+		if ($color[0] === '#') {
 			// Remove the pound
 			$color = substr($color, 1);
 		}
 
-		if (strlen($color) === 3)
-		{
+		if (strlen($color) === 3) {
 			// Convert shorthand into longhand hex notation
 			$color = preg_replace('/./', '$0$0', $color);
 		}
 
 		// Convert the hex into RGB values
-		list ($r, $g, $b) = array_map('hexdec', str_split($color, 2));
+		list($r, $g, $b) = array_map('hexdec', str_split($color, 2));
 
 		// The opacity must be in the range of 0 to 100
 		$opacity = min(max($opacity, 0), 100);
@@ -609,31 +552,29 @@ abstract class Kohana_Image {
 	 * @uses    Image::_save
 	 * @throws  Kohana_Exception
 	 */
-	public function save($file = NULL, $quality = 100)
+	public function save($file = null, $quality = 100)
 	{
-		if ($file === NULL)
-		{
+		if ($file === null) {
 			// Overwrite the file
 			$file = $this->file;
 		}
 
-		if (is_file($file))
-		{
-			if ( ! is_writable($file))
-			{
-				throw new Kohana_Exception('File must be writable: :file',
-					array(':file' => Debug::path($file)));
+		if (is_file($file)) {
+			if (! is_writable($file)) {
+				throw new Kohana_Exception(
+					'File must be writable: :file',
+					array(':file' => Debug::path($file))
+				);
 			}
-		}
-		else
-		{
+		} else {
 			// Get the directory of the file
 			$directory = realpath(pathinfo($file, PATHINFO_DIRNAME));
 
-			if ( ! is_dir($directory) OR ! is_writable($directory))
-			{
-				throw new Kohana_Exception('Directory must be writable: :directory',
-					array(':directory' => Debug::path($directory)));
+			if (! is_dir($directory) or ! is_writable($directory)) {
+				throw new Kohana_Exception(
+					'Directory must be writable: :directory',
+					array(':directory' => Debug::path($directory))
+				);
 			}
 		}
 
@@ -657,12 +598,11 @@ abstract class Kohana_Image {
 	 * @return  string
 	 * @uses    Image::_do_render
 	 */
-	public function render($type = NULL, $quality = 100)
+	public function render($type = null, $quality = 100)
 	{
-		if ($type === NULL)
-		{
+		if ($type === null) {
 			// Use the current image type
-			$type = image_type_to_extension($this->type, FALSE);
+			$type = image_type_to_extension($this->type, false);
 		}
 
 		return $this->_do_render($type, $quality);

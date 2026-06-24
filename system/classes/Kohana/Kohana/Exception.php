@@ -1,4 +1,7 @@
-<?php declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
+<?php
+
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct script access.');
 /**
  * Kohana exception class. Translates exceptions using the [I18n] class.
  *
@@ -8,8 +11,8 @@
  * @copyright  (c) 2008-2012 Kohana Team
  * @license    http://kohanaframework.org/license
  */
-class Kohana_Kohana_Exception extends Exception {
-
+class Kohana_Kohana_Exception extends Exception
+{
 	/**
 	 * @var  array  PHP error code => human readable name
 	 */
@@ -47,7 +50,7 @@ class Kohana_Kohana_Exception extends Exception {
 	 * @param   Exception       $previous   Previous exception
 	 * @return  void
 	 */
-	public function __construct($message = "", array $variables = NULL, $code = 0, Throwable $previous = NULL)
+	public function __construct($message = "", array $variables = null, $code = 0, Throwable $previous = null)
 	{
 		// Set the message
 		$message = __((string) $message, $variables);
@@ -101,8 +104,7 @@ class Kohana_Kohana_Exception extends Exception {
 	 */
 	public static function _handler(Throwable $e)
 	{
-		try
-		{
+		try {
 			// Log the exception
 			Kohana_Exception::log($e);
 
@@ -110,20 +112,17 @@ class Kohana_Kohana_Exception extends Exception {
 			$response = Kohana_Exception::response($e);
 
 			return $response;
-		}
-		catch (Throwable $e)
-		{
+		} catch (Throwable $e) {
 			/**
 			 * Things are going *really* badly for us, We now have no choice
 			 * but to bail. Hard.
 			 */
 			// Clean the output buffer if one exists
-			ob_get_level() AND ob_clean();
+			ob_get_level() and ob_clean();
 
 			// Set the Status code to 500, and Content-Type to text/plain.
-			if ( ! headers_sent())
-			{
-				header('Content-Type: text/plain; charset='.Kohana::$charset, TRUE, 500);
+			if (! headers_sent()) {
+				header('Content-Type: text/plain; charset='.Kohana::$charset, true, 500);
 			}
 
 			echo Kohana_Exception::text($e);
@@ -142,13 +141,12 @@ class Kohana_Kohana_Exception extends Exception {
 	 */
 	public static function log(Throwable $e, $level = Log::EMERGENCY)
 	{
-		if (is_object(Kohana::$log))
-		{
+		if (is_object(Kohana::$log)) {
 			// Create a text version of the exception
 			$error = Kohana_Exception::text($e);
 
 			// Add this exception to the log
-			Kohana::$log->add($level, $error, NULL, array('exception' => $e));
+			Kohana::$log->add($level, $error, null, array('exception' => $e));
 
 			// Make sure the logs are written
 			Kohana::$log->write();
@@ -165,8 +163,14 @@ class Kohana_Kohana_Exception extends Exception {
 	 */
 	public static function text(Throwable $e)
 	{
-		return sprintf('%s [ %s ]: %s ~ %s [ %d ]',
-			get_class($e), $e->getCode(), strip_tags($e->getMessage()), Debug::path($e->getFile()), $e->getLine());
+		return sprintf(
+			'%s [ %s ]: %s ~ %s [ %d ]',
+			get_class($e),
+			$e->getCode(),
+			strip_tags($e->getMessage()),
+			Debug::path($e->getFile()),
+			$e->getLine()
+		);
 	}
 
 	/**
@@ -178,8 +182,7 @@ class Kohana_Kohana_Exception extends Exception {
 	 */
 	public static function response(Throwable $e)
 	{
-		try
-		{
+		try {
 			// Get the exception information
 			$class   = get_class($e);
 			$code    = $e->getCode();
@@ -193,53 +196,43 @@ class Kohana_Kohana_Exception extends Exception {
 			 * method. We need to remove that entry from the trace and overwrite
 			 * the variables from above.
 			 */
-			if ($e instanceof HTTP_Exception AND ! empty($trace) AND $trace[0]['function'] == 'factory')
-			{
+			if ($e instanceof HTTP_Exception and ! empty($trace) and $trace[0]['function'] == 'factory') {
 				extract(array_shift($trace));
 			}
 
 
-			if ($e instanceof ErrorException)
-			{
+			if ($e instanceof ErrorException) {
 				/**
 				 * If XDebug is installed, and this is a fatal error,
 				 * use XDebug to generate the stack trace
 				 */
-				if (function_exists('xdebug_get_function_stack') AND $code == E_ERROR)
-				{
+				if (function_exists('xdebug_get_function_stack') and $code == E_ERROR) {
 					$trace = array_slice(array_reverse(xdebug_get_function_stack()), 4);
 
-					foreach ($trace as & $frame)
-					{
+					foreach ($trace as & $frame) {
 						/**
 						 * XDebug pre 2.1.1 doesn't currently set the call type key
 						 * http://bugs.xdebug.org/view.php?id=695
 						 */
-						if ( ! isset($frame['type']))
-						{
+						if (! isset($frame['type'])) {
 							$frame['type'] = '??';
 						}
 
 						// Xdebug returns the words 'dynamic' and 'static' instead of using '->' and '::' symbols
-						if ('dynamic' === $frame['type'])
-						{
+						if ('dynamic' === $frame['type']) {
 							$frame['type'] = '->';
-						}
-						elseif ('static' === $frame['type'])
-						{
+						} elseif ('static' === $frame['type']) {
 							$frame['type'] = '::';
 						}
 
 						// XDebug also has a different name for the parameters array
-						if (isset($frame['params']) AND ! isset($frame['args']))
-						{
+						if (isset($frame['params']) and ! isset($frame['args'])) {
 							$frame['args'] = $frame['params'];
 						}
 					}
 				}
 
-				if (isset(Kohana_Exception::$php_errors[$code]))
-				{
+				if (isset(Kohana_Exception::$php_errors[$code])) {
 					// Use the human-readable error name
 					$code = Kohana_Exception::$php_errors[$code];
 				}
@@ -253,12 +246,11 @@ class Kohana_Kohana_Exception extends Exception {
 			 */
 			if (
 				defined('PHPUnit_MAIN_METHOD')
-				OR
+				or
 				defined('PHPUNIT_COMPOSER_INSTALL')
-				OR
+				or
 				defined('__PHPUNIT_PHAR__')
-			)
-			{
+			) {
 				$trace = array_slice($trace, 0, 2);
 			}
 
@@ -276,9 +268,7 @@ class Kohana_Kohana_Exception extends Exception {
 
 			// Set the response body
 			$response->body($view->render());
-		}
-		catch (Throwable $e)
-		{
+		} catch (Throwable $e) {
 			/**
 			 * Things are going badly for us, Lets try to keep things under control by
 			 * generating a simpler response object.

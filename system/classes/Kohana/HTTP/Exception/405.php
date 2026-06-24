@@ -1,9 +1,10 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct script access.');
 
-class Kohana_HTTP_Exception_405 extends HTTP_Exception_Expected {
-
+class Kohana_HTTP_Exception_405 extends HTTP_Exception_Expected
+{
 	/**
 	 * @var   integer    HTTP 405 Method Not Allowed
 	 */
@@ -16,8 +17,7 @@ class Kohana_HTTP_Exception_405 extends HTTP_Exception_Expected {
 	 */
 	public function allowed($methods)
 	{
-		if (is_array($methods))
-		{
+		if (is_array($methods)) {
 			$methods = implode(',', $methods);
 		}
 
@@ -34,10 +34,11 @@ class Kohana_HTTP_Exception_405 extends HTTP_Exception_Expected {
 	 */
 	public function check()
 	{
-		if ($location = $this->headers('allow') === NULL)
+		if ($location = $this->headers('allow') === null) {
 			throw new Kohana_Exception('A list of allowed methods must be specified');
+		}
 
-		return TRUE;
+		return true;
 	}
 
 }

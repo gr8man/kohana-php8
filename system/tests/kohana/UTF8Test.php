@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('Kohana bootstrap needs to be included before tests run');
+declare(strict_types=1);
+defined('SYSPATH') or die('Kohana bootstrap needs to be included before tests run');
 /**
  * Tests Kohana_UTF8 class
  *
@@ -17,7 +18,6 @@ declare(strict_types=1); defined('SYSPATH') OR die('Kohana bootstrap needs to be
 #[AllowDynamicProperties]
 class Kohana_UTF8Test extends Unittest_TestCase
 {
-
 	/**
 	 * Provides test data for test_clean()
 	 */
@@ -50,11 +50,11 @@ class Kohana_UTF8Test extends Unittest_TestCase
 	public function provider_is_ascii()
 	{
 		return array(
-			array("\0", TRUE),
-			array("\$eno\r", TRUE),
-			array('Señor', FALSE),
-			array(array('Se', 'nor'), TRUE),
-			array(array('Se', 'ñor'), FALSE),
+			array("\0", true),
+			array("\$eno\r", true),
+			array('Señor', false),
+			array(array('Se', 'nor'), true),
+			array(array('Se', 'ñor'), false),
 		);
 	}
 
@@ -216,7 +216,7 @@ class Kohana_UTF8Test extends Unittest_TestCase
 		return array(
 			array('Cocoñùт', 3, 2, 'oñ'),
 			array('Cocoñùт', 3, 9, 'oñùт'),
-			array('Cocoñùт', 3, NULL, 'oñùт'),
+			array('Cocoñùт', 3, null, 'oñùт'),
 			array('Cocoñùт', 3, -2, 'oñ'),
 		);
 	}
@@ -365,16 +365,11 @@ class Kohana_UTF8Test extends Unittest_TestCase
 	{
 		$result = UTF8::strcasecmp($input, $input2);
 
-		if ($expected_sign === 0)
-		{
+		if ($expected_sign === 0) {
 			$this->assertSame(0, $result);
-		}
-		elseif ($expected_sign > 0)
-		{
+		} elseif ($expected_sign > 0) {
 			$this->assertGreaterThan(0, $result);
-		}
-		else
-		{
+		} else {
 			$this->assertLessThan(0, $result);
 		}
 	}
@@ -411,7 +406,7 @@ class Kohana_UTF8Test extends Unittest_TestCase
 		return array(
 			array('Cocoñùт',   'oñ', 'oñùт'),
 			array('Cocoñùт',   'o', 'ocoñùт'),
-			array('Cocoñùт',   'k', FALSE),
+			array('Cocoñùт',   'k', false),
 		);
 	}
 
@@ -433,7 +428,7 @@ class Kohana_UTF8Test extends Unittest_TestCase
 	{
 		return array(
 			array("foo", "o", 1, 2, 2),
-			array('Cocoñùт', 'oñ', NULL, NULL, 1),
+			array('Cocoñùт', 'oñ', null, null, 1),
 			array('Cocoñùт', 'oñ', 2, 4, 1),
 			array('Cocoñùт', 'šš', 3, 9, 4),
 		);
@@ -456,7 +451,7 @@ class Kohana_UTF8Test extends Unittest_TestCase
 	public function provider_strcspn()
 	{
 		return array(
-			array('Cocoñùт', 'oñ', NULL, NULL, 1),
+			array('Cocoñùт', 'oñ', null, null, 1),
 			array('Cocoñùт', 'oñ', 2, 4, 1),
 			array('Cocoñùт', 'šš', 3, 9, 4),
 		);
@@ -496,7 +491,7 @@ class Kohana_UTF8Test extends Unittest_TestCase
 		$this->assertSame($expected, UTF8::str_pad($input, $length, $pad, $type));
 	}
 
-        /**
+	/**
 	 * Tests UTF8::str_pad error
 	 *
 	 * @test
@@ -504,7 +499,7 @@ class Kohana_UTF8Test extends Unittest_TestCase
 	public function test_str_pad_error()
 	{
 		$this->expectException('UTF8_Exception');
-		UTF8::str_pad('Cocoñùт', 10, 'š', 15,  'šCocoñùтšš');
+		UTF8::str_pad('Cocoñùт', 10, 'š', 15, 'šCocoñùтšš');
 	}
 
 	/**
@@ -557,7 +552,7 @@ class Kohana_UTF8Test extends Unittest_TestCase
 	public function provider_trim()
 	{
 		return array(
-			array(' bar ', NULL, 'bar'),
+			array(' bar ', null, 'bar'),
 			array('bar',   'b',  'ar'),
 			array('barb',  'b',  'ar'),
 		);
@@ -580,7 +575,7 @@ class Kohana_UTF8Test extends Unittest_TestCase
 	public function provider_ltrim()
 	{
 		return array(
-			array(' bar ', NULL, 'bar '),
+			array(' bar ', null, 'bar '),
 			array('bar',   'b',  'ar'),
 			array('barb',  'b',  'arb'),
 			array('ñùт',   'ñ',  'ùт'),
@@ -604,7 +599,7 @@ class Kohana_UTF8Test extends Unittest_TestCase
 	public function provider_rtrim()
 	{
 		return array(
-			array(' bar ', NULL, ' bar'),
+			array(' bar ', null, ' bar'),
 			array('bar',   'b',  'bar'),
 			array('barb',  'b',  'bar'),
 			array('Cocoñùт',  'т',  'Cocoñù'),

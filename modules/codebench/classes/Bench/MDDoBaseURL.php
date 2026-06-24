@@ -1,21 +1,21 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') or die('No direct script access.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct script access.');
 /**
  * @package    Kohana/Codebench
  * @category   Tests
  * @author     Geert De Deckere <geert@idoe.be>
  */
-class Bench_MDDoBaseURL extends Codebench {
-
+class Bench_MDDoBaseURL extends Codebench
+{
 	public $description =
 		'Optimization for the <code>doBaseURL()</code> method of <code>Kohana_Kodoc_Markdown</code>
 		 for the Kohana Userguide.';
 
 	public $loops = 10000;
 
-	public $subjects = array
-	(
+	public $subjects = array(
 		// Valid matches
 		'[filesystem](about.filesystem)',
 		'[filesystem](about.filesystem "Optional title")',
@@ -35,8 +35,7 @@ class Bench_MDDoBaseURL extends Codebench {
 	}
 	public function _add_base_url_original($matches)
 	{
-		if ($matches[2] AND strpos($matches[2], '://') === FALSE)
-		{
+		if ($matches[2] and strpos($matches[2], '://') === false) {
 			// Add the base url to the link URL
 			$matches[2] = 'http://BASE/'.$matches[2];
 		}

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-defined('SYSPATH') OR die('No direct script access.');
+defined('SYSPATH') or die('No direct script access.');
 /**
  * The Encrypt library provides two-way encryption of text and binary strings
  * using the [OpenSSL](http://php.net/openssl) extension.
@@ -13,8 +13,8 @@ defined('SYSPATH') OR die('No direct script access.');
  * @copyright  (c) 2007-2012 Kohana Team
  * @license    http://kohanaframework.org/license
  */
-class Kohana_Encrypt {
-
+class Kohana_Encrypt
+{
 	/**
 	 * @var  string  default instance name
 	 */
@@ -29,7 +29,7 @@ class Kohana_Encrypt {
 	 * @var int the size of the Initialization Vector (IV) in bytes
 	 */
 	protected $_iv_size;
-	
+
 	/**
 	 * Returns a singleton instance of Encrypt. An encryption key must be
 	 * provided in your "encrypt" configuration file.
@@ -39,28 +39,26 @@ class Kohana_Encrypt {
 	 * @param   string  $name   configuration group name
 	 * @return  Encrypt
 	 */
-	public static function instance($name = NULL)
+	public static function instance($name = null)
 	{
-		if ($name === NULL)
-		{
+		if ($name === null) {
 			// Use the default instance name
 			$name = Encrypt::$default;
 		}
 
-		if ( ! isset(Encrypt::$instances[$name]))
-		{
+		if (! isset(Encrypt::$instances[$name])) {
 			// Load the configuration data
 			$config = Kohana::$config->load('encrypt')->$name;
 
-			if ( ! isset($config['key']))
-			{
+			if (! isset($config['key'])) {
 				// No default encryption key is provided!
-				throw new Kohana_Exception('No encryption key is defined in the encryption configuration group: :group',
-					array(':group' => $name));
+				throw new Kohana_Exception(
+					'No encryption key is defined in the encryption configuration group: :group',
+					array(':group' => $name)
+				);
 			}
 
-			if ( ! isset($config['method']))
-			{
+			if (! isset($config['method'])) {
 				// Use aes-256-cbc by default as it's modern and secure
 				$config['method'] = 'aes-256-cbc';
 			}
@@ -122,21 +120,19 @@ class Kohana_Encrypt {
 	public function decode($data)
 	{
 		// Convert the data back to binary
-		$data = base64_decode($data, TRUE);
+		$data = base64_decode($data, true);
 
-		if ( ! $data)
-		{
+		if (! $data) {
 			// Invalid base64 data
-			return FALSE;
+			return false;
 		}
 
 		// Extract the initialization vector from the data
 		$iv = substr($data, 0, $this->_iv_size);
 
-		if ($this->_iv_size !== strlen($iv))
-		{
+		if ($this->_iv_size !== strlen($iv)) {
 			// The iv is not the expected size
-			return FALSE;
+			return false;
 		}
 
 		// Remove the iv from the data

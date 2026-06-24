@@ -1,11 +1,10 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('No direct access allowed.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct access allowed.');
 
-return array
-(
-	'default' => array
-	(
+return array(
+	'default' => array(
 		'type'       => 'MySQL',
 		'connection' => array(
 			/**
@@ -22,13 +21,13 @@ return array
 			 */
 			'hostname'   => 'localhost',
 			'database'   => 'kohana',
-			'username'   => FALSE,
-			'password'   => FALSE,
-			'persistent' => FALSE,
+			'username'   => false,
+			'password'   => false,
+			'persistent' => false,
 		),
 		'table_prefix' => '',
 		'charset'      => 'utf8',
-		'caching'      => FALSE,
+		'caching'      => false,
 	),
 	'alternate' => array(
 		'type'       => 'PDO',
@@ -44,7 +43,7 @@ return array
 			'dsn'        => 'mysql:host=localhost;dbname=kohana',
 			'username'   => 'root',
 			'password'   => 'r00tdb',
-			'persistent' => FALSE,
+			'persistent' => false,
 		),
 		/**
 		 * The following extra options are available for PDO:
@@ -53,7 +52,7 @@ return array
 		 */
 		'table_prefix' => '',
 		'charset'      => 'utf8',
-		'caching'      => FALSE,
+		'caching'      => false,
 	),
 	/**
 	 * MySQLi driver config information

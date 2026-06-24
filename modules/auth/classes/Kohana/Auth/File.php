@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('No direct access allowed.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct access allowed.');
 /**
  * File Auth driver.
  * [!!] this Auth driver does not support roles nor autologin.
@@ -10,8 +11,8 @@ declare(strict_types=1); defined('SYSPATH') OR die('No direct access allowed.');
  * @copyright  (c) 2007-2012 Kohana Team
  * @license    http://kohanaframework.org/license
  */
-class Kohana_Auth_File extends Auth {
-
+class Kohana_Auth_File extends Auth
+{
 	// User list
 	protected $_users;
 
@@ -36,20 +37,18 @@ class Kohana_Auth_File extends Auth {
 	 */
 	protected function _login($username, $password, $remember)
 	{
-		if (is_string($password))
-		{
+		if (is_string($password)) {
 			// Create a hashed password
 			$password = $this->hash($password);
 		}
 
-		if (isset($this->_users[$username]) AND $this->_users[$username] === $password)
-		{
+		if (isset($this->_users[$username]) and $this->_users[$username] === $password) {
 			// Complete the login
 			return $this->complete_login($username);
 		}
 
 		// Login failed
-		return FALSE;
+		return false;
 	}
 
 	/**
@@ -72,7 +71,7 @@ class Kohana_Auth_File extends Auth {
 	 */
 	public function password($username)
 	{
-		return Arr::get($this->_users, $username, FALSE);
+		return Arr::get($this->_users, $username, false);
 	}
 
 	/**
@@ -82,23 +81,20 @@ class Kohana_Auth_File extends Auth {
 	 * @param   string   $hash      Stored password hash (optional for File driver)
 	 * @return  boolean
 	 */
-	public function check_password($password, $hash = NULL)
+	public function check_password($password, $hash = null)
 	{
 		$username = $this->get_user();
 
-		if ($username === FALSE)
-		{
-			return FALSE;
+		if ($username === false) {
+			return false;
 		}
 
-		if ($hash === NULL)
-		{
+		if ($hash === null) {
 			$hash = $this->password($username);
 		}
 
 		// Check if it's bcrypt hash
-		if (preg_match('/^\$2[aby]?\$/', $hash))
-		{
+		if (preg_match('/^\$2[aby]?\$/', $hash)) {
 			return password_verify($password, $hash);
 		}
 

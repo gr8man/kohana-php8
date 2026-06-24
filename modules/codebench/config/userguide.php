@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') or die('No direct script access.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct script access.');
 
 return array(
 	// Leave this alone
@@ -10,16 +11,16 @@ return array(
 		'codebench' => array(
 
 			// Whether this modules userguide pages should be shown
-			'enabled' => TRUE,
-			
+			'enabled' => true,
+
 			// The name that should show up on the userguide index page
 			'name' => 'Codebench',
 
 			// A short description of this module, shown on the index page
 			'description' => 'Code benchmarking tool.',
-			
+
 			// Copyright message, shown in the footer for this module
 			'copyright' => '&copy; 2008–2012 Kohana Team',
-		)	
+		)
 	)
 );

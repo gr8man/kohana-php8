@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct script access.');
 /**
  * [Request_Client_External] Curl driver performs external requests using the
  * php-curl extention. This is the default driver for all external requests.
@@ -12,8 +13,8 @@ declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
  * @license    http://kohanaframework.org/license
  * @uses       [PHP cURL](http://php.net/manual/en/book.curl.php)
  */
-class Kohana_Request_Client_Curl extends Request_Client_External {
-
+class Kohana_Request_Client_Curl extends Request_Client_External
+{
 	/**
 	 * Sends the HTTP message [Request] to a remote server and processes
 	 * the response.
@@ -42,12 +43,10 @@ class Kohana_Request_Client_Curl extends Request_Client_External {
 		}
 
 		// Process headers
-		if ($headers = $request->headers())
-		{
+		if ($headers = $request->headers()) {
 			$http_headers = array();
 
-			foreach ($headers as $key => $value)
-			{
+			foreach ($headers as $key => $value) {
 				$http_headers[] = $key.': '.$value;
 			}
 
@@ -55,8 +54,7 @@ class Kohana_Request_Client_Curl extends Request_Client_External {
 		}
 
 		// Process cookies
-		if ($cookies = $request->cookie())
-		{
+		if ($cookies = $request->cookie()) {
 			$options[CURLOPT_COOKIE] = http_build_query($cookies, '', '; ');
 		}
 
@@ -65,16 +63,15 @@ class Kohana_Request_Client_Curl extends Request_Client_External {
 
 		// Implement the standard parsing parameters
 		$options[CURLOPT_HEADERFUNCTION]        = array($response_header, 'parse_header_string');
-		$this->_options[CURLOPT_RETURNTRANSFER] = TRUE;
-		$this->_options[CURLOPT_HEADER]         = FALSE;
+		$this->_options[CURLOPT_RETURNTRANSFER] = true;
+		$this->_options[CURLOPT_HEADER]         = false;
 
 		// Apply any additional options set to
 		$options += $this->_options;
 
 		$uri = $request->uri();
 
-		if ($query = $request->query())
-		{
+		if ($query = $request->query()) {
 			$uri .= '?'.http_build_query($query, '', '&');
 		}
 
@@ -82,10 +79,11 @@ class Kohana_Request_Client_Curl extends Request_Client_External {
 		$curl = curl_init($uri);
 
 		// Set connection options
-		if ( ! curl_setopt_array($curl, $options))
-		{
-			throw new Request_Exception('Failed to set CURL options, check CURL documentation: :url',
-				array(':url' => 'http://php.net/curl_setopt_array'));
+		if (! curl_setopt_array($curl, $options)) {
+			throw new Request_Exception(
+				'Failed to set CURL options, check CURL documentation: :url',
+				array(':url' => 'http://php.net/curl_setopt_array')
+			);
 		}
 
 		// Get the response body
@@ -94,18 +92,18 @@ class Kohana_Request_Client_Curl extends Request_Client_External {
 		// Get the response information
 		$code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 
-		if ($body === FALSE)
-		{
+		if ($body === false) {
 			$error = curl_error($curl);
 		}
 
 		// Close the connection
 		curl_close($curl);
 
-		if (isset($error))
-		{
-			throw new Request_Exception('Error fetching remote :url [ status :code ] :error',
-				array(':url' => $request->url(), ':code' => $code, ':error' => $error));
+		if (isset($error)) {
+			throw new Request_Exception(
+				'Error fetching remote :url [ status :code ] :error',
+				array(':url' => $request->url(), ':code' => $code, ':error' => $error)
+			);
 		}
 
 		$response->status($code)
@@ -126,7 +124,7 @@ class Kohana_Request_Client_Curl extends Request_Client_External {
 	{
 		switch ($request->method()) {
 			case Request::POST:
-				$options[CURLOPT_POST] = TRUE;
+				$options[CURLOPT_POST] = true;
 				break;
 			default:
 				$options[CURLOPT_CUSTOMREQUEST] = $request->method();

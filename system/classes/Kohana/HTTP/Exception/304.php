@@ -1,9 +1,10 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct script access.');
 
-class Kohana_HTTP_Exception_304 extends HTTP_Exception_Expected {
-
+class Kohana_HTTP_Exception_304 extends HTTP_Exception_Expected
+{
 	/**
 	 * @var   integer    HTTP 304 Not Modified
 	 */

@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct script access.');
 /**
  * PDO database connection.
  *
@@ -10,8 +11,8 @@ declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
  * @copyright  (c) 2008-2009 Kohana Team
  * @license    http://kohanaphp.com/license
  */
-class Kohana_Database_PDO extends Database {
-
+class Kohana_Database_PDO extends Database
+{
 	// PDO uses no quoting for identifiers
 	protected $_identifier = '';
 
@@ -19,8 +20,7 @@ class Kohana_Database_PDO extends Database {
 	{
 		parent::__construct($name, $config);
 
-		if (isset($this->_config['identifier']))
-		{
+		if (isset($this->_config['identifier'])) {
 			// Allow the identifier to be overloaded per-connection
 			$this->_identifier = (string) $this->_config['identifier'];
 		}
@@ -28,15 +28,16 @@ class Kohana_Database_PDO extends Database {
 
 	public function connect()
 	{
-		if ($this->_connection)
+		if ($this->_connection) {
 			return;
+		}
 
 		// Extract the connection parameters, adding required variabels
 		extract($this->_config['connection'] + array(
 			'dsn'        => '',
-			'username'   => NULL,
-			'password'   => NULL,
-			'persistent' => FALSE,
+			'username'   => null,
+			'password'   => null,
+			'persistent' => false,
 		));
 
 		// Clear the connection parameters for security
@@ -45,26 +46,23 @@ class Kohana_Database_PDO extends Database {
 		// Force PDO to use exceptions for all errors
 		$options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
 
-		if ( ! empty($persistent))
-		{
+		if (! empty($persistent)) {
 			// Make the connection persistent
-			$options[PDO::ATTR_PERSISTENT] = TRUE;
+			$options[PDO::ATTR_PERSISTENT] = true;
 		}
 
-		try
-		{
+		try {
 			// Create a new PDO connection
 			$this->_connection = new PDO($dsn, $username, $password, $options);
-		}
-		catch (PDOException $e)
-		{
-			throw new Database_Exception(':error',
+		} catch (PDOException $e) {
+			throw new Database_Exception(
+				':error',
 				array(':error' => $e->getMessage()),
-				$e->getCode());
+				$e->getCode()
+			);
 		}
 
-		if ( ! empty($this->_config['charset']))
-		{
+		if (! empty($this->_config['charset'])) {
 			// Set the character set
 			$this->set_charset($this->_config['charset']);
 		}
@@ -89,7 +87,10 @@ class Kohana_Database_PDO extends Database {
 		$this->_connection or $this->connect();
 
 		return $this->_connection->sqliteCreateAggregate(
-			$name, $step, $final, $arguments
+			$name,
+			$step,
+			$final,
+			$arguments
 		);
 	}
 
@@ -111,14 +112,16 @@ class Kohana_Database_PDO extends Database {
 		$this->_connection or $this->connect();
 
 		return $this->_connection->sqliteCreateFunction(
-			$name, $callback, $arguments
+			$name,
+			$callback,
+			$arguments
 		);
 	}
 
 	public function disconnect()
 	{
 		// Destroy the PDO object
-		$this->_connection = NULL;
+		$this->_connection = null;
 
 		return parent::disconnect();
 	}
@@ -126,65 +129,55 @@ class Kohana_Database_PDO extends Database {
 	public function set_charset($charset)
 	{
 		// Make sure the database is connected
-		$this->_connection OR $this->connect();
+		$this->_connection or $this->connect();
 
 		// This SQL-92 syntax is not supported by all drivers
 		$this->_connection->exec('SET NAMES '.$this->quote($charset));
 	}
 
-	public function query($type, $sql, $as_object = FALSE, array $params = NULL)
+	public function query($type, $sql, $as_object = false, array $params = null)
 	{
 		// Make sure the database is connected
 		$this->_connection or $this->connect();
 
-		if (Kohana::$profiling)
-		{
+		if (Kohana::$profiling) {
 			// Benchmark this query for the current instance
 			$benchmark = Profiler::start("Database ({$this->_instance})", $sql);
 		}
 
-		try
-		{
+		try {
 			$result = $this->_connection->query($sql);
-		}
-		catch (Exception $e)
-		{
-			if (isset($benchmark))
-			{
+		} catch (Exception $e) {
+			if (isset($benchmark)) {
 				// This benchmark is worthless
 				Profiler::delete($benchmark);
 			}
 
 			// Convert the exception in a database exception
-			throw new Database_Exception(':error [ :query ]',
+			throw new Database_Exception(
+				':error [ :query ]',
 				array(
 					':error' => $e->getMessage(),
 					':query' => $sql
 				),
-				$e->getCode());
+				$e->getCode()
+			);
 		}
 
-		if (isset($benchmark))
-		{
+		if (isset($benchmark)) {
 			Profiler::stop($benchmark);
 		}
 
 		// Set the last query
 		$this->last_query = $sql;
 
-		if ($type === Database::SELECT)
-		{
+		if ($type === Database::SELECT) {
 			// Convert the result into an array, as PDOStatement::rowCount is not reliable
-			if ($as_object === FALSE)
-			{
+			if ($as_object === false) {
 				$result->setFetchMode(PDO::FETCH_ASSOC);
-			}
-			elseif (is_string($as_object))
-			{
+			} elseif (is_string($as_object)) {
 				$result->setFetchMode(PDO::FETCH_CLASS, $as_object, $params);
-			}
-			else
-			{
+			} else {
 				$result->setFetchMode(PDO::FETCH_CLASS, 'stdClass');
 			}
 
@@ -192,23 +185,19 @@ class Kohana_Database_PDO extends Database {
 
 			// Return an iterator of results
 			return new Database_Result_Cached($result, $sql, $as_object, $params);
-		}
-		elseif ($type === Database::INSERT)
-		{
+		} elseif ($type === Database::INSERT) {
 			// Return a list of insert id and rows created
 			return array(
 				$this->_connection->lastInsertId(),
 				$result->rowCount(),
 			);
-		}
-		else
-		{
+		} else {
 			// Return the number of rows affected
 			return $result->rowCount();
 		}
 	}
 
-	public function begin($mode = NULL)
+	public function begin($mode = null)
 	{
 		// Make sure the database is connected
 		$this->_connection or $this->connect();
@@ -232,16 +221,20 @@ class Kohana_Database_PDO extends Database {
 		return $this->_connection->rollBack();
 	}
 
-	public function list_tables($like = NULL)
+	public function list_tables($like = null)
 	{
-		throw new Kohana_Exception('Database method :method is not supported by :class',
-			array(':method' => __FUNCTION__, ':class' => __CLASS__));
+		throw new Kohana_Exception(
+			'Database method :method is not supported by :class',
+			array(':method' => __FUNCTION__, ':class' => __CLASS__)
+		);
 	}
 
-	public function list_columns($table, $like = NULL, $add_prefix = TRUE)
+	public function list_columns($table, $like = null, $add_prefix = true)
 	{
-		throw new Kohana_Exception('Database method :method is not supported by :class',
-			array(':method' => __FUNCTION__, ':class' => __CLASS__));
+		throw new Kohana_Exception(
+			'Database method :method is not supported by :class',
+			array(':method' => __FUNCTION__, ':class' => __CLASS__)
+		);
 	}
 
 	public function escape($value)

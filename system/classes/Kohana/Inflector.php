@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-defined('SYSPATH') OR die('No direct script access.');
+defined('SYSPATH') or die('No direct script access.');
 /**
  * Inflector helper class. Inflection is changing the form of a word based on
  * the context it is used in. For example, changing a word into a plural form.
@@ -15,8 +15,8 @@ defined('SYSPATH') OR die('No direct script access.');
  * @copyright  (c) 2007-2012 Kohana Team
  * @license    http://kohanaframework.org/license
  */
-class Kohana_Inflector {
-
+class Kohana_Inflector
+{
 	/**
 	 * @var  array  cached inflections
 	 */
@@ -48,8 +48,7 @@ class Kohana_Inflector {
 	 */
 	public static function uncountable($str)
 	{
-		if (Inflector::$uncountable === NULL)
-		{
+		if (Inflector::$uncountable === null) {
 			// Cache uncountables
 			Inflector::$uncountable = Kohana::$config->load('inflector')->uncountable;
 
@@ -79,14 +78,15 @@ class Kohana_Inflector {
 	 * @return  string
 	 * @uses    Inflector::uncountable
 	 */
-	public static function singular($str, $count = NULL)
+	public static function singular($str, $count = null)
 	{
 		// $count should always be a float
-		$count = ($count === NULL) ? 1.0 : (float) $count;
+		$count = ($count === null) ? 1.0 : (float) $count;
 
 		// Do nothing when $count is not 1
-		if ($count != 1)
+		if ($count != 1) {
 			return $str;
+		}
 
 		// Remove garbage
 		$str = strtolower(trim($str));
@@ -94,39 +94,31 @@ class Kohana_Inflector {
 		// Cache key name
 		$key = 'singular_'.$str.$count;
 
-		if (isset(Inflector::$cache[$key]))
+		if (isset(Inflector::$cache[$key])) {
 			return Inflector::$cache[$key];
+		}
 
-		if (Inflector::uncountable($str))
+		if (Inflector::uncountable($str)) {
 			return Inflector::$cache[$key] = $str;
+		}
 
-		if (empty(Inflector::$irregular))
-		{
+		if (empty(Inflector::$irregular)) {
 			// Cache irregular words
 			Inflector::$irregular = Kohana::$config->load('inflector')->irregular;
 		}
 
-		if ($irregular = array_search($str, Inflector::$irregular))
-		{
+		if ($irregular = array_search($str, Inflector::$irregular)) {
 			$str = $irregular;
-		}
-		elseif (preg_match('/us$/', $str))
-		{
+		} elseif (preg_match('/us$/', $str)) {
 			// http://en.wikipedia.org/wiki/Plural_form_of_words_ending_in_-us
 			// Already singular, do nothing
-		}
-		elseif (preg_match('/[sxz]es$/', $str) OR preg_match('/[^aeioudgkprt]hes$/', $str))
-		{
+		} elseif (preg_match('/[sxz]es$/', $str) or preg_match('/[^aeioudgkprt]hes$/', $str)) {
 			// Remove "es"
 			$str = substr($str, 0, -2);
-		}
-		elseif (preg_match('/[^aeiou]ies$/', $str))
-		{
+		} elseif (preg_match('/[^aeiou]ies$/', $str)) {
 			// Replace "ies" with "y"
 			$str = substr($str, 0, -3).'y';
-		}
-		elseif (substr($str, -1) === 's' AND substr($str, -2) !== 'ss')
-		{
+		} elseif (substr($str, -1) === 's' and substr($str, -2) !== 'ss') {
 			// Remove singular "s"
 			$str = substr($str, 0, -1);
 		}
@@ -153,14 +145,15 @@ class Kohana_Inflector {
 	 * @return  string
 	 * @uses    Inflector::uncountable
 	 */
-	public static function plural($str, $count = NULL)
+	public static function plural($str, $count = null)
 	{
 		// $count should always be a float
-		$count = ($count === NULL) ? 0.0 : (float) $count;
+		$count = ($count === null) ? 0.0 : (float) $count;
 
 		// Do nothing with singular
-		if ($count == 1)
+		if ($count == 1) {
 			return $str;
+		}
 
 		// Remove garbage
 		$str = trim($str);
@@ -171,43 +164,34 @@ class Kohana_Inflector {
 		// Check uppercase
 		$is_uppercase = ctype_upper($str);
 
-		if (isset(Inflector::$cache[$key]))
+		if (isset(Inflector::$cache[$key])) {
 			return Inflector::$cache[$key];
+		}
 
-		if (Inflector::uncountable($str))
+		if (Inflector::uncountable($str)) {
 			return Inflector::$cache[$key] = $str;
+		}
 
-		if (empty(Inflector::$irregular))
-		{
+		if (empty(Inflector::$irregular)) {
 			// Cache irregular words
 			Inflector::$irregular = Kohana::$config->load('inflector')->irregular;
 		}
 
-		if (isset(Inflector::$irregular[$str]))
-		{
+		if (isset(Inflector::$irregular[$str])) {
 			$str = Inflector::$irregular[$str];
-		}
-		elseif (in_array($str, Inflector::$irregular))
-		{
+		} elseif (in_array($str, Inflector::$irregular)) {
 			// Do nothing
-		}
-		elseif (preg_match('/[sxz]$/', $str) OR preg_match('/[^aeioudgkprt]h$/', $str))
-		{
+		} elseif (preg_match('/[sxz]$/', $str) or preg_match('/[^aeioudgkprt]h$/', $str)) {
 			$str .= 'es';
-		}
-		elseif (preg_match('/[^aeiou]y$/', $str))
-		{
+		} elseif (preg_match('/[^aeiou]y$/', $str)) {
 			// Change "y" to "ies"
 			$str = substr_replace($str, 'ies', -1);
-		}
-		else
-		{
+		} else {
 			$str .= 's';
 		}
 
 		// Convert to uppercase if necessary
-		if ($is_uppercase)
-		{
+		if ($is_uppercase) {
 			$str = strtoupper($str);
 		}
 

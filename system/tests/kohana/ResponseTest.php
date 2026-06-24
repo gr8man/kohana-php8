@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('Kohana bootstrap needs to be included before tests run');
+declare(strict_types=1);
+defined('SYSPATH') or die('Kohana bootstrap needs to be included before tests run');
 
 /**
  * Unit tests for response class
@@ -38,7 +39,7 @@ class Kohana_ResponseTest extends Unittest_TestCase
 
 	/**
 	 * Tests that we can set and read a body of a response
-	 * 
+	 *
 	 * @test
 	 * @dataProvider provider_body
 	 *
@@ -46,7 +47,7 @@ class Kohana_ResponseTest extends Unittest_TestCase
 	 */
 	public function test_body($source, $expected)
 	{
-		$response = new Response;
+		$response = new Response();
 		$response->body($source);
 		$this->assertSame($response->body(), $expected);
 
@@ -73,13 +74,13 @@ class Kohana_ResponseTest extends Unittest_TestCase
 	 *
 	 * @test
 	 * @dataProvider provider_body_string_zero
-	 * @param string $string 
-	 * @param string $expected 
+	 * @param string $string
+	 * @param string $expected
 	 * @return void
 	 */
 	public function test_body_string_zero($string, $expected)
 	{
-		$response = new Response;
+		$response = new Response();
 		$response->body($string);
 
 		$this->assertSame($expected, $response->body());
@@ -111,7 +112,7 @@ class Kohana_ResponseTest extends Unittest_TestCase
 						'expiration' => 123456789
 					)
 				),
-				NULL,
+				null,
 				array(
 					'test2' => array(
 						'value' => 'stfu',
@@ -132,19 +133,18 @@ class Kohana_ResponseTest extends Unittest_TestCase
 	 *
 	 * @test
 	 * @dataProvider provider_cookie_set
-	 * @param string $key 
-	 * @param string $value 
-	 * @param string $expected 
+	 * @param string $key
+	 * @param string $value
+	 * @param string $expected
 	 * @return void
 	 */
 	public function test_cookie_set($key, $value, $expected)
 	{
 		// Setup the Response and apply cookie
-		$response = new Response;
+		$response = new Response();
 		$response->cookie($key, $value);
 
-		foreach ($expected as $_key => $_value)
-		{
+		foreach ($expected as $_key => $_value) {
 			$cookie = $response->cookie($_key);
 
 			$this->assertSame($_value['value'], $cookie['value']);
@@ -159,7 +159,7 @@ class Kohana_ResponseTest extends Unittest_TestCase
 	 */
 	public function test_cookie_get()
 	{
-		$response = new Response;
+		$response = new Response();
 
 		// Test for empty cookies
 		$this->assertSame(array(), $response->cookie());
@@ -176,13 +176,13 @@ class Kohana_ResponseTest extends Unittest_TestCase
 
 	/**
 	 * Test the content type is sent when set
-	 * 
+	 *
 	 * @test
 	 */
 	public function test_content_type_when_set()
 	{
 		$content_type = 'application/json';
-		$response = new Response;
+		$response = new Response();
 		$response->headers('content-type', $content_type);
 		$headers  = $response->send_headers()->headers();
 		$this->assertSame($content_type, (string) $headers['content-type']);
@@ -195,7 +195,7 @@ class Kohana_ResponseTest extends Unittest_TestCase
 	 */
 	public function test_status_code()
 	{
-		$response = new Response;
+		$response = new Response();
 		$response->status(200);
 		$this->assertSame(200, $response->status());
 	}
@@ -208,7 +208,7 @@ class Kohana_ResponseTest extends Unittest_TestCase
 	public function test_status_invalid_code()
 	{
 		$this->expectException(\Kohana_Exception::class);
-		$response = new Response;
+		$response = new Response();
 		$response->status(99999);
 	}
 
@@ -219,7 +219,7 @@ class Kohana_ResponseTest extends Unittest_TestCase
 	 */
 	public function test_protocol()
 	{
-		$response = new Response;
+		$response = new Response();
 		$response->protocol('HTTP/1.0');
 		$this->assertSame('HTTP/1.0', $response->protocol());
 
@@ -234,7 +234,7 @@ class Kohana_ResponseTest extends Unittest_TestCase
 	 */
 	public function test_headers_object()
 	{
-		$response = new Response;
+		$response = new Response();
 		$this->assertInstanceOf('HTTP_Header', $response->headers());
 	}
 
@@ -245,7 +245,7 @@ class Kohana_ResponseTest extends Unittest_TestCase
 	 */
 	public function test_headers_set_multiple()
 	{
-		$response = new Response;
+		$response = new Response();
 		$response->headers(array(
 			'X-Custom' => 'value1',
 			'X-Other' => 'value2',
@@ -261,7 +261,7 @@ class Kohana_ResponseTest extends Unittest_TestCase
 	 */
 	public function test_headers_unknown()
 	{
-		$response = new Response;
+		$response = new Response();
 		$this->assertNull($response->headers('X-Nonexistent'));
 	}
 
@@ -272,7 +272,7 @@ class Kohana_ResponseTest extends Unittest_TestCase
 	 */
 	public function test_cookie_get_all()
 	{
-		$response = new Response;
+		$response = new Response();
 		$response->cookie('a', '1');
 		$response->cookie('b', '2');
 		$cookies = $response->cookie();
@@ -288,7 +288,7 @@ class Kohana_ResponseTest extends Unittest_TestCase
 	 */
 	public function test_cookie_delete()
 	{
-		$response = new Response;
+		$response = new Response();
 		$response->cookie('test', 'value');
 		$response->delete_cookie('test');
 		$this->assertNull($response->cookie('test'));
@@ -301,7 +301,7 @@ class Kohana_ResponseTest extends Unittest_TestCase
 	 */
 	public function test_body_default_empty()
 	{
-		$response = new Response;
+		$response = new Response();
 		$this->assertSame('', $response->body());
 	}
 
@@ -312,7 +312,7 @@ class Kohana_ResponseTest extends Unittest_TestCase
 	 */
 	public function test_body_chain()
 	{
-		$response = new Response;
+		$response = new Response();
 		$result = $response->body('content');
 		$this->assertSame($response, $result);
 	}
@@ -324,7 +324,7 @@ class Kohana_ResponseTest extends Unittest_TestCase
 	 */
 	public function test_status_chain()
 	{
-		$response = new Response;
+		$response = new Response();
 		$result = $response->status(200);
 		$this->assertSame($response, $result);
 	}
@@ -336,7 +336,7 @@ class Kohana_ResponseTest extends Unittest_TestCase
 	 */
 	public function test_headers_chain()
 	{
-		$response = new Response;
+		$response = new Response();
 		$result = $response->headers('X-Test', 'value');
 		$this->assertSame($response, $result);
 	}
@@ -348,7 +348,7 @@ class Kohana_ResponseTest extends Unittest_TestCase
 	 */
 	public function test_send_headers_returns_response()
 	{
-		$response = new Response;
+		$response = new Response();
 		$result = $response->send_headers();
 		$this->assertSame($response, $result);
 	}
@@ -360,7 +360,7 @@ class Kohana_ResponseTest extends Unittest_TestCase
 	 */
 	public function test_body_zero_integer()
 	{
-		$response = new Response;
+		$response = new Response();
 		$response->body(0);
 		$this->assertSame('0', $response->body());
 	}

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-defined('SYSPATH') OR die('No direct script access.');
+defined('SYSPATH') or die('No direct script access.');
 /**
  * Wrapper for configuration arrays. Multiple configuration readers can be
  * attached to allow loading configuration from files, database, etc.
@@ -19,8 +19,8 @@ defined('SYSPATH') OR die('No direct script access.');
  * @copyright  (c) 2009-2012 Kohana Team
  * @license    http://kohanaframework.org/license
  */
-class Kohana_Config {
-
+class Kohana_Config
+{
 	// Configuration readers
 	protected $_sources = array();
 
@@ -39,15 +39,12 @@ class Kohana_Config {
 	 * @param   boolean                 $first  add the reader as the first used object
 	 * @return  $this
 	 */
-	public function attach(Kohana_Config_Source $source, $first = TRUE)
+	public function attach(Kohana_Config_Source $source, $first = true)
 	{
-		if ($first === TRUE)
-		{
+		if ($first === true) {
 			// Place the log reader at the top of the stack
 			array_unshift($this->_sources, $source);
-		}
-		else
-		{
+		} else {
 			// Place the reader at the bottom of the stack
 			$this->_sources[] = $source;
 		}
@@ -68,8 +65,7 @@ class Kohana_Config {
 	 */
 	public function detach(Kohana_Config_Source $source)
 	{
-		if (($key = array_search($source, $this->_sources)) !== FALSE)
-		{
+		if (($key = array_search($source, $this->_sources)) !== false) {
 			// Remove the writer
 			unset($this->_sources[$key]);
 		}
@@ -92,32 +88,26 @@ class Kohana_Config {
 	 */
 	public function load($group)
 	{
-		if ( ! count($this->_sources))
-		{
+		if (! count($this->_sources)) {
 			throw new Kohana_Exception('No configuration sources attached');
 		}
 
-		if (empty($group))
-		{
+		if (empty($group)) {
 			throw new Kohana_Exception("Need to specify a config group");
 		}
 
-		if ( ! is_string($group))
-		{
+		if (! is_string($group)) {
 			throw new Kohana_Exception("Config group must be a string");
 		}
 
-		if (strpos($group, '.') !== FALSE)
-		{
+		if (strpos($group, '.') !== false) {
 			// Split the config group and path
 			list($group, $path) = explode('.', $group, 2);
 		}
 
-		if (isset($this->_groups[$group]))
-		{
-			if (isset($path))
-			{
-				return Arr::path($this->_groups[$group], $path, NULL, '.');
+		if (isset($this->_groups[$group])) {
+			if (isset($path)) {
+				return Arr::path($this->_groups[$group], $path, null, '.');
 			}
 			return $this->_groups[$group];
 		}
@@ -127,12 +117,9 @@ class Kohana_Config {
 		// We search from the "lowest" source and work our way up
 		$sources = array_reverse($this->_sources);
 
-		foreach ($sources as $source)
-		{
-			if ($source instanceof Kohana_Config_Reader)
-			{
-				if ($source_config = $source->load($group))
-				{
+		foreach ($sources as $source) {
+			if ($source instanceof Kohana_Config_Reader) {
+				if ($source_config = $source->load($group)) {
 					$config = Arr::merge($config, $source_config);
 				}
 			}
@@ -140,9 +127,8 @@ class Kohana_Config {
 
 		$this->_groups[$group] = new Config_Group($this, $group, $config);
 
-		if (isset($path))
-		{
-			return Arr::path($config, $path, NULL, '.');
+		if (isset($path)) {
+			return Arr::path($config, $path, null, '.');
 		}
 
 		return $this->_groups[$group];
@@ -161,8 +147,7 @@ class Kohana_Config {
 		// Load the configuration group
 		$config = $this->load($group);
 
-		foreach ($config->as_array() as $key => $value)
-		{
+		foreach ($config->as_array() as $key => $value) {
 			$this->_write_config($group, $key, $value);
 		}
 
@@ -179,10 +164,8 @@ class Kohana_Config {
 	 */
 	public function _write_config($group, $key, $value)
 	{
-		foreach ($this->_sources as $source)
-		{
-			if ( ! ($source instanceof Kohana_Config_Writer))
-			{
+		foreach ($this->_sources as $source) {
+			if (! ($source instanceof Kohana_Config_Writer)) {
 				continue;
 			}
 

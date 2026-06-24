@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct script access.');
 /**
  * [Request_Client_External] HTTP driver performs external requests using the
  * php-http extension. To use this driver, ensure the following is completed
@@ -18,8 +19,8 @@ declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
  * @license    http://kohanaframework.org/license
  * @uses       [PECL HTTP](http://php.net/manual/en/book.http.php)
  */
-class Kohana_Request_Client_HTTP extends Request_Client_External {
-
+class Kohana_Request_Client_HTTP extends Request_Client_External
+{
 	/**
 	 * Creates a new `Request_Client` object,
 	 * allows for dependency injection.
@@ -30,8 +31,7 @@ class Kohana_Request_Client_HTTP extends Request_Client_External {
 	public function __construct(array $params = array())
 	{
 		// Check that PECL HTTP supports requests
-		if ( ! http_support(HTTP_SUPPORT_REQUESTS))
-		{
+		if (! http_support(HTTP_SUPPORT_REQUESTS)) {
 			throw new Request_Exception('Need HTTP request support!');
 		}
 
@@ -69,8 +69,7 @@ class Kohana_Request_Client_HTTP extends Request_Client_External {
 		// Create an http request object
 		$http_request = new HTTPRequest($request->uri(), $http_method_mapping[$request->method()]);
 
-		if ($this->_options)
-		{
+		if ($this->_options) {
 			// Set custom options
 			$http_request->setOptions($this->_options);
 		}
@@ -85,29 +84,19 @@ class Kohana_Request_Client_HTTP extends Request_Client_External {
 		$http_request->setQueryData($request->query());
 
 		// Set the body
-		if ($request->method() == HTTP_Request::PUT)
-		{
+		if ($request->method() == HTTP_Request::PUT) {
 			$http_request->addPutData($request->body());
-		}
-		else
-		{
+		} else {
 			$http_request->setBody($request->body());
 		}
 
-		try
-		{
+		try {
 			$http_request->send();
-		}
-		catch (HTTPRequestException $e)
-		{
+		} catch (HTTPRequestException $e) {
 			throw new Request_Exception($e->getMessage());
-		}
-		catch (HTTPMalformedHeaderException $e)
-		{
+		} catch (HTTPMalformedHeaderException $e) {
 			throw new Request_Exception($e->getMessage());
-		}
-		catch (HTTPEncodingException $e)
-		{
+		} catch (HTTPEncodingException $e) {
 			throw new Request_Exception($e->getMessage());
 		}
 

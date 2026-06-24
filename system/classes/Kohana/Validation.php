@@ -1,4 +1,7 @@
-<?php declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
+<?php
+
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct script access.');
 /**
  * Array and variable validation.
  *
@@ -8,8 +11,8 @@
  * @copyright  (c) 2008-2012 Kohana Team
  * @license    http://kohanaframework.org/license
  */
-class Kohana_Validation implements ArrayAccess {
-
+class Kohana_Validation implements ArrayAccess
+{
 	/**
 	 * Creates a new Validation instance.
 	 *
@@ -203,16 +206,14 @@ class Kohana_Validation implements ArrayAccess {
 	 * @param   array       $params extra parameters for the rule
 	 * @return  $this
 	 */
-	public function rule($field, $rule, array $params = NULL)
+	public function rule($field, $rule, array $params = null)
 	{
-		if ($params === NULL)
-		{
+		if ($params === null) {
 			// Default to array(':value')
 			$params = array(':value');
 		}
 
-		if ($field !== TRUE AND ! isset($this->_labels[$field]))
-		{
+		if ($field !== true and ! isset($this->_labels[$field])) {
 			// Set the field label to the field name
 			$this->_labels[$field] = $field;
 		}
@@ -232,8 +233,7 @@ class Kohana_Validation implements ArrayAccess {
 	 */
 	public function rules($field, array $rules)
 	{
-		foreach ($rules as $rule)
-		{
+		foreach ($rules as $rule) {
 			$this->rule($field, $rule[0], Arr::get($rule, 1));
 		}
 
@@ -251,17 +251,13 @@ class Kohana_Validation implements ArrayAccess {
 	 * @param   mixed   $value  value
 	 * @return  $this
 	 */
-	public function bind($key, $value = NULL)
+	public function bind($key, $value = null)
 	{
-		if (is_array($key))
-		{
-			foreach ($key as $name => $value)
-			{
+		if (is_array($key)) {
+			foreach ($key as $name => $value) {
 				$this->_bound[$name] = $value;
 			}
-		}
-		else
-		{
+		} else {
 			$this->_bound[$key] = $value;
 		}
 
@@ -281,8 +277,7 @@ class Kohana_Validation implements ArrayAccess {
 	 */
 	public function check()
 	{
-		if (Kohana::$profiling === TRUE)
-		{
+		if (Kohana::$profiling === true) {
 			// Start a new benchmark
 			$benchmark = Profiler::start('Validation', __FUNCTION__);
 		}
@@ -299,21 +294,18 @@ class Kohana_Validation implements ArrayAccess {
 		// Import the rules locally
 		$rules = $this->_rules;
 
-		foreach ($expected as $field)
-		{
+		foreach ($expected as $field) {
 			// Use the submitted value or NULL if no data exists
 			$data[$field] = Arr::get($this, $field);
 
-			if (isset($rules[TRUE]))
-			{
-				if ( ! isset($rules[$field]))
-				{
+			if (isset($rules[true])) {
+				if (! isset($rules[$field])) {
 					// Initialize the rules for this field
 					$rules[$field] = array();
 				}
 
 				// Append the rules
-				$rules[$field] = array_merge($rules[$field], $rules[TRUE]);
+				$rules[$field] = array_merge($rules[$field], $rules[true]);
 			}
 		}
 
@@ -321,7 +313,7 @@ class Kohana_Validation implements ArrayAccess {
 		$this->_data = $data;
 
 		// Remove the rules that apply to every field
-		unset($rules[TRUE]);
+		unset($rules[true]);
 
 		// Bind the validation object to :validation
 		$this->bind(':validation', $this);
@@ -329,27 +321,22 @@ class Kohana_Validation implements ArrayAccess {
 		$this->bind(':data', $this->_data);
 
 		// Execute the rules
-		foreach ($rules as $field => $set)
-		{
+		foreach ($rules as $field => $set) {
 			// Get the field value
 			$value = $this[$field];
 
 			// Bind the field name and value to :field and :value respectively
-			$this->bind(array
-			(
+			$this->bind(array(
 				':field' => $field,
 				':value' => $value,
 			));
 
-			foreach ($set as $array)
-			{
+			foreach ($set as $array) {
 				// Rules are defined as array($rule, $params)
 				list($rule, $params) = $array;
 
-				foreach ($params as $key => $param)
-				{
-					if (is_string($param) AND array_key_exists($param, $this->_bound))
-					{
+				foreach ($params as $key => $param) {
+					if (is_string($param) and array_key_exists($param, $this->_bound)) {
 						// Replace with bound value
 						$params[$key] = $this->_bound[$param];
 					}
@@ -358,11 +345,9 @@ class Kohana_Validation implements ArrayAccess {
 				// Default the error name to be the rule (except array and lambda rules)
 				$error_name = $rule;
 
-				if (is_array($rule))
-				{
+				if (is_array($rule)) {
 					// Allows rule('field', array(':model', 'some_rule'));
-					if (is_string($rule[0]) AND array_key_exists($rule[0], $this->_bound))
-					{
+					if (is_string($rule[0]) and array_key_exists($rule[0], $this->_bound)) {
 						// Replace with bound value
 						$rule[0] = $this->_bound[$rule[0]];
 					}
@@ -370,31 +355,23 @@ class Kohana_Validation implements ArrayAccess {
 					// This is an array callback, the method name is the error name
 					$error_name = $rule[1];
 					$passed = call_user_func_array($rule, $params);
-				}
-				elseif ( ! is_string($rule))
-				{
+				} elseif (! is_string($rule)) {
 					// This is a lambda function, there is no error name (errors must be added manually)
-					$error_name = FALSE;
+					$error_name = false;
 					$passed = call_user_func_array($rule, $params);
-				}
-				elseif (method_exists('Valid', $rule))
-				{
+				} elseif (method_exists('Valid', $rule)) {
 					// Use a method in this object
 					$method = new ReflectionMethod('Valid', $rule);
 
 					// Call static::$rule($this[$field], $param, ...) with Reflection
-					$passed = $method->invokeArgs(NULL, $params);
-				}
-				elseif (strpos($rule, '::') === FALSE)
-				{
+					$passed = $method->invokeArgs(null, $params);
+				} elseif (strpos($rule, '::') === false) {
 					// Use a function call
 					$function = new ReflectionFunction($rule);
 
 					// Call $function($this[$field], $param, ...) with Reflection
 					$passed = $function->invokeArgs($params);
-				}
-				else
-				{
+				} else {
 					// Split the class and method of the rule
 					list($class, $method) = explode('::', $rule, 2);
 
@@ -402,23 +379,21 @@ class Kohana_Validation implements ArrayAccess {
 					$method = new ReflectionMethod($class, $method);
 
 					// Call $Class::$method($this[$field], $param, ...) with Reflection
-					$passed = $method->invokeArgs(NULL, $params);
+					$passed = $method->invokeArgs(null, $params);
 				}
 
 				// Ignore return values from rules when the field is empty
-				if ( ! in_array($rule, $this->_empty_rules) AND ! Valid::not_empty($value))
+				if (! in_array($rule, $this->_empty_rules) and ! Valid::not_empty($value)) {
 					continue;
+				}
 
-				if ($passed === FALSE AND $error_name !== FALSE)
-				{
+				if ($passed === false and $error_name !== false) {
 					// Add the rule to the errors
 					$this->error($field, $error_name, $params);
 
 					// This field has an error, stop executing rules
 					break;
-				}
-				elseif (isset($this->_errors[$field]))
-				{
+				} elseif (isset($this->_errors[$field])) {
 					// The callback added the error manually, stop checking rules
 					break;
 				}
@@ -435,8 +410,7 @@ class Kohana_Validation implements ArrayAccess {
 		// Restore the data to its original form
 		$this->_data = $original;
 
-		if (isset($benchmark))
-		{
+		if (isset($benchmark)) {
 			// Stop benchmarking
 			Profiler::stop($benchmark);
 		}
@@ -452,7 +426,7 @@ class Kohana_Validation implements ArrayAccess {
 	 * @param   array   $params
 	 * @return  $this
 	 */
-	public function error($field, $error, array $params = NULL)
+	public function error($field, $error, array $params = null)
 	{
 		$this->_errors[$field] = array($error, $params);
 
@@ -478,10 +452,9 @@ class Kohana_Validation implements ArrayAccess {
 	 * @param   mixed   $translate  translate the message
 	 * @return  array
 	 */
-	public function errors($file = NULL, $translate = TRUE)
+	public function errors($file = null, $translate = true)
 	{
-		if ($file === NULL)
-		{
+		if ($file === null) {
 			// Return the error list
 			return $this->_errors;
 		}
@@ -489,22 +462,17 @@ class Kohana_Validation implements ArrayAccess {
 		// Create a new message list
 		$messages = array();
 
-		foreach ($this->_errors as $field => $set)
-		{
+		foreach ($this->_errors as $field => $set) {
 			list($error, $params) = $set;
 
 			// Get the label for this field
 			$label = $this->_labels[$field];
 
-			if ($translate)
-			{
-				if (is_string($translate))
-				{
+			if ($translate) {
+				if (is_string($translate)) {
 					// Translate the label using the specified language
-					$label = __($label, NULL, $translate);
-				}
-				else
-				{
+					$label = __($label, null, $translate);
+				} else {
 					// Translate the label
 					$label = __($label);
 				}
@@ -516,42 +484,31 @@ class Kohana_Validation implements ArrayAccess {
 				':value' => Arr::get($this, $field),
 			);
 
-			if (is_array($values[':value']))
-			{
+			if (is_array($values[':value'])) {
 				// All values must be strings
 				$values[':value'] = implode(', ', Arr::flatten($values[':value']));
 			}
 
-			if ($params)
-			{
-				foreach ($params as $key => $value)
-				{
-					if (is_array($value))
-					{
+			if ($params) {
+				foreach ($params as $key => $value) {
+					if (is_array($value)) {
 						// All values must be strings
 						$value = implode(', ', Arr::flatten($value));
-					}
-					elseif (is_object($value))
-					{
+					} elseif (is_object($value)) {
 						// Objects cannot be used in message files
 						continue;
 					}
 
 					// Check if a label for this parameter exists
-					if (isset($this->_labels[$value]))
-					{
+					if (isset($this->_labels[$value])) {
 						// Use the label as the value, eg: related field name for "matches"
 						$value = $this->_labels[$value];
 
-						if ($translate)
-						{
-							if (is_string($translate))
-							{
+						if ($translate) {
+							if (is_string($translate)) {
 								// Translate the value using the specified language
-								$value = __($value, NULL, $translate);
-							}
-							else
-							{
+								$value = __($value, null, $translate);
+							} else {
 								// Translate the value
 								$value = __($value);
 							}
@@ -563,43 +520,28 @@ class Kohana_Validation implements ArrayAccess {
 				}
 			}
 
-			if ($message = Kohana::message($file, "{$field}.{$error}") AND is_string($message))
-			{
+			if ($message = Kohana::message($file, "{$field}.{$error}") and is_string($message)) {
 				// Found a message for this field and error
-			}
-			elseif ($message = Kohana::message($file, "{$field}.default") AND is_string($message))
-			{
+			} elseif ($message = Kohana::message($file, "{$field}.default") and is_string($message)) {
 				// Found a default message for this field
-			}
-			elseif ($message = Kohana::message($file, $error) AND is_string($message))
-			{
+			} elseif ($message = Kohana::message($file, $error) and is_string($message)) {
 				// Found a default message for this error
-			}
-			elseif ($message = Kohana::message('validation', $error) AND is_string($message))
-			{
+			} elseif ($message = Kohana::message('validation', $error) and is_string($message)) {
 				// Found a default message for this error
-			}
-			else
-			{
+			} else {
 				// No message exists, display the path expected
 				$message = "{$file}.{$field}.{$error}";
 			}
 
-			if ($translate)
-			{
-				if (is_string($translate))
-				{
+			if ($translate) {
+				if (is_string($translate)) {
 					// Translate the message using specified language
 					$message = __($message, $values, $translate);
-				}
-				else
-				{
+				} else {
 					// Translate the message using the default language
 					$message = __($message, $values);
 				}
-			}
-			else
-			{
+			} else {
 				// Do not translate, just replace the values
 				$message = strtr($message, $values);
 			}

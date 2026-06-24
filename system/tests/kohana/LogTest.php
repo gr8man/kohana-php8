@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('Kohana bootstrap needs to be included before tests run');
+declare(strict_types=1);
+defined('SYSPATH') or die('Kohana bootstrap needs to be included before tests run');
 
 /**
  * Tests Kohana Logging API
@@ -19,7 +20,6 @@ declare(strict_types=1); defined('SYSPATH') OR die('Kohana bootstrap needs to be
 #[AllowDynamicProperties]
 class Kohana_LogTest extends Unittest_TestCase
 {
-
 	/**
 	 * Tests that when a new logger is created the list of messages is initially
 	 * empty
@@ -29,7 +29,7 @@ class Kohana_LogTest extends Unittest_TestCase
 	 */
 	public function test_messages_is_initially_empty()
 	{
-		$logger = new Log;
+		$logger = new Log();
 
 		$this->assertAttributeSame(array(), '_messages', $logger);
 	}
@@ -43,7 +43,7 @@ class Kohana_LogTest extends Unittest_TestCase
 	 */
 	public function test_writers_is_initially_empty()
 	{
-		$logger = new Log;
+		$logger = new Log();
 
 		$this->assertAttributeSame(array(), '_writers', $logger);
 	}
@@ -58,7 +58,7 @@ class Kohana_LogTest extends Unittest_TestCase
 	 */
 	public function test_attach_attaches_log_writer_and_returns_this()
 	{
-		$logger = new Log;
+		$logger = new Log();
 		$writer = $this->getMockForAbstractClass('Log_Writer');
 
 		$this->assertSame($logger, $logger->attach($writer));
@@ -80,7 +80,7 @@ class Kohana_LogTest extends Unittest_TestCase
 	 */
 	public function test_attach_attaches_log_writer_min_max_and_returns_this()
 	{
-		$logger = new Log;
+		$logger = new Log();
 		$writer = $this->getMockForAbstractClass('Log_Writer');
 
 		$this->assertSame($logger, $logger->attach($writer, Log::NOTICE, Log::CRITICAL));
@@ -100,7 +100,7 @@ class Kohana_LogTest extends Unittest_TestCase
 	 */
 	public function test_detach_removes_log_writer_and_returns_this()
 	{
-		$logger = new Log;
+		$logger = new Log();
 		$writer = $this->getMockForAbstractClass('Log_Writer');
 
 		$logger->attach($writer);

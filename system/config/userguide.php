@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct script access.');
 
 return array(
 	// Leave this alone
@@ -10,7 +11,7 @@ return array(
 		'kohana' => array(
 
 			// Whether this modules userguide pages should be shown
-			'enabled' => TRUE,
+			'enabled' => true,
 
 			// The name that should show up on the userguide index page
 			'name' => 'Kohana',

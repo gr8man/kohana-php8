@@ -23,13 +23,15 @@ function scan_dir($dir, &$errors, &$missing_strict) {
                 $errors++;
             }
 
-            // Strict types check
-            $content = file_get_contents($path);
-            if (strpos($content, 'declare(strict_types=1)') === false) {
-                // Only report classes
-                if (strpos($content, 'class ') !== false || strpos($content, 'interface ') !== false || strpos($content, 'trait ') !== false) {
-                    echo "MISSING STRICT_TYPES: $path\n";
-                    $missing_strict++;
+            // Strict types check (skip for view files)
+            if (strpos($path, '/views/') === false) {
+                $content = file_get_contents($path);
+                if (strpos($content, 'declare(strict_types=1)') === false) {
+                    // Only report classes
+                    if (strpos($content, 'class ') !== false || strpos($content, 'interface ') !== false || strpos($content, 'trait ') !== false) {
+                        echo "MISSING STRICT_TYPES: $path\n";
+                        $missing_strict++;
+                    }
                 }
             }
         }

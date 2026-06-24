@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('Kohana bootstrap needs to be included before tests run');
+declare(strict_types=1);
+defined('SYSPATH') or die('Kohana bootstrap needs to be included before tests run');
 
 /**
  * Tests Num
@@ -20,6 +21,8 @@ class Kohana_NumTest extends Unittest_TestCase
 {
 	protected $default_locale;
 
+	protected $has_en_locale = false;
+
 	/**
 	 * SetUp test enviroment
 	 */
@@ -29,8 +32,10 @@ class Kohana_NumTest extends Unittest_TestCase
 	{
 		parent::setUp();
 
-		$this->default_locale = setlocale(LC_ALL, 0);
-		setlocale(LC_ALL, 'en_US.utf8');
+		$this->default_locale = setlocale(LC_ALL, '0');
+		$set = setlocale(LC_ALL, 'en_US.utf8', 'en_US.UTF-8', 'en_US', 'C.UTF-8');
+		$info = localeconv();
+		$this->has_en_locale = ($set !== false and ($info['thousands_sep'] === ',' or $info['mon_thousands_sep'] === ','));
 	}
 
 	/**
@@ -59,7 +64,7 @@ class Kohana_NumTest extends Unittest_TestCase
 			array(2684354560.0, '2.5GB'),
 		);
 	}
-	
+
 	/**
 	 * Tests Num::bytes()
 	 *
@@ -73,7 +78,7 @@ class Kohana_NumTest extends Unittest_TestCase
 	{
 		$this->assertSame($expected, Num::bytes($size));
 	}
-	
+
 	/**
 	 * Provides test data for test_ordinal()
 	 * @return array
@@ -110,12 +115,12 @@ class Kohana_NumTest extends Unittest_TestCase
 	{
 		return array(
 			// English
-			array(10000, 2, FALSE, '10,000.00'),
-			array(10000, 2, TRUE, '10,000.00'),
+			array(10000, 2, false, '10,000.00'),
+			array(10000, 2, true, '10,000.00'),
 
 			// Additional dp's should be removed
-			array(123.456, 2, FALSE, '123.46'),
-			array(123.456, 2, TRUE, '123.46'),
+			array(123.456, 2, false, '123.46'),
+			array(123.456, 2, true, '123.46'),
 		);
 	}
 
@@ -130,6 +135,9 @@ class Kohana_NumTest extends Unittest_TestCase
 	 */
 	public function test_format($number, $places, $monetary, $expected)
 	{
+		if (! $this->has_en_locale) {
+			$this->markTestSkipped('en_US locale is not available on this system.');
+		}
 		$this->assertSame($expected, Num::format($number, $places, $monetary));
 	}
 
@@ -137,7 +145,7 @@ class Kohana_NumTest extends Unittest_TestCase
 	 * Provides data for test_round()
 	 * @return array
 	 */
-	function provider_round()
+	public function provider_round()
 	{
 		return array(
 			array(5.5, 0, array(
@@ -199,11 +207,10 @@ class Kohana_NumTest extends Unittest_TestCase
 	 * @param integer $mode
 	 * @param number $expected
 	 */
-	function test_round($input, $precision, $expected)
+	public function test_round($input, $precision, $expected)
 	{
-		foreach (array(Num::ROUND_HALF_UP, Num::ROUND_HALF_DOWN, Num::ROUND_HALF_EVEN, Num::ROUND_HALF_ODD) as $i => $mode)
-		{
-			$this->assertSame($expected[$i], Num::round($input, $precision, $mode, FALSE));
+		foreach (array(Num::ROUND_HALF_UP, Num::ROUND_HALF_DOWN, Num::ROUND_HALF_EVEN, Num::ROUND_HALF_ODD) as $i => $mode) {
+			$this->assertSame($expected[$i], Num::round($input, $precision, $mode, false));
 		}
 	}
 }

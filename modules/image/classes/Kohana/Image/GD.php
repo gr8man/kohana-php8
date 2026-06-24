@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct script access.');
 /**
  * Support for image manipulation using [GD](http://php.net/GD).
  *
@@ -10,13 +11,13 @@ declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
  * @copyright  (c) 2008-2009 Kohana Team
  * @license    http://kohanaphp.com/license.html
  */
-class Kohana_Image_GD extends Image {
-
+class Kohana_Image_GD extends Image
+{
 	// Which GD functions are available?
-	const IMAGEROTATE = 'imagerotate';
-	const IMAGECONVOLUTION = 'imageconvolution';
-	const IMAGEFILTER = 'imagefilter';
-	const IMAGELAYEREFFECT = 'imagelayereffect';
+	public const IMAGEROTATE = 'imagerotate';
+	public const IMAGECONVOLUTION = 'imageconvolution';
+	public const IMAGEFILTER = 'imagefilter';
+	public const IMAGELAYEREFFECT = 'imagelayereffect';
 	protected static $_available_functions = array();
 
 	/**
@@ -28,8 +29,7 @@ class Kohana_Image_GD extends Image {
 	 */
 	public static function check()
 	{
-		if ( ! function_exists('gd_info'))
-		{
+		if (! function_exists('gd_info')) {
 			throw new Kohana_Exception('GD is either not installed or not enabled, check your configuration');
 		}
 		$functions = array(
@@ -38,18 +38,14 @@ class Kohana_Image_GD extends Image {
 			Image_GD::IMAGEFILTER,
 			Image_GD::IMAGELAYEREFFECT
 		);
-		foreach ($functions as $function)
-		{
+		foreach ($functions as $function) {
 			Image_GD::$_available_functions[$function] = function_exists($function);
 		}
 
-		if (defined('GD_VERSION'))
-		{
+		if (defined('GD_VERSION')) {
 			// Get the version via a constant, available in PHP 5.2.4+
 			$version = GD_VERSION;
-		}
-		else
-		{
+		} else {
 			// Get the version information
 			$info = gd_info();
 
@@ -60,13 +56,14 @@ class Kohana_Image_GD extends Image {
 			$version = $matches[0];
 		}
 
-		if ( ! version_compare($version, '2.0.1', '>='))
-		{
-			throw new Kohana_Exception('Image_GD requires GD version :required or greater, you have :version',
-				array('required' => '2.0.1', ':version' => $version));
+		if (! version_compare($version, '2.0.1', '>=')) {
+			throw new Kohana_Exception(
+				'Image_GD requires GD version :required or greater, you have :version',
+				array('required' => '2.0.1', ':version' => $version)
+			);
 		}
 
-		return Image_GD::$_checked = TRUE;
+		return Image_GD::$_checked = true;
 	}
 
 	// Temporary image resource
@@ -84,8 +81,7 @@ class Kohana_Image_GD extends Image {
 	 */
 	public function __construct($file)
 	{
-		if ( ! Image_GD::$_checked)
-		{
+		if (! Image_GD::$_checked) {
 			// Run the install check
 			Image_GD::check();
 		}
@@ -93,23 +89,23 @@ class Kohana_Image_GD extends Image {
 		parent::__construct($file);
 
 		// Set the image creation function name
-		switch ($this->type)
-		{
+		switch ($this->type) {
 			case IMAGETYPE_JPEG:
 				$create = 'imagecreatefromjpeg';
-			break;
+				break;
 			case IMAGETYPE_GIF:
 				$create = 'imagecreatefromgif';
-			break;
+				break;
 			case IMAGETYPE_PNG:
 				$create = 'imagecreatefrompng';
-			break;
+				break;
 		}
 
-		if ( ! isset($create) OR ! function_exists($create))
-		{
-			throw new Kohana_Exception('Installed GD does not support :type images',
-				array(':type' => image_type_to_extension($this->type, FALSE)));
+		if (! isset($create) or ! function_exists($create)) {
+			throw new Kohana_Exception(
+				'Installed GD does not support :type images',
+				array(':type' => image_type_to_extension($this->type, false))
+			);
 		}
 
 		// Save function for future use
@@ -126,8 +122,7 @@ class Kohana_Image_GD extends Image {
 	 */
 	public function __destruct()
 	{
-		if (is_resource($this->_image))
-		{
+		if (is_resource($this->_image)) {
 			// Free all resources
 			imagedestroy($this->_image);
 		}
@@ -140,8 +135,7 @@ class Kohana_Image_GD extends Image {
 	 */
 	protected function _load_image()
 	{
-		if ( ! is_resource($this->_image))
-		{
+		if (! is_resource($this->_image)) {
 			// Gets create function
 			$create = $this->_create_function;
 
@@ -149,7 +143,7 @@ class Kohana_Image_GD extends Image {
 			$this->_image = $create($this->file);
 
 			// Preserve transparency when saving
-			imagesavealpha($this->_image, TRUE);
+			imagesavealpha($this->_image, true);
 		}
 	}
 
@@ -170,14 +164,12 @@ class Kohana_Image_GD extends Image {
 		$this->_load_image();
 
 		// Test if we can do a resize without resampling to speed up the final resize
-		if ($width > ($this->width / 2) AND $height > ($this->height / 2))
-		{
+		if ($width > ($this->width / 2) and $height > ($this->height / 2)) {
 			// The maximum reduction is 10% greater than the final size
 			$reduction_width  = round($width  * 1.1);
 			$reduction_height = round($height * 1.1);
 
-			while ($pre_width / 2 > $reduction_width AND $pre_height / 2 > $reduction_height)
-			{
+			while ($pre_width / 2 > $reduction_width and $pre_height / 2 > $reduction_height) {
 				// Reduce the size using an O(2n) algorithm, until it reaches the maximum reduction
 				$pre_width /= 2;
 				$pre_height /= 2;
@@ -186,8 +178,7 @@ class Kohana_Image_GD extends Image {
 			// Create the temporary image to copy to
 			$image = $this->_create($pre_width, $pre_height);
 
-			if (imagecopyresized($image, $this->_image, 0, 0, 0, 0, $pre_width, $pre_height, $this->width, $this->height))
-			{
+			if (imagecopyresized($image, $this->_image, 0, 0, 0, 0, $pre_width, $pre_height, $this->width, $this->height)) {
 				// Swap the new image for the old one
 				imagedestroy($this->_image);
 				$this->_image = $image;
@@ -198,8 +189,7 @@ class Kohana_Image_GD extends Image {
 		$image = $this->_create($width, $height);
 
 		// Execute the resize
-		if (imagecopyresampled($image, $this->_image, 0, 0, 0, 0, $width, $height, $pre_width, $pre_height))
-		{
+		if (imagecopyresampled($image, $this->_image, 0, 0, 0, 0, $width, $height, $pre_width, $pre_height)) {
 			// Swap the new image for the old one
 			imagedestroy($this->_image);
 			$this->_image = $image;
@@ -228,8 +218,7 @@ class Kohana_Image_GD extends Image {
 		$this->_load_image();
 
 		// Execute the crop
-		if (imagecopyresampled($image, $this->_image, 0, 0, $offset_x, $offset_y, $width, $height, $width, $height))
-		{
+		if (imagecopyresampled($image, $this->_image, 0, 0, $offset_x, $offset_y, $width, $height, $width, $height)) {
 			// Swap the new image for the old one
 			imagedestroy($this->_image);
 			$this->_image = $image;
@@ -248,10 +237,11 @@ class Kohana_Image_GD extends Image {
 	 */
 	protected function _do_rotate($degrees)
 	{
-		if (empty(Image_GD::$_available_functions[Image_GD::IMAGEROTATE]))
-		{
-			throw new Kohana_Exception('This method requires :function, which is only available in the bundled version of GD',
-				array(':function' => 'imagerotate'));
+		if (empty(Image_GD::$_available_functions[Image_GD::IMAGEROTATE])) {
+			throw new Kohana_Exception(
+				'This method requires :function, which is only available in the bundled version of GD',
+				array(':function' => 'imagerotate')
+			);
 		}
 
 		// Loads image if not yet loaded
@@ -264,14 +254,13 @@ class Kohana_Image_GD extends Image {
 		$image = imagerotate($this->_image, 360 - $degrees, $transparent, 1);
 
 		// Save the alpha of the rotated image
-		imagesavealpha($image, TRUE);
+		imagesavealpha($image, true);
 
 		// Get the width and height of the rotated image
 		$width  = imagesx($image);
 		$height = imagesy($image);
 
-		if (imagecopymerge($this->_image, $image, 0, 0, 0, 0, $width, $height, 100))
-		{
+		if (imagecopymerge($this->_image, $image, 0, 0, 0, 0, $width, $height, 100)) {
 			// Swap the new image for the old one
 			imagedestroy($this->_image);
 			$this->_image = $image;
@@ -296,18 +285,13 @@ class Kohana_Image_GD extends Image {
 		// Loads image if not yet loaded
 		$this->_load_image();
 
-		if ($direction === Image::HORIZONTAL)
-		{
-			for ($x = 0; $x < $this->width; $x++)
-			{
+		if ($direction === Image::HORIZONTAL) {
+			for ($x = 0; $x < $this->width; $x++) {
 				// Flip each row from top to bottom
 				imagecopy($flipped, $this->_image, $x, 0, $this->width - $x - 1, 0, 1, $this->height);
 			}
-		}
-		else
-		{
-			for ($y = 0; $y < $this->height; $y++)
-			{
+		} else {
+			for ($y = 0; $y < $this->height; $y++) {
 				// Flip each column from left to right
 				imagecopy($flipped, $this->_image, 0, $y, 0, $this->height - $y - 1, $this->width, 1);
 			}
@@ -330,10 +314,11 @@ class Kohana_Image_GD extends Image {
 	 */
 	protected function _do_sharpen($amount)
 	{
-		if (empty(Image_GD::$_available_functions[Image_GD::IMAGECONVOLUTION]))
-		{
-			throw new Kohana_Exception('This method requires :function, which is only available in the bundled version of GD',
-				array(':function' => 'imageconvolution'));
+		if (empty(Image_GD::$_available_functions[Image_GD::IMAGECONVOLUTION])) {
+			throw new Kohana_Exception(
+				'This method requires :function, which is only available in the bundled version of GD',
+				array(':function' => 'imageconvolution')
+			);
 		}
 
 		// Loads image if not yet loaded
@@ -343,16 +328,14 @@ class Kohana_Image_GD extends Image {
 		$amount = round(abs(-18 + ($amount * 0.08)), 2);
 
 		// Gaussian blur matrix
-		$matrix = array
-		(
+		$matrix = array(
 			array(-1,   -1,    -1),
 			array(-1, $amount, -1),
 			array(-1,   -1,    -1),
 		);
 
 		// Perform the sharpen
-		if (imageconvolution($this->_image, $matrix, $amount - 8, 0))
-		{
+		if (imageconvolution($this->_image, $matrix, $amount - 8, 0)) {
 			// Reset the width and height
 			$this->width  = imagesx($this->_image);
 			$this->height = imagesy($this->_image);
@@ -369,10 +352,11 @@ class Kohana_Image_GD extends Image {
 	 */
 	protected function _do_reflection($height, $opacity, $fade_in)
 	{
-		if (empty(Image_GD::$_available_functions[Image_GD::IMAGEFILTER]))
-		{
-			throw new Kohana_Exception('This method requires :function, which is only available in the bundled version of GD',
-				array(':function' => 'imagefilter'));
+		if (empty(Image_GD::$_available_functions[Image_GD::IMAGEFILTER])) {
+			throw new Kohana_Exception(
+				'This method requires :function, which is only available in the bundled version of GD',
+				array(':function' => 'imagefilter')
+			);
 		}
 
 		// Loads image if not yet loaded
@@ -381,13 +365,10 @@ class Kohana_Image_GD extends Image {
 		// Convert an opacity range of 0-100 to 127-0
 		$opacity = round(abs(($opacity * 127 / 100) - 127));
 
-		if ($opacity < 127)
-		{
+		if ($opacity < 127) {
 			// Calculate the opacity stepping
 			$stepping = (127 - $opacity) / $height;
-		}
-		else
-		{
+		} else {
 			// Avoid a "divide by zero" error
 			$stepping = 127 / $height;
 		}
@@ -398,21 +379,17 @@ class Kohana_Image_GD extends Image {
 		// Copy the image to the reflection
 		imagecopy($reflection, $this->_image, 0, 0, 0, 0, $this->width, $this->height);
 
-		for ($offset = 0; $height >= $offset; $offset++)
-		{
+		for ($offset = 0; $height >= $offset; $offset++) {
 			// Read the next line down
 			$src_y = $this->height - $offset - 1;
 
 			// Place the line at the bottom of the reflection
 			$dst_y = $this->height + $offset;
 
-			if ($fade_in === TRUE)
-			{
+			if ($fade_in === true) {
 				// Start with the most transparent line first
 				$dst_opacity = round($opacity + ($stepping * ($height - $offset)));
-			}
-			else
-			{
+			} else {
 				// Start with the most opaque line first
 				$dst_opacity = round($opacity + ($stepping * $offset));
 			}
@@ -450,10 +427,11 @@ class Kohana_Image_GD extends Image {
 	 */
 	protected function _do_watermark(Image $watermark, $offset_x, $offset_y, $opacity)
 	{
-		if (empty(Image_GD::$_available_functions[Image_GD::IMAGELAYEREFFECT]))
-		{
-			throw new Kohana_Exception('This method requires :function, which is only available in the bundled version of GD',
-				array(':function' => 'imagelayereffect'));
+		if (empty(Image_GD::$_available_functions[Image_GD::IMAGELAYEREFFECT])) {
+			throw new Kohana_Exception(
+				'This method requires :function, which is only available in the bundled version of GD',
+				array(':function' => 'imagelayereffect')
+			);
 		}
 
 		// Loads image if not yet loaded
@@ -462,14 +440,13 @@ class Kohana_Image_GD extends Image {
 		// Create the watermark image resource
 		$overlay = imagecreatefromstring($watermark->render());
 
-		imagesavealpha($overlay, TRUE);
+		imagesavealpha($overlay, true);
 
 		// Get the width and height of the watermark
 		$width  = imagesx($overlay);
 		$height = imagesy($overlay);
 
-		if ($opacity < 100)
-		{
+		if ($opacity < 100) {
 			// Convert an opacity range of 0-100 to 127-0
 			$opacity = round(abs(($opacity * 127 / 100) - 127));
 
@@ -484,10 +461,9 @@ class Kohana_Image_GD extends Image {
 		}
 
 		// Alpha blending must be enabled on the background!
-		imagealphablending($this->_image, TRUE);
+		imagealphablending($this->_image, true);
 
-		if (imagecopy($this->_image, $overlay, $offset_x, $offset_y, 0, 0, $width, $height))
-		{
+		if (imagecopy($this->_image, $overlay, $offset_x, $offset_y, 0, 0, $width, $height)) {
 			// Destroy the overlay image
 			imagedestroy($overlay);
 		}
@@ -520,11 +496,10 @@ class Kohana_Image_GD extends Image {
 		imagefilledrectangle($background, 0, 0, $this->width, $this->height, $color);
 
 		// Alpha blending must be enabled on the background!
-		imagealphablending($background, TRUE);
+		imagealphablending($background, true);
 
 		// Copy the image onto a white background to remove all transparency
-		if (imagecopy($background, $this->_image, 0, 0, 0, 0, $this->width, $this->height))
-		{
+		if (imagecopy($background, $this->_image, 0, 0, 0, 0, $this->width, $this->height)) {
 			// Swap the new image for the old one
 			imagedestroy($this->_image);
 			$this->_image = $background;
@@ -552,14 +527,13 @@ class Kohana_Image_GD extends Image {
 		// Save the image to a file
 		$status = isset($quality) ? $save($this->_image, $file, $quality) : $save($this->_image, $file);
 
-		if ($status === TRUE AND $type !== $this->type)
-		{
+		if ($status === true and $type !== $this->type) {
 			// Reset the image type and mime type
 			$this->type = $type;
 			$this->mime = image_type_to_mime_type($type);
 		}
 
-		return TRUE;
+		return true;
 	}
 
 	/**
@@ -581,10 +555,9 @@ class Kohana_Image_GD extends Image {
 		ob_start();
 
 		// Render the image
-		$status = isset($quality) ? $save($this->_image, NULL, $quality) : $save($this->_image, NULL);
+		$status = isset($quality) ? $save($this->_image, null, $quality) : $save($this->_image, null);
 
-		if ($status === TRUE AND $type !== $this->type)
-		{
+		if ($status === true and $type !== $this->type) {
 			// Reset the image type and mime type
 			$this->type = $type;
 			$this->mime = image_type_to_mime_type($type);
@@ -604,29 +577,27 @@ class Kohana_Image_GD extends Image {
 	 */
 	protected function _save_function($extension, & $quality)
 	{
-		if ( ! $extension)
-		{
+		if (! $extension) {
 			// Use the current image type
-			$extension = image_type_to_extension($this->type, FALSE);
+			$extension = image_type_to_extension($this->type, false);
 		}
 
-		switch (strtolower($extension))
-		{
+		switch (strtolower($extension)) {
 			case 'jpg':
 			case 'jpe':
 			case 'jpeg':
 				// Save a JPG file
 				$save = 'imagejpeg';
 				$type = IMAGETYPE_JPEG;
-			break;
+				break;
 			case 'gif':
 				// Save a GIF file
 				$save = 'imagegif';
 				$type = IMAGETYPE_GIF;
 
 				// GIFs do not a quality setting
-				$quality = NULL;
-			break;
+				$quality = null;
+				break;
 			case 'png':
 				// Save a PNG file
 				$save = 'imagepng';
@@ -634,11 +605,13 @@ class Kohana_Image_GD extends Image {
 
 				// Use a compression level of 9 (does not affect quality!)
 				$quality = 9;
-			break;
+				break;
 			default:
-				throw new Kohana_Exception('Installed GD does not support :type images',
-					array(':type' => $extension));
-			break;
+				throw new Kohana_Exception(
+					'Installed GD does not support :type images',
+					array(':type' => $extension)
+				);
+				break;
 		}
 
 		return array($save, $type);
@@ -657,10 +630,10 @@ class Kohana_Image_GD extends Image {
 		$image = imagecreatetruecolor($width, $height);
 
 		// Do not apply alpha blending
-		imagealphablending($image, FALSE);
+		imagealphablending($image, false);
 
 		// Save alpha levels
-		imagesavealpha($image, TRUE);
+		imagesavealpha($image, true);
 
 		return $image;
 	}

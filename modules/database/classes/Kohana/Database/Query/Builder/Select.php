@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct script access.');
 /**
  * Database query builder for SELECT statements. See [Query Builder](/database/query/builder) for usage and examples.
  *
@@ -10,13 +11,13 @@ declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
  * @copyright  (c) 2008-2009 Kohana Team
  * @license    http://kohanaphp.com/license
  */
-class Kohana_Database_Query_Builder_Select extends Database_Query_Builder_Where {
-
+class Kohana_Database_Query_Builder_Select extends Database_Query_Builder_Where
+{
 	// SELECT ...
 	protected $_select = array();
 
 	// DISTINCT
-	protected $_distinct = FALSE;
+	protected $_distinct = false;
 
 	// FROM ...
 	protected $_from = array();
@@ -31,10 +32,10 @@ class Kohana_Database_Query_Builder_Select extends Database_Query_Builder_Where 
 	protected $_having = array();
 
 	// OFFSET ...
-	protected $_offset = NULL;
+	protected $_offset = null;
 
-    // UNION ...
-    protected $_union = array();
+	// UNION ...
+	protected $_union = array();
 
 	// The last JOIN statement created
 	protected $_last_join;
@@ -45,10 +46,9 @@ class Kohana_Database_Query_Builder_Select extends Database_Query_Builder_Where 
 	 * @param   array  $columns  column list
 	 * @return  void
 	 */
-	public function __construct(array $columns = NULL)
+	public function __construct(array $columns = null)
 	{
-		if ( ! empty($columns))
-		{
+		if (! empty($columns)) {
 			// Set the initial columns
 			$this->_select = $columns;
 		}
@@ -76,7 +76,7 @@ class Kohana_Database_Query_Builder_Select extends Database_Query_Builder_Where 
 	 * @param   mixed  $columns  column name or array($column, $alias) or object
 	 * @return  $this
 	 */
-	public function select($columns = NULL)
+	public function select($columns = null)
 	{
 		$columns = func_get_args();
 
@@ -120,7 +120,7 @@ class Kohana_Database_Query_Builder_Select extends Database_Query_Builder_Where 
 	 * @param   string  $type   join type (LEFT, RIGHT, INNER, etc)
 	 * @return  $this
 	 */
-	public function join($table, $type = NULL)
+	public function join($table, $type = null)
 	{
 		$this->_join[] = $this->_last_join = new Database_Query_Builder_Join($table, $type);
 
@@ -180,7 +180,7 @@ class Kohana_Database_Query_Builder_Select extends Database_Query_Builder_Where 
 	 * @param   mixed   $value   column value
 	 * @return  $this
 	 */
-	public function having($column, $op, $value = NULL)
+	public function having($column, $op, $value = null)
 	{
 		return $this->and_having($column, $op, $value);
 	}
@@ -193,7 +193,7 @@ class Kohana_Database_Query_Builder_Select extends Database_Query_Builder_Where 
 	 * @param   mixed   $value   column value
 	 * @return  $this
 	 */
-	public function and_having($column, $op, $value = NULL)
+	public function and_having($column, $op, $value = null)
 	{
 		$this->_having[] = array('AND' => array($column, $op, $value));
 
@@ -208,7 +208,7 @@ class Kohana_Database_Query_Builder_Select extends Database_Query_Builder_Where 
 	 * @param   mixed   $value   column value
 	 * @return  $this
 	 */
-	public function or_having($column, $op, $value = NULL)
+	public function or_having($column, $op, $value = null)
 	{
 		$this->_having[] = array('OR' => array($column, $op, $value));
 
@@ -291,15 +291,15 @@ class Kohana_Database_Query_Builder_Select extends Database_Query_Builder_Where 
 	 * @param boolean $all  decides if it's an UNION or UNION ALL clause
 	 * @return $this
 	 */
-	public function union($select, $all = TRUE)
+	public function union($select, $all = true)
 	{
-		if (is_string($select))
-		{
+		if (is_string($select)) {
 			$select = DB::select()->from($select);
 		}
-		if ( ! $select instanceof Database_Query_Builder_Select)
+		if (! $select instanceof Database_Query_Builder_Select) {
 			throw new Kohana_Exception('first parameter must be a string or an instance of Database_Query_Builder_Select');
-		$this->_union []= array('select' => $select, 'all' => $all);
+		}
+		$this->_union [] = array('select' => $select, 'all' => $all);
 		return $this;
 	}
 
@@ -311,7 +311,7 @@ class Kohana_Database_Query_Builder_Select extends Database_Query_Builder_Where 
 	 */
 	public function offset($number)
 	{
-		$this->_offset = ($number === NULL) ? NULL : (int) $number;
+		$this->_offset = ($number === null) ? null : (int) $number;
 
 		return $this;
 	}
@@ -322,10 +322,9 @@ class Kohana_Database_Query_Builder_Select extends Database_Query_Builder_Where 
 	 * @param   mixed  $db  Database instance or name of instance
 	 * @return  string
 	 */
-	public function compile($db = NULL)
+	public function compile($db = null)
 	{
-		if ( ! is_object($db))
-		{
+		if (! is_object($db)) {
 			// Get the database instance
 			$db = Database::instance($db);
 		}
@@ -339,78 +338,64 @@ class Kohana_Database_Query_Builder_Select extends Database_Query_Builder_Where 
 		// Start a selection query
 		$query = 'SELECT ';
 
-		if ($this->_distinct === TRUE)
-		{
+		if ($this->_distinct === true) {
 			// Select only unique results
 			$query .= 'DISTINCT ';
 		}
 
-		if (empty($this->_select))
-		{
+		if (empty($this->_select)) {
 			// Select all columns
 			$query .= '*';
-		}
-		else
-		{
+		} else {
 			// Select all columns
 			$query .= implode(', ', array_unique(array_map($quote_column, $this->_select)));
 		}
 
-		if ( ! empty($this->_from))
-		{
+		if (! empty($this->_from)) {
 			// Set tables to select from
 			$query .= ' FROM '.implode(', ', array_unique(array_map($quote_table, $this->_from)));
 		}
 
-		if ( ! empty($this->_join))
-		{
+		if (! empty($this->_join)) {
 			// Add tables to join
 			$query .= ' '.$this->_compile_join($db, $this->_join);
 		}
 
-		if ( ! empty($this->_where))
-		{
+		if (! empty($this->_where)) {
 			// Add selection conditions
 			$query .= ' WHERE '.$this->_compile_conditions($db, $this->_where);
 		}
 
-		if ( ! empty($this->_group_by))
-		{
+		if (! empty($this->_group_by)) {
 			// Add grouping
 			$query .= ' '.$this->_compile_group_by($db, $this->_group_by);
 		}
 
-		if ( ! empty($this->_having))
-		{
+		if (! empty($this->_having)) {
 			// Add filtering conditions
 			$query .= ' HAVING '.$this->_compile_conditions($db, $this->_having);
 		}
 
-		if ( ! empty($this->_order_by))
-		{
+		if (! empty($this->_order_by)) {
 			// Add sorting
 			$query .= ' '.$this->_compile_order_by($db, $this->_order_by);
 		}
 
-		if ($this->_limit !== NULL)
-		{
+		if ($this->_limit !== null) {
 			// Add limiting
 			$query .= ' LIMIT '.$this->_limit;
 		}
 
-		if ($this->_offset !== NULL)
-		{
+		if ($this->_offset !== null) {
 			// Add offsets
 			$query .= ' OFFSET '.$this->_offset;
 		}
 
-		if ( ! empty($this->_union))
-		{
+		if (! empty($this->_union)) {
 			$query = '('.$query.')';
 			foreach ($this->_union as $u) {
 				$query .= ' UNION ';
-				if ($u['all'] === TRUE)
-				{
+				if ($u['all'] === true) {
 					$query .= 'ALL ';
 				}
 				$query .= '('.$u['select']->compile($db).')';
@@ -433,15 +418,15 @@ class Kohana_Database_Query_Builder_Select extends Database_Query_Builder_Where 
 		$this->_order_by =
 		$this->_union = array();
 
-		$this->_distinct = FALSE;
+		$this->_distinct = false;
 
 		$this->_limit     =
 		$this->_offset    =
-		$this->_last_join = NULL;
+		$this->_last_join = null;
 
 		$this->_parameters = array();
 
-		$this->_sql = NULL;
+		$this->_sql = null;
 
 		return $this;
 	}

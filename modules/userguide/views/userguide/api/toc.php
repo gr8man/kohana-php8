@@ -1,7 +1,3 @@
-<?php
-
-declare(strict_types=1);
-
 <h1><?php echo 'Available Classes' ?></h1>
 
 <label>Filter:</label>

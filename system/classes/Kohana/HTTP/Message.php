@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct script access.');
 /**
  * The HTTP Interaction interface providing the core HTTP methods that
  * should be implemented by any HTTP request or response class.
@@ -12,8 +13,8 @@ declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
  * @copyright  (c) 2008-2014 Kohana Team
  * @license    http://kohanaframework.org/license
  */
-interface Kohana_HTTP_Message {
-
+interface Kohana_HTTP_Message
+{
 	/**
 	 * Gets or sets the HTTP protocol. The standard protocol to use
 	 * is `HTTP/1.1`.
@@ -21,7 +22,7 @@ interface Kohana_HTTP_Message {
 	 * @param   string   $protocol  Protocol to set to the request/response
 	 * @return  mixed
 	 */
-	public function protocol($protocol = NULL);
+	public function protocol($protocol = null);
 
 	/**
 	 * Gets or sets HTTP headers to the request or response. All headers
@@ -33,7 +34,7 @@ interface Kohana_HTTP_Message {
 	 * @param   string  $value  Value to set to the supplied key
 	 * @return  mixed
 	 */
-	public function headers($key = NULL, $value = NULL);
+	public function headers($key = null, $value = null);
 
 	/**
 	 * Gets or sets the HTTP body to the request or response. The body is
@@ -43,7 +44,7 @@ interface Kohana_HTTP_Message {
 	 * @return  string
 	 * @return  void
 	 */
-	public function body($content = NULL);
+	public function body($content = null);
 
 	/**
 	 * Renders the HTTP_Interaction to a string, producing

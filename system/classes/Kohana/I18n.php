@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-defined('SYSPATH') OR die('No direct script access.');
+defined('SYSPATH') or die('No direct script access.');
 /**
  * Internationalization (i18n) class. Provides language loading and translation
  * methods without dependencies on [gettext](http://php.net/gettext).
@@ -22,8 +22,8 @@ defined('SYSPATH') OR die('No direct script access.');
  * @copyright  (c) 2008-2012 Kohana Team
  * @license    http://kohanaframework.org/license
  */
-class Kohana_I18n {
-
+class Kohana_I18n
+{
 	/**
 	 * @var  string   target language: en-us, es-es, zh-cn, etc
 	 */
@@ -52,10 +52,9 @@ class Kohana_I18n {
 	 * @return  string
 	 * @since   3.0.2
 	 */
-	public static function lang($lang = NULL)
+	public static function lang($lang = null)
 	{
-		if ($lang)
-		{
+		if ($lang) {
 			// Normalize the language
 			I18n::$lang = strtolower(str_replace(array(' ', '_'), '-', $lang));
 		}
@@ -73,10 +72,9 @@ class Kohana_I18n {
 	 * @param   string  $lang   target language
 	 * @return  string
 	 */
-	public static function get($string, $lang = NULL)
+	public static function get($string, $lang = null)
 	{
-		if ( ! $lang)
-		{
+		if (! $lang) {
 			// Use the global target language
 			$lang = I18n::$lang;
 		}
@@ -99,8 +97,7 @@ class Kohana_I18n {
 	 */
 	public static function load($lang)
 	{
-		if (isset(I18n::$_cache[$lang]))
-		{
+		if (isset(I18n::$_cache[$lang])) {
 			return I18n::$_cache[$lang];
 		}
 
@@ -110,16 +107,13 @@ class Kohana_I18n {
 		// Split the language: language, region, locale, etc
 		$parts = explode('-', $lang);
 
-		do
-		{
+		do {
 			// Create a path for this set of parts
 			$path = implode(DIRECTORY_SEPARATOR, $parts);
 
-			if ($files = Kohana::find_file('i18n', $path, NULL, TRUE))
-			{
+			if ($files = Kohana::find_file('i18n', $path, null, true)) {
 				$t = array();
-				foreach ($files as $file)
-				{
+				foreach ($files as $file) {
 					// Merge the language strings into the sub table
 					$t = array_merge($t, Kohana::load($file));
 				}
@@ -131,8 +125,7 @@ class Kohana_I18n {
 
 			// Remove the last part
 			array_pop($parts);
-		}
-		while ($parts);
+		} while ($parts);
 
 		// Cache the translation table locally
 		return I18n::$_cache[$lang] = $table;
@@ -140,8 +133,7 @@ class Kohana_I18n {
 
 }
 
-if ( ! function_exists('__'))
-{
+if (! function_exists('__')) {
 	/**
 	 * Kohana translation/internationalization function. The PHP function
 	 * [strtr](http://php.net/strtr) is used for replacing parameters.
@@ -156,10 +148,9 @@ if ( ! function_exists('__'))
 	 * @param   string  $lang   source language
 	 * @return  string
 	 */
-	function __($string, array $values = NULL, $lang = 'en-us')
+	function __($string, array $values = null, $lang = 'en-us')
 	{
-		if ($lang !== I18n::$lang)
-		{
+		if ($lang !== I18n::$lang) {
 			// The message and target languages are different
 			// Get the translation for this message
 			$string = I18n::get($string);

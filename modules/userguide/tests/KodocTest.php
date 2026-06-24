@@ -339,15 +339,15 @@ COMMENT
 	{
 		return array(
 			// Kohana_Core is a special case
-			array('Kohana','Kohana_Core',NULL),
-			array('Controller_Template','Kohana_Controller_Template',NULL),
+			array('Kohana','Kohana_Core',null),
+			array('Controller_Template','Kohana_Controller_Template',null),
 			array('Controller_Template','Kohana_Controller_Template',
-				array('Kohana_Controller_Template'=>'Kohana_Controller_Template',
-					'Controller_Template'=>'Controller_Template')
+				array('Kohana_Controller_Template' => 'Kohana_Controller_Template',
+					'Controller_Template' => 'Controller_Template')
 			),
-			array(FALSE,'Kohana_Controller_Template',
-				array('Kohana_Controller_Template'=>'Kohana_Controller_Template')),
-			array(FALSE,'Controller_Template',NULL),
+			array(false,'Kohana_Controller_Template',
+				array('Kohana_Controller_Template' => 'Kohana_Controller_Template')),
+			array(false,'Controller_Template',null),
 		);
 	}
 
@@ -365,6 +365,6 @@ COMMENT
 	public function test_transparent_classes($expected, $class, $classes)
 	{
 		$result = Kodoc::is_transparent($class, $classes);
-		$this->assertSame($expected,$result);
+		$this->assertSame($expected, $result);
 	}
 }

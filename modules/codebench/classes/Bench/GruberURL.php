@@ -1,20 +1,20 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') or die('No direct access allowed.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct access allowed.');
 /**
  * @package    Kohana/Codebench
  * @category   Tests
  * @author     Geert De Deckere <geert@idoe.be>
  */
-class Bench_GruberURL extends Codebench {
-
+class Bench_GruberURL extends Codebench
+{
 	public $description =
 		'Optimization for http://daringfireball.net/2009/11/liberal_regex_for_matching_urls';
 
 	public $loops = 10000;
 
-	public $subjects = array
-	(
+	public $subjects = array(
 		'http://foo.com/blah_blah',
 		'http://foo.com/blah_blah/',
 		'(Something like http://foo.com/blah_blah)',
@@ -43,21 +43,21 @@ class Bench_GruberURL extends Codebench {
 	{
 		// Original regex by John Gruber
 		preg_match('~\b(([\w-]+://?|www[.])[^\s()<>]+(?:\([\w\d]+\)|([^[:punct:]\s]|/)))~', $subject, $matches);
-		return (empty($matches)) ? FALSE : $matches[0];
+		return (empty($matches)) ? false : $matches[0];
 	}
 
 	public function bench_daringfireball_v2($subject)
 	{
 		// Removed outer capturing parentheses, made another pair non-capturing
 		preg_match('~\b(?:[\w-]+://?|www[.])[^\s()<>]+(?:\([\w\d]+\)|(?:[^[:punct:]\s]|/))~', $subject, $matches);
-		return (empty($matches)) ? FALSE : $matches[0];
+		return (empty($matches)) ? false : $matches[0];
 	}
 
 	public function bench_daringfireball_v3($subject)
 	{
 		// Made quantifiers possessive where possible
 		preg_match('~\b(?:[\w-]++://?+|www[.])[^\s()<>]+(?:\([\w\d]++\)|(?:[^[:punct:]\s]|/))~', $subject, $matches);
-		return (empty($matches)) ? FALSE : $matches[0];
+		return (empty($matches)) ? false : $matches[0];
 	}
 
 }

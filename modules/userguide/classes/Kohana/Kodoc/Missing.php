@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') or die('No direct script access.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct script access.');
 /**
  * Set Kodoc_Missing::create_class as an autoloading to prevent missing classes
  * from crashing the api browser.  Classes that are missing a parent will
@@ -13,8 +14,8 @@ declare(strict_types=1); defined('SYSPATH') or die('No direct script access.');
  * @license    http://kohanaframework.org/license
  * @since      3.0.7
  */
-abstract class Kohana_Kodoc_Missing {
-
+abstract class Kohana_Kodoc_Missing
+{
 	/**
 	 * Creates classes when they are otherwise not found.
 	 *
@@ -28,13 +29,12 @@ abstract class Kohana_Kodoc_Missing {
 	 */
 	public static function create_class($class)
 	{
-		if ( ! class_exists($class))
-		{
+		if (! class_exists($class)) {
 			// Create a new missing class
 			eval("class {$class} extends Kodoc_Missing {}");
 		}
 
-		return TRUE;
+		return true;
 	}
 
 } // End Kohana_Kodoc_Missing

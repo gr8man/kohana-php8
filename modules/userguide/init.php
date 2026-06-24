@@ -1,23 +1,23 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') or die('No direct script access.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct script access.');
 
 // Static file serving (CSS, JS, images)
 Route::set('docs/media', 'guide-media(/<file>)', array('file' => '.+'))
 	->defaults(array(
 		'controller' => 'Userguide',
 		'action'     => 'media',
-		'file'       => NULL,
+		'file'       => null,
 	));
 
 // API Browser, if enabled
-if (Kohana::$config->load('userguide.api_browser') === TRUE)
-{
+if (Kohana::$config->load('userguide.api_browser') === true) {
 	Route::set('docs/api', 'guide-api(/<class>)', array('class' => '[a-zA-Z0-9_]+'))
 		->defaults(array(
 			'controller' => 'Userguide',
 			'action'     => 'api',
-			'class'      => NULL,
+			'class'      => null,
 		));
 }
 
@@ -32,11 +32,11 @@ Route::set('docs/guide', 'guide(/<module>(/<page>))', array(
 	));
 
 // Simple autoloader used to encourage PHPUnit to behave itself.
-class Markdown_Autoloader {
+class Markdown_Autoloader
+{
 	public static function autoload($class)
 	{
-		if ($class == 'Markdown_Parser' OR $class == 'MarkdownExtra_Parser')
-		{
+		if ($class == 'Markdown_Parser' or $class == 'MarkdownExtra_Parser') {
 			include_once Kohana::find_file('vendor', 'markdown/markdown');
 		}
 	}

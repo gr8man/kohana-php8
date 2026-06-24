@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct script access.');
 /**
  * MySQL database connection.
  *
@@ -10,8 +11,8 @@ declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
  * @copyright  (c) 2008-2009 Kohana Team
  * @license    http://kohanaphp.com/license
  */
-class Kohana_Database_MySQL extends Database {
-
+class Kohana_Database_MySQL extends Database
+{
 	protected $_identifier = '`';
 
 	public function connect()
@@ -21,7 +22,7 @@ class Kohana_Database_MySQL extends Database {
 
 	public function disconnect()
 	{
-		return TRUE;
+		return true;
 	}
 
 	public function set_charset($charset)
@@ -29,12 +30,12 @@ class Kohana_Database_MySQL extends Database {
 		throw new Database_Exception('The ext/mysql driver is not available.');
 	}
 
-	public function query($type, $sql, $as_object = FALSE, array $params = NULL)
+	public function query($type, $sql, $as_object = false, array $params = null)
 	{
 		throw new Database_Exception('The ext/mysql driver is not available.');
 	}
 
-	public function begin($mode = NULL)
+	public function begin($mode = null)
 	{
 		throw new Database_Exception('The ext/mysql driver is not available.');
 	}
@@ -49,12 +50,12 @@ class Kohana_Database_MySQL extends Database {
 		throw new Database_Exception('The ext/mysql driver is not available.');
 	}
 
-	public function list_tables($like = NULL)
+	public function list_tables($like = null)
 	{
 		throw new Database_Exception('The ext/mysql driver is not available.');
 	}
 
-	public function list_columns($table, $like = NULL, $add_prefix = TRUE)
+	public function list_columns($table, $like = null, $add_prefix = true)
 	{
 		throw new Database_Exception('The ext/mysql driver is not available.');
 	}

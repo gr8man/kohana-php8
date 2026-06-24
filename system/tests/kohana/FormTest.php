@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('Kohana bootstrap needs to be included before tests run');
+declare(strict_types=1);
+defined('SYSPATH') or die('Kohana bootstrap needs to be included before tests run');
 
 /**
  * Tests Kohana Form helper
@@ -40,15 +41,15 @@ class Kohana_FormTest extends Unittest_TestCase
 	{
 		return array(
 			array(
-				  array('', NULL),
+				  array('', null),
 				  array('action' => '')
 			),
 			array(
-				  array(NULL, NULL),
+				  array(null, null),
 				  array('action' => '')
 			),
 			array(
-				  array('foo', NULL),
+				  array('foo', null),
 				  array('action' => '/foo')
 			),
 			array(
@@ -105,10 +106,10 @@ class Kohana_FormTest extends Unittest_TestCase
 	{
 		return array(
 			// $value, $result
-			array('input',    'foo', 'bar', NULL, 'input'),
-			array('input',    'foo',  NULL, NULL, 'input'),
-			array('hidden',   'foo', 'bar', NULL, 'hidden'),
-			array('password', 'foo', 'bar', NULL, 'password'),
+			array('input',    'foo', 'bar', null, 'input'),
+			array('input',    'foo',  null, null, 'input'),
+			array('hidden',   'foo', 'bar', null, 'hidden'),
+			array('password', 'foo', 'bar', null, 'password'),
 		);
 	}
 
@@ -128,20 +129,17 @@ class Kohana_FormTest extends Unittest_TestCase
 		);
 
 		// Form::input creates a text input
-		if ($type === 'input')
-		{
+		if ($type === 'input') {
 			$matcher['attributes']['type'] = 'text';
 		}
 
 		// NULL just means no value
-		if ($value !== NULL)
-		{
+		if ($value !== null) {
 			$matcher['attributes']['value'] = $value;
 		}
 
 		// Add on any attributes
-		if (is_array($attributes))
-		{
+		if (is_array($attributes)) {
 			$matcher['attributes'] = $attributes + $matcher['attributes'];
 		}
 
@@ -159,7 +157,7 @@ class Kohana_FormTest extends Unittest_TestCase
 	{
 		return array(
 			// $value, $result
-			array('foo', NULL, '<input type="file" name="foo" />'),
+			array('foo', null, '<input type="file" name="foo" />'),
 		);
 	}
 
@@ -185,13 +183,13 @@ class Kohana_FormTest extends Unittest_TestCase
 	{
 		return array(
 			// $value, $result
-			array('checkbox', 'foo', NULL, FALSE, NULL),
-			array('checkbox', 'foo', NULL, TRUE, NULL),
-			array('checkbox', 'foo', 'bar', TRUE, NULL),
+			array('checkbox', 'foo', null, false, null),
+			array('checkbox', 'foo', null, true, null),
+			array('checkbox', 'foo', 'bar', true, null),
 
-			array('radio', 'foo', NULL, FALSE, NULL),
-			array('radio', 'foo', NULL, TRUE, NULL),
-			array('radio', 'foo', 'bar', TRUE, NULL),
+			array('radio', 'foo', null, false, null),
+			array('radio', 'foo', null, true, null),
+			array('radio', 'foo', 'bar', true, null),
 		);
 	}
 
@@ -207,18 +205,15 @@ class Kohana_FormTest extends Unittest_TestCase
 	{
 		$matcher = array('tag' => 'input', 'attributes' => array('name' => $name, 'type' => $type));
 
-		if ($value !== NULL)
-		{
+		if ($value !== null) {
 			$matcher['attributes']['value'] = $value;
 		}
 
-		if (is_array($attributes))
-		{
+		if (is_array($attributes)) {
 			$matcher['attributes'] = $attributes + $matcher['attributes'];
 		}
 
-		if ($checked === TRUE)
-		{
+		if ($checked === true) {
 			$matcher['attributes']['checked'] = 'checked';
 		}
 
@@ -235,11 +230,11 @@ class Kohana_FormTest extends Unittest_TestCase
 	{
 		return array(
 			// $value, $result
-			array('textarea', 'foo', 'bar', NULL),
+			array('textarea', 'foo', 'bar', null),
 			array('textarea', 'foo', 'bar', array('rows' => 20, 'cols' => 20)),
-			array('button', 'foo', 'bar', NULL),
-			array('label', 'foo', 'bar', NULL),
-			array('label', 'foo', NULL, NULL),
+			array('button', 'foo', 'bar', null),
+			array('label', 'foo', 'bar', null),
+			array('label', 'foo', null, null),
 		);
 	}
 
@@ -259,18 +254,14 @@ class Kohana_FormTest extends Unittest_TestCase
 			'content' => $body,
 		);
 
-		if ($type !== 'label')
-		{
+		if ($type !== 'label') {
 			$matcher['attributes'] = array('name' => $name);
-		}
-		else
-		{
+		} else {
 			$matcher['attributes'] = array('for' => $name);
 		}
 
 
-		if (is_array($attributes))
-		{
+		if (is_array($attributes)) {
 			$matcher['attributes'] = $attributes + $matcher['attributes'];
 		}
 
@@ -289,10 +280,10 @@ class Kohana_FormTest extends Unittest_TestCase
 	{
 		return array(
 			// $value, $result
-			array('foo', NULL, NULL, "<select name=\"foo\"></select>"),
-			array('foo', array('bar' => 'bar'), NULL, "<select name=\"foo\">\n<option value=\"bar\">bar</option>\n</select>"),
+			array('foo', null, null, "<select name=\"foo\"></select>"),
+			array('foo', array('bar' => 'bar'), null, "<select name=\"foo\">\n<option value=\"bar\">bar</option>\n</select>"),
 			array('foo', array('bar' => 'bar'), 'bar', "<select name=\"foo\">\n<option value=\"bar\" selected=\"selected\">bar</option>\n</select>"),
-			array('foo', array('bar' => array('foo' => 'bar')), NULL, "<select name=\"foo\">\n<optgroup label=\"bar\">\n<option value=\"foo\">bar</option>\n</optgroup>\n</select>"),
+			array('foo', array('bar' => array('foo' => 'bar')), null, "<select name=\"foo\">\n<optgroup label=\"bar\">\n<option value=\"foo\">bar</option>\n</optgroup>\n</select>"),
 			array('foo', array('bar' => array('foo' => 'bar')), 'foo', "<select name=\"foo\">\n<optgroup label=\"bar\">\n<option value=\"foo\" selected=\"selected\">bar</option>\n</optgroup>\n</select>"),
 			// #2286
 			array('foo', array('bar' => 'bar', 'unit' => 'test', 'foo' => 'foo'), array('bar', 'foo'), "<select name=\"foo\" multiple=\"multiple\">\n<option value=\"bar\" selected=\"selected\">bar</option>\n<option value=\"unit\">test</option>\n<option value=\"foo\" selected=\"selected\">foo</option>\n</select>"),
@@ -378,19 +369,19 @@ class Kohana_FormTest extends Unittest_TestCase
 	 *
 	 * @return array
 	 */
-	function provider_label()
+	public function provider_label()
 	{
 		return array(
 			// $value, $result
 			// Single for provided
-			array('email', NULL, NULL, '<label for="email">Email</label>'),
-			array('email_address', NULL, NULL, '<label for="email_address">Email Address</label>'),
-			array('email-address', NULL, NULL, '<label for="email-address">Email Address</label>'),
+			array('email', null, null, '<label for="email">Email</label>'),
+			array('email_address', null, null, '<label for="email_address">Email Address</label>'),
+			array('email-address', null, null, '<label for="email-address">Email Address</label>'),
 			// For and text values provided
-			array('name', 'First name', NULL, '<label for="name">First name</label>'),
+			array('name', 'First name', null, '<label for="name">First name</label>'),
 			// with attributes
 			array('lastname', 'Last name', array('class' => 'text'), '<label class="text" for="lastname">Last name</label>'),
-			array('lastname', 'Last name', array('class' => 'text', 'id'=>'txt_lastname'), '<label id="txt_lastname" class="text" for="lastname">Last name</label>'),
+			array('lastname', 'Last name', array('class' => 'text', 'id' => 'txt_lastname'), '<label id="txt_lastname" class="text" for="lastname">Last name</label>'),
 		);
 	}
 
@@ -404,7 +395,7 @@ class Kohana_FormTest extends Unittest_TestCase
 	 * @param boolean $attributes  Input for Form::label
 	 * @param boolean $expected    Output for Form::label
 	 */
-	function test_label($for, $text, $attributes, $expected)
+	public function test_label($for, $text, $attributes, $expected)
 	{
 		$this->assertSame($expected, Form::label($for, $text, $attributes));
 	}

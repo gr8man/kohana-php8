@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('No direct access allowed.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct access allowed.');
 /**
  * User authorization library. Handles user login and logout, as well as secure
  * password hashing.
@@ -10,8 +11,8 @@ declare(strict_types=1); defined('SYSPATH') OR die('No direct access allowed.');
  * @copyright  (c) 2007-2012 Kohana Team
  * @license    http://kohanaframework.org/license
  */
-abstract class Kohana_Auth {
-
+abstract class Kohana_Auth
+{
 	// Auth instances
 	protected static $_instance;
 
@@ -22,13 +23,11 @@ abstract class Kohana_Auth {
 	 */
 	public static function instance()
 	{
-		if ( ! isset(Auth::$_instance))
-		{
+		if (! isset(Auth::$_instance)) {
 			// Load the configuration for this type
 			$config = Kohana::$config->load('auth');
 
-			if ( ! $type = $config->get('driver'))
-			{
+			if (! $type = $config->get('driver')) {
 				$type = 'file';
 			}
 
@@ -71,7 +70,7 @@ abstract class Kohana_Auth {
 	 * @param   mixed  $default  Default value to return if the user is currently not logged in.
 	 * @return  mixed
 	 */
-	public function get_user($default = NULL)
+	public function get_user($default = null)
 	{
 		return $this->_session->get($this->_config['session_key'], $default);
 	}
@@ -84,10 +83,11 @@ abstract class Kohana_Auth {
 	 * @param   boolean  $remember  Enable autologin
 	 * @return  boolean
 	 */
-	public function login($username, $password, $remember = FALSE)
+	public function login($username, $password, $remember = false)
 	{
-		if (empty($password))
-			return FALSE;
+		if (empty($password)) {
+			return false;
+		}
 
 		return $this->_login($username, $password, $remember);
 	}
@@ -99,15 +99,12 @@ abstract class Kohana_Auth {
 	 * @param   boolean  $logout_all  Remove all tokens for user
 	 * @return  boolean
 	 */
-	public function logout($destroy = FALSE, $logout_all = FALSE)
+	public function logout($destroy = false, $logout_all = false)
 	{
-		if ($destroy === TRUE)
-		{
+		if ($destroy === true) {
 			// Destroy the session completely
 			$this->_session->destroy();
-		}
-		else
-		{
+		} else {
 			// Remove the user from the session
 			$this->_session->delete($this->_config['session_key']);
 
@@ -126,14 +123,14 @@ abstract class Kohana_Auth {
 	 * @param   string  $role  role name
 	 * @return  mixed
 	 */
-	public function logged_in($role = NULL)
+	public function logged_in($role = null)
 	{
-		return ($this->get_user() !== NULL);
+		return ($this->get_user() !== null);
 	}
 
 	/**
 	 * Hash a password using bcrypt (recommended) or fall back to HMAC.
-	 * 
+	 *
 	 * SECURITY: Use this method to create password hashes instead of hash().
 	 * This method prefers bcrypt (PASSWORD_BCRYPT) when available.
 	 *
@@ -142,14 +139,14 @@ abstract class Kohana_Auth {
 	 */
 	public function hash_password($password)
 	{
-		if (function_exists('password_hash'))
-		{
+		if (function_exists('password_hash')) {
 			$cost = isset($this->_config['bcrypt_cost']) ? (int) $this->_config['bcrypt_cost'] : 12;
-			return password_hash($password, PASSWORD_BCRYPT, ['cost' => $cost]);
+			return password_hash($password, PASSWORD_BCRYPT, array('cost' => $cost));
 		}
 
-		if ( ! $this->_config['hash_key'])
+		if (! $this->_config['hash_key']) {
 			throw new Kohana_Exception('A valid hash key must be set in your auth config.');
+		}
 
 		return hash_hmac($this->_config['hash_method'], $password, $this->_config['hash_key']);
 	}
@@ -166,17 +163,16 @@ abstract class Kohana_Auth {
 	 */
 	public function check_password($password, $hash)
 	{
-		if (preg_match('/^\$2[aby]?\$/', $hash))
-		{
-			if (function_exists('password_verify'))
-			{
+		if (preg_match('/^\$2[aby]?\$/', $hash)) {
+			if (function_exists('password_verify')) {
 				return password_verify($password, $hash);
 			}
 			throw new Kohana_Exception('bcrypt requires PHP 5.5+ or password_compat library.');
 		}
 
-		if ( ! $this->_config['hash_key'])
+		if (! $this->_config['hash_key']) {
 			throw new Kohana_Exception('A valid hash key must be set in your auth config.');
+		}
 
 		$computed = hash_hmac($this->_config['hash_method'], $password, $this->_config['hash_key']);
 		return hash_equals($hash, $computed);
@@ -190,12 +186,11 @@ abstract class Kohana_Auth {
 	 */
 	public function needs_rehash($hash)
 	{
-		if (function_exists('password_needs_rehash'))
-		{
+		if (function_exists('password_needs_rehash')) {
 			$cost = isset($this->_config['bcrypt_cost']) ? (int) $this->_config['bcrypt_cost'] : 12;
-			return password_needs_rehash($hash, PASSWORD_BCRYPT, ['cost' => $cost]);
+			return password_needs_rehash($hash, PASSWORD_BCRYPT, array('cost' => $cost));
 		}
-		return FALSE;
+		return false;
 	}
 
 	/**
@@ -206,8 +201,9 @@ abstract class Kohana_Auth {
 	 */
 	public function hash($str)
 	{
-		if ( ! $this->_config['hash_key'])
+		if (! $this->_config['hash_key']) {
 			throw new Kohana_Exception('A valid hash key must be set in your auth config.');
+		}
 
 		return hash_hmac($this->_config['hash_method'], $str, $this->_config['hash_key']);
 	}
@@ -220,7 +216,7 @@ abstract class Kohana_Auth {
 		// Store username in session
 		$this->_session->set($this->_config['session_key'], $user);
 
-		return TRUE;
+		return true;
 	}
 
 } // End Auth

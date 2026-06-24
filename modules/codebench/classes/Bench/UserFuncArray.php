@@ -1,21 +1,21 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') or die('No direct access allowed.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct access allowed.');
 /**
  * @package    Kohana/Codebench
  * @category   Tests
  * @author     Woody Gilk <woody.gilk@kohanaphp.com>
  */
-class Bench_UserFuncArray extends Codebench {
-
+class Bench_UserFuncArray extends Codebench
+{
 	public $description =
 		'Testing the speed difference of using <code>call_user_func_array</code>
 		 compared to counting args and doing manual calls.';
 
 	public $loops = 100000;
 
-	public $subjects = array
-	(
+	public $subjects = array(
 		// Argument sets
 		array(),
 		array('one'),
@@ -26,23 +26,22 @@ class Bench_UserFuncArray extends Codebench {
 	public function bench_count_args($args)
 	{
 		$name = 'callme';
-		switch (count($args))
-		{
+		switch (count($args)) {
 			case 1:
 				$this->$name($args[0]);
-			break;
+				break;
 			case 2:
 				$this->$name($args[0], $args[1]);
-			break;
+				break;
 			case 3:
 				$this->$name($args[0], $args[1], $args[2]);
-			break;
+				break;
 			case 4:
 				$this->$name($args[0], $args[1], $args[2], $args[3]);
-			break;
+				break;
 			default:
 				call_user_func_array(array($this, $name), $args);
-			break;
+				break;
 		}
 	}
 

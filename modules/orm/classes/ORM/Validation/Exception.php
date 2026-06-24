@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct script access.');
 /**
  * ORM Validation exceptions.
  *
@@ -9,4 +10,6 @@ declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
  * @copyright  (c) 2008-2009 Kohana Team
  * @license    http://kohanaphp.com/license
  */
-class ORM_Validation_Exception extends Kohana_ORM_Validation_Exception {}
+class ORM_Validation_Exception extends Kohana_ORM_Validation_Exception
+{
+}

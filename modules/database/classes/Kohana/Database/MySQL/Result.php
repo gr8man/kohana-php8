@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct script access.');
 /**
  * MySQL database result.   See [Results](/database/results) for usage and examples.
  *
@@ -10,11 +11,11 @@ declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
  * @copyright  (c) 2008-2009 Kohana Team
  * @license    http://kohanaphp.com/license
  */
-class Kohana_Database_MySQL_Result extends Database_Result {
-
+class Kohana_Database_MySQL_Result extends Database_Result
+{
 	protected $_internal_row = 0;
 
-	public function __construct($result, $sql, $as_object = FALSE, array $params = NULL)
+	public function __construct($result, $sql, $as_object = false, array $params = null)
 	{
 		parent::__construct($result, $sql, $as_object, $params);
 
@@ -24,16 +25,14 @@ class Kohana_Database_MySQL_Result extends Database_Result {
 
 	public function __destruct()
 	{
-		if (is_resource($this->_result))
-		{
+		if (is_resource($this->_result)) {
 			mysql_free_result($this->_result);
 		}
 	}
 
 	public function seek(int $offset): void
 	{
-		if ($this->offsetExists($offset) AND mysql_data_seek($this->_result, $offset))
-		{
+		if ($this->offsetExists($offset) and mysql_data_seek($this->_result, $offset)) {
 			// Set the current row to the offset
 			$this->_current_row = $this->_internal_row = $offset;
 		}
@@ -41,8 +40,7 @@ class Kohana_Database_MySQL_Result extends Database_Result {
 
 	public function current(): mixed
 	{
-		if ($this->_current_row !== $this->_internal_row)
-		{
+		if ($this->_current_row !== $this->_internal_row) {
 			$this->seek($this->_current_row);
 		}
 
@@ -52,42 +50,34 @@ class Kohana_Database_MySQL_Result extends Database_Result {
 		// FIXME mysql_fetch_object has been deprecated as of php 5.5!
 		// Please use mysqli_fetch_object or PDOStatement::fetch(PDO::FETCH_OBJ) instead.
 
-		if ($this->_as_object === TRUE)
-		{
+		if ($this->_as_object === true) {
 			// Return an stdClass
 			return mysql_fetch_object($this->_result);
-		}
-		elseif (is_string($this->_as_object))
-		{
-			/* The second and third argument for mysql_fetch_object are optional, but do 
-			 * not have default values defined.  Passing _object_params with a non-array value results 
-			 * in undefined behavior that varies by PHP version.  For example, if NULL is supplied on 
-			 * PHP 5.3, the resulting behavior is identical to calling with array(), which results in the 
-			 * classes __construct function being called with no arguments. This is only an issue when 
-			 * the _as_object class does not have an explicit __construct method resulting in the 
+		} elseif (is_string($this->_as_object)) {
+			/* The second and third argument for mysql_fetch_object are optional, but do
+			 * not have default values defined.  Passing _object_params with a non-array value results
+			 * in undefined behavior that varies by PHP version.  For example, if NULL is supplied on
+			 * PHP 5.3, the resulting behavior is identical to calling with array(), which results in the
+			 * classes __construct function being called with no arguments. This is only an issue when
+			 * the _as_object class does not have an explicit __construct method resulting in the
 			 * cryptic error "Class %s does not have a constructor hence you cannot use ctor_params."
-			 * In contrast, the same function call on PHP 5.5 will 'functionally' interpret 
+			 * In contrast, the same function call on PHP 5.5 will 'functionally' interpret
 			 * _object_params == NULL as an omission of the third argument, resulting in the original
 			 * intended functionally.
-			 * 
+			 *
 			 * Because the backing code for the mysql_fetch_object has not changed between 5.3 and 5.5,
-			 * I suspect this discrepancy is due to the way the classes are instantiated on a boarder 
-			 * level. Additionally, mysql_fetch_object has been deprecated in 5.5 and should probably be 
+			 * I suspect this discrepancy is due to the way the classes are instantiated on a boarder
+			 * level. Additionally, mysql_fetch_object has been deprecated in 5.5 and should probably be
 			 * replaced by mysqli_fetch_object or PDOStatement::fetch(PDO::FETCH_OBJ) in Kohana 3.4.
 			 */
-			if ($this->_object_params !== NULL)
-			{
+			if ($this->_object_params !== null) {
 				// Return an object of given class name with constructor params
 				return mysql_fetch_object($this->_result, $this->_as_object, $this->_object_params);
-			}
-			else
-			{
+			} else {
 				// Return an object of given class name without constructor params
 				return mysql_fetch_object($this->_result, $this->_as_object);
 			}
-		}
-		else
-		{
+		} else {
 			// Return an array of the row
 			return mysql_fetch_assoc($this->_result);
 		}

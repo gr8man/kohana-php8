@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') or die('No direct script access.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct script access.');
 /**
  * Class method documentation generator.
  *
@@ -10,8 +11,8 @@ declare(strict_types=1); defined('SYSPATH') or die('No direct script access.');
  * @copyright  (c) 2008-2013 Kohana Team
  * @license    http://kohanaframework.org/license
  */
-class Kohana_Kodoc_Method extends Kodoc {
-
+class Kohana_Kodoc_Method extends Kodoc
+{
 	/**
 	 * @var  ReflectionMethod  The ReflectionMethod for this class
 	 */
@@ -38,44 +39,35 @@ class Kohana_Kodoc_Method extends Kodoc {
 
 		$this->class = $parent = $this->method->getDeclaringClass();
 
-		if ($modifiers = $this->method->getModifiers())
-		{
+		if ($modifiers = $this->method->getModifiers()) {
 			$this->modifiers = '<small>'.implode(' ', Reflection::getModifierNames($modifiers)).'</small> ';
 		}
 
-		do
-		{
-			if ($parent->hasMethod($method) AND $comment = $parent->getMethod($method)->getDocComment())
-			{
+		do {
+			if ($parent->hasMethod($method) and $comment = $parent->getMethod($method)->getDocComment()) {
 				// Found a description for this method
 				break;
 			}
-		}
-		while ($parent = $parent->getParentClass());
+		} while ($parent = $parent->getParentClass());
 
 		list($this->description, $tags) = Kodoc::parse($comment);
 
-		if ($file = $this->class->getFileName())
-		{
+		if ($file = $this->class->getFileName()) {
 			$this->source = Kodoc::source($file, $this->method->getStartLine(), $this->method->getEndLine());
 		}
 
-		if (isset($tags['param']))
-		{
+		if (isset($tags['param'])) {
 			$params = array();
 
-			foreach ($this->method->getParameters() as $i => $param)
-			{
-				$param = new Kodoc_Method_Param(array($this->method->class, $this->method->name),$i);
+			foreach ($this->method->getParameters() as $i => $param) {
+				$param = new Kodoc_Method_Param(array($this->method->class, $this->method->name), $i);
 
-				if (isset($tags['param'][$i]))
-				{
+				if (isset($tags['param'][$i])) {
 					preg_match('/^(\S+)(?:\s*(?:\$'.$param->name.'\s*)?(.+))?$/s', $tags['param'][$i], $matches);
 
 					$param->type = $matches[1];
 
-					if (isset($matches[2]))
-					{
+					if (isset($matches[2])) {
 						$param->description = ucfirst($matches[2]);
 					}
 				}
@@ -87,12 +79,9 @@ class Kohana_Kodoc_Method extends Kodoc {
 			unset($tags['param']);
 		}
 
-		if (isset($tags['return']))
-		{
-			foreach ($tags['return'] as $return)
-			{
-				if (preg_match('/^(\S*)(?:\s*(.+?))?$/', $return, $matches))
-				{
+		if (isset($tags['return'])) {
+			foreach ($tags['return'] as $return) {
+				if (preg_match('/^(\S*)(?:\s*(.+?))?$/', $return, $matches)) {
 					$this->return[] = array($matches[1], isset($matches[2]) ? $matches[2] : '');
 				}
 			}
@@ -106,34 +95,25 @@ class Kohana_Kodoc_Method extends Kodoc {
 	public function params_short()
 	{
 		$out = '';
-		$required = TRUE;
-		$first = TRUE;
-		foreach ($this->params as $param)
-		{
-			if ($required AND $param->default AND $first)
-			{
+		$required = true;
+		$first = true;
+		foreach ($this->params as $param) {
+			if ($required and $param->default and $first) {
 				$out .= '[ '.$param;
-				$required = FALSE;
-				$first = FALSE;
-			}
-			elseif ($required AND $param->default)
-			{
+				$required = false;
+				$first = false;
+			} elseif ($required and $param->default) {
 				$out .= '[, '.$param;
-				$required = FALSE;
-			}
-			elseif ($first)
-			{
+				$required = false;
+			} elseif ($first) {
 				$out .= $param;
-				$first = FALSE;
-			}
-			else
-			{
+				$first = false;
+			} else {
 				$out .= ', '.$param;
 			}
 		}
 
-		if ( ! $required)
-		{
+		if (! $required) {
 			$out .= '] ';
 		}
 

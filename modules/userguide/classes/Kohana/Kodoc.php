@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') or die('No direct script access.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct script access.');
 /**
  * Documentation generator.
  *
@@ -10,8 +11,8 @@ declare(strict_types=1); defined('SYSPATH') or die('No direct script access.');
  * @copyright  (c) 2008-2013 Kohana Team
  * @license    http://kohanaframework.org/license
  */
-class Kohana_Kodoc {
-
+class Kohana_Kodoc
+{
 	/**
 	 * @var string  PCRE fragment for matching 'Class', 'Class::method', 'Class::method()' or 'Class::$property'
 	 */
@@ -27,26 +28,20 @@ class Kohana_Kodoc {
 	{
 		$link = $matches[1];
 		$class = $matches[2];
-		$member = NULL;
+		$member = null;
 
-		if (isset($matches[3]))
-		{
+		if (isset($matches[3])) {
 			// If the first char is a $ it is a property, e.g. Kohana::$base_url
-			if ($matches[3][0] === '$')
-			{
+			if ($matches[3][0] === '$') {
 				$member = '#property:'.substr($matches[3], 1);
-			}
-			elseif (preg_match('/^[A-Z_\x7f-\xff][A-Z0-9_\x7f-\xff]*$/', $matches[3]))
-			{
-				$member = '#constant:'.substr($matches[3],0);
-			}
-			else
-			{
+			} elseif (preg_match('/^[A-Z_\x7f-\xff][A-Z0-9_\x7f-\xff]*$/', $matches[3])) {
+				$member = '#constant:'.substr($matches[3], 0);
+			} else {
 				$member = '#'.$matches[3];
 			}
 		}
 
-		return HTML::anchor(Route::get('docs/api')->uri(array('class' => $class)).$member, $link, NULL, NULL, TRUE);
+		return HTML::anchor(Route::get('docs/api')->uri(array('class' => $class)).$member, $link, null, null, true);
 	}
 
 	public static function factory($class)
@@ -69,38 +64,31 @@ class Kohana_Kodoc {
 
 		$route = Route::get('docs/api');
 
-		foreach ($classes as $class)
-		{
-			if (Kodoc::is_transparent($class, $classes))
+		foreach ($classes as $class) {
+			if (Kodoc::is_transparent($class, $classes)) {
 				continue;
+			}
 
 			$class = Kodoc_Class::factory($class);
 
 			// Test if we should show this class
-			if ( ! Kodoc::show_class($class))
+			if (! Kodoc::show_class($class)) {
 				continue;
+			}
 
 			$link = HTML::anchor($route->uri(array('class' => $class->class->name)), $class->class->name);
 
-			if (isset($class->tags['package']))
-			{
-				foreach ($class->tags['package'] as $package)
-				{
-					if (isset($class->tags['category']))
-					{
-						foreach ($class->tags['category'] as $category)
-						{
+			if (isset($class->tags['package'])) {
+				foreach ($class->tags['package'] as $package) {
+					if (isset($class->tags['category'])) {
+						foreach ($class->tags['category'] as $category) {
 							$menu[$package][$category][] = $link;
 						}
-					}
-					else
-					{
+					} else {
 						$menu[$package]['Base'][] = $link;
 					}
 				}
-			}
-			else
-			{
+			} else {
 				$menu['[Unknown]']['Base'][] = $link;
 			}
 		}
@@ -118,10 +106,9 @@ class Kohana_Kodoc {
 	 * @param   array   array of files, obtained using Kohana::list_files
 	 * @return  array   an array of all the class names
 	 */
-	public static function classes(array $list = NULL)
+	public static function classes(array $list = null)
 	{
-		if ($list === NULL)
-		{
+		if ($list === null) {
 			$list = Kohana::list_files('classes');
 		}
 
@@ -130,14 +117,10 @@ class Kohana_Kodoc {
 		// This will be used a lot!
 		$ext_length = strlen(EXT);
 
-		foreach ($list as $name => $path)
-		{
-			if (is_array($path))
-			{
+		foreach ($list as $name => $path) {
+			if (is_array($path)) {
 				$classes += Kodoc::classes($path);
-			}
-			elseif (substr($name, -$ext_length) === EXT)
-			{
+			} elseif (substr($name, -$ext_length) === EXT) {
 				// Remove "classes/" and the extension
 				$class = substr($name, 8, -$ext_length);
 
@@ -159,34 +142,31 @@ class Kohana_Kodoc {
 	 * >     ~bluehawk
 	 *
 	 */
-	public static function class_methods(array $list = NULL)
+	public static function class_methods(array $list = null)
 	{
 		$list = Kodoc::classes($list);
 
 		$classes = array();
 
-		foreach ($list as $class)
-		{
+		foreach ($list as $class) {
 			// Skip transparent extension classes
-			if (Kodoc::is_transparent($class))
+			if (Kodoc::is_transparent($class)) {
 				continue;
+			}
 
 			$_class = new ReflectionClass($class);
 
 			$methods = array();
 
-			foreach ($_class->getMethods() as $_method)
-			{
+			foreach ($_class->getMethods() as $_method) {
 				$declares = $_method->getDeclaringClass()->name;
 
 				// Remove the transparent prefix from declaring classes
-				if ($child = Kodoc::is_transparent($declares))
-				{
+				if ($child = Kodoc::is_transparent($declares)) {
 					$declares = $child;
 				}
 
-				if ($declares === $_class->name OR $declares === "Core")
-				{
+				if ($declares === $_class->name or $declares === "Core") {
 					$methods[] = $_method->name;
 				}
 			}
@@ -208,31 +188,24 @@ class Kohana_Kodoc {
 	 */
 	public static function format_tag($tag, $text)
 	{
-		if ($tag === 'license')
-		{
-			if (strpos($text, '://') !== FALSE)
+		if ($tag === 'license') {
+			if (strpos($text, '://') !== false) {
 				return HTML::anchor($text);
-		}
-		elseif ($tag === 'link')
-		{
+			}
+		} elseif ($tag === 'link') {
 			$split = preg_split('/\s+/', $text, 2);
 
 			return HTML::anchor(
 				$split[0],
 				isset($split[1]) ? $split[1] : $split[0]
 			);
-		}
-		elseif ($tag === 'copyright')
-		{
+		} elseif ($tag === 'copyright') {
 			// Convert the copyright symbol
 			return str_replace('(c)', '&copy;', $text);
-		}
-		elseif ($tag === 'throws')
-		{
+		} elseif ($tag === 'throws') {
 			$route = Route::get('docs/api');
 
-			if (preg_match('/^(\w+)\W(.*)$/D', $text, $matches))
-			{
+			if (preg_match('/^(\w+)\W(.*)$/D', $text, $matches)) {
 				return HTML::anchor(
 					$route->uri(array('class' => $matches[1])),
 					$matches[1]
@@ -243,11 +216,10 @@ class Kohana_Kodoc {
 				$route->uri(array('class' => $text)),
 				$text
 			);
-		}
-		elseif ($tag === 'see' OR $tag === 'uses')
-		{
-			if (preg_match('/^'.Kodoc::$regex_class_member.'/', $text, $matches))
+		} elseif ($tag === 'see' or $tag === 'uses') {
+			if (preg_match('/^'.Kodoc::$regex_class_member.'/', $text, $matches)) {
 				return Kodoc::link_class_member($matches);
+			}
 		}
 
 		return $text;
@@ -263,7 +235,7 @@ class Kohana_Kodoc {
 	 *   to HTML (deprecated)
 	 * @return  array   array(string $description, array $tags)
 	 */
-	public static function parse($comment, $html = TRUE)
+	public static function parse($comment, $html = true)
 	{
 		// Normalize all new lines to \n
 		$comment = str_replace(array("\r\n", "\n"), "\n", $comment);
@@ -281,13 +253,10 @@ class Kohana_Kodoc {
 		 * @param   string  $text   Content of the tag
 		 * @return  void
 		 */
-		$add_tag = function ($tag, $text) use ($html, & $tags)
-		{
+		$add_tag = function ($tag, $text) use ($html, & $tags) {
 			// Don't show @access lines, they are shown elsewhere
-			if ($tag !== 'access')
-			{
-				if ($html)
-				{
+			if ($tag !== 'access') {
+				if ($html) {
 					$text = Kodoc::format_tag($tag, $text);
 				}
 
@@ -296,16 +265,13 @@ class Kohana_Kodoc {
 			}
 		};
 
-		$comment = $tag = NULL;
+		$comment = $tag = null;
 		$end = count($lines[1]) - 1;
 
-		foreach ($lines[1] as $i => $line)
-		{
+		foreach ($lines[1] as $i => $line) {
 			// Search this line for a tag
-			if (preg_match('/^@(\S+)\s*(.+)?$/', $line, $matches))
-			{
-				if ($tag)
-				{
+			if (preg_match('/^@(\S+)\s*(.+)?$/', $line, $matches)) {
+				if ($tag) {
 					// Previous tag is finished
 					$add_tag($tag, $text);
 				}
@@ -313,33 +279,26 @@ class Kohana_Kodoc {
 				$tag = $matches[1];
 				$text = isset($matches[2]) ? $matches[2] : '';
 
-				if ($i === $end)
-				{
+				if ($i === $end) {
 					// No more lines
 					$add_tag($tag, $text);
 				}
-			}
-			elseif ($tag)
-			{
+			} elseif ($tag) {
 				// This is the continuation of the previous tag
 				$text .= "\n".$line;
 
-				if ($i === $end)
-				{
+				if ($i === $end) {
 					// No more lines
 					$add_tag($tag, $text);
 				}
-			}
-			else
-			{
+			} else {
 				$comment .= "\n".$line;
 			}
 		}
 
 		$comment = trim($comment, "\n");
 
-		if ($comment AND $html)
-		{
+		if ($comment and $html) {
 			// Parse the comment with Markdown
 			$comment = Kodoc_Markdown::markdown($comment);
 		}
@@ -356,18 +315,18 @@ class Kohana_Kodoc {
 	 */
 	public static function source($file, $start, $end)
 	{
-		if ( ! $file) return FALSE;
+		if (! $file) {
+			return false;
+		}
 
 		$file = file($file, FILE_IGNORE_NEW_LINES);
 
 		$file = array_slice($file, $start - 1, $end - $start + 1);
 
-		if (preg_match('/^(\s+)/', $file[0], $matches))
-		{
+		if (preg_match('/^(\s+)/', $file[0], $matches)) {
 			$padding = strlen($matches[1]);
 
-			foreach ($file as & $line)
-			{
+			foreach ($file as & $line) {
 				$line = substr($line, $padding);
 			}
 		}
@@ -386,20 +345,21 @@ class Kohana_Kodoc {
 		$api_packages = Kohana::$config->load('userguide.api_packages');
 
 		// If api_packages is true, all packages should be shown
-		if ($api_packages === TRUE)
-			return TRUE;
+		if ($api_packages === true) {
+			return true;
+		}
 
 		// Get the package tags for this class (as an array)
 		$packages = Arr::get($class->tags, 'package', array('None'));
 
-		$show_this = FALSE;
+		$show_this = false;
 
 		// Loop through each package tag
-		foreach ($packages as $package)
-		{
+		foreach ($packages as $package) {
 			// If this package is in the allowed packages, set show this to true
-			if (in_array($package, explode(',', $api_packages)))
-				$show_this = TRUE;
+			if (in_array($package, explode(',', $api_packages))) {
+				$show_this = true;
+			}
 		}
 
 		return $show_this;
@@ -428,43 +388,37 @@ class Kohana_Kodoc {
 	 * @return  string                    The name of the class that extends this (in the case provided)
 	 * @throws  InvalidArgumentException  If the $classes array is provided and the $class variable is not lowercase
 	 */
-	public static function is_transparent($class, $classes = NULL)
+	public static function is_transparent($class, $classes = null)
 	{
 
-		static $transparent_prefixes = NULL;
+		static $transparent_prefixes = null;
 
-		if ( ! $transparent_prefixes)
-		{
+		if (! $transparent_prefixes) {
 			$transparent_prefixes = Kohana::$config->load('userguide.transparent_prefixes');
 		}
 
 		// Split the class name at the first underscore
-		$segments = explode('_',$class,2);
+		$segments = explode('_', $class, 2);
 
-		if ((count($segments) == 2) AND (isset($transparent_prefixes[$segments[0]])))
-		{
-			if ($segments[1] === 'Core')
-			{
+		if ((count($segments) == 2) and (isset($transparent_prefixes[$segments[0]]))) {
+			if ($segments[1] === 'Core') {
 				// Cater for Module extends Module_Core naming
 				$child_class = $segments[0];
-			}
-			else
-			{
+			} else {
 				// Cater for Foo extends Module_Foo naming
 				$child_class = $segments[1];
 			}
 
 			// It is only a transparent class if the unprefixed class also exists
-			if ($classes AND ! isset($classes[$child_class]))
-				return FALSE;
+			if ($classes and ! isset($classes[$child_class])) {
+				return false;
+			}
 
 			// Return the name of the child class
 			return $child_class;
-		}
-		else
-		{
+		} else {
 			// Not a transparent class
-			return FALSE;
+			return false;
 		}
 	}
 

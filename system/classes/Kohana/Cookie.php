@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-defined('SYSPATH') OR die('No direct script access.');
+defined('SYSPATH') or die('No direct script access.');
 /**
  * Cookie helper.
  *
@@ -12,12 +12,12 @@ defined('SYSPATH') OR die('No direct script access.');
  * @copyright  (c) 2008-2012 Kohana Team
  * @license    http://kohanaframework.org/license
  */
-class Kohana_Cookie {
-
+class Kohana_Cookie
+{
 	/**
 	 * @var  string  Magic salt to add to the cookie
 	 */
-	public static $salt = NULL;
+	public static $salt = null;
 
 	/**
 	 * @var  integer  Number of seconds before the cookie expires
@@ -32,17 +32,17 @@ class Kohana_Cookie {
 	/**
 	 * @var  string  Restrict the domain that the cookie is available to
 	 */
-	public static $domain = NULL;
+	public static $domain = null;
 
 	/**
 	 * @var  boolean  Only transmit cookies over secure connections
 	 */
-	public static $secure = FALSE;
+	public static $secure = false;
 
 	/**
 	 * @var  boolean  Only transmit cookies over HTTP, disabling Javascript access
 	 */
-	public static $httponly = TRUE;
+	public static $httponly = true;
 
 	/**
 	 * @var  string  SameSite attribute (Strict, Lax, or NULL)
@@ -55,24 +55,20 @@ class Kohana_Cookie {
 	 */
 	public static function init()
 	{
-		try
-		{
+		try {
 			$config = Kohana::$config->load('cookie');
-			
-			if ($config->get('salt') !== NULL)
-			{
+
+			if ($config->get('salt') !== null) {
 				Cookie::$salt = $config->get('salt');
 			}
-			
+
 			Cookie::$expiration = $config->get('expiration', Cookie::$expiration);
 			Cookie::$path = $config->get('path', Cookie::$path);
 			Cookie::$domain = $config->get('domain', Cookie::$domain);
 			Cookie::$secure = $config->get('secure', Cookie::$secure);
 			Cookie::$httponly = $config->get('httponly', Cookie::$httponly);
 			Cookie::$samesite = $config->get('samesite', Cookie::$samesite);
-		}
-		catch (Exception $e)
-		{
+		} catch (Exception $e) {
 			// Config not available, use defaults
 		}
 	}
@@ -89,10 +85,9 @@ class Kohana_Cookie {
 	 * @param   mixed   $default    default value to return
 	 * @return  string
 	 */
-	public static function get($key, $default = NULL)
+	public static function get($key, $default = null)
 	{
-		if ( ! isset($_COOKIE[$key]))
-		{
+		if (! isset($_COOKIE[$key])) {
 			// The cookie does not exist
 			return $default;
 		}
@@ -101,15 +96,13 @@ class Kohana_Cookie {
 		$cookie = $_COOKIE[$key];
 
 		// Find the position of the split between salt and contents
-		$split = strlen(Cookie::salt($key, NULL));
+		$split = strlen(Cookie::salt($key, null));
 
-		if (isset($cookie[$split]) AND $cookie[$split] === '~')
-		{
+		if (isset($cookie[$split]) and $cookie[$split] === '~') {
 			// Separate the salt and the value
-			list ($hash, $value) = explode('~', $cookie, 2);
+			list($hash, $value) = explode('~', $cookie, 2);
 
-			if (Security::slow_equals(Cookie::salt($key, $value), $hash))
-			{
+			if (Security::slow_equals(Cookie::salt($key, $value), $hash)) {
 				// Cookie signature is valid
 				return $value;
 			}
@@ -139,16 +132,14 @@ class Kohana_Cookie {
 	 * @return  boolean
 	 * @uses    Cookie::salt
 	 */
-	public static function set($name, $value, $lifetime = NULL)
+	public static function set($name, $value, $lifetime = null)
 	{
-		if ($lifetime === NULL)
-		{
+		if ($lifetime === null) {
 			// Use the default expiration
 			$lifetime = Cookie::$expiration;
 		}
 
-		if ($lifetime !== 0)
-		{
+		if ($lifetime !== 0) {
 			// The expiration is expected to be a UNIX timestamp
 			$lifetime += static::_time();
 		}
@@ -191,8 +182,7 @@ class Kohana_Cookie {
 	public static function salt($name, $value)
 	{
 		// Require a valid salt
-		if ( ! Cookie::$salt)
-		{
+		if (! Cookie::$salt) {
 			throw new Kohana_Exception('A valid cookie salt is required. Please set Cookie::$salt in your bootstrap.php. For more information check the documentation');
 		}
 
@@ -221,18 +211,17 @@ class Kohana_Cookie {
 	protected static function _setcookie($name, $value, $expire, $path, $domain, $secure, $httponly)
 	{
 		// SECURITY: Use SameSite attribute if PHP version supports it (PHP 7.3+)
-		if (PHP_VERSION_ID >= 70300 AND Cookie::$samesite !== NULL)
-		{
-			return setcookie($name, $value, [
+		if (PHP_VERSION_ID >= 70300 and Cookie::$samesite !== null) {
+			return setcookie($name, $value, array(
 				'expires' => $expire,
 				'path' => $path,
 				'domain' => $domain,
 				'secure' => $secure,
 				'httponly' => $httponly,
 				'samesite' => Cookie::$samesite,
-			]);
+			));
 		}
-		
+
 		return setcookie($name, $value, $expire, $path, $domain, $secure, $httponly);
 	}
 

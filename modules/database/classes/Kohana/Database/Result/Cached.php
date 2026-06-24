@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct script access.');
 /**
  * Object used for caching the results of select queries.  See [Results](/database/results#select-cached) for usage and examples.
  *
@@ -10,9 +11,9 @@ declare(strict_types=1); defined('SYSPATH') OR die('No direct script access.');
  * @copyright  (c) 2009 Kohana Team
  * @license    http://kohanaphp.com/license
  */
-class Kohana_Database_Result_Cached extends Database_Result {
-
-	public function __construct(array $result, $sql, $as_object = NULL)
+class Kohana_Database_Result_Cached extends Database_Result
+{
+	public function __construct(array $result, $sql, $as_object = null)
 	{
 		parent::__construct($result, $sql, $as_object);
 
@@ -32,8 +33,7 @@ class Kohana_Database_Result_Cached extends Database_Result {
 
 	public function seek(int $offset): void
 	{
-		if ($this->offsetExists($offset))
-		{
+		if ($this->offsetExists($offset)) {
 			$this->_current_row = $offset;
 		}
 	}

@@ -1,16 +1,17 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('No direct access allowed.');
+declare(strict_types=1);
+defined('SYSPATH') or die('No direct access allowed.');
 
 return array(
 
 	'driver'       => 'File',
 	'hash_method'  => 'sha256',
-	'hash_key'     => NULL,
+	'hash_key'     => null,
 	'lifetime'     => 1209600,
 	'session_type' => Session::$default,
 	'session_key'  => 'auth_user',
-	
+
 	// bcrypt cost factor (higher = more secure but slower, 12 is recommended)
 	'bcrypt_cost'  => 12,
 

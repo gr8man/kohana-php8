@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-defined('SYSPATH') OR die('No direct script access.');
+defined('SYSPATH') or die('No direct script access.');
 /**
  * Message logging with observer-based log writing.
  *
@@ -14,22 +14,22 @@ defined('SYSPATH') OR die('No direct script access.');
  * @copyright  (c) 2008-2012 Kohana Team
  * @license    http://kohanaframework.org/license
  */
-class Kohana_Log {
-
+class Kohana_Log
+{
 	// Log message levels - Windows users see PHP Bug #18090
-	const EMERGENCY = LOG_EMERG;    // 0
-	const ALERT     = LOG_ALERT;    // 1
-	const CRITICAL  = LOG_CRIT;     // 2
-	const ERROR     = LOG_ERR;      // 3
-	const WARNING   = LOG_WARNING;  // 4
-	const NOTICE    = LOG_NOTICE;   // 5
-	const INFO      = LOG_INFO;     // 6
-	const DEBUG     = LOG_DEBUG;    // 7
+	public const EMERGENCY = LOG_EMERG;    // 0
+	public const ALERT     = LOG_ALERT;    // 1
+	public const CRITICAL  = LOG_CRIT;     // 2
+	public const ERROR     = LOG_ERR;      // 3
+	public const WARNING   = LOG_WARNING;  // 4
+	public const NOTICE    = LOG_NOTICE;   // 5
+	public const INFO      = LOG_INFO;     // 6
+	public const DEBUG     = LOG_DEBUG;    // 7
 
 	/**
 	 * @var  boolean  immediately write when logs are added
 	 */
-	public static $write_on_add = FALSE;
+	public static $write_on_add = false;
 
 	/**
 	 * @var  Log  Singleton instance container
@@ -45,10 +45,9 @@ class Kohana_Log {
 	 */
 	public static function instance()
 	{
-		if (Log::$_instance === NULL)
-		{
+		if (Log::$_instance === null) {
 			// Create a new instance
-			Log::$_instance = new Log;
+			Log::$_instance = new Log();
 
 			// Write the logs at shutdown
 			register_shutdown_function(array(Log::$_instance, 'write'));
@@ -80,13 +79,11 @@ class Kohana_Log {
 	 */
 	public function attach(Log_Writer $writer, $levels = array(), $min_level = 0)
 	{
-		if ( ! is_array($levels))
-		{
+		if (! is_array($levels)) {
 			$levels = range($min_level, $levels);
 		}
 
-		$this->_writers["{$writer}"] = array
-		(
+		$this->_writers["{$writer}"] = array(
 			'object' => $writer,
 			'levels' => $levels
 		);
@@ -124,56 +121,46 @@ class Kohana_Log {
 	 * @param   array   $additional  additional custom parameters to supply to the log writer
 	 * @return  Log
 	 */
-	public function add($level, $message, array $values = NULL, array $additional = NULL)
+	public function add($level, $message, array $values = null, array $additional = null)
 	{
-		if ($values)
-		{
+		if ($values) {
 			// Insert the values into the message
 			$message = strtr($message, $values);
 		}
 
 		// Grab a copy of the trace
-		if (isset($additional['exception']))
-		{
+		if (isset($additional['exception'])) {
 			$trace = $additional['exception']->getTrace();
-		}
-		else
-		{
+		} else {
 			// Older php version don't have 'DEBUG_BACKTRACE_IGNORE_ARGS', so manually remove the args from the backtrace
-			if ( ! defined('DEBUG_BACKTRACE_IGNORE_ARGS'))
-			{
+			if (! defined('DEBUG_BACKTRACE_IGNORE_ARGS')) {
 				$trace = array_map(function ($item) {
 					unset($item['args']);
 					return $item;
-				}, array_slice(debug_backtrace(FALSE), 1));
-			}
-			else
-			{
+				}, array_slice(debug_backtrace(false), 1));
+			} else {
 				$trace = array_slice(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS), 1);
 			}
 		}
 
-		if ($additional == NULL)
-		{
+		if ($additional == null) {
 			$additional = array();
 		}
 
 		// Create a new message
-		$this->_messages[] = array
-		(
+		$this->_messages[] = array(
 			'time'       => time(),
 			'level'      => $level,
 			'body'       => $message,
 			'trace'      => $trace,
-			'file'       => isset($trace[0]['file']) ? $trace[0]['file'] : NULL,
-			'line'       => isset($trace[0]['line']) ? $trace[0]['line'] : NULL,
-			'class'      => isset($trace[0]['class']) ? $trace[0]['class'] : NULL,
-			'function'   => isset($trace[0]['function']) ? $trace[0]['function'] : NULL,
+			'file'       => isset($trace[0]['file']) ? $trace[0]['file'] : null,
+			'line'       => isset($trace[0]['line']) ? $trace[0]['line'] : null,
+			'class'      => isset($trace[0]['class']) ? $trace[0]['class'] : null,
+			'function'   => isset($trace[0]['function']) ? $trace[0]['function'] : null,
 			'additional' => $additional,
 		);
 
-		if (Log::$write_on_add)
-		{
+		if (Log::$write_on_add) {
 			// Write logs as they are added
 			$this->write();
 		}
@@ -190,8 +177,7 @@ class Kohana_Log {
 	 */
 	public function write()
 	{
-		if (empty($this->_messages))
-		{
+		if (empty($this->_messages)) {
 			// There is nothing to write, move along
 			return;
 		}
@@ -202,22 +188,16 @@ class Kohana_Log {
 		// Reset the messages array
 		$this->_messages = array();
 
-		foreach ($this->_writers as $writer)
-		{
-			if (empty($writer['levels']))
-			{
+		foreach ($this->_writers as $writer) {
+			if (empty($writer['levels'])) {
 				// Write all of the messages
 				$writer['object']->write($messages);
-			}
-			else
-			{
+			} else {
 				// Filtered messages
 				$filtered = array();
 
-				foreach ($messages as $message)
-				{
-					if (in_array($message['level'], $writer['levels']))
-					{
+				foreach ($messages as $message) {
+					if (in_array($message['level'], $writer['levels'])) {
 						// Writer accepts this kind of message
 						$filtered[] = $message;
 					}

@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1); defined('SYSPATH') OR die('Kohana bootstrap needs to be included before tests run');
+declare(strict_types=1);
+defined('SYSPATH') or die('Kohana bootstrap needs to be included before tests run');
 
 /**
  * Tests HTML
@@ -19,7 +20,6 @@ declare(strict_types=1); defined('SYSPATH') OR die('Kohana bootstrap needs to be
 #[AllowDynamicProperties]
 class Kohana_HTMLTest extends Unittest_TestCase
 {
-
 	/**
 	 * Sets up the environment
 	 */
@@ -39,7 +39,7 @@ class Kohana_HTMLTest extends Unittest_TestCase
 	protected $environmentDefault = array(
 		'Kohana::$base_url'    => '/kohana/',
 		'Kohana::$index_file'  => 'index.php',
-		'HTML::$strict' => TRUE,
+		'HTML::$strict' => true,
 		'HTTP_HOST'	=> 'www.kohanaframework.org',
 	);
 	// @codingStandardsIgnoreStart
@@ -58,7 +58,7 @@ class Kohana_HTMLTest extends Unittest_TestCase
 				' id="unique_field" name="field" random="not_quite"'
 			),
 			array(
-				array('invalid' => NULL),
+				array('invalid' => null),
 				array(),
 				''
 			),
@@ -74,7 +74,7 @@ class Kohana_HTMLTest extends Unittest_TestCase
 			),
 			array(
 				array('id' => 'disabled_field', 'disabled'),
-				array('HTML::$strict' => FALSE),
+				array('HTML::$strict' => false),
 				' id="disabled_field" disabled',
 			),
 		);
@@ -114,23 +114,23 @@ class Kohana_HTMLTest extends Unittest_TestCase
 			array(
 				'<script type="text/javascript" src="http://www.kohanaframework.org/kohana/index.php/my/script.js"></script>',
 				'my/script.js',
-				NULL,
+				null,
 				'http',
-				TRUE
+				true
 			),
 			array(
 				'<script type="text/javascript" src="https://www.kohanaframework.org/kohana/my/script.js"></script>',
 				'my/script.js',
-				NULL,
+				null,
 				'https',
-				FALSE
+				false
 			),
 			array(
 				'<script type="text/javascript" src="https://www.kohanaframework.org/kohana/my/script.js"></script>',
 				'/my/script.js', // Test absolute paths
-				NULL,
+				null,
 				'https',
-				FALSE
+				false
 			),
 			array(
 				'<script type="text/javascript" src="//google.com/script.js"></script>',
@@ -151,7 +151,7 @@ class Kohana_HTMLTest extends Unittest_TestCase
 	 * @param string  $protocol       Protocol to use
 	 * @param bool    $index          Should the index file be included in url?
 	 */
-	public function test_script($expected, $file, array $attributes = NULL, $protocol = NULL, $index = FALSE)
+	public function test_script($expected, $file, array $attributes = null, $protocol = null, $index = false)
 	{
 		$this->assertSame(
 			$expected,
@@ -171,36 +171,36 @@ class Kohana_HTMLTest extends Unittest_TestCase
 				'<link type="text/css" href="http://google.com/style.css" rel="stylesheet" />',
 				'http://google.com/style.css',
 				array(),
-				NULL,
-				FALSE
+				null,
+				false
 			),
 			array(
 				'<link type="text/css" href="/kohana/my/style.css" rel="stylesheet" />',
 				'my/style.css',
 				array(),
-				NULL,
-				FALSE
+				null,
+				false
 			),
 			array(
 				'<link type="text/css" href="https://www.kohanaframework.org/kohana/my/style.css" rel="stylesheet" />',
 				'my/style.css',
 				array(),
 				'https',
-				FALSE
+				false
 			),
 			array(
 				'<link type="text/css" href="https://www.kohanaframework.org/kohana/index.php/my/style.css" rel="stylesheet" />',
 				'my/style.css',
 				array(),
 				'https',
-				TRUE
+				true
 			),
 			array(
 				'<link type="text/css" href="https://www.kohanaframework.org/kohana/index.php/my/style.css" rel="stylesheet" />',
 				'/my/style.css',
 				array(),
 				'https',
-				TRUE
+				true
 			),
 			array(
 				// #4283: http://dev.kohanaframework.org/issues/4283
@@ -210,14 +210,14 @@ class Kohana_HTMLTest extends Unittest_TestCase
 					'rel' => 'stylesheet/less'
 				),
 				'https',
-				TRUE
+				true
 			),
 			array(
 				'<link type="text/css" href="//google.com/style.css" rel="stylesheet" />',
 				'//google.com/style.css',
 				array(),
-				NULL,
-				FALSE
+				null,
+				false
 			),
 		);
 	}
@@ -233,7 +233,7 @@ class Kohana_HTMLTest extends Unittest_TestCase
 	 * @param string  $protocol     Protocol to use
 	 * @param bool    $index        Whether the index file should be added to the link
 	 */
-	public function test_style($expected, $file, array $attributes = NULL, $protocol = NULL, $index = FALSE)
+	public function test_style($expected, $file, array $attributes = null, $protocol = null, $index = false)
 	{
 		$this->assertSame(
 			$expected,
@@ -282,25 +282,25 @@ class Kohana_HTMLTest extends Unittest_TestCase
 				array(),
 				'users/example',
 				'Kohana',
-				NULL,
+				null,
 				'https',
-				FALSE,
+				false,
 			),
 			array(
 				'<a href="https://www.kohanaframework.org/kohana/index.php/users/example">Kohana</a>',
 				array(),
 				'users/example',
 				'Kohana',
-				NULL,
+				null,
 				'https',
-				TRUE,
+				true,
 			),
 			array(
 				'<a href="https://www.kohanaframework.org/kohana/index.php/users/example">Kohana</a>',
 				array(),
 				'users/example',
 				'Kohana',
-				NULL,
+				null,
 				'https',
 			),
 			array(
@@ -308,27 +308,27 @@ class Kohana_HTMLTest extends Unittest_TestCase
 				array(),
 				'users/example',
 				'Kohana',
-				NULL,
+				null,
 				'https',
-				TRUE,
+				true,
 			),
 			array(
 				'<a href="https://www.kohanaframework.org/kohana/users/example">Kohana</a>',
 				array(),
 				'users/example',
 				'Kohana',
-				NULL,
+				null,
 				'https',
-				FALSE,
+				false,
 			),
 			array(
 				'<a href="https://www.kohanaframework.org/kohana/users/example">Kohana</a>',
 				array(),
 				'/users/example',
 				'Kohana',
-				NULL,
+				null,
 				'https',
-				FALSE,
+				false,
 			),
 		);
 	}
@@ -339,7 +339,7 @@ class Kohana_HTMLTest extends Unittest_TestCase
 	 * @test
 	 * @dataProvider provider_anchor
 	 */
-	public function test_anchor($expected, array $options, $uri, $title = NULL, array $attributes = NULL, $protocol = NULL, $index = TRUE)
+	public function test_anchor($expected, array $options, $uri, $title = null, array $attributes = null, $protocol = null, $index = true)
 	{
 		// $this->setEnvironment($options);
 
@@ -369,7 +369,7 @@ class Kohana_HTMLTest extends Unittest_TestCase
 				'mypic.png',
 				'My picture file',
 				'https',
-				TRUE
+				true
 			),
 			array(
 				'<a href="ftp://www.kohanaframework.org/kohana/mypic.png">My picture file</a>',
@@ -377,7 +377,7 @@ class Kohana_HTMLTest extends Unittest_TestCase
 				'mypic.png',
 				'My picture file',
 				'ftp',
-				FALSE
+				false
 			),
 			array(
 				'<a href="ftp://www.kohanaframework.org/kohana/mypic.png">My picture file</a>',
@@ -385,7 +385,7 @@ class Kohana_HTMLTest extends Unittest_TestCase
 				'/mypic.png',
 				'My picture file',
 				'ftp',
-				FALSE
+				false
 			),
 		);
 	}
@@ -397,7 +397,7 @@ class Kohana_HTMLTest extends Unittest_TestCase
 	 * @covers HTML::file_anchor
 	 * @dataProvider provider_file_anchor
 	 */
-	public function test_file_anchor($expected, array $attributes, $file, $title = NULL, $protocol = NULL, $index = FALSE)
+	public function test_file_anchor($expected, array $attributes, $file, $title = null, $protocol = null, $index = false)
 	{
 		$this->assertSame(
 			$expected,
