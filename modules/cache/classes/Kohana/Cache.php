@@ -162,27 +162,29 @@ abstract class Kohana_Cache {
 	}
 
 	/**
-	 * Getter and setter for the configuration. If no argument provided, the
-	 * current configuration is returned. Otherwise the configuration is set
-	 * to this class.
-	 *
-	 *     // Overwrite all configuration
-	 *     $cache->config(array('driver' => 'memcache', '...'));
-	 *
-	 *     // Set a new configuration setting
-	 *     $cache->config('servers', array(
-	 *          'foo' => 'bar',
-	 *          '...'
-	 *          ));
-	 *
-	 *     // Get a configuration setting
-	 *     $servers = $cache->config('servers);
-	 *
-	 * @param   mixed    key to set to array, either array or config path
-	 * @param   mixed    value to associate with key
-	 * @return  mixed
-	 */
-	public function config($key = NULL, $value = NULL)
+				 * Getter and setter for the configuration. If no argument provided, the
+				 * current configuration is returned. Otherwise the configuration is set
+				 * to this class.
+				 *
+				 * // Overwrite all configuration
+				 * $cache->config(array('driver' => 'memcache', '...'));
+				 *
+				 * // Set a new configuration setting
+				 * $cache->config('servers', array(
+				 * 'foo' => 'bar',
+				 * '...'
+				 * ));
+				 *
+				 * // Get a configuration setting
+				 * $servers = $cache->config('servers);
+				 *
+				 * @param mixed    key to set to array, either array or config path
+				 * @param mixed    value to associate with key
+				 *
+				 * @return mixed
+				 * @psalm-param 'ignore_on_delete'|array|null $key
+				 */
+				public function config(array|string|null $key = NULL, $value = NULL)
 	{
 		if ($key === NULL)
 			return $this->_config;

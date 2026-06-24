@@ -407,9 +407,10 @@ class Kohana_Request implements HTTP_Request, \Stringable
 	/**
 	 * Process a request to find a matching route
 	 *
-	 * @param   object  $request Request
-	 * @param   array   $routes  Route
-	 * @return  array
+	 * @param Request $request Request
+	 * @param array   $routes  Route
+	 *
+	 * @return array
 	 */
 	public static function process(Request $request, $routes = null): ?array
 	{
@@ -647,6 +648,7 @@ class Kohana_Request implements HTTP_Request, \Stringable
 	 *
 	 *     echo $request;
 	 */
+	#[\Override]
 	public function __toString(): string
 	{
 		return $this->render();
@@ -657,6 +659,7 @@ class Kohana_Request implements HTTP_Request, \Stringable
 	 *
 	 * @param   string $uri
 	 */
+	#[\Override]
 	public function uri($uri = null): string|self
 	{
 		if ($uri === null) {
@@ -732,7 +735,7 @@ class Kohana_Request implements HTTP_Request, \Stringable
 	/**
 	 * Sets and gets the route from the request.
 	 *
-	 * @param   string $route
+	 * @param Route|null $route
 	 */
 	public function route(Route $route = null): \Route|self
 	{
@@ -807,10 +810,9 @@ class Kohana_Request implements HTTP_Request, \Stringable
 	/**
 	 * Provides access to the [Request_Client].
 	 *
-	 * @return  Request_Client
-	 * @return  self
+	 * @return Kohana_Request_Client|static
 	 */
-	public function client(Request_Client $client = null)
+	public function client(Request_Client $client = null): static|Kohana_Request_Client
 	{
 		if ($client === null) {
 			return $this->_client;
@@ -949,6 +951,7 @@ class Kohana_Request implements HTTP_Request, \Stringable
 	 * @param   string   $method  Method to use for this request
 	 * @return  mixed
 	 */
+	#[\Override]
 	public function method($method = null)
 	{
 		if ($method === null) {
@@ -969,6 +972,7 @@ class Kohana_Request implements HTTP_Request, \Stringable
 	 * @param   string   $protocol  Protocol to set to the request
 	 * @return  mixed
 	 */
+	#[\Override]
 	public function protocol($protocol = null)
 	{
 		if ($protocol === null) {
@@ -1012,6 +1016,7 @@ class Kohana_Request implements HTTP_Request, \Stringable
 	 * @param   string  $value Value to set to the supplied key
 	 * @return  mixed
 	 */
+	#[\Override]
 	public function headers($key = null, $value = null)
 	{
 		if ($key instanceof HTTP_Header) {
@@ -1050,12 +1055,15 @@ class Kohana_Request implements HTTP_Request, \Stringable
 	/**
 	 * Set and get cookies values for this request.
 	 *
-	 * @param   mixed    $key    Cookie name, or array of cookie values
-	 * @param   string   $value  Value to set to cookie
-	 * @return  string
-	 * @return  mixed
+	 * @param null|string[] $key Cookie name, or array of cookie values
+	 * @param string   $value  Value to set to cookie
+	 *
+	 * @return string
+	 * @return mixed
+	 *
+	 * @psalm-param array<string, string>|null $key
 	 */
-	public function cookie($key = null, $value = null)
+	public function cookie(array|null $key = null, $value = null)
 	{
 		if (is_array($key)) {
 			// Act as a setter, replace all cookies
@@ -1082,6 +1090,7 @@ class Kohana_Request implements HTTP_Request, \Stringable
 	 * @param   string  $content Content to set to the object
 	 * @return  mixed
 	 */
+	#[\Override]
 	public function body($content = null)
 	{
 		if ($content === null) {
@@ -1114,6 +1123,7 @@ class Kohana_Request implements HTTP_Request, \Stringable
 	 *  If there are variables set to the `Kohana_Request::$_post`
 	 *  they will override any values set to body.
 	 */
+	#[\Override]
 	public function render(): string
 	{
 		if (! $post = $this->post()) {
@@ -1159,6 +1169,7 @@ class Kohana_Request implements HTTP_Request, \Stringable
 	 * @return  mixed
 	 * @uses    Arr::path
 	 */
+	#[\Override]
 	public function query($key = null, $value = null)
 	{
 		if (is_array($key)) {
@@ -1190,6 +1201,7 @@ class Kohana_Request implements HTTP_Request, \Stringable
 	 * @return  mixed
 	 * @uses    Arr::path
 	 */
+	#[\Override]
 	public function post($key = null, $value = null)
 	{
 		if (is_array($key)) {

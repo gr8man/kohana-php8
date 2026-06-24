@@ -597,7 +597,7 @@ class Kohana_Core
 	 * @return  array   a list of files when $array is TRUE
 	 * @return  string  single file path
 	 */
-	public static function find_file(string $dir, string $file, $ext = null, $array = false)
+	public static function find_file(string $dir, string $file, $ext = null, bool $array = false)
 	{
 		if ($ext === null) {
 			// Use the default extension
@@ -752,11 +752,11 @@ class Kohana_Core
 	/**
 	 * Provides simple file-based caching for strings and arrays:
 	 *
-	 *     // Set the "foo" cache
-	 *     Kohana::cache('foo', 'hello, world');
+	 * // Set the "foo" cache
+	 * Kohana::cache('foo', 'hello, world');
 	 *
-	 *     // Get the "foo" cache
-	 *     $foo = Kohana::cache('foo');
+	 * // Get the "foo" cache
+	 * $foo = Kohana::cache('foo');
 	 *
 	 * All caches are stored as PHP code, generated with [var_export][ref-var].
 	 * Caching objects may not work as expected. Storing references or an
@@ -766,14 +766,21 @@ class Kohana_Core
 	 *
 	 * [ref-var]: http://php.net/var_export
 	 *
-	 * @throws  Kohana_Exception
-	 * @param   string  $name       name of the cache
-	 * @param   mixed   $data       data to cache
-	 * @param   integer $lifetime   number of seconds the cache is valid for
-	 * @return  mixed    for getting
-	 * @return  boolean  for setting
+	 * @throws Kohana_Exception
+	 *
+	 * @param string  $name       name of the cache
+	 * @param (array|int)[]|false|null|string $data data to cache
+	 * @param integer $lifetime   number of seconds the cache is valid for
+	 * @param false|string[] $allowed_classes
+	 *
+	 * @return mixed    for getting
+	 * @return boolean  for setting
+	 *
+	 * @psalm-param array{min: array{time: mixed, memory: mixed}, max: array{time: mixed, memory: mixed}, total: array{time: mixed, memory: mixed}, count: 1, average: array{time: mixed, memory: mixed}}|false|null|string $data
+	 * @psalm-param -3600|86400|null $lifetime
+	 * @psalm-param false|list{'Route'} $allowed_classes
 	 */
-	public static function cache($name, $data = null, $lifetime = null, $allowed_classes = false): bool
+	public static function cache(string $name, array|string|false|null $data = null, int|null $lifetime = null, array|false $allowed_classes = false): bool
 	{
 		// Cache file is a hash of the name
 		$file = sha1($name).'.txt';
@@ -836,18 +843,20 @@ class Kohana_Core
 	 * performed on the returned values.  See [message files](kohana/files/messages)
 	 * for more information.
 	 *
-	 *     // Get "username" from messages/text.php
-	 *     $username = Kohana::message('text', 'username');
+	 * // Get "username" from messages/text.php
+	 * $username = Kohana::message('text', 'username');
 	 *
-	 * @param   string  $file       file name
-	 * @param   string  $path       key path to get
-	 * @param   mixed   $default    default value if the path does not exist
-	 * @return  string  message string for the given path
-	 * @return  array   complete message list, when no path is specified
-	 * @uses    Arr::merge
-	 * @uses    Arr::path
+	 * @param string  $file       file name
+	 * @param null|string $path key path to get
+	 * @param mixed   $default    default value if the path does not exist
+	 *
+	 * @return string  message string for the given path
+	 * @return array   complete message list, when no path is specified
+	 *
+	 * @uses Arr::merge
+	 * @uses Arr::path
 	 */
-	public static function message($file, $path = null, $default = null)
+	public static function message(string $file, string|null $path = null, $default = null)
 	{
 		static $messages;
 

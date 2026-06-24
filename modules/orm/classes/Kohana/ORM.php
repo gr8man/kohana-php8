@@ -405,8 +405,8 @@ class Kohana_ORM extends Model implements \Stringable
 	 * Reload column definitions.
 	 *
 	 * @chainable
-	 * @param   boolean $force Force reloading
-	 * @return  ORM
+	 *
+	 * @param boolean $force Force reloading
 	 */
 	public function reload_columns($force = false): static
 	{
@@ -430,7 +430,6 @@ class Kohana_ORM extends Model implements \Stringable
 	 * Unloads the current object and clears the status.
 	 *
 	 * @chainable
-	 * @return ORM
 	 */
 	public function clear(): static
 	{
@@ -506,6 +505,7 @@ class Kohana_ORM extends Model implements \Stringable
 	/**
 	 * Displays the primary key of a model when it is converted to a string.
 	 */
+	#[\Override]
 	public function __toString(): string
 	{
 		return (string) $this->pk();
@@ -781,8 +781,7 @@ class Kohana_ORM extends Model implements \Stringable
 	 * Binds another one-to-one object to this model.  One-to-one objects
 	 * can be nested using 'object1:object2' syntax
 	 *
-	 * @param  string $target_path Target model to bind to
-	 * @return ORM
+	 * @param string $target_path Target model to bind to
 	 */
 	public function with(string $target_path): static
 	{
@@ -853,8 +852,7 @@ class Kohana_ORM extends Model implements \Stringable
 	/**
 	 * Initializes the Database Builder to given query type
 	 *
-	 * @param  integer $type Type of Database query
-	 * @return ORM
+	 * @param integer $type Type of Database query
 	 */
 	protected function _build($type): static
 	{
@@ -1006,8 +1004,8 @@ class Kohana_ORM extends Model implements \Stringable
 	 * Loads an array of values into into the current object.
 	 *
 	 * @chainable
-	 * @param  array $values Values to load
-	 * @return ORM
+	 *
+	 * @param array $values Values to load
 	 */
 	protected function _load_values(array $values): static
 	{
@@ -1570,7 +1568,6 @@ class Kohana_ORM extends Model implements \Stringable
 	 * query conditions for another query.
 	 *
 	 * @param bool $next Pass FALSE to avoid resetting on the next call
-	 * @return ORM
 	 */
 	public function reset($next = true): static
 	{

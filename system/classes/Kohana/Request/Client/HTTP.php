@@ -52,6 +52,7 @@ class Kohana_Request_Client_HTTP extends Request_Client_External
 	 * @param   Request   $request  request to send
 	 * @param   Response  $request  response to send
 	 */
+	#[\Override]
 	public function _send_message(Request $request, Response $response): Response
 	{
 		$http_method_mapping = array(

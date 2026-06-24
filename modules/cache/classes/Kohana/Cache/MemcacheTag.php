@@ -38,6 +38,7 @@ class Kohana_Cache_MemcacheTag extends Cache_Memcache implements Cache_Tagging {
 	 * @param   array    $tags      tags [Optional]
 	 * @return  boolean
 	 */
+	#[\Override]
 	public function set_with_tags($id, $data, $lifetime = NULL, array $tags = NULL)
 	{
 		$id = $this->_sanitize_id($id);
@@ -61,6 +62,7 @@ class Kohana_Cache_MemcacheTag extends Cache_Memcache implements Cache_Tagging {
 	 * @param   string  $tag  tag
 	 * @return  boolean
 	 */
+	#[\Override]
 	public function delete_tag($tag)
 	{
 		return $this->_memcache->tag_delete($tag);
@@ -72,6 +74,7 @@ class Kohana_Cache_MemcacheTag extends Cache_Memcache implements Cache_Tagging {
      * @param   string  $tag  tag
      * @throws  Cache_Exception
      */
+    #[\Override]
     public function find($tag): never
 	{
 		throw new Cache_Exception('Memcached-tags does not support finding by tag');

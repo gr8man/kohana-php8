@@ -26,6 +26,7 @@ class Kohana_Database_PDO extends Database
 		}
 	}
 
+	#[\Override]
 	public function connect(): void
 	{
 		if ($this->_connection) {
@@ -127,6 +128,7 @@ class Kohana_Database_PDO extends Database
 		return parent::disconnect();
 	}
 
+	#[\Override]
 	public function set_charset($charset): void
 	{
 		// Make sure the database is connected
@@ -136,6 +138,7 @@ class Kohana_Database_PDO extends Database
 		$this->_connection->exec('SET NAMES '.$this->quote($charset));
 	}
 
+	#[\Override]
 	public function query($type, $sql, $as_object = false, array $params = null)
 	{
 		// Make sure the database is connected
@@ -198,6 +201,7 @@ class Kohana_Database_PDO extends Database
 		}
 	}
 
+	#[\Override]
 	public function begin($mode = null)
 	{
 		// Make sure the database is connected
@@ -206,6 +210,7 @@ class Kohana_Database_PDO extends Database
 		return $this->_connection->beginTransaction();
 	}
 
+	#[\Override]
 	public function commit()
 	{
 		// Make sure the database is connected
@@ -214,6 +219,7 @@ class Kohana_Database_PDO extends Database
 		return $this->_connection->commit();
 	}
 
+	#[\Override]
 	public function rollback()
 	{
 		// Make sure the database is connected
@@ -222,6 +228,7 @@ class Kohana_Database_PDO extends Database
 		return $this->_connection->rollBack();
 	}
 
+	#[\Override]
 	public function list_tables($like = null): never
 	{
 		throw new Kohana_Exception(
@@ -230,6 +237,7 @@ class Kohana_Database_PDO extends Database
 		);
 	}
 
+	#[\Override]
 	public function list_columns($table, $like = null, $add_prefix = true): never
 	{
 		throw new Kohana_Exception(
@@ -238,6 +246,7 @@ class Kohana_Database_PDO extends Database
 		);
 	}
 
+	#[\Override]
 	public function escape($value)
 	{
 		// Make sure the database is connected

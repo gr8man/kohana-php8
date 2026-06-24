@@ -76,6 +76,7 @@ class Kohana_Cache_Wincache extends Cache {
 	 * @return  mixed
 	 * @throws  Cache_Exception
 	 */
+	#[\Override]
 	public function get($id, $default = NULL)
 	{
 		$data = wincache_ucache_get($this->_sanitize_id($id), $success);
@@ -98,6 +99,7 @@ class Kohana_Cache_Wincache extends Cache {
      * @param   string   $data      data to set to cache
      * @param   integer  $lifetime  lifetime in seconds
      */
+    #[\Override]
     public function set($id, $data, $lifetime = NULL): bool
 	{
 		if ($lifetime === NULL)
@@ -116,6 +118,7 @@ class Kohana_Cache_Wincache extends Cache {
      *
      * @param   string  $id  id to remove from cache
      */
+    #[\Override]
     public function delete($id): bool
 	{
 		return wincache_ucache_delete($this->_sanitize_id($id));
@@ -131,6 +134,7 @@ class Kohana_Cache_Wincache extends Cache {
      *     // Delete all cache entries in the wincache group
      *     Cache::instance('wincache')->delete_all();
      */
+    #[\Override]
     public function delete_all(): bool
 	{
 		return wincache_ucache_clear();

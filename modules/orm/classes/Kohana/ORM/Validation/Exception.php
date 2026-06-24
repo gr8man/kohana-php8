@@ -46,23 +46,22 @@ class Kohana_ORM_Validation_Exception extends Kohana_Exception
 	/**
 	 * Adds a Validation object to this exception
 	 *
-	 *     // The following will add a validation object for a profile model
-	 *     // inside the exception for a user model.
-	 *     $e->add_object('profile', $validation);
-	 *     // The errors array will now look something like this
-	 *     // array
-	 *     // (
-	 *     //   'username' => 'This field is required',
-	 *     //   'profile'  => array
-	 *     //   (
-	 *     //     'first_name' => 'This field is required',
-	 *     //   ),
-	 *     // );
+	 * // The following will add a validation object for a profile model
+	 * // inside the exception for a user model.
+	 * $e->add_object('profile', $validation);
+	 * // The errors array will now look something like this
+	 * // array
+	 * // (
+	 * //   'username' => 'This field is required',
+	 * //   'profile'  => array
+	 * //   (
+	 * //     'first_name' => 'This field is required',
+	 * //   ),
+	 * // );
 	 *
-	 * @param  string     $alias    The relationship alias from the model
-	 * @param  Validation $object   The Validation object to merge
-	 * @param  mixed      $has_many The array key to use if this exception can be merged multiple times
-	 * @return ORM_Validation_Exception
+	 * @param string     $alias    The relationship alias from the model
+	 * @param Validation $object   The Validation object to merge
+	 * @param mixed      $has_many The array key to use if this exception can be merged multiple times
 	 */
 	public function add_object($alias, Validation $object, $has_many = false): static
 	{
@@ -86,9 +85,8 @@ class Kohana_ORM_Validation_Exception extends Kohana_Exception
 	 * Merges an ORM_Validation_Exception object into the current exception
 	 * Useful when you want to combine errors into one array
 	 *
-	 * @param  ORM_Validation_Exception $object   The exception to merge
-	 * @param  mixed                    $has_many The array key to use if this exception can be merged multiple times
-	 * @return ORM_Validation_Exception
+	 * @param ORM_Validation_Exception $object   The exception to merge
+	 * @param mixed                    $has_many The array key to use if this exception can be merged multiple times
 	 */
 	public function merge(ORM_Validation_Exception $object, $has_many = false): static
 	{

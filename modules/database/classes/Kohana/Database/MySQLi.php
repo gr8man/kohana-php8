@@ -25,6 +25,7 @@ class Kohana_Database_MySQLi extends Database
 	// MySQL uses a backtick for identifiers
 	protected $_identifier = '`';
 
+	#[\Override]
 	public function connect(): void
 	{
 		if ($this->_connection) {
@@ -116,6 +117,7 @@ class Kohana_Database_MySQLi extends Database
 		return $status;
 	}
 
+	#[\Override]
 	public function set_charset($charset): void
 	{
 		// Make sure the database is connected
@@ -134,7 +136,13 @@ class Kohana_Database_MySQLi extends Database
 		}
 	}
 
-	public function query($type, $sql, $as_object = false, array $params = null)
+	#[\Override]
+	/**
+	 * @param false $as_object
+	 *
+	 * @psalm-param 1 $type
+	 */
+	public function query(int $type, string $sql, bool $as_object = false, array $params = null)
 	{
 		// Make sure the database is connected
 		$this->_connection or $this->connect();
@@ -231,6 +239,7 @@ class Kohana_Database_MySQLi extends Database
 	 *
 	 * @param string $mode  Isolation level
 	 */
+	#[\Override]
 	public function begin($mode = null): bool
 	{
 		// Make sure the database is connected
@@ -248,6 +257,7 @@ class Kohana_Database_MySQLi extends Database
 	/**
 	 * Commit a SQL transaction
 	 */
+	#[\Override]
 	public function commit(): bool
 	{
 		// Make sure the database is connected
@@ -259,6 +269,7 @@ class Kohana_Database_MySQLi extends Database
 	/**
 	 * Rollback a SQL transaction
 	 */
+	#[\Override]
 	public function rollback(): bool
 	{
 		// Make sure the database is connected
@@ -270,6 +281,7 @@ class Kohana_Database_MySQLi extends Database
 	/**
 	 * @return mixed[]
 	 */
+	#[\Override]
 	public function list_tables($like = null): array
 	{
 		if (is_string($like)) {
@@ -291,6 +303,7 @@ class Kohana_Database_MySQLi extends Database
 	/**
 	 * @return mixed[]
 	 */
+	#[\Override]
 	public function list_columns($table, $like = null, $add_prefix = true): array
 	{
 		// Quote the table name
@@ -366,6 +379,7 @@ class Kohana_Database_MySQLi extends Database
 		return $columns;
 	}
 
+	#[\Override]
 	public function escape($value): string
 	{
 		// Make sure the database is connected

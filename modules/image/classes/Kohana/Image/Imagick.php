@@ -65,6 +65,7 @@ class Kohana_Image_Imagick extends Image
 		$this->im->destroy();
 	}
 
+	#[\Override]
 	protected function _do_resize($width, $height): bool
 	{
 		if ($this->im->scaleImage($width, $height)) {
@@ -78,6 +79,7 @@ class Kohana_Image_Imagick extends Image
 		return false;
 	}
 
+	#[\Override]
 	protected function _do_crop($width, $height, $offset_x, $offset_y): bool
 	{
 		if ($this->im->cropImage($width, $height, $offset_x, $offset_y)) {
@@ -94,6 +96,7 @@ class Kohana_Image_Imagick extends Image
 		return false;
 	}
 
+	#[\Override]
 	protected function _do_rotate($degrees): bool
 	{
 		if ($this->im->rotateImage(new ImagickPixel('transparent'), $degrees)) {
@@ -110,6 +113,7 @@ class Kohana_Image_Imagick extends Image
 		return false;
 	}
 
+	#[\Override]
 	protected function _do_flip($direction): bool
 	{
 		if ($direction === Image::HORIZONTAL) {
@@ -119,6 +123,7 @@ class Kohana_Image_Imagick extends Image
 		}
 	}
 
+	#[\Override]
 	protected function _do_sharpen($amount): bool
 	{
 		// IM not support $amount under 5 (0.15)
@@ -130,6 +135,7 @@ class Kohana_Image_Imagick extends Image
 		return $this->im->sharpenImage(0, $amount);
 	}
 
+	#[\Override]
 	protected function _do_reflection($height, $opacity, $fade_in): bool
 	{
 		// Clone the current image and flip it for reflection
@@ -141,7 +147,7 @@ class Kohana_Image_Imagick extends Image
 		$reflection->setImagePage($this->width, $height, 0, 0);
 
 		// Select the fade direction
-		$direction = array('transparent', 'black');
+		$direction = ['transparent', 'black'];
 
 		if ($fade_in) {
 			// Change the direction of the fade
@@ -187,6 +193,7 @@ class Kohana_Image_Imagick extends Image
 		return false;
 	}
 
+	#[\Override]
 	protected function _do_watermark(Image $image, $offset_x, $offset_y, $opacity): bool
 	{
 		// Convert the Image intance into an Imagick instance
@@ -210,6 +217,7 @@ class Kohana_Image_Imagick extends Image
 		return $this->im->compositeImage($watermark, Imagick::COMPOSITE_DISSOLVE, $offset_x, $offset_y);
 	}
 
+	#[\Override]
 	protected function _do_background($r, $g, $b, $opacity): bool
 	{
 		// Create a RGB color for the background
@@ -243,6 +251,7 @@ class Kohana_Image_Imagick extends Image
 		return false;
 	}
 
+	#[\Override]
 	protected function _do_save($file, $quality): bool
 	{
 		// Get the image format and type
@@ -265,6 +274,7 @@ class Kohana_Image_Imagick extends Image
 		return false;
 	}
 
+	#[\Override]
 	protected function _do_render($type, $quality): string
 	{
 		// Get the image format and type
@@ -286,9 +296,13 @@ class Kohana_Image_Imagick extends Image
 	/**
 	 * Get the image type and format for an extension.
 	 *
-	 * @param   string  $extension  image extension: png, jpg, etc
-	 * @return  string  IMAGETYPE_* constant
-	 * @throws  Kohana_Exception
+	 * @param string  $extension  image extension: png, jpg, etc
+	 *
+	 * @return (int|string)[] IMAGETYPE_* constant
+	 *
+	 * @throws Kohana_Exception
+	 *
+	 * @psalm-return list{string, 1|2|3}
 	 */
 	protected function _get_imagetype($extension): array
 	{
@@ -301,10 +315,10 @@ class Kohana_Image_Imagick extends Image
 			'png' => IMAGETYPE_PNG,
 			default => throw new Kohana_Exception(
 				'Installed ImageMagick does not support :type images',
-				array(':type' => $extension)
+				[':type' => $extension]
 			),
 		};
 
-		return array($format, $type);
+		return [$format, $type];
 	}
 } // End Kohana_Image_Imagick

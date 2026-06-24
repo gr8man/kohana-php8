@@ -71,6 +71,7 @@ class Kohana_Cache_Apc extends Cache implements Cache_Arithmetic {
 	 * @return  mixed
 	 * @throws  Cache_Exception
 	 */
+	#[\Override]
 	public function get($id, $default = NULL)
 	{
 		$data = apc_fetch($this->_sanitize_id($id), $success);
@@ -93,6 +94,7 @@ class Kohana_Cache_Apc extends Cache implements Cache_Arithmetic {
      * @param   string   $data      data to set to cache
      * @param   integer  $lifetime  lifetime in seconds
      */
+    #[\Override]
     public function set($id, $data, $lifetime = NULL): bool
 	{
 		if ($lifetime === NULL)
@@ -111,6 +113,7 @@ class Kohana_Cache_Apc extends Cache implements Cache_Arithmetic {
      *
      * @param   string  $id  id to remove from cache
      */
+    #[\Override]
     public function delete($id): bool
 	{
 		return apc_delete($this->_sanitize_id($id));
@@ -126,6 +129,7 @@ class Kohana_Cache_Apc extends Cache implements Cache_Arithmetic {
      *     // Delete all cache entries in the apc group
      *     Cache::instance('apc')->delete_all();
      */
+    #[\Override]
     public function delete_all(): bool
 	{
 		return apc_clear_cache('user');
@@ -136,10 +140,13 @@ class Kohana_Cache_Apc extends Cache implements Cache_Arithmetic {
      * Useful for shared counters and other persistent integer based
      * tracking.
      *
-     * @param   string    id of cache entry to increment
-     * @param   int       step value to increment by
+     * @param string    id of cache entry to increment
+     * @param int       step value to increment by
+     *
+     * @return false|int
      */
-    public function increment($id, $step = 1): int
+    #[\Override]
+    public function increment($id, $step = 1): int|false
 	{
 		return apc_inc($id, $step);
 	}
@@ -149,10 +156,13 @@ class Kohana_Cache_Apc extends Cache implements Cache_Arithmetic {
      * Useful for shared counters and other persistent integer based
      * tracking.
      *
-     * @param   string    id of cache entry to decrement
-     * @param   int       step value to decrement by
+     * @param string    id of cache entry to decrement
+     * @param int       step value to decrement by
+     *
+     * @return false|int
      */
-    public function decrement($id, $step = 1): int
+    #[\Override]
+    public function decrement($id, $step = 1): int|false
 	{
 		return apc_dec($id, $step);
 	}

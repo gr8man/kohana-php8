@@ -22,6 +22,7 @@ class Kohana_Request_Client_Curl extends Request_Client_External
 	 * @param   Request   $request  request to send
 	 * @param   Response  $request  response to send
 	 */
+	#[\Override]
 	public function _send_message(Request $request, Response $response): Response
 	{
 		$options = array();

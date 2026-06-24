@@ -215,6 +215,7 @@ class Kohana_View implements \Stringable
 	 *
 	 * @uses    View::render
 	 */
+	#[\Override]
 	public function __toString(): string
 	{
 		try {
@@ -235,11 +236,11 @@ class Kohana_View implements \Stringable
 	/**
 	 * Sets the view filename.
 	 *
-	 *     $view->set_filename($file);
+	 * $view->set_filename($file);
 	 *
-	 * @param   string  $file   view filename
-	 * @return  View
-	 * @throws  View_Exception
+	 * @param string  $file   view filename
+	 *
+	 * @throws View_Exception
 	 */
 	public function set_filename($file): static
 	{

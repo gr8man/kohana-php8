@@ -17,7 +17,7 @@ class Kohana_Valid
 	/**
 	 * Checks if a field is not empty.
 	 */
-	public static function not_empty($value): bool
+	public static function not_empty(string $value): bool
 	{
 		if (is_object($value) and $value instanceof ArrayObject) {
 			// Get the array from the ArrayObject

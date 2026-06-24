@@ -117,6 +117,7 @@ class Kohana_Cache_File extends Cache implements Cache_GarbageCollect {
 	 * @return  mixed
 	 * @throws  Cache_Exception
 	 */
+	#[\Override]
 	public function get($id, $default = NULL)
 	{
 		$filename = Cache_File::filename($this->_sanitize_id($id));
@@ -190,6 +191,7 @@ class Kohana_Cache_File extends Cache implements Cache_GarbageCollect {
      * @param   string   $data      data to set to cache
      * @param   integer  $lifetime  lifetime in seconds
      */
+    #[\Override]
     public function set($id, $data, $lifetime = NULL): bool
 	{
 		$filename = Cache_File::filename($this->_sanitize_id($id));
@@ -244,6 +246,7 @@ class Kohana_Cache_File extends Cache implements Cache_GarbageCollect {
 	 * @param   string   $id  id to remove from cache
 	 * @return  boolean
 	 */
+	#[\Override]
 	public function delete($id)
 	{
 		$filename = Cache_File::filename($this->_sanitize_id($id));
@@ -264,6 +267,7 @@ class Kohana_Cache_File extends Cache implements Cache_GarbageCollect {
 	 *
 	 * @return  boolean
 	 */
+	#[\Override]
 	public function delete_all()
 	{
 		return $this->_delete_file($this->_cache_dir, TRUE);
@@ -273,6 +277,7 @@ class Kohana_Cache_File extends Cache implements Cache_GarbageCollect {
      * Garbage collection method that cleans any expired
      * cache entries from the cache.
      */
+    #[\Override]
     public function garbage_collect(): void
 	{
 		$this->_delete_file($this->_cache_dir, TRUE, FALSE, TRUE);
@@ -281,15 +286,17 @@ class Kohana_Cache_File extends Cache implements Cache_GarbageCollect {
 	/**
 	 * Deletes files recursively and returns FALSE on any errors
 	 *
-	 *     // Delete a file or folder whilst retaining parent directory and ignore all errors
-	 *     $this->_delete_file($folder, TRUE, TRUE);
+	 * // Delete a file or folder whilst retaining parent directory and ignore all errors
+	 * $this->_delete_file($folder, TRUE, TRUE);
 	 *
-	 * @param   SplFileInfo  $file                     file
-	 * @param   boolean      $retain_parent_directory  retain the parent directory
-	 * @param   boolean      $ignore_errors            ignore_errors to prevent all exceptions interrupting exec
-	 * @param   boolean      $only_expired             only expired files
-	 * @return  boolean
-	 * @throws  Cache_Exception
+	 * @param SplFileInfo  $file                     file
+	 * @param boolean      $retain_parent_directory  retain the parent directory
+	 * @param boolean      $ignore_errors            ignore_errors to prevent all exceptions interrupting exec
+	 * @param boolean      $only_expired             only expired files
+	 *
+	 * @return bool|null
+	 *
+	 * @throws Cache_Exception
 	 */
 	protected function _delete_file(SplFileInfo $file, $retain_parent_directory = FALSE, $ignore_errors = FALSE, $only_expired = FALSE)
 	{

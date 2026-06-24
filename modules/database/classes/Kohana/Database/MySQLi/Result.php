@@ -23,6 +23,7 @@ class Kohana_Database_MySQLi_Result extends Database_Result
 		$this->_total_rows = $result->num_rows;
 	}
 
+	#[\Override]
 	public function __destruct()
 	{
 		if (is_resource($this->_result)) {
@@ -30,6 +31,7 @@ class Kohana_Database_MySQLi_Result extends Database_Result
 		}
 	}
 
+	#[\Override]
 	public function seek(int $offset): void
 	{
 		if ($this->offsetExists($offset) and $this->_result->data_seek($offset)) {
@@ -38,6 +40,7 @@ class Kohana_Database_MySQLi_Result extends Database_Result
 		}
 	}
 
+	#[\Override]
 	public function current(): mixed
 	{
 		return mysqli_fetch_assoc($this->_result);

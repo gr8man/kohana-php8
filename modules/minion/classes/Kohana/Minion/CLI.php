@@ -7,7 +7,7 @@ class Kohana_Minion_CLI
 {
 	public static $wait_msg = 'Press any key to continue...';
 
-	protected static $foreground_colors = array(
+	protected static $foreground_colors = [
 		'black'        => '0;30',
 		'dark_gray'    => '1;30',
 		'blue'         => '0;34',
@@ -24,8 +24,8 @@ class Kohana_Minion_CLI
 		'yellow'       => '1;33',
 		'light_gray'   => '0;37',
 		'white'        => '1;37',
-	);
-	protected static $background_colors = array(
+	];
+	protected static $background_colors = [
 		'black'      => '40',
 		'red'        => '41',
 		'green'      => '42',
@@ -34,27 +34,30 @@ class Kohana_Minion_CLI
 		'magenta'    => '45',
 		'cyan'       => '46',
 		'light_gray' => '47',
-	);
+	];
 
 	/**
 	 * Returns one or more command-line options. Options are specified using
 	 * standard CLI syntax:
 	 *
-	 *     php index.php --username=john.smith --password=secret --var="some value with spaces"
+	 * php index.php --username=john.smith --password=secret --var="some value with spaces"
 	 *
-	 *     // Get the values of "username" and "password"
-	 *     $auth = Minion_CLI::options('username', 'password');
+	 * // Get the values of "username" and "password"
+	 * $auth = Minion_CLI::options('username', 'password');
 	 *
-	 * @param   string  $options,...    option name
-	 * @return  array
+	 * @param string  $options,...    option name
+	 *
+	 * @return (null|string)[]|null|string
+	 *
+	 * @psalm-return array<int<0, max>|string, null|string>|null|string
 	 */
-	public static function options($options = null)
+	public static function options($options = null): array|string|null
 	{
 		// Get all of the requested options
 		$options = func_get_args();
 
 		// Found option values
-		$values = array();
+		$values = [];
 
 		// Skip the first option, it is always the file executed
 		for ($i = 1; $i < $_SERVER['argc']; $i++) {

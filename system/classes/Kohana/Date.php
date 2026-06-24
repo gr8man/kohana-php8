@@ -285,10 +285,14 @@ class Kohana_Date
 	 * the the current year - 5 and current year + 5 will be used. Typically used
 	 * as a shortcut for generating a list that can be used in a form.
 	 *
-	 *     $years = Date::years(2000, 2010); // 2000, 2001, ..., 2009, 2010
+	 * $years = Date::years(2000, 2010); // 2000, 2001, ..., 2009, 2010
 	 *
-	 * @param   integer $start  starting year (default is current year - 5)
-	 * @param   integer $end    ending year (default is current year + 5)
+	 * @param integer $start  starting year (default is current year - 5)
+	 * @param integer $end    ending year (default is current year + 5)
+	 *
+	 * @return numeric-string[]
+	 *
+	 * @psalm-return array<float|int, numeric-string>
 	 */
 	public static function years($start = false, $end = false): array
 	{
@@ -310,16 +314,18 @@ class Kohana_Date
 	 * If the second timestamp is not given, the current time will be used.
 	 * Also consider using [Date::fuzzy_span] when displaying a span.
 	 *
-	 *     $span = Date::span(60, 182, 'minutes,seconds'); // array('minutes' => 2, 'seconds' => 2)
-	 *     $span = Date::span(60, 182, 'minutes'); // 2
+	 * $span = Date::span(60, 182, 'minutes,seconds'); // array('minutes' => 2, 'seconds' => 2)
+	 * $span = Date::span(60, 182, 'minutes'); // 2
 	 *
-	 * @param   integer $remote timestamp to find the span of
-	 * @param   integer $local  timestamp to use as the baseline
-	 * @param   string  $output formatting string
-	 * @return  string   when only a single output is requested
-	 * @return  array    associative list of all outputs requested
+	 * @param integer $remote timestamp to find the span of
+	 * @param integer $local  timestamp to use as the baseline
+	 * @param string  $output formatting string
+	 *
+	 * @return (float|int)[]|false|float|int
+	 *
+	 * @psalm-return array<float|int>|false|float|int
 	 */
-	public static function span($remote, $local = null, $output = 'years,months,weeks,days,hours,minutes,seconds'): false|int|array
+	public static function span($remote, $local = null, $output = 'years,months,weeks,days,hours,minutes,seconds'): array|int|float|false|int|array
 	{
 		// Normalize output
 		$output = trim(strtolower((string) $output));

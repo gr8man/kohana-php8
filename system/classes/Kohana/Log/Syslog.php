@@ -31,6 +31,7 @@ class Kohana_Log_Syslog extends Log_Writer
 	/**
 	 * Writes each of the messages into the syslog.
 	 */
+	#[\Override]
 	public function write(array $messages): void
 	{
 		foreach ($messages as $message) {

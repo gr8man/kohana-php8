@@ -136,6 +136,7 @@ class Kohana_Response implements HTTP_Response, \Stringable
 	/**
 	 * Outputs the body when cast to string
 	 */
+	#[\Override]
 	public function __toString(): string
 	{
 		return $this->_body;
@@ -144,9 +145,12 @@ class Kohana_Response implements HTTP_Response, \Stringable
 	/**
 	 * Gets or sets the body of the response
 	 *
-	 * @return  mixed
+	 * @return mixed
+	 *
+	 * @param null|string $content
 	 */
-	public function body($content = null)
+	#[\Override]
+	public function body(string|null $content = null)
 	{
 		if ($content === null) {
 			return $this->_body;
@@ -163,6 +167,7 @@ class Kohana_Response implements HTTP_Response, \Stringable
 	 * @param   string   $protocol Protocol to set to the request/response
 	 * @return  mixed
 	 */
+	#[\Override]
 	public function protocol($protocol = null)
 	{
 		if ($protocol) {
@@ -190,6 +195,7 @@ class Kohana_Response implements HTTP_Response, \Stringable
 	 * @param   integer  $status Status to set to this response
 	 * @return  mixed
 	 */
+	#[\Override]
 	public function status($status = null)
 	{
 		if ($status === null) {
@@ -223,6 +229,7 @@ class Kohana_Response implements HTTP_Response, \Stringable
 	 * @param string $value
 	 * @return mixed
 	 */
+	#[\Override]
 	public function headers($key = null, $value = null)
 	{
 		if ($key === null) {
@@ -250,20 +257,23 @@ class Kohana_Response implements HTTP_Response, \Stringable
 	/**
 	 * Set and get cookies values for this response.
 	 *
-	 *     // Get the cookies set to the response
-	 *     $cookies = $response->cookie();
+	 * // Get the cookies set to the response
+	 * $cookies = $response->cookie();
 	 *
-	 *     // Set a cookie to the response
-	 *     $response->cookie('session', array(
-	 *          'value' => $value,
-	 *          'expiration' => 12352234
-	 *     ));
+	 * // Set a cookie to the response
+	 * $response->cookie('session', array(
+	 * 'value' => $value,
+	 * 'expiration' => 12352234
+	 * ));
 	 *
-	 * @param   mixed   $key    cookie name, or array of cookie values
-	 * @param   string  $value  value to set to cookie
-	 * @return  string
-	 * @return  void
-	 * @return  [Response]
+	 * @param (int|string)|null $key cookie name, or array of cookie values
+	 * @param string  $value  value to set to cookie
+	 *
+	 * @return string
+	 * @return void
+	 * @return [Response]
+	 *
+	 * @psalm-param array-key|null $key
 	 */
 	public function cookie($key = null, $value = null)
 	{
@@ -298,8 +308,7 @@ class Kohana_Response implements HTTP_Response, \Stringable
 	/**
 	 * Deletes a cookie set to the response
 	 *
-	 * @param   string  $name
-	 * @return  Response
+	 * @param string  $name
 	 */
 	public function delete_cookie($name): static
 	{
@@ -309,8 +318,6 @@ class Kohana_Response implements HTTP_Response, \Stringable
 
 	/**
 	 * Deletes all cookies from this response
-	 *
-	 * @return  Response
 	 */
 	public function delete_cookies(): static
 	{
@@ -529,6 +536,7 @@ class Kohana_Response implements HTTP_Response, \Stringable
 	 *  - Headers
 	 *  - Body
 	 */
+	#[\Override]
 	public function render(): string
 	{
 		if (! $this->_header->offsetExists('content-type')) {

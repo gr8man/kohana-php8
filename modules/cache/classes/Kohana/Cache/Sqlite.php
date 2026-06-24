@@ -73,6 +73,7 @@ class Kohana_Cache_Sqlite extends Cache implements Cache_Tagging, Cache_GarbageC
 	 * @return  mixed
 	 * @throws  Cache_Exception
 	 */
+	#[\Override]
 	public function get($id, $default = NULL)
 	{
 		// Prepare statement
@@ -124,6 +125,7 @@ class Kohana_Cache_Sqlite extends Cache implements Cache_Tagging, Cache_GarbageC
      * @param   mixed    $data      data
      * @param   integer  $lifetime  lifetime [Optional]
      */
+    #[\Override]
     public function set($id, $data, $lifetime = NULL): bool
 	{
 		return $this->set_with_tags($id, $data, $lifetime);
@@ -135,6 +137,7 @@ class Kohana_Cache_Sqlite extends Cache implements Cache_Tagging, Cache_GarbageC
      * @param   string  $id  id
      * @throws  Cache_Exception
      */
+    #[\Override]
     public function delete($id): bool
 	{
 		// Prepare statement
@@ -156,6 +159,7 @@ class Kohana_Cache_Sqlite extends Cache implements Cache_Tagging, Cache_GarbageC
 	/**
      * Delete all cache entries
      */
+    #[\Override]
     public function delete_all(): bool
 	{
 		// Prepare statement
@@ -183,6 +187,7 @@ class Kohana_Cache_Sqlite extends Cache implements Cache_Tagging, Cache_GarbageC
      * @param   array    $tags      tags [Optional]
      * @throws  Cache_Exception
      */
+    #[\Override]
     public function set_with_tags($id, $data, $lifetime = NULL, array $tags = NULL): bool
 	{
 		// Serialize the data
@@ -224,6 +229,7 @@ class Kohana_Cache_Sqlite extends Cache implements Cache_Tagging, Cache_GarbageC
      * @param   string  $tag  tag
      * @throws  Cache_Exception
      */
+    #[\Override]
     public function delete_tag($tag): bool
 	{
 		// Prepare the statement
@@ -248,6 +254,7 @@ class Kohana_Cache_Sqlite extends Cache implements Cache_Tagging, Cache_GarbageC
      * @param   string  $tag  tag
      * @throws  Cache_Exception
      */
+    #[\Override]
     public function find($tag): array
 	{
 		// Prepare the statement
@@ -286,6 +293,7 @@ class Kohana_Cache_Sqlite extends Cache implements Cache_Tagging, Cache_GarbageC
      * Garbage collection method that cleans any expired
      * cache entries from the cache.
      */
+    #[\Override]
     public function garbage_collect(): void
 	{
 		// Create the sequel statement

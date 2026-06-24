@@ -70,12 +70,11 @@ class Kohana_Log
 	 * Attaches a log writer, and optionally limits the levels of messages that
 	 * will be written by the writer.
 	 *
-	 *     $log->attach($writer);
+	 * $log->attach($writer);
 	 *
-	 * @param   Log_Writer  $writer     instance
-	 * @param   mixed       $levels     array of messages levels to write OR max level to write
-	 * @param   integer     $min_level  min level to write IF $levels is not an array
-	 * @return  Log
+	 * @param Log_Writer  $writer     instance
+	 * @param mixed       $levels     array of messages levels to write OR max level to write
+	 * @param integer     $min_level  min level to write IF $levels is not an array
 	 */
 	public function attach(Log_Writer $writer, $levels = array(), $min_level = 0): static
 	{
@@ -94,10 +93,9 @@ class Kohana_Log
 	/**
 	 * Detaches a log writer. The same writer object must be used.
 	 *
-	 *     $log->detach($writer);
+	 * $log->detach($writer);
 	 *
-	 * @param   Log_Writer  $writer instance
-	 * @return  Log
+	 * @param Log_Writer  $writer instance
 	 */
 	public function detach(Log_Writer $writer): static
 	{
@@ -111,15 +109,14 @@ class Kohana_Log
 	 * Adds a message to the log. Replacement values must be passed in to be
 	 * replaced using [strtr](http://php.net/strtr).
 	 *
-	 *     $log->add(Log::ERROR, 'Could not locate user: :user', array(
-	 *         ':user' => $username,
-	 *     ));
+	 * $log->add(Log::ERROR, 'Could not locate user: :user', array(
+	 * ':user' => $username,
+	 * ));
 	 *
-	 * @param   string  $level       level of message
-	 * @param   string  $message     message body
-	 * @param   array   $values      values to replace in the message
-	 * @param   array   $additional  additional custom parameters to supply to the log writer
-	 * @return  Log
+	 * @param string  $level       level of message
+	 * @param string  $message     message body
+	 * @param array   $values      values to replace in the message
+	 * @param array   $additional  additional custom parameters to supply to the log writer
 	 */
 	public function add($level, $message, array $values = null, array $additional = null): static
 	{

@@ -100,6 +100,7 @@ abstract class Kohana_Request_Client_External extends Request_Client
 	 * @uses    [Kohana::$profiling]
 	 * @uses    [Profiler]
 	 */
+	#[\Override]
 	public function execute_request(Request $request, Response $response)
 	{
 		if (Kohana::$profiling) {

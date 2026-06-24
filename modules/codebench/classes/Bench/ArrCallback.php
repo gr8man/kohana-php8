@@ -15,7 +15,7 @@ class Bench_ArrCallback extends Codebench
 
 	public $loops = 10000;
 
-	public $subjects = array(
+	public $subjects = [
 		// Valid callback strings
 		'foo',
 		'foo::bar',
@@ -26,8 +26,13 @@ class Bench_ArrCallback extends Codebench
 
 		// Invalid callback strings
 		'foo[apple,orange', // no closing bracket
-	);
+	];
 
+	/**
+	 * @return null|string[]
+	 *
+	 * @psalm-return array<string>|null
+	 */
 	public function bench_shadowhand($subject)
 	{
 		// The original regex we're trying to optimize
@@ -36,6 +41,11 @@ class Bench_ArrCallback extends Codebench
 		}
 	}
 
+	/**
+	 * @return null|string[]
+	 *
+	 * @psalm-return array<string>|null
+	 */
 	public function bench_geert_regex_1($subject)
 	{
 		// Added ^ and $ around the whole pattern
@@ -44,6 +54,11 @@ class Bench_ArrCallback extends Codebench
 		}
 	}
 
+	/**
+	 * @return null|string[]
+	 *
+	 * @psalm-return array<string>|null
+	 */
 	public function bench_geert_regex_2($subject)
 	{
 		// A rather experimental approach using \K which requires PCRE 7.2 ~ PHP 5.2.4
@@ -53,6 +68,11 @@ class Bench_ArrCallback extends Codebench
 		}
 	}
 
+	/**
+	 * @return null|string[]
+	 *
+	 * @psalm-return list{0: string, 1?: string}|null
+	 */
 	public function bench_geert_str($subject)
 	{
 		// A native string function approach which beats all the regexes

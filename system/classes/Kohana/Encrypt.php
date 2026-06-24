@@ -23,7 +23,7 @@ class Kohana_Encrypt
 	/**
 	 * @var  array  Encrypt class instances
 	 */
-	public static $instances = array();
+	public static $instances = [];
 
 	/**
 	 * @var int the size of the Initialization Vector (IV) in bytes
@@ -54,7 +54,7 @@ class Kohana_Encrypt
 				// No default encryption key is provided!
 				throw new Kohana_Exception(
 					'No encryption key is defined in the encryption configuration group: :group',
-					array(':group' => $name)
+					[':group' => $name]
 				);
 			}
 
@@ -116,7 +116,7 @@ class Kohana_Encrypt
 	 * @return  FALSE   if decryption fails
 	 * @return  string
 	 */
-	public function decode($data): false|string
+	public function decode(string $data): false|string
 	{
 		// Convert the data back to binary
 		$data = base64_decode($data, true);

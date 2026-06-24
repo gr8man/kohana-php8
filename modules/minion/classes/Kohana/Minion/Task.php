@@ -39,7 +39,9 @@ abstract class Kohana_Minion_Task implements \Stringable
 	/**
 	 * Gets the task name of a task class / task object
 	 *
-	 * @param  string|Minion_Task The task class / object
+	 * @param string|Minion_Task The task class / object
+	 * @param static $class
+	 *
 	 * @return string             The task name
 	 */
 	public static function convert_class_to_task($class)
@@ -133,6 +135,7 @@ abstract class Kohana_Minion_Task implements \Stringable
 	/**
 	 * Gets the task name for the task
 	 */
+	#[\Override]
 	public function __toString(): string
 	{
 		static $task_name = null;
@@ -148,9 +151,8 @@ abstract class Kohana_Minion_Task implements \Stringable
 	 * Sets options for this task
 	 *
 	 * $param  array  the array of options to set
-	 * @return this
 	 */
-	public function set_options(array $options)
+	public function set_options(array $options): static
 	{
 		foreach ($options as $key => $value) {
 			$this->_options[$key] = $value;
@@ -205,9 +207,9 @@ abstract class Kohana_Minion_Task implements \Stringable
 	/**
 	 * Returns $_errors_file
 	 *
-	 * @return string
+	 * @return null|string
 	 */
-	public function get_errors_file()
+	public function get_errors_file(): string|null
 	{
 		return $this->_errors_file;
 	}
@@ -239,7 +241,7 @@ abstract class Kohana_Minion_Task implements \Stringable
 	/**
 	 * Outputs help for this task
 	 */
-	protected function _help(array $params)
+	protected function _help(array $params): void
 	{
 		$this->_compile_task_list(Kohana::list_files('classes/task'));
 
@@ -269,9 +271,11 @@ abstract class Kohana_Minion_Task implements \Stringable
 	 * Based on the code in Kodoc::parse()
 	 *
 	 * @param string The comment to parse
+	 * @param false|string $comment
+	 *
 	 * @return array First element is the comment, second is an array of tags
 	 */
-	protected function _parse_doccomment($comment)
+	protected function _parse_doccomment(string|false $comment)
 	{
 		// Normalize all new lines to \n
 		$comment = str_replace(array("\r\n", "\n"), "\n", $comment);

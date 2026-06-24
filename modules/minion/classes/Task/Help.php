@@ -15,7 +15,10 @@ class Task_Help extends Minion_Task
 {
 	/**
 	 * Generates a help list for all tasks
+	 *
+	 * @return void
 	 */
+	#[\Override]
 	protected function _execute(array $params)
 	{
 		$tasks = $this->_compile_task_list(Kohana::list_files('classes/Task'));

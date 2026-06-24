@@ -151,6 +151,7 @@ class Kohana_Image_GD extends Image
 	 * @param   integer  $height  new height
 	 * @return  void
 	 */
+	#[\Override]
 	protected function _do_resize($width, $height)
 	{
 		// Presize width and height
@@ -206,6 +207,7 @@ class Kohana_Image_GD extends Image
 	 * @param   integer  $offset_y  offset from the top
 	 * @return  void
 	 */
+	#[\Override]
 	protected function _do_crop($width, $height, $offset_x, $offset_y)
 	{
 		// Create the temporary image to copy to
@@ -232,6 +234,7 @@ class Kohana_Image_GD extends Image
 	 * @param   integer  $degrees  degrees to rotate
 	 * @return  void
 	 */
+	#[\Override]
 	protected function _do_rotate($degrees)
 	{
 		if (empty(Image_GD::$_available_functions[Image_GD::IMAGEROTATE])) {
@@ -274,6 +277,7 @@ class Kohana_Image_GD extends Image
 	 * @param   integer  $direction  direction to flip
 	 * @return  void
 	 */
+	#[\Override]
 	protected function _do_flip($direction)
 	{
 		// Create the flipped image
@@ -309,6 +313,7 @@ class Kohana_Image_GD extends Image
 	 * @param   integer  $amount  amount to sharpen
 	 * @return  void
 	 */
+	#[\Override]
 	protected function _do_sharpen($amount)
 	{
 		if (empty(Image_GD::$_available_functions[Image_GD::IMAGECONVOLUTION])) {
@@ -347,6 +352,7 @@ class Kohana_Image_GD extends Image
 	 * @param   boolean   $fade_in  TRUE to fade out, FALSE to fade in
 	 * @return  void
 	 */
+	#[\Override]
 	protected function _do_reflection($height, $opacity, $fade_in)
 	{
 		if (empty(Image_GD::$_available_functions[Image_GD::IMAGEFILTER])) {
@@ -422,6 +428,7 @@ class Kohana_Image_GD extends Image
 	 * @param   integer  $opacity   opacity of watermark
 	 * @return  void
 	 */
+	#[\Override]
 	protected function _do_watermark(Image $watermark, $offset_x, $offset_y, $opacity)
 	{
 		if (empty(Image_GD::$_available_functions[Image_GD::IMAGELAYEREFFECT])) {
@@ -475,6 +482,7 @@ class Kohana_Image_GD extends Image
 	 * @param   integer  $opacity  opacity
 	 * @return void
 	 */
+	#[\Override]
 	protected function _do_background($r, $g, $b, $opacity)
 	{
 		// Loads image if not yet loaded
@@ -509,6 +517,7 @@ class Kohana_Image_GD extends Image
 	 * @param   string   $file     new image filename
 	 * @param   integer  $quality  quality
 	 */
+	#[\Override]
 	protected function _do_save($file, $quality): bool
 	{
 		// Loads image if not yet loaded
@@ -535,11 +544,13 @@ class Kohana_Image_GD extends Image
 	/**
 	 * Execute a render.
 	 *
-	 * @param   string    $type     image type: png, jpg, gif, etc
-	 * @param   integer   $quality  quality
-	 * @return  string
+	 * @param string    $type     image type: png, jpg, gif, etc
+	 * @param integer   $quality  quality
+	 *
+	 * @return false|string
 	 */
-	protected function _do_render($type, $quality): string|false
+	#[\Override]
+	protected function _do_render($type, $quality): string|false|false
 	{
 		// Loads image if not yet loaded
 		$this->_load_image();
@@ -615,11 +626,10 @@ class Kohana_Image_GD extends Image
 	/**
 	 * Create an empty image with the given width and height.
 	 *
-	 * @param   integer   $width   image width
-	 * @param   integer   $height  image height
-	 * @return  resource
+	 * @param integer   $width   image width
+	 * @param integer   $height  image height
 	 */
-	protected function _create($width, $height): \GdImage|false
+	protected function _create($width, $height): GdImage|false|false
 	{
 		// Create an empty image
 		$image = imagecreatetruecolor($width, $height);

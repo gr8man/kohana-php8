@@ -56,6 +56,7 @@ class Kohana_Validation implements ArrayAccess
 	 * @param   mixed    $offset    key to set
 	 * @param   mixed    $value     value to set
 	 */
+	#[\Override]
 	public function offsetSet(mixed $offset, mixed $value): void
 	{
 		throw new Kohana_Exception('Validation objects are read-only.');
@@ -68,6 +69,7 @@ class Kohana_Validation implements ArrayAccess
 	 * @param   mixed   $offset key to check
 	 * @return  bool    whether the key is set
 	 */
+	#[\Override]
 	public function offsetExists(mixed $offset): bool
 	{
 		return isset($this->_data[$offset]);
@@ -80,6 +82,7 @@ class Kohana_Validation implements ArrayAccess
 	 * @throws  Kohana_Exception
 	 * @param   mixed   $offset key to unset
 	 */
+	#[\Override]
 	public function offsetUnset(mixed $offset): void
 	{
 		throw new Kohana_Exception('Validation objects are read-only.');
@@ -92,6 +95,7 @@ class Kohana_Validation implements ArrayAccess
 	 * @param   mixed   $offset key to return
 	 * @return  mixed   value from array
 	 */
+	#[\Override]
 	public function offsetGet(mixed $offset): mixed
 	{
 		return $this->_data[$offset];
@@ -100,11 +104,11 @@ class Kohana_Validation implements ArrayAccess
 	/**
 	 * Copies the current rules to a new array.
 	 *
-	 *     $copy = $array->copy($new_data);
+	 * $copy = $array->copy($new_data);
 	 *
-	 * @param   array   $array  new data set
-	 * @return  Validation
-	 * @since   3.0.5
+	 * @param array   $array  new data set
+	 *
+	 * @since 3.0.5
 	 */
 	public function copy(array $array): static
 	{

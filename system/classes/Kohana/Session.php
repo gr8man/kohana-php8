@@ -131,6 +131,7 @@ abstract class Kohana_Session implements \Stringable
 	 *
 	 * @uses    Encrypt::encode
 	 */
+	#[\Override]
 	public function __toString(): string
 	{
 		// Serialize the data array

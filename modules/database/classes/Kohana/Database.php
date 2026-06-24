@@ -35,7 +35,7 @@ abstract class Kohana_Database implements \Stringable
 	/**
 	 * @var  array  Database instances
 	 */
-	public static $instances = array();
+	public static $instances = [];
 
 	/**
 	 * Get a singleton Database instance. If configuration is not specified,
@@ -68,7 +68,7 @@ abstract class Kohana_Database implements \Stringable
 			if (! isset($config['type'])) {
 				throw new Kohana_Exception(
 					'Database type not defined in :name configuration',
-					array(':name' => $name)
+					[':name' => $name]
 				);
 			}
 
@@ -133,6 +133,7 @@ abstract class Kohana_Database implements \Stringable
 	 *
 	 *     echo (string) $db;
 	 */
+	#[\Override]
 	public function __toString(): string
 	{
 		return (string) $this->_instance;
@@ -178,21 +179,24 @@ abstract class Kohana_Database implements \Stringable
 	/**
 	 * Perform an SQL query of the given type.
 	 *
-	 *     // Make a SELECT query and use objects for results
-	 *     $db->query(Database::SELECT, 'SELECT * FROM groups', TRUE);
+	 * // Make a SELECT query and use objects for results
+	 * $db->query(Database::SELECT, 'SELECT * FROM groups', TRUE);
 	 *
-	 *     // Make a SELECT query and use "Model_User" for the results
-	 *     $db->query(Database::SELECT, 'SELECT * FROM users LIMIT 1', 'Model_User');
+	 * // Make a SELECT query and use "Model_User" for the results
+	 * $db->query(Database::SELECT, 'SELECT * FROM users LIMIT 1', 'Model_User');
 	 *
-	 * @param   integer  $type       Database::SELECT, Database::INSERT, etc
-	 * @param   string   $sql        SQL query
-	 * @param   mixed    $as_object  result object class string, TRUE for stdClass, FALSE for assoc array
-	 * @param   array    $params     object construct parameters for result class
-	 * @return  object   Database_Result for SELECT queries
-	 * @return  array    list (insert id, row count) for INSERT queries
-	 * @return  integer  number of affected rows for all other queries
+	 * @param integer  $type       Database::SELECT, Database::INSERT, etc
+	 * @param string   $sql        SQL query
+	 * @param false $as_object result object class string, TRUE for stdClass, FALSE for assoc array
+	 * @param array    $params     object construct parameters for result class
+	 *
+	 * @return object   Database_Result for SELECT queries
+	 * @return array    list (insert id, row count) for INSERT queries
+	 * @return integer  number of affected rows for all other queries
+	 *
+	 * @psalm-param 1 $type
 	 */
-	abstract public function query($type, $sql, $as_object = false, array $params = null);
+	abstract public function query(int $type, string $sql, bool $as_object = false, array $params = null);
 
 	/**
 	 * Start a SQL transaction
@@ -265,60 +269,60 @@ abstract class Kohana_Database implements \Stringable
 	 */
 	public function datatype($type)
 	{
-		static $types = array(
+		static $types = [
 			// SQL-92
-			'bit'                           => array('type' => 'string', 'exact' => true),
-			'bit varying'                   => array('type' => 'string'),
-			'char'                          => array('type' => 'string', 'exact' => true),
-			'char varying'                  => array('type' => 'string'),
-			'character'                     => array('type' => 'string', 'exact' => true),
-			'character varying'             => array('type' => 'string'),
-			'date'                          => array('type' => 'string'),
-			'dec'                           => array('type' => 'float', 'exact' => true),
-			'decimal'                       => array('type' => 'float', 'exact' => true),
-			'double precision'              => array('type' => 'float'),
-			'float'                         => array('type' => 'float'),
-			'int'                           => array('type' => 'int', 'min' => '-2147483648', 'max' => '2147483647'),
-			'integer'                       => array('type' => 'int', 'min' => '-2147483648', 'max' => '2147483647'),
-			'interval'                      => array('type' => 'string'),
-			'national char'                 => array('type' => 'string', 'exact' => true),
-			'national char varying'         => array('type' => 'string'),
-			'national character'            => array('type' => 'string', 'exact' => true),
-			'national character varying'    => array('type' => 'string'),
-			'nchar'                         => array('type' => 'string', 'exact' => true),
-			'nchar varying'                 => array('type' => 'string'),
-			'numeric'                       => array('type' => 'float', 'exact' => true),
-			'real'                          => array('type' => 'float'),
-			'smallint'                      => array('type' => 'int', 'min' => '-32768', 'max' => '32767'),
-			'time'                          => array('type' => 'string'),
-			'time with time zone'           => array('type' => 'string'),
-			'timestamp'                     => array('type' => 'string'),
-			'timestamp with time zone'      => array('type' => 'string'),
-			'varchar'                       => array('type' => 'string'),
+			'bit'                           => ['type' => 'string', 'exact' => true],
+			'bit varying'                   => ['type' => 'string'],
+			'char'                          => ['type' => 'string', 'exact' => true],
+			'char varying'                  => ['type' => 'string'],
+			'character'                     => ['type' => 'string', 'exact' => true],
+			'character varying'             => ['type' => 'string'],
+			'date'                          => ['type' => 'string'],
+			'dec'                           => ['type' => 'float', 'exact' => true],
+			'decimal'                       => ['type' => 'float', 'exact' => true],
+			'double precision'              => ['type' => 'float'],
+			'float'                         => ['type' => 'float'],
+			'int'                           => ['type' => 'int', 'min' => '-2147483648', 'max' => '2147483647'],
+			'integer'                       => ['type' => 'int', 'min' => '-2147483648', 'max' => '2147483647'],
+			'interval'                      => ['type' => 'string'],
+			'national char'                 => ['type' => 'string', 'exact' => true],
+			'national char varying'         => ['type' => 'string'],
+			'national character'            => ['type' => 'string', 'exact' => true],
+			'national character varying'    => ['type' => 'string'],
+			'nchar'                         => ['type' => 'string', 'exact' => true],
+			'nchar varying'                 => ['type' => 'string'],
+			'numeric'                       => ['type' => 'float', 'exact' => true],
+			'real'                          => ['type' => 'float'],
+			'smallint'                      => ['type' => 'int', 'min' => '-32768', 'max' => '32767'],
+			'time'                          => ['type' => 'string'],
+			'time with time zone'           => ['type' => 'string'],
+			'timestamp'                     => ['type' => 'string'],
+			'timestamp with time zone'      => ['type' => 'string'],
+			'varchar'                       => ['type' => 'string'],
 
 			// SQL:1999
-			'binary large object'               => array('type' => 'string', 'binary' => true),
-			'blob'                              => array('type' => 'string', 'binary' => true),
-			'boolean'                           => array('type' => 'bool'),
-			'char large object'                 => array('type' => 'string'),
-			'character large object'            => array('type' => 'string'),
-			'clob'                              => array('type' => 'string'),
-			'national character large object'   => array('type' => 'string'),
-			'nchar large object'                => array('type' => 'string'),
-			'nclob'                             => array('type' => 'string'),
-			'time without time zone'            => array('type' => 'string'),
-			'timestamp without time zone'       => array('type' => 'string'),
+			'binary large object'               => ['type' => 'string', 'binary' => true],
+			'blob'                              => ['type' => 'string', 'binary' => true],
+			'boolean'                           => ['type' => 'bool'],
+			'char large object'                 => ['type' => 'string'],
+			'character large object'            => ['type' => 'string'],
+			'clob'                              => ['type' => 'string'],
+			'national character large object'   => ['type' => 'string'],
+			'nchar large object'                => ['type' => 'string'],
+			'nclob'                             => ['type' => 'string'],
+			'time without time zone'            => ['type' => 'string'],
+			'timestamp without time zone'       => ['type' => 'string'],
 
 			// SQL:2003
-			'bigint'    => array('type' => 'int', 'min' => '-9223372036854775808', 'max' => '9223372036854775807'),
+			'bigint'    => ['type' => 'int', 'min' => '-9223372036854775808', 'max' => '9223372036854775807'],
 
 			// SQL:2008
-			'binary'            => array('type' => 'string', 'binary' => true, 'exact' => true),
-			'binary varying'    => array('type' => 'string', 'binary' => true),
-			'varbinary'         => array('type' => 'string', 'binary' => true),
-		);
+			'binary'            => ['type' => 'string', 'binary' => true, 'exact' => true],
+			'binary varying'    => ['type' => 'string', 'binary' => true],
+			'varbinary'         => ['type' => 'string', 'binary' => true],
+		];
 
-		return $types[$type] ?? array();
+		return $types[$type] ?? [];
 	}
 
 	/**
@@ -369,7 +373,7 @@ abstract class Kohana_Database implements \Stringable
 	{
 		if (($open = strpos($type, '(')) === false) {
 			// No length specified
-			return array($type, null);
+			return [$type, null];
 		}
 
 		// Closing parenthesis
@@ -381,7 +385,7 @@ abstract class Kohana_Database implements \Stringable
 		// Type without the length
 		$type = substr($type, 0, $open).substr($type, $close + 1);
 
-		return array($type, $length);
+		return [$type, $length];
 	}
 
 	/**
@@ -397,22 +401,23 @@ abstract class Kohana_Database implements \Stringable
 	}
 
 	/**
-	 * Quote a value for an SQL query.
-	 *
-	 *     $db->quote(NULL);   // 'NULL'
-	 *     $db->quote(10);     // 10
-	 *     $db->quote('fred'); // 'fred'
-	 *
-	 * Objects passed to this function will be converted to strings.
-	 * [Database_Expression] objects will be compiled.
-	 * [Database_Query] objects will be compiled and converted to a sub-query.
-	 * All other objects will be converted using the `__toString` method.
-	 *
-	 * @param   mixed   $value  any value to quote
-	 * @return  string
-	 * @uses    Database::escape
-	 */
-	public function quote($value)
+				 * Quote a value for an SQL query.
+				 *
+				 * $db->quote(NULL);   // 'NULL'
+				 * $db->quote(10);     // 10
+				 * $db->quote('fred'); // 'fred'
+				 *
+				 * Objects passed to this function will be converted to strings.
+				 * [Database_Expression] objects will be compiled.
+				 * [Database_Query] objects will be compiled and converted to a sub-query.
+				 * All other objects will be converted using the `__toString` method.
+				 *
+				 * @param mixed   $value  any value to quote
+				 *
+				 *
+				 * @uses Database::escape
+				 */
+				public function quote($value): string|int
 	{
 		if ($value === null) {
 			return 'NULL';
@@ -432,7 +437,7 @@ abstract class Kohana_Database implements \Stringable
 				return $this->quote((string) $value);
 			}
 		} elseif (is_array($value)) {
-			return '('.implode(', ', array_map(array($this, __FUNCTION__), $value)).')';
+			return '('.implode(', ', array_map([$this, __FUNCTION__], $value)).')';
 		} elseif (is_int($value)) {
 			return $value;
 		} elseif (is_float($value)) {

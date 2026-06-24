@@ -17,10 +17,10 @@ class Kohana_Database_Query_Builder_Join extends Database_Query_Builder
 	protected $_type;
 
 	// ON ...
-	protected $_on = array();
+	protected $_on = [];
 
 	// USING ...
-	protected $_using = array();
+	protected $_using = [];
 
 	/**
 	 * Creates a new JOIN statement for a table. Optionally, the type of JOIN
@@ -51,7 +51,7 @@ class Kohana_Database_Query_Builder_Join extends Database_Query_Builder
 			throw new Kohana_Exception('JOIN ... ON ... cannot be combined with JOIN ... USING ...');
 		}
 
-		$this->_on[] = array($c1, $op, $c2);
+		$this->_on[] = [$c1, $op, $c2];
 
 		return $this;
 	}
@@ -99,9 +99,9 @@ class Kohana_Database_Query_Builder_Join extends Database_Query_Builder
 
 		if (! empty($this->_using)) {
 			// Quote and concat the columns
-			$sql .= ' USING ('.implode(', ', array_map(array($db, 'quote_column'), $this->_using)).')';
+			$sql .= ' USING ('.implode(', ', array_map([$db, 'quote_column'], $this->_using)).')';
 		} else {
-			$conditions = array();
+			$conditions = [];
 			foreach ($this->_on as $condition) {
 				// Split the condition
 				[$c1, $op, $c2] = $condition;
@@ -122,12 +122,13 @@ class Kohana_Database_Query_Builder_Join extends Database_Query_Builder
 		return $sql;
 	}
 
+	#[\Override]
 	public function reset(): void
 	{
 		$this->_type =
 		$this->_table = null;
 
-		$this->_on = array();
+		$this->_on = [];
 	}
 
 } // End Database_Query_Builder_Join

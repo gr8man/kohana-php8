@@ -22,7 +22,7 @@ class Kohana_Minion_Exception extends Kohana_Exception
 	 * @uses    Kohana_Exception::text
 	 */
 	#[\Override]
-	public static function handler(Throwable $e): void
+	public static function handler(Throwable $e): never
 	{
 		try {
 			// Log the exception

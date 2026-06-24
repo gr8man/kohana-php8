@@ -159,11 +159,11 @@ abstract class Kohana_Request_Client
 	 * Getter and setter for the internal caching engine,
 	 * used to cache responses if available and valid.
 	 *
-	 * @param   HTTP_Cache  $cache  engine to use for caching
-	 * @return  HTTP_Cache
-	 * @return  Request_Client
+	 * @param HTTP_Cache  $cache  engine to use for caching
+	 *
+	 * @return Cache|static
 	 */
-	public function cache(HTTP_Cache $cache = null)
+	public function cache(HTTP_Cache $cache = null): static|Cache
 	{
 		if ($cache === null) {
 			return $this->_cache;
@@ -177,11 +177,9 @@ abstract class Kohana_Request_Client
 	 * Getter and setter for the follow redirects
 	 * setting.
 	 *
-	 * @param   bool  $follow  Boolean indicating if redirects should be followed
-	 * @return  bool
-	 * @return  Request_Client
+	 * @param bool  $follow  Boolean indicating if redirects should be followed
 	 */
-	public function follow($follow = null)
+	public function follow($follow = null): bool|static
 	{
 		if ($follow === null) {
 			return $this->_follow;
@@ -196,11 +194,9 @@ abstract class Kohana_Request_Client
 	 * Getter and setter for the follow redirects
 	 * headers array.
 	 *
-	 * @param   array  $follow_headers  Array of headers to be re-used when following a Location header
-	 * @return  array
-	 * @return  Request_Client
+	 * @param array  $follow_headers  Array of headers to be re-used when following a Location header
 	 */
-	public function follow_headers($follow_headers = null)
+	public function follow_headers($follow_headers = null): array|static
 	{
 		if ($follow_headers === null) {
 			return $this->_follow_headers;
@@ -221,10 +217,9 @@ abstract class Kohana_Request_Client
 	 * non-compliant third party sites may require that strict_redirect is set
 	 * FALSE to force the client to switch to GET following a 302 response.
 	 *
-	 * @param  bool  $strict_redirect  Boolean indicating if 302 redirects should be followed with the original method
-	 * @return Request_Client
+	 * @param bool  $strict_redirect  Boolean indicating if 302 redirects should be followed with the original method
 	 */
-	public function strict_redirect($strict_redirect = null)
+	public function strict_redirect($strict_redirect = null): bool|static
 	{
 		if ($strict_redirect === null) {
 			return $this->_strict_redirect;
@@ -246,15 +241,14 @@ abstract class Kohana_Request_Client
 	 * By default, the [Request_Client::on_header_location] callback is assigned
 	 * to the Location header to support automatic redirect following.
 	 *
-	 *     $client->header_callbacks(array(
-	 *         'Location' => 'Request_Client::on_header_location',
-	 *         'WWW-Authenticate' => function($request, $response, $client) {return $new_response;},
-	 *     );
+	 * $client->header_callbacks(array(
+	 * 'Location' => 'Request_Client::on_header_location',
+	 * 'WWW-Authenticate' => function($request, $response, $client) {return $new_response;},
+	 * );
 	 *
-	 * @param array $header_callbacks	Array of callbacks to trigger on presence of given headers
-	 * @return Request_Client
+	 * @param array $header_callbacks Array of callbacks to trigger on presence of given headers
 	 */
-	public function header_callbacks($header_callbacks = null)
+	public function header_callbacks($header_callbacks = null): array|static
 	{
 		if ($header_callbacks === null) {
 			return $this->_header_callbacks;

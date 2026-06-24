@@ -15,7 +15,7 @@ class Bench_Transliterate extends Codebench
 
 	public $loops = 10;
 
-	public $subjects = array(
+	public $subjects = [
 		// ASCII
 		'a', 'b', 'c', 'd', '1', '2', '3',
 
@@ -50,9 +50,9 @@ class Bench_Transliterate extends Codebench
 		'Â', 'Ľ', 'Ẅ', 'Ż', 'Ī', 'Ã', 'Ġ',
 		'Ṁ', 'Ō', 'Ĩ', 'Ù', 'Į', 'Ź', 'Á',
 		'Û', 'Þ', 'Ð', 'Æ', 'İ',
-	);
+	];
 
-	public function bench_utf8($subject)
+	public function bench_utf8($subject): string
 	{
 		return UTF8::transliterate_to_ascii($subject);
 	}

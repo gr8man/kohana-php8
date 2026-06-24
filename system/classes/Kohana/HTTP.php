@@ -190,8 +190,9 @@ abstract class Kohana_HTTP
 	 * Processes an array of key value pairs and encodes
 	 * the values to meet RFC 3986
 	 *
-	 * @param   array   $params  Params
-	 * @return  string
+	 * @param array   $params  Params
+	 *
+	 * @return null|string
 	 */
 	public static function www_form_urlencode(array $params = array())
 	{

@@ -125,6 +125,7 @@ abstract class Kohana_Image implements \Stringable
 	 * [!!] The output of this function is binary and must be rendered with the
 	 * appropriate Content-Type header or it will not be displayed correctly!
 	 */
+	#[\Override]
 	public function __toString(): string
 	{
 		try {

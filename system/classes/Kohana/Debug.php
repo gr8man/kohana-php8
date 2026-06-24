@@ -18,11 +18,12 @@ class Kohana_Debug
 	 * Returns an HTML string of debugging information about any number of
 	 * variables, each wrapped in a "pre" tag:
 	 *
-	 *     // Displays the type and value of each variable
-	 *     echo Debug::vars($foo, $bar, $baz);
+	 * // Displays the type and value of each variable
+	 * echo Debug::vars($foo, $bar, $baz);
 	 *
-	 * @param   mixed   $var,...    variable to debug
-	 * @return  string
+	 * @param mixed   $var,...    variable to debug
+	 *
+	 * @return null|string
 	 */
 	public static function vars()
 	{
@@ -59,11 +60,12 @@ class Kohana_Debug
 	/**
 	 * Helper for Debug::dump(), handles recursion in arrays and objects.
 	 *
-	 * @param   mixed   $var    variable to dump
-	 * @param   integer $length maximum length of strings
-	 * @param   integer $limit  recursion limit
-	 * @param   integer $level  current recursion level (internal usage only!)
-	 * @return  string
+	 * @param mixed   $var    variable to dump
+	 * @param integer $length maximum length of strings
+	 * @param integer $limit  recursion limit
+	 * @param integer $level  current recursion level (internal usage only!)
+	 *
+	 * @return null|string
 	 */
 	protected static function _dump(& $var, $length = 128, $limit = 10, $level = 0)
 	{
@@ -285,10 +287,12 @@ class Kohana_Debug
 	/**
 	 * Returns an array of HTML strings that represent each step in the backtrace.
 	 *
-	 *     // Displays the entire current backtrace
-	 *     echo implode('<br/>', Debug::trace());
+	 * // Displays the entire current backtrace
+	 * echo implode('<br/>', Debug::trace());
 	 *
-	 * @return  string
+	 * @return (mixed|null|string)[][]
+	 *
+	 * @psalm-return list<array{args: null, file: null, function: mixed|string, line: null, source: null}>
 	 */
 	public static function trace(array $trace = null): array
 	{

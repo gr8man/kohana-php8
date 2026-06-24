@@ -15,8 +15,9 @@ class Kohana_Auth_ORM extends Auth
 	/**
 	 * Checks if a session is active.
 	 *
-	 * @param   mixed    $role Role name string, role ORM object, or array with role names
-	 * @return  boolean
+	 * @param mixed    $role Role name string, role ORM object, or array with role names
+	 *
+	 * @return bool|null
 	 */
 	#[\Override]
 	public function logged_in($role = null)
@@ -69,6 +70,7 @@ class Kohana_Auth_ORM extends Auth
 	 * @param   string   $password
 	 * @param   boolean  $remember  enable autologin
 	 */
+	#[\Override]
 	protected function _login($user, $password, $remember): bool
 	{
 		if (! is_object($user)) {
@@ -234,6 +236,7 @@ class Kohana_Auth_ORM extends Auth
 	 * @param   mixed   $user  username string, or user ORM object
 	 * @return  string
 	 */
+	#[\Override]
 	public function password($user)
 	{
 		if (! is_object($user)) {

@@ -31,7 +31,7 @@ abstract class Kohana_Log_Writer implements \Stringable
 	 * Numeric log level to string lookup table.
 	 * @var array
 	 */
-	protected $_log_levels = array(
+	protected $_log_levels = [
 		LOG_EMERG   => 'EMERGENCY',
 		LOG_ALERT   => 'ALERT',
 		LOG_CRIT    => 'CRITICAL',
@@ -40,7 +40,7 @@ abstract class Kohana_Log_Writer implements \Stringable
 		LOG_NOTICE  => 'NOTICE',
 		LOG_INFO    => 'INFO',
 		LOG_DEBUG   => 'DEBUG',
-	);
+	];
 
 	/**
 	 * @var  int  Level to use for stack traces
@@ -61,6 +61,7 @@ abstract class Kohana_Log_Writer implements \Stringable
 	 *
 	 *     echo $writer;
 	 */
+	#[\Override]
 	final public function __toString(): string
 	{
 		return spl_object_hash($this);

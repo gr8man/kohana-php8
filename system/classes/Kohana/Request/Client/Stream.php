@@ -29,6 +29,7 @@ class Kohana_Request_Client_Stream extends Request_Client_External
 	 * @param   Response  $request  response to send
 	 * @uses    [PHP cURL](http://php.net/manual/en/book.curl.php)
 	 */
+	#[\Override]
 	public function _send_message(Request $request, Response $response): Response
 	{
 		// Calculate stream mode

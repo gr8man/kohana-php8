@@ -19,12 +19,12 @@ class Kohana_Auth_File extends Auth
 	/**
 	 * Constructor loads the user list into the class.
 	 */
-	public function __construct($config = array())
+	public function __construct($config = [])
 	{
 		parent::__construct($config);
 
 		// Load user list
-		$this->_users = Arr::get($config, 'users', array());
+		$this->_users = Arr::get($config, 'users', []);
 	}
 
 	/**
@@ -35,6 +35,7 @@ class Kohana_Auth_File extends Auth
 	 * @param   boolean  $remember  Enable autologin (not supported)
 	 * @return  boolean
 	 */
+	#[\Override]
 	protected function _login($username, $password, $remember)
 	{
 		if (is_string($password)) {
@@ -57,7 +58,7 @@ class Kohana_Auth_File extends Auth
 	 * @param   mixed    $username  Username
 	 * @return  boolean
 	 */
-	public function force_login($username)
+	public function force_login(string|object $username)
 	{
 		// Complete the login
 		return $this->complete_login($username);
@@ -69,6 +70,7 @@ class Kohana_Auth_File extends Auth
 	 * @param   mixed   $username  Username
 	 * @return  string
 	 */
+	#[\Override]
 	public function password($username)
 	{
 		return Arr::get($this->_users, $username, false);

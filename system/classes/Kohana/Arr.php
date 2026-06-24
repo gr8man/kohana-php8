@@ -372,19 +372,20 @@ class Kohana_Arr
 	 *
 	 * Note that this does not work the same as [array_merge_recursive](http://php.net/array_merge_recursive)!
 	 *
-	 *     $john = array('name' => 'john', 'children' => array('fred', 'paul', 'sally', 'jane'));
-	 *     $mary = array('name' => 'mary', 'children' => array('jane'));
+	 * $john = array('name' => 'john', 'children' => array('fred', 'paul', 'sally', 'jane'));
+	 * $mary = array('name' => 'mary', 'children' => array('jane'));
 	 *
-	 *     // John and Mary are married, merge them together
-	 *     $john = Arr::merge($john, $mary);
+	 * // John and Mary are married, merge them together
+	 * $john = Arr::merge($john, $mary);
 	 *
-	 *     // The output of $john will now be:
-	 *     array('name' => 'mary', 'children' => array('fred', 'paul', 'sally', 'jane'))
+	 * // The output of $john will now be:
+	 * array('name' => 'mary', 'children' => array('fred', 'paul', 'sally', 'jane'))
 	 *
-	 * @param   array  $array1      initial array
-	 * @param   array  $array2,...  array to merge
+	 * @param array  $array1      initial array
+	 * @param array  $array2,...  array to merge
+	 * @param array|true $array2
 	 */
-	public static function merge(array $array1, $array2): array
+	public static function merge(array $array1, array|bool $array2): array
 	{
 		if (Arr::is_assoc($array2)) {
 			foreach ($array2 as $key => $value) {

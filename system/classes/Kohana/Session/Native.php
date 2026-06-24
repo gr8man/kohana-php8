@@ -14,9 +14,10 @@ defined('SYSPATH') or die('No direct script access.');
 class Kohana_Session_Native extends Session
 {
 	/**
-	 * @return  string
+	 * @return false|string
 	 */
-	public function id(): string|false
+	#[\Override]
+	public function id(): string|false|false
 	{
 		return session_id();
 	}
@@ -24,6 +25,7 @@ class Kohana_Session_Native extends Session
 	/**
 	 * @param   string  $id  session id
 	 */
+	#[\Override]
 	protected function _read($id = null): null
 	{
 		/**
@@ -73,9 +75,10 @@ class Kohana_Session_Native extends Session
 	}
 
 	/**
-	 * @return  string
+	 * @return false|string
 	 */
-	protected function _regenerate(): string|false
+	#[\Override]
+	protected function _regenerate(): string|false|false
 	{
 		// Regenerate the session id
 		session_regenerate_id();
@@ -83,6 +86,7 @@ class Kohana_Session_Native extends Session
 		return session_id();
 	}
 
+	#[\Override]
 	protected function _write(): bool
 	{
 		// Write and close the session
@@ -94,6 +98,7 @@ class Kohana_Session_Native extends Session
 	/**
 	 * @return  bool
 	 */
+	#[\Override]
 	protected function _restart()
 	{
 		// Fire up a new session
@@ -108,6 +113,7 @@ class Kohana_Session_Native extends Session
 	/**
 	 * @return  bool
 	 */
+	#[\Override]
 	protected function _destroy()
 	{
 		// Destroy the current session

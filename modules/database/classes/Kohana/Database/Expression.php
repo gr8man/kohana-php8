@@ -26,7 +26,7 @@ class Kohana_Database_Expression implements \Stringable
 	 */
 	public function __construct(
 		protected string $_value,
-		protected array $_parameters = array()
+		protected array $_parameters = []
 	) {
 	}
 
@@ -88,6 +88,7 @@ class Kohana_Database_Expression implements \Stringable
 	 *
 	 * @uses    Database_Expression::value
 	 */
+	#[\Override]
 	public function __toString(): string
 	{
 		return $this->value();
@@ -99,7 +100,7 @@ class Kohana_Database_Expression implements \Stringable
 	 *
 	 * @param   mixed    Database instance or name of instance
 	 */
-	public function compile($db = null): string
+	public function compile(Kohana_Database|null $db = null): string
 	{
 		if (! is_object($db)) {
 			$db = Database::instance($db);
@@ -108,7 +109,7 @@ class Kohana_Database_Expression implements \Stringable
 		$value = $this->value();
 
 		if (! empty($this->_parameters)) {
-			$params = array_map(array($db, 'quote'), $this->_parameters);
+			$params = array_map($db->quote(...), $this->_parameters);
 			$value = strtr($value, $params);
 		}
 

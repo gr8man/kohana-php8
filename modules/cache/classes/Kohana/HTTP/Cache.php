@@ -198,11 +198,11 @@ class Kohana_HTTP_Cache {
 	 * Getter and setter for the internal caching engine,
 	 * used to cache responses if available and valid.
 	 *
-	 * @param   Kohana_Cache  $cache    engine to use for caching
-	 * @return  Kohana_Cache
-	 * @return  Kohana_Request_Client
+	 * @param Kohana_Cache  $cache    engine to use for caching
+	 *
+	 * @return Cache|static
 	 */
-	public function cache(Cache $cache = NULL)
+	public function cache(Cache $cache = NULL): static|Cache
 	{
 		if ($cache === NULL)
 			return $this->_cache;
@@ -216,12 +216,11 @@ class Kohana_HTTP_Cache {
 	 * If set to `TRUE`, the client will also cache cache-control directives
 	 * that have the `private` setting.
 	 *
-	 * @link    http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.9
-	 * @param   boolean $setting    allow caching of privately marked responses
-	 * @return  boolean
-	 * @return  [Request_Client]
+	 * @link http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.9
+	 *
+	 * @param boolean $setting    allow caching of privately marked responses
 	 */
-	public function allow_private_cache($setting = NULL)
+	public function allow_private_cache($setting = NULL): bool|static
 	{
 		if ($setting === NULL)
 			return $this->_allow_private_cache;

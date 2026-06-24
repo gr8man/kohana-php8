@@ -133,12 +133,13 @@ class Kohana_Route
 	/**
 	 * Get the name of a route.
 	 *
-	 *     $name = Route::name($route)
+	 * $name = Route::name($route)
 	 *
-	 * @param   Route   $route  instance
-	 * @return  string
+	 * @param Route   $route  instance
+	 *
+	 * @return false
 	 */
-	public static function name(Route $route): int|string|false
+	public static function name(Route $route): bool|string|false
 	{
 		return array_search($route, Route::$_routes);
 	}
@@ -148,17 +149,18 @@ class Kohana_Route
 	 * a long period of time, use this to reload the routes from the cache
 	 * rather than redefining them on every page load.
 	 *
-	 *     if ( ! Route::cache())
-	 *     {
-	 *         // Set routes here
-	 *         Route::cache(TRUE);
-	 *     }
+	 * if ( ! Route::cache())
+	 * {
+	 * // Set routes here
+	 * Route::cache(TRUE);
+	 * }
 	 *
-	 * @param   boolean $save   cache the current routes
-	 * @param   boolean $append append, rather than replace, cached routes when loading
-	 * @return  void    when saving routes
-	 * @return  boolean when loading routes
-	 * @uses    Kohana::cache
+	 * @param boolean $save   cache the current routes
+	 * @param boolean $append append, rather than replace, cached routes when loading
+	 *
+	 * @return bool|null
+	 *
+	 * @uses Kohana::cache
 	 */
 	public static function cache($save = false, $append = false)
 	{
@@ -230,7 +232,7 @@ class Kohana_Route
 	 * @uses    Route::REGEX_ESCAPE
 	 * @uses    Route::REGEX_SEGMENT
 	 */
-	public static function compile($uri, array $regex = null): string
+	public static function compile(string $uri, array $regex = null): string
 	{
 		// The URI should be considered literal except for keys and optional parts
 		// Escape everything preg_quote would escape except for : ( ) < >
@@ -317,17 +319,18 @@ class Kohana_Route
 	 * Provides default values for keys when they are not present. The default
 	 * action will always be "index" unless it is overloaded here.
 	 *
-	 *     $route->defaults(array(
-	 *         'controller' => 'welcome',
-	 *         'action'     => 'index'
-	 *     ));
+	 * $route->defaults(array(
+	 * 'controller' => 'welcome',
+	 * 'action'     => 'index'
+	 * ));
 	 *
 	 * If no parameter is passed, this method will act as a getter.
 	 *
-	 * @param   array   $defaults   key values
-	 * @return  $this or array
+	 * @param array   $defaults   key values
+	 *
+	 * @return array|static or array
 	 */
-	public function defaults(array $defaults = null)
+	public function defaults(array $defaults = null): array|static
 	{
 		if ($defaults === null) {
 			return $this->_defaults;
@@ -463,20 +466,23 @@ class Kohana_Route
 	/**
 	 * Generates a URI for the current route based on the parameters given.
 	 *
-	 *     // Using the "default" route: "users/profile/10"
-	 *     $route->uri(array(
-	 *         'controller' => 'users',
-	 *         'action'     => 'profile',
-	 *         'id'         => '10'
-	 *     ));
+	 * // Using the "default" route: "users/profile/10"
+	 * $route->uri(array(
+	 * 'controller' => 'users',
+	 * 'action'     => 'profile',
+	 * 'id'         => '10'
+	 * ));
 	 *
-	 * @param   array   $params URI parameters
-	 * @return  string
-	 * @throws  Kohana_Exception
-	 * @uses    Route::REGEX_GROUP
-	 * @uses    Route::REGEX_KEY
+	 * @param array   $params URI parameters
+	 *
+	 * @return null|string
+	 *
+	 * @throws Kohana_Exception
+	 *
+	 * @uses Route::REGEX_GROUP
+	 * @uses Route::REGEX_KEY
 	 */
-	public function uri(array $params = null)
+	public function uri(array $params = null): string|null
 	{
 		if ($params) {
 			// @issue #4079 rawurlencode parameters

@@ -79,11 +79,13 @@ class Kohana_Session_Database extends Session
 		}
 	}
 
+	#[\Override]
 	public function id()
 	{
 		return $this->_session_id;
 	}
 
+	#[\Override]
 	protected function _read($id = null)
 	{
 		if ($id or $id = Cookie::get($this->_name)) {
@@ -109,6 +111,7 @@ class Kohana_Session_Database extends Session
 		return null;
 	}
 
+	#[\Override]
 	protected function _regenerate(): string|array
 	{
 		// Create the query to find an ID
@@ -129,6 +132,7 @@ class Kohana_Session_Database extends Session
 		return $this->_session_id = $id;
 	}
 
+	#[\Override]
 	protected function _write(): bool
 	{
 		if ($this->_update_id === null) {
@@ -166,6 +170,7 @@ class Kohana_Session_Database extends Session
 		return true;
 	}
 
+	#[\Override]
 	protected function _restart(): bool
 	{
 		$this->_regenerate();
@@ -173,6 +178,7 @@ class Kohana_Session_Database extends Session
 		return true;
 	}
 
+	#[\Override]
 	protected function _destroy(): bool
 	{
 		if ($this->_update_id === null) {
@@ -202,7 +208,7 @@ class Kohana_Session_Database extends Session
 		return true;
 	}
 
-	protected function _gc()
+	protected function _gc(): void
 	{
 		if ($this->_lifetime) {
 			// Expire sessions when their lifetime is up

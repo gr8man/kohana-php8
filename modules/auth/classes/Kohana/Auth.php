@@ -48,12 +48,12 @@ abstract class Kohana_Auth
 	 *
 	 * @param array $_config Config Options
 	 */
-	public function __construct(protected $_config = array())
+	public function __construct(protected $_config = [])
 	{
 		$this->_session = Session::instance($this->_config['session_type']);
 	}
 
-	abstract protected function _login($username, $password, $remember);
+	abstract protected function _login(string $username, string $password, bool $remember);
 
 	abstract public function password($username);
 
@@ -77,7 +77,7 @@ abstract class Kohana_Auth
 	 * @param   boolean  $remember  Enable autologin
 	 * @return  boolean
 	 */
-	public function login($username, $password, $remember = false)
+	public function login(string $username, $password, bool $remember = false)
 	{
 		if (empty($password)) {
 			return false;
@@ -135,7 +135,7 @@ abstract class Kohana_Auth
 	{
 		if (function_exists('password_hash')) {
 			$cost = isset($this->_config['bcrypt_cost']) ? (int) $this->_config['bcrypt_cost'] : 12;
-			return password_hash($password, PASSWORD_BCRYPT, array('cost' => $cost));
+			return password_hash($password, PASSWORD_BCRYPT, ['cost' => $cost]);
 		}
 
 		if (! $this->_config['hash_key']) {
@@ -182,7 +182,7 @@ abstract class Kohana_Auth
 	{
 		if (function_exists('password_needs_rehash')) {
 			$cost = isset($this->_config['bcrypt_cost']) ? (int) $this->_config['bcrypt_cost'] : 12;
-			return password_needs_rehash($hash, PASSWORD_BCRYPT, array('cost' => $cost));
+			return password_needs_rehash($hash, PASSWORD_BCRYPT, ['cost' => $cost]);
 		}
 		return false;
 	}
@@ -202,7 +202,10 @@ abstract class Kohana_Auth
 		return hash_hmac((string) $this->_config['hash_method'], $str, (string) $this->_config['hash_key']);
 	}
 
-	protected function complete_login($user)
+	/**
+				 * @return true
+				 */
+				protected function complete_login(string|object $user)
 	{
 		// Regenerate session_id
 		$this->_session->regenerate();

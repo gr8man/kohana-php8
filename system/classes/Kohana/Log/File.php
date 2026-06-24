@@ -45,6 +45,7 @@ class Kohana_Log_File extends Log_Writer
 	 *
 	 *     $writer->write($messages);
 	 */
+	#[\Override]
 	public function write(array $messages): void
 	{
 		// Set the yearly directory name

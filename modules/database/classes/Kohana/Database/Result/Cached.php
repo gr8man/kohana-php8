@@ -21,6 +21,7 @@ class Kohana_Database_Result_Cached extends Database_Result
 		$this->_total_rows = count($result);
 	}
 
+	#[\Override]
 	public function __destruct()
 	{
 		// Cached results do not use resources
@@ -32,6 +33,7 @@ class Kohana_Database_Result_Cached extends Database_Result
 		return $this;
 	}
 
+	#[\Override]
 	public function seek(int $offset): void
 	{
 		if ($this->offsetExists($offset)) {
@@ -39,6 +41,7 @@ class Kohana_Database_Result_Cached extends Database_Result
 		}
 	}
 
+	#[\Override]
 	public function current(): mixed
 	{
 		return $this->_result[$this->_current_row];

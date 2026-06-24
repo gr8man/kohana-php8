@@ -18,6 +18,7 @@ class Kohana_Log_StdErr extends Log_Writer
 	 *
 	 *     $writer->write($messages);
 	 */
+	#[\Override]
 	public function write(array $messages): void
 	{
 		foreach ($messages as $message) {

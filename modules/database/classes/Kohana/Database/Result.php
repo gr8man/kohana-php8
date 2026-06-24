@@ -165,6 +165,7 @@ abstract class Kohana_Database_Result implements Countable, Iterator, SeekableIt
 	 *
 	 *     echo count($result);
 	 */
+	#[\Override]
 	public function count(): int
 	{
 		return $this->_total_rows;
@@ -180,6 +181,7 @@ abstract class Kohana_Database_Result implements Countable, Iterator, SeekableIt
 	 *
 	 * @param   int     $offset
 	 */
+	#[\Override]
 	public function offsetExists($offset): bool
 	{
 		return ($offset >= 0 and $offset < $this->_total_rows);
@@ -192,6 +194,7 @@ abstract class Kohana_Database_Result implements Countable, Iterator, SeekableIt
 	 *
 	 * @param   int     $offset
 	 */
+	#[\Override]
 	public function offsetGet($offset): mixed
 	{
 		if ($this->offsetExists($offset)) {
@@ -211,6 +214,7 @@ abstract class Kohana_Database_Result implements Countable, Iterator, SeekableIt
 	 * @param   mixed   $value
 	 * @throws  Kohana_Exception
 	 */
+	#[\Override]
 	final public function offsetSet($offset, $value): void
 	{
 		throw new Kohana_Exception('Database results are read-only');
@@ -224,6 +228,7 @@ abstract class Kohana_Database_Result implements Countable, Iterator, SeekableIt
 	 * @param   int     $offset
 	 * @throws  Kohana_Exception
 	 */
+	#[\Override]
 	final public function offsetUnset($offset): void
 	{
 		throw new Kohana_Exception('Database results are read-only');
@@ -234,6 +239,7 @@ abstract class Kohana_Database_Result implements Countable, Iterator, SeekableIt
 	 *
 	 *     echo key($result);
 	 */
+	#[\Override]
 	public function key(): int
 	{
 		return $this->_current_row;
@@ -244,6 +250,7 @@ abstract class Kohana_Database_Result implements Countable, Iterator, SeekableIt
 	 *
 	 *     next($result);
 	 */
+	#[\Override]
 	public function next(): void
 	{
 		++$this->_current_row;
@@ -264,6 +271,7 @@ abstract class Kohana_Database_Result implements Countable, Iterator, SeekableIt
 	 *
 	 *     rewind($result);
 	 */
+	#[\Override]
 	public function rewind(): void
 	{
 		$this->_current_row = 0;
@@ -274,6 +282,7 @@ abstract class Kohana_Database_Result implements Countable, Iterator, SeekableIt
 	 *
 	 * [!!] This method is only used internally.
 	 */
+	#[\Override]
 	public function valid(): bool
 	{
 		return $this->offsetExists($this->_current_row);

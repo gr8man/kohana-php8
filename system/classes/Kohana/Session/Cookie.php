@@ -17,27 +17,32 @@ class Kohana_Session_Cookie extends Session
 	 * @param   string  $id  session id
 	 * @return  string
 	 */
+	#[\Override]
 	protected function _read($id = null)
 	{
 		return Cookie::get($this->_name);
 	}
 
+	#[\Override]
 	protected function _regenerate(): null
 	{
 		// Cookie sessions have no id
 		return null;
 	}
 
+	#[\Override]
 	protected function _write(): bool
 	{
 		return Cookie::set($this->_name, $this->__toString(), $this->_lifetime);
 	}
 
+	#[\Override]
 	protected function _restart(): bool
 	{
 		return true;
 	}
 
+	#[\Override]
 	protected function _destroy(): bool
 	{
 		return Cookie::delete($this->_name);

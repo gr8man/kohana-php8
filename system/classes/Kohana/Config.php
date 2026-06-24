@@ -160,7 +160,6 @@ class Kohana_Config
 	 * @param string    $group  Group name
 	 * @param string    $key    Variable name
 	 * @param mixed     $value  The new value
-	 * @return Kohana_Config Chainable instance
 	 */
 	public function _write_config($group, $key, $value): static
 	{

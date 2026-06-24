@@ -283,6 +283,7 @@ class Kohana_HTTP_Header extends ArrayObject implements \Stringable
 	 *     // Return the header as a string
 	 *     echo (string) $request->headers();
 	 */
+	#[\Override]
 	public function __toString(): string
 	{
 		$header = '';
@@ -312,6 +313,7 @@ class Kohana_HTTP_Header extends ArrayObject implements \Stringable
 	 * @param   boolean $replace    replace existing value
 	 * @since   3.2.0
 	 */
+	#[\Override]
 	public function offsetSet(mixed $index, mixed $newval, bool $replace = true): void
 	{
 		// Ensure the index is lowercase
@@ -339,6 +341,7 @@ class Kohana_HTTP_Header extends ArrayObject implements \Stringable
 	 *
 	 * @since   3.2.0
 	 */
+	#[\Override]
 	public function offsetExists(mixed $index): bool
 	{
 		return parent::offsetExists(strtolower((string) $index));
@@ -350,6 +353,7 @@ class Kohana_HTTP_Header extends ArrayObject implements \Stringable
 	 *
 	 * @since   3.2.0
 	 */
+	#[\Override]
 	public function offsetUnset(mixed $index): void
 	{
 		parent::offsetUnset(strtolower((string) $index));
@@ -362,6 +366,7 @@ class Kohana_HTTP_Header extends ArrayObject implements \Stringable
 	 * @param   mixed   $index  index to retrieve
 	 * @since   3.2.0
 	 */
+	#[\Override]
 	public function offsetGet(mixed $index): mixed
 	{
 		return parent::offsetGet(strtolower((string) $index));
@@ -373,6 +378,7 @@ class Kohana_HTTP_Header extends ArrayObject implements \Stringable
 	 *
 	 * @since   3.2.0
 	 */
+	#[\Override]
 	public function exchangeArray(object|array $input): array
 	{
 		/**
@@ -478,26 +484,27 @@ class Kohana_HTTP_Header extends ArrayObject implements \Stringable
 	 * quality settings. If items have the same quality value, the first item
 	 * found in the array supplied as `$types` will be returned.
 	 *
-	 *     // Get the preferred acceptable content type
-	 *     // Accept: text/html, application/json; q=.8, text/*
-	 *     $result = $header->preferred_accept(array(
-	 *         'text/html'
-	 *         'text/rtf',
-	 *         'application/json'
-	 *     )); // $result = 'application/json'
+	 * // Get the preferred acceptable content type
+	 * // Accept: text/html, application/json; q=.8, text/*
+	 * $result = $header->preferred_accept(array(
+	 * 'text/html'
+	 * 'text/rtf',
+	 * 'application/json'
+	 * )); // $result = 'application/json'
 	 *
-	 *     $result = $header->preferred_accept(array(
-	 *         'text/rtf',
-	 *         'application/xml'
-	 *     ), TRUE); // $result = FALSE (none matched explicitly)
+	 * $result = $header->preferred_accept(array(
+	 * 'text/rtf',
+	 * 'application/xml'
+	 * ), TRUE); // $result = FALSE (none matched explicitly)
 	 *
+	 * @param array   $types      the content types to examine
+	 * @param boolean $explicit   only allow explicit references, no wildcards
 	 *
-	 * @param   array   $types      the content types to examine
-	 * @param   boolean $explicit   only allow explicit references, no wildcards
-	 * @return  string  name of the preferred content type
-	 * @since   3.2.0
+	 * @return false|string name of the preferred content type
+	 *
+	 * @since 3.2.0
 	 */
-	public function preferred_accept(array $types, $explicit = false)
+	public function preferred_accept(array $types, $explicit = false): string|false
 	{
 		$preferred = false;
 		$ceiling = 0;

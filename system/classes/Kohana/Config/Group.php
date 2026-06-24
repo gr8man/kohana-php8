@@ -40,6 +40,7 @@ class Kohana_Config_Group extends ArrayObject implements \Stringable
 	 *
 	 *     echo $config;
 	 */
+	#[\Override]
 	public function __toString(): string
 	{
 		return serialize($this->getArrayCopy());
@@ -108,6 +109,7 @@ class Kohana_Config_Group extends ArrayObject implements \Stringable
 	 * @param mixed  $key   The key of the config item we're changing
 	 * @param mixed  $value The new array value
 	 */
+	#[\Override]
 	public function offsetSet(mixed $key, mixed $value): void
 	{
 		$this->_parent_instance->_write_config($this->_group_name, $key, $value);

@@ -177,6 +177,7 @@ class Kohana_Cache_Memcache extends Cache implements Cache_Arithmetic {
 	 * @return  mixed
 	 * @throws  Cache_Exception
 	 */
+	#[\Override]
 	public function get($id, $default = NULL)
 	{
 		// Get the value from Memcache
@@ -208,6 +209,7 @@ class Kohana_Cache_Memcache extends Cache implements Cache_Arithmetic {
      * @param   mixed    $data      data to set to cache
      * @param   integer  $lifetime  lifetime in seconds, maximum value 2592000
      */
+    #[\Override]
     public function set($id, $data, $lifetime = 3600): bool
 	{
 		// If the lifetime is greater than the ceiling
@@ -244,6 +246,7 @@ class Kohana_Cache_Memcache extends Cache implements Cache_Arithmetic {
      * @param   string   $id       id of entry to delete
      * @param   integer  $timeout  timeout of entry, if zero item is deleted immediately, otherwise the item will delete after the specified value in seconds
      */
+    #[\Override]
     public function delete($id, $timeout = 0): bool
 	{
 		// Delete the id
@@ -262,6 +265,7 @@ class Kohana_Cache_Memcache extends Cache implements Cache_Arithmetic {
 	 *
 	 * @return  boolean
 	 */
+	#[\Override]
 	public function delete_all()
 	{
 		$result = $this->_memcache->flush();
@@ -327,6 +331,7 @@ class Kohana_Cache_Memcache extends Cache implements Cache_Arithmetic {
      * @param   string    id of cache entry to increment
      * @param   int       step value to increment by
      */
+    #[\Override]
     public function increment($id, $step = 1): int
 	{
 		return $this->_memcache->increment($id, $step);
@@ -340,6 +345,7 @@ class Kohana_Cache_Memcache extends Cache implements Cache_Arithmetic {
      * @param   string    id of cache entry to decrement
      * @param   int       step value to decrement by
      */
+    #[\Override]
     public function decrement($id, $step = 1): int
 	{
 		return $this->_memcache->decrement($id, $step);

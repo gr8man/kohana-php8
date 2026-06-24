@@ -71,6 +71,7 @@ class Kohana_Cache_Apcu extends Cache implements Cache_Arithmetic {
 	 * @return  mixed
 	 * @throws  Cache_Exception
 	 */
+	#[\Override]
 	public function get($id, $default = NULL)
 	{
 		$data = apcu_fetch($this->_sanitize_id($id), $success);
@@ -93,6 +94,7 @@ class Kohana_Cache_Apcu extends Cache implements Cache_Arithmetic {
      * @param   string   $data      data to set to cache
      * @param   integer  $lifetime  lifetime in seconds
      */
+    #[\Override]
     public function set($id, $data, $lifetime = NULL): bool
 	{
 		if ($lifetime === NULL)
@@ -111,6 +113,7 @@ class Kohana_Cache_Apcu extends Cache implements Cache_Arithmetic {
      *
      * @param   string  $id  id to remove from cache
      */
+    #[\Override]
     public function delete($id): bool
 	{
 		return apcu_delete($this->_sanitize_id($id));
@@ -126,6 +129,7 @@ class Kohana_Cache_Apcu extends Cache implements Cache_Arithmetic {
      *     // Delete all cache entries in the apcu group
      *     Cache::instance('apcu')->delete_all();
      */
+    #[\Override]
     public function delete_all(): bool
 	{
 		return apcu_clear_cache();
@@ -141,6 +145,7 @@ class Kohana_Cache_Apcu extends Cache implements Cache_Arithmetic {
 	 * @return  integer
 	 * @return  boolean
 	 */
+	#[\Override]
 	public function increment($id, $step = 1): int|false
 	{
 		if (apcu_exists($id)) {
@@ -160,6 +165,7 @@ class Kohana_Cache_Apcu extends Cache implements Cache_Arithmetic {
 	 * @return  integer
 	 * @return  boolean
 	 */
+	#[\Override]
 	public function decrement($id, $step = 1): int|false
 	{
 		if (apcu_exists($id)) {
