@@ -597,7 +597,7 @@ class Kohana_Core
 	 * @return  array   a list of files when $array is TRUE
 	 * @return  string  single file path
 	 */
-	public static function find_file(string $dir, string $file, $ext = null, bool $array = false)
+	public static function find_file(string $dir, mixed $file, $ext = null, bool $array = false)
 	{
 		if ($ext === null) {
 			// Use the default extension
@@ -780,7 +780,7 @@ class Kohana_Core
 	 * @psalm-param -3600|86400|null $lifetime
 	 * @psalm-param false|list{'Route'} $allowed_classes
 	 */
-	public static function cache(string $name, array|string|false|null $data = null, int|null $lifetime = null, array|false $allowed_classes = false): bool
+	public static function cache(string $name, mixed $data = null, int|null $lifetime = null, array|false $allowed_classes = false): mixed
 	{
 		// Cache file is a hash of the name
 		$file = sha1($name).'.txt';
@@ -856,7 +856,7 @@ class Kohana_Core
 	 * @uses Arr::merge
 	 * @uses Arr::path
 	 */
-	public static function message(string $file, string|null $path = null, $default = null)
+	public static function message(mixed $file, string|null $path = null, $default = null)
 	{
 		static $messages;
 

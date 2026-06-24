@@ -176,7 +176,7 @@ class Kohana_Cookie
 	 *
 	 * @throws Kohana_Exception if Cookie::$salt is not configured
 	 */
-	public static function salt(string $name, string $value): string
+	public static function salt(string $name, mixed $value): string
 	{
 		// Require a valid salt
 		if (! Cookie::$salt) {

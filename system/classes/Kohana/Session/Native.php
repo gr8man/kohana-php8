@@ -17,7 +17,7 @@ class Kohana_Session_Native extends Session
 	 * @return false|string
 	 */
 	#[\Override]
-	public function id(): string|false|false
+	public function id(): string|false
 	{
 		return session_id();
 	}
@@ -78,7 +78,7 @@ class Kohana_Session_Native extends Session
 	 * @return false|string
 	 */
 	#[\Override]
-	protected function _regenerate(): string|false|false
+	protected function _regenerate(): string|false
 	{
 		// Regenerate the session id
 		session_regenerate_id();

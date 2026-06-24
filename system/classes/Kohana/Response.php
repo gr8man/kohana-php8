@@ -154,7 +154,7 @@ class Kohana_Response implements HTTP_Response, \Stringable
 			return $this->_body;
 		}
 
-		$this->_body = $content;
+		$this->_body = (string) $content;
 		return $this;
 	}
 

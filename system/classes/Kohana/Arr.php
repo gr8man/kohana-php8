@@ -243,7 +243,7 @@ class Kohana_Arr
 	 * @param   mixed   $default    default value
 	 * @return  mixed
 	 */
-	public static function get(array $array, $key, $default = null)
+	public static function get(mixed $array, $key, $default = null)
 	{
 		if ($array instanceof ArrayObject) {
 			// This is a workaround for inconsistent implementation of isset between PHP and HHVM

@@ -17,7 +17,7 @@ class Kohana_Valid
 	/**
 	 * Checks if a field is not empty.
 	 */
-	public static function not_empty(string $value): bool
+	public static function not_empty(mixed $value): bool
 	{
 		if (is_object($value) and $value instanceof ArrayObject) {
 			// Get the array from the ArrayObject
@@ -498,7 +498,7 @@ class Kohana_Valid
 	 * @param   string  $field  field name
 	 * @param   string  $match  field name to match
 	 */
-	public static function matches(array $array, $field, $match): bool
+	public static function matches(mixed $array, $field, $match): bool
 	{
 		return ($array[$field] === $array[$match]);
 	}

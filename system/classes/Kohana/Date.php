@@ -325,7 +325,7 @@ class Kohana_Date
 	 *
 	 * @psalm-return array<float|int>|false|float|int
 	 */
-	public static function span($remote, $local = null, $output = 'years,months,weeks,days,hours,minutes,seconds'): array|int|float|false|int|array
+	public static function span($remote, $local = null, $output = 'years,months,weeks,days,hours,minutes,seconds'): array|int|float|false
 	{
 		// Normalize output
 		$output = trim(strtolower((string) $output));

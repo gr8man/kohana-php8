@@ -179,7 +179,7 @@ class Kohana_Num
 				 *
 				 * @param string  $bytes  file size in SB format
 				 */
-	public static function bytes(string|false $size): float
+	public static function bytes(mixed $size): float
 	{
 		// Prepare the size
 		$size = trim((string) $size);

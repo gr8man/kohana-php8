@@ -129,7 +129,7 @@ abstract class Kohana_Unittest_TestCase extends PHPUnit\Framework\TestCase
 	 * Overwrite assertContains to support strings in PHPUnit 9+
 	 */
 	#[\Override]
-	public static function assertContains($needle, iterable $haystack, string $message = ''): void
+	public static function assertContains($needle, iterable|string $haystack, string $message = ''): void
 	{
 		if (is_string($haystack)) {
 			self::assertStringContainsString($needle, $haystack, $message);
@@ -142,7 +142,7 @@ abstract class Kohana_Unittest_TestCase extends PHPUnit\Framework\TestCase
 	 * Overwrite assertNotContains to support strings in PHPUnit 9+
 	 */
 	#[\Override]
-	public static function assertNotContains($needle, iterable $haystack, string $message = ''): void
+	public static function assertNotContains($needle, iterable|string $haystack, string $message = ''): void
 	{
 		if (is_string($haystack)) {
 			self::assertStringNotContainsString($needle, $haystack, $message);

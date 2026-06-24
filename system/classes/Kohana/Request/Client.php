@@ -161,7 +161,7 @@ abstract class Kohana_Request_Client
 				 *
 				 * @param HTTP_Cache  $cache  engine to use for caching
 				 */
-	public function cache(HTTP_Cache $cache = null): static|Cache
+	public function cache(HTTP_Cache $cache = null)
 	{
 		if ($cache === null) {
 			return $this->_cache;

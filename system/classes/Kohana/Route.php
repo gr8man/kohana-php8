@@ -280,7 +280,7 @@ class Kohana_Route
 	 */
 	protected $_defaults = array('action' => 'index', 'host' => false);
 
-	protected string $_route_regex;
+	protected ?string $_route_regex = null;
 
 	/**
 	 * Creates a new route. Sets the URI and regular expressions for keys.

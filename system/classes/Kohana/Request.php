@@ -519,7 +519,7 @@ class Kohana_Request implements HTTP_Request, \Stringable
 	/**
 	 * @var  Route       route matched for this request
 	 */
-	protected \Route $_route;
+	protected ?\Route $_route = null;
 
 	/**
 	 * @var  Kohana_HTTP_Header  headers to sent as part of the request
@@ -737,7 +737,7 @@ class Kohana_Request implements HTTP_Request, \Stringable
 	 *
 	 * @param Route|null $route
 	 */
-	public function route(Route $route = null): \Route|self
+	public function route(Route $route = null): \Route|null|self
 	{
 		if ($route === null) {
 			// Act as a getter

@@ -373,7 +373,7 @@ class Kohana_CookieTest_TestableCookie extends Cookie
 	/**
 	 * @return int
 	 */
-	protected static function _time()
+	protected static function _time(): int
 	{
 		return Kohana_CookieTest::UNIX_TIMESTAMP;
 	}
