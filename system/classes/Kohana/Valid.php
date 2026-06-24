@@ -262,7 +262,7 @@ class Kohana_Valid
 		$length = strlen((string) $number);
 
 		// Validate the card length by the card type
-		if (! in_array($length, preg_split('/\D+/', (string) $cards[$type]['length']))) {
+		if (! in_array((string) $length, preg_split('/\D+/', (string) $cards[$type]['length']), true)) {
 			return false;
 		}
 

@@ -17,5 +17,5 @@ function _strlen($str)
 		return strlen($str);
 	}
 
-	return strlen(utf8_decode($str));
+	return mb_strlen($str, 'UTF-8');
 }

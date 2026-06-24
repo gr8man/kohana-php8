@@ -133,16 +133,8 @@ abstract class Kohana_Auth
 	 */
 	public function hash_password($password)
 	{
-		if (function_exists('password_hash')) {
-			$cost = isset($this->_config['bcrypt_cost']) ? (int) $this->_config['bcrypt_cost'] : 12;
-			return password_hash($password, PASSWORD_BCRYPT, array('cost' => $cost));
-		}
-
-		if (! $this->_config['hash_key']) {
-			throw new Kohana_Exception('A valid hash key must be set in your auth config.');
-		}
-
-		return hash_hmac((string) $this->_config['hash_method'], $password, (string) $this->_config['hash_key']);
+		$cost = isset($this->_config['bcrypt_cost']) ? (int) $this->_config['bcrypt_cost'] : 12;
+		return password_hash($password, PASSWORD_BCRYPT, array('cost' => $cost));
 	}
 
 	/**
@@ -158,10 +150,7 @@ abstract class Kohana_Auth
 	public function check_password($password, $hash)
 	{
 		if (preg_match('/^\$2[aby]?\$/', $hash)) {
-			if (function_exists('password_verify')) {
-				return password_verify($password, $hash);
-			}
-			throw new Kohana_Exception('bcrypt requires PHP 5.5+ or password_compat library.');
+			return password_verify($password, $hash);
 		}
 
 		if (! $this->_config['hash_key']) {
@@ -180,11 +169,8 @@ abstract class Kohana_Auth
 	 */
 	public function needs_rehash($hash)
 	{
-		if (function_exists('password_needs_rehash')) {
-			$cost = isset($this->_config['bcrypt_cost']) ? (int) $this->_config['bcrypt_cost'] : 12;
-			return password_needs_rehash($hash, PASSWORD_BCRYPT, array('cost' => $cost));
-		}
-		return false;
+		$cost = isset($this->_config['bcrypt_cost']) ? (int) $this->_config['bcrypt_cost'] : 12;
+		return password_needs_rehash($hash, PASSWORD_BCRYPT, array('cost' => $cost));
 	}
 
 	/**

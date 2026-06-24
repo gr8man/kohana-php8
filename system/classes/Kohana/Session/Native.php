@@ -46,13 +46,14 @@ class Kohana_Session_Native extends Session
 			: Cookie::$domain;
 
 		// Sync up the session cookie with Cookie parameters
-		session_set_cookie_params(
-			$this->_lifetime,
-			Cookie::$path,
-			$session_cookie_domain,
-			Cookie::$secure,
-			Cookie::$httponly
-		);
+		session_set_cookie_params(array(
+			'lifetime' => $this->_lifetime,
+			'path' => Cookie::$path,
+			'domain' => $session_cookie_domain,
+			'secure' => Cookie::$secure,
+			'httponly' => Cookie::$httponly,
+			'samesite' => Cookie::$samesite,
+		));
 
 		// Do not allow PHP to send Cache-Control headers
 		session_cache_limiter('');

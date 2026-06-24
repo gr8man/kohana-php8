@@ -86,9 +86,19 @@
 
 ```
 PHPUnit 9.6.34
-Tests: 1262, Assertions: 2869, Errors: 0, Failures: 0, Skipped: 2, Risky: 1
+Tests: 1461, Assertions: 3160, Errors: 0, Failures: 0, Skipped: 5
 ```
 
 Aplikacja jest stabilna, a większość kluczowych błędów została wyeliminowana. Kolejne kroki koncentrują się na kompletności testów, dalszej modernizacji kodu i generowaniu raportu końcowego.
+
+## Dodatkowe poprawki wprowadzone:
+
+7.  **Naprawa typów:** `Request.php:233` - dodano `(string)` cast na wyniku `parse_url()` przed `strlen()`, aby uniknąć TypeError przy null.
+8.  **Type hint:** `HTTP/Header.php:412` - dodano `string` type hint dla parametru `$header_line` w `parse_header_string()`.
+9.  **Strict in_array:** `Valid.php:265` - dodano `(string)` cast i `true` (strict) do `in_array()` dla porównania int vs string[].
+10. **Deprecated utf8_decode:** `system/utf8/strlen.php:20` - zastąpiono `utf8_decode()` na `mb_strlen($str, 'UTF-8')`.
+11. **Dead code:** `Core.php` - usunięto martwy kod `register_globals` i `safe_mode` z `init()` (wyłączone od PHP 5.4).
+12. **Modernizacja sesji:** `Session/Native.php` - `session_set_cookie_params()` zmieniono na array API (PHP 7.3+).
+13. **Czysty kod:** `Auth.php` - usunięto zbędne `function_exists()` dla wbudowanych funkcji `password_hash`/`password_verify`/`password_needs_rehash`.
         
 --- End of content ---

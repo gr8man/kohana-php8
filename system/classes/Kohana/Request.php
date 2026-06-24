@@ -226,9 +226,9 @@ class Kohana_Request implements HTTP_Request, \Stringable
 			}
 
 			// Get the path from the base URL, including the index file
-			$base_url = parse_url(Kohana::$base_url, PHP_URL_PATH);
+			$base_url = (string) parse_url(Kohana::$base_url, PHP_URL_PATH);
 
-			if (str_starts_with((string) $uri, $base_url)) {
+			if ($base_url !== '' && str_starts_with((string) $uri, $base_url)) {
 				// Remove the base URL from the URI
 				$uri = substr((string) $uri, strlen($base_url));
 			}

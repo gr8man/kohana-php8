@@ -401,7 +401,7 @@ class Kohana_HTTP_Header extends ArrayObject implements \Stringable
 	 * @param   string      $header_line    the line from the header to parse
 	 * @since   3.2.0
 	 */
-	public function parse_header_string($resource, $header_line): int
+	public function parse_header_string($resource, string $header_line): int
 	{
 		if (preg_match_all('/(\w[^\s:]*):[ ]*([^\r\n]*(?:\r\n[ \t][^\r\n]*)*)/', $header_line, $matches)) {
 			foreach ($matches[0] as $key => $value) {
