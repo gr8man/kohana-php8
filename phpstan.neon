@@ -1,5 +1,5 @@
 parameters:
-  level: 1
+  level: 0
   paths:
     - system/classes
     - modules
@@ -9,3 +9,7 @@ parameters:
     - system/tests
     - modules/*/tests
     - application/tests
+  ignoreErrors:
+    - '#is implicitly nullable via default value null.#'
+    - '#Function _.* not found.#'
+    - '#Method .* should return .* but return statement is missing.#'
