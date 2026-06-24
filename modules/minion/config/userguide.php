@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-return array(
-	'modules' => array(
-		'minion' => array(
+return [
+	'modules' => [
+		'minion' => [
 			'enabled' => true,
 			'name' => 'Minion',
 			'description' => 'Minion is a simple command line task runner',
 			'copyright' => '&copy; 2009-2011 Kohana Team',
-		)
-	)
-);
+		]
+	]
+];

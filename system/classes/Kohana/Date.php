@@ -95,7 +95,7 @@ class Kohana_Date
 		// Always integer
 		$step = (int) $step;
 
-		$seconds = array();
+		$seconds = [];
 
 		for ($i = $start; $i < $end; $i += $step) {
 			$seconds[$i] = sprintf('%02d', $i);
@@ -114,7 +114,7 @@ class Kohana_Date
 	 * @param   integer $step   amount to increment each step by, 1 to 30
 	 * @return  array   A mirrored (foo => foo) array from 1-60.
 	 */
-	public static function minutes($step = 5)
+	public static function minutes($step = 5): array
 	{
 		// Because there are the same number of minutes as seconds in this set,
 		// we choose to re-use seconds(), rather than creating an entirely new
@@ -139,14 +139,14 @@ class Kohana_Date
 		// Default values
 		$step = (int) $step;
 		$long = (bool) $long;
-		$hours = array();
+		$hours = [];
 
 		// Set the default start if none was specified.
 		if ($start === null) {
 			$start = ($long === false) ? 1 : 0;
 		}
 
-		$hours = array();
+		$hours = [];
 
 		// 24-hour time has 24 hours, instead of 12
 		$size = ($long === true) ? 23 : 12;
@@ -228,7 +228,7 @@ class Kohana_Date
 
 		// We use caching for months, because time functions are used
 		if (empty($months[$year][$month])) {
-			$months[$year][$month] = array();
+			$months[$year][$month] = [];
 
 			// Use date to find the number of days in the given month
 			$total = date('t', mktime(1, 0, 0, $month, 1, $year)) + 1;
@@ -264,9 +264,9 @@ class Kohana_Date
 	 * @param   string  $format The format to use for months
 	 * @return  array   An array of months based on the specified format
 	 */
-	public static function months($format = null)
+	public static function months($format = null): array
 	{
-		$months = array();
+		$months = [];
 
 		if ($format === Date::MONTHS_LONG or $format === Date::MONTHS_SHORT) {
 			$date_format = ($format === Date::MONTHS_LONG) ? 'F' : 'M';
@@ -296,7 +296,7 @@ class Kohana_Date
 		$start = ($start === false) ? (date('Y') - 5) : (int) $start;
 		$end   = ($end   === false) ? (date('Y') + 5) : (int) $end;
 
-		$years = array();
+		$years = [];
 
 		for ($i = $start; $i <= $end; $i++) {
 			$years[$i] = (string) $i;

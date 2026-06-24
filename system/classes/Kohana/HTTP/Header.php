@@ -28,12 +28,12 @@ class Kohana_HTTP_Header extends ArrayObject implements \Stringable
 	 */
 	public static function accept_quality(array $parts): array
 	{
-		$parsed = array();
+		$parsed = [];
 
 		// Resource light iteration
 		$parts_keys = array_keys($parts);
 		foreach ($parts_keys as $key) {
-			$value = trim(str_replace(array("\r", "\n"), '', $parts[$key]));
+			$value = trim(str_replace(["\r", "\n"], '', $parts[$key]));
 
 			$pattern = '~\b(\;\s*+)?q\s*+=\s*+([.0-9]+)~';
 
@@ -69,13 +69,13 @@ class Kohana_HTTP_Header extends ArrayObject implements \Stringable
 
 		// If there is no accept, lets accept everything
 		if ($accepts === null) {
-			return array('*' => array('*' => (float) HTTP_Header::DEFAULT_QUALITY));
+			return ['*' => ['*' => (float) HTTP_Header::DEFAULT_QUALITY]];
 		}
 
 		// Parse the accept header qualities
 		$accepts = HTTP_Header::accept_quality($accepts);
 
-		$parsed_accept = array();
+		$parsed_accept = [];
 
 		// This method of iteration uses less resource
 		$keys = array_keys($accepts);
@@ -96,39 +96,37 @@ class Kohana_HTTP_Header extends ArrayObject implements \Stringable
 	}
 
 	/**
-	 * Parses the `Accept-Charset:` HTTP header and returns an array containing
-	 * the charset and associated quality.
-	 *
-	 * @link    http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.2
-	 * @param   string  $charset    charset string to parse
-	 * @return  array
-	 * @since   3.2.0
-	 */
-	public static function parse_charset_header($charset = null)
+     * Parses the `Accept-Charset:` HTTP header and returns an array containing
+     * the charset and associated quality.
+     *
+     * @link    http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.2
+     * @param   string  $charset    charset string to parse
+     * @since   3.2.0
+     */
+    public static function parse_charset_header($charset = null): array
 	{
 		if ($charset === null) {
-			return array('*' => (float) HTTP_Header::DEFAULT_QUALITY);
+			return ['*' => (float) HTTP_Header::DEFAULT_QUALITY];
 		}
 
 		return HTTP_Header::accept_quality(explode(',', (string) $charset));
 	}
 
 	/**
-	 * Parses the `Accept-Encoding:` HTTP header and returns an array containing
-	 * the charsets and associated quality.
-	 *
-	 * @link    http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.3
-	 * @param   string  $encoding   charset string to parse
-	 * @return  array
-	 * @since   3.2.0
-	 */
-	public static function parse_encoding_header($encoding = null)
+     * Parses the `Accept-Encoding:` HTTP header and returns an array containing
+     * the charsets and associated quality.
+     *
+     * @link    http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.3
+     * @param   string  $encoding   charset string to parse
+     * @since   3.2.0
+     */
+    public static function parse_encoding_header($encoding = null): array
 	{
 		// Accept everything
 		if ($encoding === null) {
-			return array('*' => (float) HTTP_Header::DEFAULT_QUALITY);
+			return ['*' => (float) HTTP_Header::DEFAULT_QUALITY];
 		} elseif ($encoding === '') {
-			return array('identity' => (float) HTTP_Header::DEFAULT_QUALITY);
+			return ['identity' => (float) HTTP_Header::DEFAULT_QUALITY];
 		} else {
 			return HTTP_Header::accept_quality(explode(',', (string) $encoding));
 		}
@@ -145,12 +143,12 @@ class Kohana_HTTP_Header extends ArrayObject implements \Stringable
 	public static function parse_language_header($language = null): array
 	{
 		if ($language === null) {
-			return array('*' => array('*' => (float) HTTP_Header::DEFAULT_QUALITY));
+			return ['*' => ['*' => (float) HTTP_Header::DEFAULT_QUALITY]];
 		}
 
 		$language = HTTP_Header::accept_quality(explode(',', (string) $language));
 
-		$parsed_language = array();
+		$parsed_language = [];
 
 		$keys = array_keys($language);
 		foreach ($keys as $key) {
@@ -188,7 +186,7 @@ class Kohana_HTTP_Header extends ArrayObject implements \Stringable
 	 */
 	public static function create_cache_control(array $cache_control): string
 	{
-		$parts = array();
+		$parts = [];
 
 		foreach ($cache_control as $key => $value) {
 			$parts[] = (is_int($key)) ? $value : ($key.'='.$value);
@@ -221,7 +219,7 @@ class Kohana_HTTP_Header extends ArrayObject implements \Stringable
 			return false;
 		}
 
-		$output = array();
+		$output = [];
 
 		foreach ($directives as $directive) {
 			if (str_contains($directive, '=')) {
@@ -266,7 +264,7 @@ class Kohana_HTTP_Header extends ArrayObject implements \Stringable
 	 * @param   int     $flags          Flags
 	 * @param   string  $iterator_class The iterator class to use
 	 */
-	public function __construct(array $input = array(), $flags = 0, $iterator_class = 'ArrayIterator')
+	public function __construct(array $input = [], $flags = 0, $iterator_class = 'ArrayIterator')
 	{
 		/**
 		 * @link http://www.w3.org/Protocols/rfc2616/rfc2616.html
@@ -329,7 +327,7 @@ class Kohana_HTTP_Header extends ArrayObject implements \Stringable
 		if (is_array($current_value)) {
 			$current_value[] = $newval;
 		} else {
-			$current_value = array($current_value, $newval);
+			$current_value = [$current_value, $newval];
 		}
 
 		parent::offsetSet($index, $current_value);
@@ -765,7 +763,7 @@ class Kohana_HTTP_Header extends ArrayObject implements \Stringable
 		$status = $response->status();
 
 		// Create the response header
-		$processed_headers = array($protocol.' '.$status.' '.Response::$messages[$status]);
+		$processed_headers = [$protocol.' '.$status.' '.Response::$messages[$status]];
 
 		// Get the headers array
 		$headers = $response->headers()->getArrayCopy();

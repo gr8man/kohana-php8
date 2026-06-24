@@ -127,7 +127,7 @@ class Kohana_DB
 	 * @param   string  $string  expression
 	 * @param   array   parameters
 	 */
-	public static function expr($string, $parameters = array()): \Database_Expression
+	public static function expr($string, $parameters = []): \Database_Expression
 	{
 		return new Database_Expression($string, $parameters);
 	}

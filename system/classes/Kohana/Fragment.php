@@ -36,7 +36,7 @@ class Kohana_Fragment
 	/**
 	 * @var  array  list of buffer => cache key
 	 */
-	protected static $_caches = array();
+	protected static $_caches = [];
 
 	/**
 	 * Generate the cache key name for a fragment.
@@ -75,7 +75,7 @@ class Kohana_Fragment
 	 * @param   integer $lifetime   fragment cache lifetime
 	 * @param   boolean $i18n       multilingual fragment support
 	 */
-	public static function load($name, $lifetime = null, $i18n = null): bool
+	public static function load(string $name, $lifetime = null, $i18n = null): bool
 	{
 		// Set the cache lifetime
 		$lifetime = ($lifetime === null) ? Fragment::$lifetime : (int) $lifetime;
@@ -132,7 +132,7 @@ class Kohana_Fragment
 	 * @param   string  $name   fragment name
 	 * @param   boolean $i18n   multilingual fragment support
 	 */
-	public static function delete($name, $i18n = null): void
+	public static function delete(string $name, $i18n = null): void
 	{
 		// Invalid the cache
 		Kohana::cache(Fragment::_cache_key($name, $i18n), null, -3600);

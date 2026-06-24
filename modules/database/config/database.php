@@ -3,10 +3,10 @@
 declare(strict_types=1);
 defined('SYSPATH') or die('No direct access allowed.');
 
-return array(
-	'default' => array(
+return [
+	'default' => [
 		'type'       => 'MySQL',
-		'connection' => array(
+		'connection' => [
 			/**
 			 * The following options are available for MySQL:
 			 *
@@ -24,14 +24,14 @@ return array(
 			'username'   => false,
 			'password'   => false,
 			'persistent' => false,
-		),
+		],
 		'table_prefix' => '',
 		'charset'      => 'utf8',
 		'caching'      => false,
-	),
-	'alternate' => array(
+	],
+	'alternate' => [
 		'type'       => 'PDO',
-		'connection' => array(
+		'connection' => [
 			/**
 			 * The following options are available for PDO:
 			 *
@@ -44,7 +44,7 @@ return array(
 			'username'   => 'root',
 			'password'   => 'r00tdb',
 			'persistent' => false,
-		),
+		],
 		/**
 		 * The following extra options are available for PDO:
 		 *
@@ -53,7 +53,7 @@ return array(
 		'table_prefix' => '',
 		'charset'      => 'utf8',
 		'caching'      => false,
-	),
+	],
 	/**
 	 * MySQLi driver config information
 	 *
@@ -88,4 +88,4 @@ return array(
 // 		'charset'      => 'utf8',
 // 		'caching'      => FALSE,
 // 	),
-);
+];
