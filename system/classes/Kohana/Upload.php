@@ -53,7 +53,7 @@ class Kohana_Upload
 	 * @return  string  on success, full path to new file
 	 * @return  FALSE   on failure
 	 */
-	public static function save(array $file, $filename = null, $directory = null, $chmod = 0644)
+	public static function save(array $file, $filename = null, $directory = null, $chmod = 0644): false|string
 	{
 		if (! isset($file['tmp_name']) or ! is_uploaded_file($file['tmp_name'])) {
 			// Ignore corrupted uploads
@@ -78,7 +78,7 @@ class Kohana_Upload
 		if (! is_dir($directory) or ! is_writable(realpath($directory))) {
 			throw new Kohana_Exception(
 				'Directory :dir must be writable',
-				array(':dir' => Debug::path($directory))
+				[':dir' => Debug::path($directory)]
 			);
 		}
 
@@ -99,16 +99,15 @@ class Kohana_Upload
 	}
 
 	/**
-	 * Tests if upload data is valid, even if no file was uploaded. If you
-	 * _do_ require a file to be uploaded, add the [Upload::not_empty] rule
-	 * before this rule.
-	 *
-	 *     $array->rule('file', 'Upload::valid')
-	 *
-	 * @param   array   $file   $_FILES item
-	 * @return  bool
-	 */
-	public static function valid($file)
+     * Tests if upload data is valid, even if no file was uploaded. If you
+     * _do_ require a file to be uploaded, add the [Upload::not_empty] rule
+     * before this rule.
+     *
+     *     $array->rule('file', 'Upload::valid')
+     *
+     * @param   array   $file   $_FILES item
+     */
+    public static function valid(array $file): bool
 	{
 		return (isset($file['error'])
 			and isset($file['name'])
@@ -118,14 +117,13 @@ class Kohana_Upload
 	}
 
 	/**
-	 * Tests if a successful upload has been made.
-	 *
-	 *     $array->rule('file', 'Upload::not_empty');
-	 *
-	 * @param   array   $file   $_FILES item
-	 * @return  bool
-	 */
-	public static function not_empty(array $file)
+     * Tests if a successful upload has been made.
+     *
+     *     $array->rule('file', 'Upload::not_empty');
+     *
+     * @param   array   $file   $_FILES item
+     */
+    public static function not_empty(array $file): bool
 	{
 		return (isset($file['error'])
 			and isset($file['tmp_name'])
@@ -148,7 +146,7 @@ class Kohana_Upload
 			return true;
 		}
 
-		$ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+		$ext = strtolower(pathinfo((string) $file['name'], PATHINFO_EXTENSION));
 
 		return in_array($ext, $allowed);
 	}
@@ -209,8 +207,8 @@ class Kohana_Upload
 		if (Upload::not_empty($file)) {
 			try {
 				// Get the width and height from the uploaded image
-				list($width, $height) = getimagesize($file['tmp_name']);
-			} catch (ErrorException $e) {
+				[$width, $height] = getimagesize($file['tmp_name']);
+			} catch (ErrorException) {
 				// Ignore read errors
 			}
 

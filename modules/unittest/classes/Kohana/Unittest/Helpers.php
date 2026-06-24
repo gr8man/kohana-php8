@@ -14,7 +14,7 @@ class Kohana_Unittest_Helpers
 	 * @see has_internet
 	 * @var boolean
 	 */
-	protected static $_has_internet = null;
+	protected static $_has_internet;
 
 	/**
 	 * Check for internet connectivity
@@ -27,29 +27,26 @@ class Kohana_Unittest_Helpers
 			// The @ operator is used here to avoid DNS errors when there is no connection.
 			$sock = @fsockopen("www.google.com", 80, $errno, $errstr, 1);
 
-			self::$_has_internet = (bool) $sock ? true : false;
+			self::$_has_internet = (bool) $sock;
 		}
 
 		return self::$_has_internet;
 	}
 
 	/**
-	 * Helper function which replaces the "/" to OS-specific delimiter
-	 *
-	 * @param string $path
-	 * @return string
-	 */
-	public static function dir_separator($path)
+     * Helper function which replaces the "/" to OS-specific delimiter
+     *
+     * @param string $path
+     */
+    public static function dir_separator($path): string
 	{
 		return str_replace('/', DIRECTORY_SEPARATOR, $path);
 	}
 
 	/**
-	 * Removes all cache files from the kohana cache dir
-	 *
-	 * @return void
-	 */
-	public static function clean_cache_dir()
+     * Removes all cache files from the kohana cache dir
+     */
+    public static function clean_cache_dir(): void
 	{
 		$cache_dir = opendir(Kohana::$cache_dir);
 
@@ -80,7 +77,7 @@ class Kohana_Unittest_Helpers
 	 * @see set_environment
 	 * @var array
 	 */
-	protected $_environment_backup = array();
+	protected $_environment_backup = [];
 
 	/**
 	 * Allows easy setting & backing up of enviroment config
@@ -103,20 +100,20 @@ class Kohana_Unittest_Helpers
 			$backup_needed = ! array_key_exists($option, $this->_environment_backup);
 
 			// Handle changing superglobals
-			if (in_array($option, array('_GET', '_POST', '_SERVER', '_FILES'))) {
+			if (in_array($option, ['_GET', '_POST', '_SERVER', '_FILES'])) {
 				// For some reason we need to do this in order to change the superglobals
-				global $$option;
+				global ${$option};
 
 				if ($backup_needed) {
-					$this->_environment_backup[$option] = $$option;
+					$this->_environment_backup[$option] = ${$option};
 				}
 
 				// PHPUnit makes a backup of superglobals automatically
-				$$option = $value;
+				${$option} = $value;
 			}
 			// If this is a static property i.e. Html::$windowed_urls
-			elseif (strpos($option, '::$') !== false) {
-				list($class, $var) = explode('::$', $option, 2);
+			elseif (str_contains((string) $option, '::$')) {
+				[$class, $var] = explode('::$', (string) $option, 2);
 
 				$class = new ReflectionClass($class);
 
@@ -127,9 +124,9 @@ class Kohana_Unittest_Helpers
 				$class->setStaticPropertyValue($var, $value);
 			}
 			// If this is an environment variable
-			elseif (preg_match('/^[A-Z_-]+$/', $option) or isset($_SERVER[$option])) {
+			elseif (preg_match('/^[A-Z_-]+$/', (string) $option) or isset($_SERVER[$option])) {
 				if ($backup_needed) {
-					$this->_environment_backup[$option] = isset($_SERVER[$option]) ? $_SERVER[$option] : '';
+					$this->_environment_backup[$option] = $_SERVER[$option] ?? '';
 				}
 
 				$_SERVER[$option] = $value;
@@ -140,7 +137,7 @@ class Kohana_Unittest_Helpers
 					$this->_environment_backup[$option] = Kohana::$config->load($option);
 				}
 
-				list($group, $var) = explode('.', $option, 2);
+				[$group, $var] = explode('.', (string) $option, 2);
 
 				Kohana::$config->load($group)->set($var, $value);
 			}
@@ -153,7 +150,7 @@ class Kohana_Unittest_Helpers
 	 * @chainable
 	 * @return Kohana_Unittest_Helpers $this
 	 */
-	public function restore_environment()
+	public function restore_environment(): void
 	{
 		$this->set_environment($this->_environment_backup);
 	}

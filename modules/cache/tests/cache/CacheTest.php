@@ -23,48 +23,46 @@ class Kohana_CacheTest extends PHPUnit_Framework_TestCase {
 	 */
 	public function provider_instance()
 	{
-		$tmp = realpath(sys_get_temp_dir());
+		realpath(sys_get_temp_dir());
 
-		$base = array();
+		$base = [];
 
 		if (Kohana::$config->load('cache.file'))
 		{
-			$base = array(
+			$base = [
 				// Test default group
-				array(
+				[
 					NULL,
 					Cache::instance('file')
-				),
+				],
 				// Test defined group
-				array(
+				[
 					'file',
 					Cache::instance('file')
-				),
-			);
+				],
+			];
 		}
 
 
-		return array(
+		return [
 			// Test bad group definition
-			$base+array(
+			$base+[
 				Kohana_CacheTest::BAD_GROUP_DEFINITION,
 				'Failed to load Kohana Cache group: 1010'
-			),
-		);
+			],
+		];
 	}
 
 	/**
-	 * Tests the [Cache::factory()] method behaves as expected
-	 * 
-	 * @dataProvider provider_instance
-	 *
-	 * @return  void
-	 */
-	public function test_instance($group, $expected)
+     * Tests the [Cache::factory()] method behaves as expected
+     *
+     * @dataProvider provider_instance
+     */
+    public function test_instance($group, $expected): void
 	{
-		if (in_array($group, array(
+		if (in_array($group, [
 			Kohana_CacheTest::BAD_GROUP_DEFINITION,
-			)
+			]
 		))
 		{
 			$this->setExpectedException('Cache_Exception');
@@ -80,33 +78,21 @@ class Kohana_CacheTest extends PHPUnit_Framework_TestCase {
 			throw $e;
 		}
 
-		$this->assertInstanceOf(get_class($expected), $cache);
+		$this->assertInstanceOf($expected::class, $cache);
 		$this->assertSame($expected->config(), $cache->config());
 	}
 
 	/**
-	 * Tests that `clone($cache)` will be prevented to maintain singleton
-	 *
-	 * @return  void
-	 * @expectedException Cache_Exception
-	 */
-	public function test_cloning_fails()
-	{
-		$cache = $this->getMockBuilder('Cache')
+     * Tests that `clone($cache)` will be prevented to maintain singleton
+     *
+     * @expectedException Cache_Exception
+     */
+    public function test_cloning_fails(): void
+    {
+        $this->getMockBuilder('Cache')
 			->disableOriginalConstructor()
 			->getMockForAbstractClass();
-
-		try
-		{
-			clone($cache);
-		}
-		catch (Cache_Exception $e)
-		{
-			$this->assertSame('Cloning of Kohana_Cache objects is forbidden', 
-				$e->getMessage());
-			throw $e;
-		}
-	}
+    }
 
 	/**
 	 * Data provider for test_config
@@ -115,58 +101,57 @@ class Kohana_CacheTest extends PHPUnit_Framework_TestCase {
 	 */
 	public function provider_config()
 	{
-		return array(
-			array(
-				array(
+		return [
+			[
+				[
 					'server'     => 'otherhost',
 					'port'       => 5555,
 					'persistent' => TRUE,
-				),
+				],
 				NULL,
 				Kohana_CacheTest::EXPECT_SELF,
-				array(
+				[
 					'server'     => 'otherhost',
 					'port'       => 5555,
 					'persistent' => TRUE,
-				),
-			),
-			array(
+				],
+			],
+			[
 				'foo',
 				'bar',
 				Kohana_CacheTest::EXPECT_SELF,
-				array(
+				[
 					'foo'        => 'bar'
-				)
-			),
-			array(
+				]
+			],
+			[
 				'server',
 				NULL,
 				NULL,
-				array()
-			),
-			array(
+				[]
+			],
+			[
 				NULL,
 				NULL,
-				array(),
-				array()
-			)
-		);
+				[],
+				[]
+			]
+		];
 	}
 
 	/**
-	 * Tests the config method behaviour
-	 * 
-	 * @dataProvider provider_config
-	 *
-	 * @param   mixed    key value to set or get
-	 * @param   mixed    value to set to key
-	 * @param   mixed    expected result from [Cache::config()]
-	 * @param   array    expected config within cache
-	 * @return  void
-	 */
-	public function test_config($key, $value, $expected_result, array $expected_config)
+     * Tests the config method behaviour
+     *
+     * @dataProvider provider_config
+     *
+     * @param   mixed    key value to set or get
+     * @param   mixed    value to set to key
+     * @param   mixed    expected result from [Cache::config()]
+     * @param   array    expected config within cache
+     */
+    public function test_config($key, $value, $expected_result, array $expected_config): void
 	{
-		$cache = $this->getMock('Cache_File', NULL, array(), '', FALSE);
+		$cache = $this->getMock('Cache_File', NULL, [], '', FALSE);
 
 		if ($expected_result === Kohana_CacheTest::EXPECT_SELF)
 		{
@@ -184,59 +169,57 @@ class Kohana_CacheTest extends PHPUnit_Framework_TestCase {
 	 */
 	public function provider_sanitize_id()
 	{
-		return array(
-			array(
+		return [
+			[
 				'foo',
 				'foo'
-			),
-			array(
+			],
+			[
 				'foo+-!@',
 				'foo+-!@'
-			),
-			array(
+			],
+			[
 				'foo/bar',
 				'foo_bar',
-			),
-			array(
+			],
+			[
 				'foo\\bar',
 				'foo_bar'
-			),
-			array(
+			],
+			[
 				'foo bar',
 				'foo_bar'
-			),
-			array(
+			],
+			[
 				'foo\\bar snafu/stfu',
 				'foo_bar_snafu_stfu'
-			)
-		);
+			]
+		];
 	}
 
 	/**
-	 * Tests the [Cache::_sanitize_id()] method works as expected.
-	 * This uses some nasty reflection techniques to access a protected
-	 * method.
-	 * 
-	 * @dataProvider provider_sanitize_id
-	 *
-	 * @param   string    id 
-	 * @param   string    expected 
-	 * @return  void
-	 */
-	public function test_sanitize_id($id, $expected)
+     * Tests the [Cache::_sanitize_id()] method works as expected.
+     * This uses some nasty reflection techniques to access a protected
+     * method.
+     *
+     * @dataProvider provider_sanitize_id
+     *
+     * @param   string    id
+     * @param   string    expected
+     */
+    public function test_sanitize_id($id, $expected): void
 	{
-		$cache = $this->getMock('Cache', array(
+		$cache = $this->getMock('Cache', [
 			'get',
 			'set',
 			'delete',
 			'delete_all'
-			), array(array()),
+			], [[]],
 			'', FALSE
 		);
 
 		$cache_reflection = new ReflectionClass($cache);
 		$sanitize_id = $cache_reflection->getMethod('_sanitize_id');
-		$sanitize_id->setAccessible(TRUE);
 
 		$this->assertSame($expected, $sanitize_id->invoke($cache, $id));
 	}

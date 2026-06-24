@@ -11,7 +11,7 @@ defined('SYSPATH') or die('No direct script access.');
  * @copyright  (c) 2008-2013 Kohana Team
  * @license    http://kohanaframework.org/license
  */
-class Kohana_Kodoc_Method_Param extends Kodoc
+class Kohana_Kodoc_Method_Param extends Kodoc implements \Stringable
 {
 	/**
 	 * @var  object  ReflectionParameter for this property
@@ -67,7 +67,7 @@ class Kohana_Kodoc_Method_Param extends Kodoc
 		}
 	}
 
-	public function __toString()
+	public function __toString(): string
 	{
 		$display = '';
 

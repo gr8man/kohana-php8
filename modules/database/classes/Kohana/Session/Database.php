@@ -27,14 +27,14 @@ class Kohana_Session_Database extends Session
 	protected $_db;
 
 	// Database table name
-	protected $_table = 'sessions';
+	protected string $_table = 'sessions';
 
 	// Database column names
-	protected $_columns = array(
+	protected $_columns = [
 		'session_id'  => 'session_id',
 		'last_active' => 'last_active',
 		'contents'    => 'contents'
-	);
+	];
 
 	// Garbage collection requests
 	protected $_gc = 500;
@@ -87,7 +87,7 @@ class Kohana_Session_Database extends Session
 	protected function _read($id = null)
 	{
 		if ($id or $id = Cookie::get($this->_name)) {
-			$result = DB::select(array($this->_columns['contents'], 'contents'))
+			$result = DB::select([$this->_columns['contents'], 'contents'])
 				->from($this->_table)
 				->where($this->_columns['session_id'], '=', ':id')
 				->limit(1)
@@ -109,7 +109,7 @@ class Kohana_Session_Database extends Session
 		return null;
 	}
 
-	protected function _regenerate()
+	protected function _regenerate(): string|array
 	{
 		// Create the query to find an ID
 		$query = DB::select($this->_columns['session_id'])
@@ -120,7 +120,7 @@ class Kohana_Session_Database extends Session
 
 		do {
 			// Create a new session id
-			$id = str_replace('.', '-', uniqid(null, true));
+			$id = str_replace('.', '-', uniqid('', true));
 
 			// Get the the id from the database
 			$result = $query->execute($this->_db);
@@ -129,12 +129,12 @@ class Kohana_Session_Database extends Session
 		return $this->_session_id = $id;
 	}
 
-	protected function _write()
+	protected function _write(): bool
 	{
 		if ($this->_update_id === null) {
 			// Insert a new row
 			$query = DB::insert($this->_table, $this->_columns)
-				->values(array(':new_id', ':active', ':contents'));
+				->values([':new_id', ':active', ':contents']);
 		} else {
 			// Update the row
 			$query = DB::update($this->_table)
@@ -166,17 +166,14 @@ class Kohana_Session_Database extends Session
 		return true;
 	}
 
-	/**
-	 * @return  bool
-	 */
-	protected function _restart()
+	protected function _restart(): bool
 	{
 		$this->_regenerate();
 
 		return true;
 	}
 
-	protected function _destroy()
+	protected function _destroy(): bool
 	{
 		if ($this->_update_id === null) {
 			// Session has not been created yet
@@ -197,7 +194,7 @@ class Kohana_Session_Database extends Session
 
 			// Delete the cookie
 			Cookie::delete($this->_name);
-		} catch (Exception $e) {
+		} catch (Exception) {
 			// An error occurred, the session has not been deleted
 			return false;
 		}

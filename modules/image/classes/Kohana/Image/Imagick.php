@@ -16,7 +16,7 @@ class Kohana_Image_Imagick extends Image
 	/**
 	 * @var  Imagick  image magick object
 	 */
-	protected $im;
+	protected \Imagick $im;
 
 	/**
 	 * Checks if ImageMagick is enabled.
@@ -34,12 +34,11 @@ class Kohana_Image_Imagick extends Image
 	}
 
 	/**
-	 * Runs [Image_Imagick::check] and loads the image.
-	 *
-	 * @return  void
-	 * @throws  Kohana_Exception
-	 */
-	public function __construct($file)
+     * Runs [Image_Imagick::check] and loads the image.
+     *
+     * @throws  Kohana_Exception
+     */
+    public function __construct($file)
 	{
 		if (! Image_Imagick::$_checked) {
 			// Run the install check
@@ -58,17 +57,15 @@ class Kohana_Image_Imagick extends Image
 	}
 
 	/**
-	 * Destroys the loaded image to free up resources.
-	 *
-	 * @return  void
-	 */
-	public function __destruct()
+     * Destroys the loaded image to free up resources.
+     */
+    public function __destruct()
 	{
 		$this->im->clear();
 		$this->im->destroy();
 	}
 
-	protected function _do_resize($width, $height)
+	protected function _do_resize($width, $height): bool
 	{
 		if ($this->im->scaleImage($width, $height)) {
 			// Reset the width and height
@@ -81,7 +78,7 @@ class Kohana_Image_Imagick extends Image
 		return false;
 	}
 
-	protected function _do_crop($width, $height, $offset_x, $offset_y)
+	protected function _do_crop($width, $height, $offset_x, $offset_y): bool
 	{
 		if ($this->im->cropImage($width, $height, $offset_x, $offset_y)) {
 			// Reset the width and height
@@ -97,7 +94,7 @@ class Kohana_Image_Imagick extends Image
 		return false;
 	}
 
-	protected function _do_rotate($degrees)
+	protected function _do_rotate($degrees): bool
 	{
 		if ($this->im->rotateImage(new ImagickPixel('transparent'), $degrees)) {
 			// Reset the width and height
@@ -113,7 +110,7 @@ class Kohana_Image_Imagick extends Image
 		return false;
 	}
 
-	protected function _do_flip($direction)
+	protected function _do_flip($direction): bool
 	{
 		if ($direction === Image::HORIZONTAL) {
 			return $this->im->flopImage();
@@ -122,7 +119,7 @@ class Kohana_Image_Imagick extends Image
 		}
 	}
 
-	protected function _do_sharpen($amount)
+	protected function _do_sharpen($amount): bool
 	{
 		// IM not support $amount under 5 (0.15)
 		$amount = ($amount < 5) ? 5 : $amount;
@@ -133,7 +130,7 @@ class Kohana_Image_Imagick extends Image
 		return $this->im->sharpenImage(0, $amount);
 	}
 
-	protected function _do_reflection($height, $opacity, $fade_in)
+	protected function _do_reflection($height, $opacity, $fade_in): bool
 	{
 		// Clone the current image and flip it for reflection
 		$reflection = $this->im->clone();
@@ -144,7 +141,7 @@ class Kohana_Image_Imagick extends Image
 		$reflection->setImagePage($this->width, $height, 0, 0);
 
 		// Select the fade direction
-		$direction = array('transparent', 'black');
+		$direction = ['transparent', 'black'];
 
 		if ($fade_in) {
 			// Change the direction of the fade
@@ -190,7 +187,7 @@ class Kohana_Image_Imagick extends Image
 		return false;
 	}
 
-	protected function _do_watermark(Image $image, $offset_x, $offset_y, $opacity)
+	protected function _do_watermark(Image $image, $offset_x, $offset_y, $opacity): bool
 	{
 		// Convert the Image intance into an Imagick instance
 		$watermark = new Imagick();
@@ -213,7 +210,7 @@ class Kohana_Image_Imagick extends Image
 		return $this->im->compositeImage($watermark, Imagick::COMPOSITE_DISSOLVE, $offset_x, $offset_y);
 	}
 
-	protected function _do_background($r, $g, $b, $opacity)
+	protected function _do_background($r, $g, $b, $opacity): bool
 	{
 		// Create a RGB color for the background
 		$color = sprintf('rgb(%d, %d, %d)', $r, $g, $b);
@@ -246,10 +243,10 @@ class Kohana_Image_Imagick extends Image
 		return false;
 	}
 
-	protected function _do_save($file, $quality)
+	protected function _do_save($file, $quality): bool
 	{
 		// Get the image format and type
-		list($format, $type) = $this->_get_imagetype(pathinfo($file, PATHINFO_EXTENSION));
+		[$format, $type] = str_split($this->_get_imagetype(pathinfo($file, PATHINFO_EXTENSION)));
 
 		// Set the output image type
 		$this->im->setFormat($format);
@@ -268,10 +265,10 @@ class Kohana_Image_Imagick extends Image
 		return false;
 	}
 
-	protected function _do_render($type, $quality)
+	protected function _do_render($type, $quality): string
 	{
 		// Get the image format and type
-		list($format, $type) = $this->_get_imagetype($type);
+		[$format, $type] = str_split($this->_get_imagetype($type));
 
 		// Set the output image type
 		$this->im->setFormat($format);
@@ -293,31 +290,21 @@ class Kohana_Image_Imagick extends Image
 	 * @return  string  IMAGETYPE_* constant
 	 * @throws  Kohana_Exception
 	 */
-	protected function _get_imagetype($extension)
+	protected function _get_imagetype($extension): array
 	{
 		// Normalize the extension to a format
 		$format = strtolower($extension);
 
-		switch ($format) {
-			case 'jpg':
-			case 'jpe':
-			case 'jpeg':
-				$type = IMAGETYPE_JPEG;
-				break;
-			case 'gif':
-				$type = IMAGETYPE_GIF;
-				break;
-			case 'png':
-				$type = IMAGETYPE_PNG;
-				break;
-			default:
-				throw new Kohana_Exception(
+		$type = match ($format) {
+            'jpg', 'jpe', 'jpeg' => IMAGETYPE_JPEG,
+            'gif' => IMAGETYPE_GIF,
+            'png' => IMAGETYPE_PNG,
+            default => throw new Kohana_Exception(
 					'Installed ImageMagick does not support :type images',
-					array(':type' => $extension)
-				);
-				break;
-		}
+					[':type' => $extension]
+				),
+        };
 
-		return array($format, $type);
+		return [$format, $type];
 	}
 } // End Kohana_Image_Imagick

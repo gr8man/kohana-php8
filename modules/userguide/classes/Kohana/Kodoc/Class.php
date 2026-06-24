@@ -31,27 +31,26 @@ class Kohana_Kodoc_Class extends Kodoc
 	/**
 	 * @var  array  array of tags, retrieved from the comment
 	 */
-	public $tags = array();
+	public $tags = [];
 
 	/**
 	 * @var  array  array of this classes constants
 	 */
-	public $constants = array();
+	public $constants = [];
 
 	/**
 	 * @var array Parent classes/interfaces of this class/interface
 	 */
-	public $parents = array();
+	public $parents = [];
 
 	/**
-	 * Loads a class and uses [reflection](http://php.net/reflection) to parse
-	 * the class. Reads the class modifiers, constants and comment. Parses the
-	 * comment to find the description and tags.
-	 *
-	 * @param   string  Class name
-	 * @return  void
-	 */
-	public function __construct($class)
+     * Loads a class and uses [reflection](http://php.net/reflection) to parse
+     * the class. Reads the class modifiers, constants and comment. Parses the
+     * comment to find the description and tags.
+     *
+     * @param   string  Class name
+     */
+    public function __construct($class)
 	{
 		$this->class = new ReflectionClass($class);
 
@@ -82,17 +81,15 @@ class Kohana_Kodoc_Class extends Kodoc
 			}
 		}
 
-		list($this->description, $this->tags) = Kodoc::parse($comment, false);
+		[$this->description, $this->tags] = Kodoc::parse($comment, false);
 	}
 
 	/**
-	 * Gets the constants of this class as HTML.
-	 *
-	 * @return  array
-	 */
-	public function constants()
+     * Gets the constants of this class as HTML.
+     */
+    public function constants(): array
 	{
-		$result = array();
+		$result = [];
 
 		foreach ($this->constants as $name => $value) {
 			$result[$name] = Debug::vars($value);
@@ -126,17 +123,15 @@ class Kohana_Kodoc_Class extends Kodoc
 	}
 
 	/**
-	 * Gets a list of the class properties as [Kodoc_Property] objects.
-	 *
-	 * @return  array
-	 */
-	public function properties()
+     * Gets a list of the class properties as [Kodoc_Property] objects.
+     */
+    public function properties(): array
 	{
 		$props = $this->class->getProperties();
 
 		$defaults = $this->class->getDefaultProperties();
 
-		usort($props, array($this,'_prop_sort'));
+		usort($props, $this->_prop_sort(...));
 
 		foreach ($props as $key => $property) {
 			// Create Kodoc Properties for each property
@@ -146,7 +141,7 @@ class Kohana_Kodoc_Class extends Kodoc
 		return $props;
 	}
 
-	protected function _prop_sort($a, $b)
+	protected function _prop_sort($a, $b): int
 	{
 		// If one property is public, and the other is not, it goes on top
 		if ($a->isPublic() and (! $b->isPublic())) {
@@ -165,19 +160,17 @@ class Kohana_Kodoc_Class extends Kodoc
 		}
 
 		// Otherwise just do alphabetical
-		return strcmp($a->name, $b->name);
+		return strcmp((string) $a->name, (string) $b->name);
 	}
 
 	/**
-	 * Gets a list of the class properties as [Kodoc_Method] objects.
-	 *
-	 * @return  array
-	 */
-	public function methods()
+     * Gets a list of the class properties as [Kodoc_Method] objects.
+     */
+    public function methods(): array
 	{
 		$methods = $this->class->getMethods();
 
-		usort($methods, array($this,'_method_sort'));
+		usort($methods, $this->_method_sort(...));
 
 		foreach ($methods as $key => $method) {
 			$methods[$key] = new Kodoc_Method($this->class->name, $method->name);
@@ -195,7 +188,7 @@ class Kohana_Kodoc_Class extends Kodoc
 	 *  * lastly, they will be sorted alphabetically
 	 *
 	 */
-	protected function _method_sort($a, $b)
+	protected function _method_sort($a, $b): int
 	{
 		// If one method is public, and the other is not, it goes on top
 		if ($a->isPublic() and (! $b->isPublic())) {
@@ -227,7 +220,7 @@ class Kohana_Kodoc_Class extends Kodoc
 
 		// If both methods are defined in the same class, just compare the method names
 		if ($a->class == $b->class) {
-			return strcmp($a->name, $b->name);
+			return strcmp((string) $a->name, (string) $b->name);
 		}
 
 		// If one of them was declared by this class, it needs to be on top
@@ -256,13 +249,11 @@ class Kohana_Kodoc_Class extends Kodoc
 	}
 
 	/**
-	 * Get the tags of this class as HTML.
-	 *
-	 * @return  array
-	 */
-	public function tags()
+     * Get the tags of this class as HTML.
+     */
+    public function tags(): array
 	{
-		$result = array();
+		$result = [];
 
 		foreach ($this->tags as $name => $set) {
 			foreach ($set as $text) {

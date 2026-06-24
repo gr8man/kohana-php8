@@ -11,48 +11,37 @@ defined('SYSPATH') or die('No direct script access.');
  * @copyright  (c) 2008-2009 Kohana Team
  * @license    http://kohanaphp.com/license
  */
-class Kohana_Database_Query
+class Kohana_Database_Query implements \Stringable
 {
-	// Query type
-	protected $_type;
-
 	// Execute the query during a cache hit
 	protected $_force_execute = false;
 
 	// Cache lifetime
-	protected $_lifetime = null;
-
-	// SQL statement
-	protected $_sql;
+	protected $_lifetime;
 
 	// Quoted query parameters
-	protected $_parameters = array();
+	protected $_parameters = [];
 
 	// Return results as associative arrays or objects
 	protected $_as_object = false;
 
 	// Parameters for __construct when using object results
-	protected $_object_params = array();
+	protected $_object_params = [];
 
 	/**
-	 * Creates a new SQL query of the specified type.
-	 *
-	 * @param   integer  $type  query type: Database::SELECT, Database::INSERT, etc
-	 * @param   string   $sql   query string
-	 * @return  void
-	 */
-	public function __construct($type, $sql)
-	{
-		$this->_type = $type;
-		$this->_sql = $sql;
-	}
+     * Creates a new SQL query of the specified type.
+     *
+     * @param integer $_type query type: Database::SELECT, Database::INSERT, etc
+     * @param string $_sql query string
+     */
+    public function __construct(protected $_type, protected $_sql)
+    {
+    }
 
 	/**
-	 * Return the SQL query string.
-	 *
-	 * @return  string
-	 */
-	public function __toString()
+     * Return the SQL query string.
+     */
+    public function __toString(): string
 	{
 		try {
 			// Return the SQL string
@@ -80,7 +69,7 @@ class Kohana_Database_Query
 	 * @return  $this
 	 * @uses    Kohana::$cache_life
 	 */
-	public function cached($lifetime = null, $force = false)
+	public function cached($lifetime = null, $force = false): static
 	{
 		if ($lifetime === null) {
 			// Use the global setting
@@ -98,23 +87,22 @@ class Kohana_Database_Query
 	 *
 	 * @return  $this
 	 */
-	public function as_assoc()
+	public function as_assoc(): static
 	{
 		$this->_as_object = false;
 
-		$this->_object_params = array();
+		$this->_object_params = [];
 
 		return $this;
 	}
 
 	/**
-	 * Returns results as objects
-	 *
-	 * @param   string  $class  classname or TRUE for stdClass
-	 * @param   array   $params
-	 * @return  $this
-	 */
-	public function as_object($class = true, array $params = null)
+     * Returns results as objects
+     *
+     * @param   string  $class  classname or TRUE for stdClass
+     * @return  $this
+     */
+    public function as_object($class = true, array $params = null): static
 	{
 		$this->_as_object = $class;
 
@@ -133,7 +121,7 @@ class Kohana_Database_Query
 	 * @param   mixed    $value  value to use
 	 * @return  $this
 	 */
-	public function param($param, $value)
+	public function param($param, $value): static
 	{
 		// Add or overload a new parameter
 		$this->_parameters[$param] = $value;
@@ -148,7 +136,7 @@ class Kohana_Database_Query
 	 * @param   mixed   $var    variable to use
 	 * @return  $this
 	 */
-	public function bind($param, & $var)
+	public function bind($param, & $var): static
 	{
 		// Bind a value to a variable
 		$this->_parameters[$param] = & $var;
@@ -162,7 +150,7 @@ class Kohana_Database_Query
 	 * @param   array  $params  list of parameters
 	 * @return  $this
 	 */
-	public function parameters(array $params)
+	public function parameters(array $params): static
 	{
 		// Merge the new parameters in
 		$this->_parameters = $params + $this->_parameters;
@@ -189,7 +177,7 @@ class Kohana_Database_Query
 
 		if (! empty($this->_parameters)) {
 			// Quote all of the values
-			$values = array_map(array($db, 'quote'), $this->_parameters);
+			$values = array_map([$db, 'quote'], $this->_parameters);
 
 			// Replace the values in the SQL
 			$sql = strtr($sql, $values);

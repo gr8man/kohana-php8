@@ -29,12 +29,9 @@ class Kohana_Log_Syslog extends Log_Writer
 	}
 
 	/**
-	 * Writes each of the messages into the syslog.
-	 *
-	 * @param   array   $messages
-	 * @return  void
-	 */
-	public function write(array $messages)
+     * Writes each of the messages into the syslog.
+     */
+    public function write(array $messages): void
 	{
 		foreach ($messages as $message) {
 			syslog($message['level'], $message['body']);
@@ -46,11 +43,9 @@ class Kohana_Log_Syslog extends Log_Writer
 	}
 
 	/**
-	 * Closes the syslog connection
-	 *
-	 * @return  void
-	 */
-	public function __destruct()
+     * Closes the syslog connection
+     */
+    public function __destruct()
 	{
 		// Close connection to syslog
 		closelog();

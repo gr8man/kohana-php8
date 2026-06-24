@@ -33,7 +33,7 @@ class Kohana_Debug
 		// Get all passed variables
 		$variables = func_get_args();
 
-		$output = array();
+		$output = [];
 		foreach ($variables as $var) {
 			$output[] = Debug::_dump($var, 1024);
 		}
@@ -101,12 +101,12 @@ class Kohana_Debug
 				$str = htmlspecialchars(UTF8::substr($var, 0, $length), ENT_NOQUOTES, Kohana::$charset).'&nbsp;&hellip;';
 			} else {
 				// Encode the string
-				$str = htmlspecialchars($var, ENT_NOQUOTES, Kohana::$charset);
+				$str = htmlspecialchars((string) $var, ENT_NOQUOTES, Kohana::$charset);
 			}
 
-			return '<small>string</small><span>('.strlen($var).')</span> "'.$str.'"';
+			return '<small>string</small><span>('.strlen((string) $var).')</span> "'.$str.'"';
 		} elseif (is_array($var)) {
-			$output = array();
+			$output = [];
 
 			// Indentation for this variable
 			$space = str_repeat($s = '    ', $level);
@@ -149,7 +149,7 @@ class Kohana_Debug
 			// Copy the object as an array
 			$array = (array) $var;
 
-			$output = array();
+			$output = [];
 
 			// Indentation for this variable
 			$space = str_repeat($s = '    ', $level);
@@ -157,7 +157,7 @@ class Kohana_Debug
 			$hash = spl_object_hash($var);
 
 			// Objects that are being dumped
-			static $objects = array();
+			static $objects = [];
 
 			if (empty($var)) {
 				// Do nothing
@@ -173,7 +173,7 @@ class Kohana_Debug
 						$access = '<small>'.(($key[1] === '*') ? 'protected' : 'private').'</small>';
 
 						// Remove the access level from the variable name
-						$key = substr($key, strrpos($key, "\x00") + 1);
+						$key = substr((string) $key, strrpos((string) $key, "\x00") + 1);
 					} else {
 						$access = '<small>public</small>';
 					}
@@ -188,7 +188,7 @@ class Kohana_Debug
 				$output[] = "{\n$space$s...\n$space}";
 			}
 
-			return '<small>object</small> <span>'.get_class($var).'('.count($array).')</span> '.implode("\n", $output);
+			return '<small>object</small> <span>'.$var::class.'('.count($array).')</span> '.implode("\n", $output);
 		} else {
 			return '<small>'.gettype($var).'</small> '.htmlspecialchars(print_r($var, true), ENT_NOQUOTES, Kohana::$charset);
 		}
@@ -207,13 +207,13 @@ class Kohana_Debug
 	 */
 	public static function path($file)
 	{
-		if (strpos($file, APPPATH) === 0) {
+		if (str_starts_with($file, APPPATH)) {
 			$file = 'APPPATH'.DIRECTORY_SEPARATOR.substr($file, strlen(APPPATH));
-		} elseif (strpos($file, SYSPATH) === 0) {
+		} elseif (str_starts_with($file, SYSPATH)) {
 			$file = 'SYSPATH'.DIRECTORY_SEPARATOR.substr($file, strlen(SYSPATH));
-		} elseif (strpos($file, MODPATH) === 0) {
+		} elseif (str_starts_with($file, MODPATH)) {
 			$file = 'MODPATH'.DIRECTORY_SEPARATOR.substr($file, strlen(MODPATH));
-		} elseif (strpos($file, DOCROOT) === 0) {
+		} elseif (str_starts_with($file, DOCROOT)) {
 			$file = 'DOCROOT'.DIRECTORY_SEPARATOR.substr($file, strlen(DOCROOT));
 		}
 
@@ -233,7 +233,7 @@ class Kohana_Debug
 	 * @return  string   source of file
 	 * @return  FALSE    file is unreadable
 	 */
-	public static function source($file, $line_number, $padding = 5)
+	public static function source($file, $line_number, $padding = 5): false|string
 	{
 		if (! $file or ! is_readable($file)) {
 			// Continuing will cause errors
@@ -245,7 +245,7 @@ class Kohana_Debug
 		$line = 0;
 
 		// Set the reading range
-		$range = array('start' => $line_number - $padding, 'end' => $line_number + $padding);
+		$range = ['start' => $line_number - $padding, 'end' => $line_number + $padding];
 
 		// Set the zero-padding amount for line numbers
 		$format = '% '.strlen((string) $range['end']).'d';
@@ -283,15 +283,14 @@ class Kohana_Debug
 	}
 
 	/**
-	 * Returns an array of HTML strings that represent each step in the backtrace.
-	 *
-	 *     // Displays the entire current backtrace
-	 *     echo implode('<br/>', Debug::trace());
-	 *
-	 * @param   array   $trace
-	 * @return  string
-	 */
-	public static function trace(array $trace = null)
+     * Returns an array of HTML strings that represent each step in the backtrace.
+     *
+     *     // Displays the entire current backtrace
+     *     echo implode('<br/>', Debug::trace());
+     *
+     * @return  string
+     */
+    public static function trace(array $trace = null): array
 	{
 		if ($trace === null) {
 			// Start a new trace
@@ -299,9 +298,9 @@ class Kohana_Debug
 		}
 
 		// Non-standard function calls
-		$statements = array('include', 'include_once', 'require', 'require_once');
+		$statements = ['include', 'include_once', 'require', 'require_once'];
 
-		$output = array();
+		$output = [];
 		foreach ($trace as $step) {
 			if (! isset($step['function'])) {
 				// Invalid trace step
@@ -327,13 +326,13 @@ class Kohana_Debug
 			if (in_array((string) $step['function'], $statements)) {
 				if (empty($step['args'])) {
 					// No arguments
-					$args = array();
+					$args = [];
 				} else {
 					// Sanitize the file path
-					$args = array($step['args'][0]);
+					$args = [$step['args'][0]];
 				}
 			} elseif (isset($step['args'])) {
-				if (! function_exists($step['function']) or strpos($step['function'], '{closure}') !== false) {
+				if (! function_exists($step['function']) or str_contains($step['function'], '{closure}')) {
 					// Introspection on closures or language constructs in a stack trace is impossible
 					$params = null;
 				} else {
@@ -351,7 +350,7 @@ class Kohana_Debug
 					$params = $reflection->getParameters();
 				}
 
-				$args = array();
+				$args = [];
 
 				foreach ($step['args'] as $i => $arg) {
 					if (isset($params[$i])) {
@@ -369,13 +368,13 @@ class Kohana_Debug
 				$function = $step['class'].$step['type'].$step['function'];
 			}
 
-			$output[] = array(
+			$output[] = [
 				'function' => $function,
-				'args'     => isset($args) ? $args : null,
-				'file'     => isset($file) ? $file : null,
-				'line'     => isset($line) ? $line : null,
-				'source'   => isset($source) ? $source : null,
-			);
+				'args'     => $args ?? null,
+				'file'     => $file ?? null,
+				'line'     => $line ?? null,
+				'source'   => $source ?? null,
+			];
 
 			unset($function, $args, $file, $line, $source);
 		}

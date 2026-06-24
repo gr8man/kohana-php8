@@ -22,7 +22,7 @@ abstract class Kohana_Model
 	 * @param   string  $name   model name
 	 * @return  Model
 	 */
-	public static function factory($name)
+	public static function factory(string $name)
 	{
 		// Add the model prefix
 		$class = 'Model_'.$name;

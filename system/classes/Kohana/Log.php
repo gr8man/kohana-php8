@@ -50,7 +50,7 @@ class Kohana_Log
 			Log::$_instance = new Log();
 
 			// Write the logs at shutdown
-			register_shutdown_function(array(Log::$_instance, 'write'));
+			register_shutdown_function([Log::$_instance, 'write']);
 		}
 
 		return Log::$_instance;
@@ -59,12 +59,12 @@ class Kohana_Log
 	/**
 	 * @var  array  list of added messages
 	 */
-	protected $_messages = array();
+	protected $_messages = [];
 
 	/**
 	 * @var  array  list of log writers
 	 */
-	protected $_writers = array();
+	protected $_writers = [];
 
 	/**
 	 * Attaches a log writer, and optionally limits the levels of messages that
@@ -77,16 +77,16 @@ class Kohana_Log
 	 * @param   integer     $min_level  min level to write IF $levels is not an array
 	 * @return  Log
 	 */
-	public function attach(Log_Writer $writer, $levels = array(), $min_level = 0)
+	public function attach(Log_Writer $writer, $levels = [], $min_level = 0): static
 	{
 		if (! is_array($levels)) {
 			$levels = range($min_level, $levels);
 		}
 
-		$this->_writers["{$writer}"] = array(
+		$this->_writers["{$writer}"] = [
 			'object' => $writer,
 			'levels' => $levels
-		);
+		];
 
 		return $this;
 	}
@@ -99,7 +99,7 @@ class Kohana_Log
 	 * @param   Log_Writer  $writer instance
 	 * @return  Log
 	 */
-	public function detach(Log_Writer $writer)
+	public function detach(Log_Writer $writer): static
 	{
 		// Remove the writer
 		unset($this->_writers["{$writer}"]);
@@ -121,7 +121,7 @@ class Kohana_Log
 	 * @param   array   $additional  additional custom parameters to supply to the log writer
 	 * @return  Log
 	 */
-	public function add($level, $message, array $values = null, array $additional = null)
+	public function add($level, $message, array $values = null, array $additional = null): static
 	{
 		if ($values) {
 			// Insert the values into the message
@@ -134,7 +134,7 @@ class Kohana_Log
 		} else {
 			// Older php version don't have 'DEBUG_BACKTRACE_IGNORE_ARGS', so manually remove the args from the backtrace
 			if (! defined('DEBUG_BACKTRACE_IGNORE_ARGS')) {
-				$trace = array_map(function ($item) {
+				$trace = array_map(function (array $item): array {
 					unset($item['args']);
 					return $item;
 				}, array_slice(debug_backtrace(false), 1));
@@ -144,21 +144,21 @@ class Kohana_Log
 		}
 
 		if ($additional == null) {
-			$additional = array();
+			$additional = [];
 		}
 
 		// Create a new message
-		$this->_messages[] = array(
+		$this->_messages[] = [
 			'time'       => time(),
 			'level'      => $level,
 			'body'       => $message,
 			'trace'      => $trace,
-			'file'       => isset($trace[0]['file']) ? $trace[0]['file'] : null,
-			'line'       => isset($trace[0]['line']) ? $trace[0]['line'] : null,
-			'class'      => isset($trace[0]['class']) ? $trace[0]['class'] : null,
-			'function'   => isset($trace[0]['function']) ? $trace[0]['function'] : null,
+			'file'       => $trace[0]['file'] ?? null,
+			'line'       => $trace[0]['line'] ?? null,
+			'class'      => $trace[0]['class'] ?? null,
+			'function'   => $trace[0]['function'] ?? null,
 			'additional' => $additional,
-		);
+		];
 
 		if (Log::$write_on_add) {
 			// Write logs as they are added
@@ -169,13 +169,11 @@ class Kohana_Log
 	}
 
 	/**
-	 * Write and clear all of the messages.
-	 *
-	 *     $log->write();
-	 *
-	 * @return  void
-	 */
-	public function write()
+     * Write and clear all of the messages.
+     *
+     *     $log->write();
+     */
+    public function write(): void
 	{
 		if (empty($this->_messages)) {
 			// There is nothing to write, move along
@@ -186,7 +184,7 @@ class Kohana_Log
 		$messages = $this->_messages;
 
 		// Reset the messages array
-		$this->_messages = array();
+		$this->_messages = [];
 
 		foreach ($this->_writers as $writer) {
 			if (empty($writer['levels'])) {
@@ -194,7 +192,7 @@ class Kohana_Log
 				$writer['object']->write($messages);
 			} else {
 				// Filtered messages
-				$filtered = array();
+				$filtered = [];
 
 				foreach ($messages as $message) {
 					if (in_array($message['level'], $writer['levels'])) {

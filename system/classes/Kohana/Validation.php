@@ -14,30 +14,29 @@ defined('SYSPATH') or die('No direct script access.');
 class Kohana_Validation implements ArrayAccess
 {
 	/**
-	 * Creates a new Validation instance.
-	 *
-	 * @param   array   $array  array to use for validation
-	 * @return  Validation
-	 */
-	public static function factory(array $array)
+     * Creates a new Validation instance.
+     *
+     * @param   array   $array  array to use for validation
+     */
+    public static function factory(array $array): \Validation
 	{
 		return new Validation($array);
 	}
 
 	// Bound values
-	protected array $_bound = array();
+	protected array $_bound = [];
 
 	// Field rules
-	protected array $_rules = array();
+	protected array $_rules = [];
 
 	// Field labels
-	protected array $_labels = array();
+	protected array $_labels = [];
 
 	// Rules that are executed even when the value is empty
-	protected array $_empty_rules = array('not_empty', 'matches');
+	protected array $_empty_rules = ['not_empty', 'matches'];
 
 	// Error list, field => rule
-	protected array $_errors = array();
+	protected array $_errors = [];
 
 	/**
 	 * Sets the unique "any field" key and creates an ArrayObject from the
@@ -50,15 +49,14 @@ class Kohana_Validation implements ArrayAccess
 	}
 
 	/**
-	 * Throws an exception because Validation is read-only.
-	 * Implements ArrayAccess method.
-	 *
-	 * @throws  Kohana_Exception
-	 * @param   mixed    $offset    key to set
-	 * @param   mixed    $value     value to set
-	 * @return  void
-	 */
-	public function offsetSet(mixed $offset, mixed $value): void
+     * Throws an exception because Validation is read-only.
+     * Implements ArrayAccess method.
+     *
+     * @throws  Kohana_Exception
+     * @param   mixed    $offset    key to set
+     * @param   mixed    $value     value to set
+     */
+    public function offsetSet(mixed $offset, mixed $value): void
 	{
 		throw new Kohana_Exception('Validation objects are read-only.');
 	}
@@ -76,14 +74,13 @@ class Kohana_Validation implements ArrayAccess
 	}
 
 	/**
-	 * Throws an exception because Validation is read-only.
-	 * Implements ArrayAccess method.
-	 *
-	 * @throws  Kohana_Exception
-	 * @param   mixed   $offset key to unset
-	 * @return  void
-	 */
-	public function offsetUnset(mixed $offset): void
+     * Throws an exception because Validation is read-only.
+     * Implements ArrayAccess method.
+     *
+     * @throws  Kohana_Exception
+     * @param   mixed   $offset key to unset
+     */
+    public function offsetUnset(mixed $offset): void
 	{
 		throw new Kohana_Exception('Validation objects are read-only.');
 	}
@@ -109,7 +106,7 @@ class Kohana_Validation implements ArrayAccess
 	 * @return  Validation
 	 * @since   3.0.5
 	 */
-	public function copy(array $array)
+	public function copy(array $array): static
 	{
 		// Create a copy of the current validation set
 		$copy = clone $this;
@@ -121,23 +118,19 @@ class Kohana_Validation implements ArrayAccess
 	}
 
 	/**
-	 * Returns the array representation of the current object.
-	 * Deprecated in favor of [Validation::data]
-	 *
-	 * @deprecated
-	 * @return  array
-	 */
-	public function as_array()
+     * Returns the array representation of the current object.
+     * Deprecated in favor of [Validation::data]
+     */
+    #[\Deprecated]
+    public function as_array(): array
 	{
 		return $this->_data;
 	}
 
 	/**
-	 * Returns the array of data to be validated.
-	 *
-	 * @return  array
-	 */
-	public function data()
+     * Returns the array of data to be validated.
+     */
+    public function data(): array
 	{
 		return $this->_data;
 	}
@@ -149,7 +142,7 @@ class Kohana_Validation implements ArrayAccess
 	 * @param   string  $label  label
 	 * @return  $this
 	 */
-	public function label($field, $label)
+	public function label($field, $label): static
 	{
 		// Set the label for this field
 		$this->_labels[$field] = $label;
@@ -163,7 +156,7 @@ class Kohana_Validation implements ArrayAccess
 	 * @param   array   $labels list of field => label names
 	 * @return  $this
 	 */
-	public function labels(array $labels)
+	public function labels(array $labels): static
 	{
 		$this->_labels = $labels + $this->_labels;
 
@@ -206,11 +199,11 @@ class Kohana_Validation implements ArrayAccess
 	 * @param   array       $params extra parameters for the rule
 	 * @return  $this
 	 */
-	public function rule($field, $rule, array $params = null)
+	public function rule($field, $rule, array $params = null): static
 	{
 		if ($params === null) {
 			// Default to array(':value')
-			$params = array(':value');
+			$params = [':value'];
 		}
 
 		if ($field !== true and ! isset($this->_labels[$field])) {
@@ -219,7 +212,7 @@ class Kohana_Validation implements ArrayAccess
 		}
 
 		// Store the rule and params for this rule
-		$this->_rules[$field][] = array($rule, $params);
+		$this->_rules[$field][] = [$rule, $params];
 
 		return $this;
 	}
@@ -231,7 +224,7 @@ class Kohana_Validation implements ArrayAccess
 	 * @param   array   $rules  list of callbacks
 	 * @return  $this
 	 */
-	public function rules($field, array $rules)
+	public function rules($field, array $rules): static
 	{
 		foreach ($rules as $rule) {
 			$this->rule($field, $rule[0], Arr::get($rule, 1));
@@ -251,7 +244,7 @@ class Kohana_Validation implements ArrayAccess
 	 * @param   mixed   $value  value
 	 * @return  $this
 	 */
-	public function bind($key, $value = null)
+	public function bind($key, $value = null): static
 	{
 		if (is_array($key)) {
 			foreach ($key as $name => $value) {
@@ -265,17 +258,15 @@ class Kohana_Validation implements ArrayAccess
 	}
 
 	/**
-	 * Executes all validation rules. This should
-	 * typically be called within an if/else block.
-	 *
-	 *     if ($validation->check())
-	 *     {
-	 *          // The data is valid, do something here
-	 *     }
-	 *
-	 * @return  boolean
-	 */
-	public function check()
+     * Executes all validation rules. This should
+     * typically be called within an if/else block.
+     *
+     *     if ($validation->check())
+     *     {
+     *          // The data is valid, do something here
+     *     }
+     */
+    public function check(): bool
 	{
 		if (Kohana::$profiling === true) {
 			// Start a new benchmark
@@ -283,7 +274,7 @@ class Kohana_Validation implements ArrayAccess
 		}
 
 		// New data set
-		$data = $this->_errors = array();
+		$data = $this->_errors = [];
 
 		// Store the original data because this class should not modify it post-validation
 		$original = $this->_data;
@@ -301,7 +292,7 @@ class Kohana_Validation implements ArrayAccess
 			if (isset($rules[true])) {
 				if (! isset($rules[$field])) {
 					// Initialize the rules for this field
-					$rules[$field] = array();
+					$rules[$field] = [];
 				}
 
 				// Append the rules
@@ -326,14 +317,14 @@ class Kohana_Validation implements ArrayAccess
 			$value = $this[$field];
 
 			// Bind the field name and value to :field and :value respectively
-			$this->bind(array(
+			$this->bind([
 				':field' => $field,
 				':value' => $value,
-			));
+			]);
 
 			foreach ($set as $array) {
 				// Rules are defined as array($rule, $params)
-				list($rule, $params) = $array;
+				[$rule, $params] = $array;
 
 				foreach ($params as $key => $param) {
 					if (is_string($param) and array_key_exists($param, $this->_bound)) {
@@ -365,7 +356,7 @@ class Kohana_Validation implements ArrayAccess
 
 					// Call static::$rule($this[$field], $param, ...) with Reflection
 					$passed = $method->invokeArgs(null, $params);
-				} elseif (strpos($rule, '::') === false) {
+				} elseif (!str_contains($rule, '::')) {
 					// Use a function call
 					$function = new ReflectionFunction($rule);
 
@@ -373,7 +364,7 @@ class Kohana_Validation implements ArrayAccess
 					$passed = $function->invokeArgs($params);
 				} else {
 					// Split the class and method of the rule
-					list($class, $method) = explode('::', $rule, 2);
+					[$class, $method] = explode('::', $rule, 2);
 
 					// Use a static method call
 					$method = new ReflectionMethod($class, $method);
@@ -419,40 +410,38 @@ class Kohana_Validation implements ArrayAccess
 	}
 
 	/**
-	 * Add an error to a field.
-	 *
-	 * @param   string  $field  field name
-	 * @param   string  $error  error message
-	 * @param   array   $params
-	 * @return  $this
-	 */
-	public function error($field, $error, array $params = null)
+     * Add an error to a field.
+     *
+     * @param   string  $field  field name
+     * @param   string  $error  error message
+     * @return  $this
+     */
+    public function error($field, $error, array $params = null): static
 	{
-		$this->_errors[$field] = array($error, $params);
+		$this->_errors[$field] = [$error, $params];
 
 		return $this;
 	}
 
 	/**
-	 * Returns the error messages. If no file is specified, the error message
-	 * will be the name of the rule that failed. When a file is specified, the
-	 * message will be loaded from "field/rule", or if no rule-specific message
-	 * exists, "field/default" will be used. If neither is set, the returned
-	 * message will be "file/field/rule".
-	 *
-	 * By default all messages are translated using the default language.
-	 * A string can be used as the second parameter to specified the language
-	 * that the message was written in.
-	 *
-	 *     // Get errors from messages/forms/login.php
-	 *     $errors = $Validation->errors('forms/login');
-	 *
-	 * @uses    Kohana::message
-	 * @param   string  $file       file to load error messages from
-	 * @param   mixed   $translate  translate the message
-	 * @return  array
-	 */
-	public function errors($file = null, $translate = true)
+     * Returns the error messages. If no file is specified, the error message
+     * will be the name of the rule that failed. When a file is specified, the
+     * message will be loaded from "field/rule", or if no rule-specific message
+     * exists, "field/default" will be used. If neither is set, the returned
+     * message will be "file/field/rule".
+     *
+     * By default all messages are translated using the default language.
+     * A string can be used as the second parameter to specified the language
+     * that the message was written in.
+     *
+     *     // Get errors from messages/forms/login.php
+     *     $errors = $Validation->errors('forms/login');
+     *
+     * @uses    Kohana::message
+     * @param   string  $file       file to load error messages from
+     * @param   mixed   $translate  translate the message
+     */
+    public function errors($file = null, $translate = true): array
 	{
 		if ($file === null) {
 			// Return the error list
@@ -460,10 +449,10 @@ class Kohana_Validation implements ArrayAccess
 		}
 
 		// Create a new message list
-		$messages = array();
+		$messages = [];
 
 		foreach ($this->_errors as $field => $set) {
-			list($error, $params) = $set;
+			[$error, $params] = $set;
 
 			// Get the label for this field
 			$label = $this->_labels[$field];
@@ -479,10 +468,10 @@ class Kohana_Validation implements ArrayAccess
 			}
 
 			// Start the translation values list
-			$values = array(
+			$values = [
 				':field' => $label,
 				':value' => Arr::get($this, $field),
-			);
+			];
 
 			if (is_array($values[':value'])) {
 				// All values must be strings

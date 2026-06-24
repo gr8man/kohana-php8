@@ -30,12 +30,12 @@ class Kohana_UTF8
 	/**
 	 * @var  boolean  Does the server support UTF-8 natively?
 	 */
-	public static $server_utf8 = null;
+	public static $server_utf8;
 
 	/**
 	 * @var  array  List of called methods that have had their required file included.
 	 */
-	public static $called = array();
+	public static $called = [];
 
 	/**
 	 * Recursively cleans arrays, objects, and strings. Removes ASCII control
@@ -86,21 +86,20 @@ class Kohana_UTF8
 	}
 
 	/**
-	 * Tests whether a string contains only 7-bit ASCII bytes. This is used to
-	 * determine when to use native functions or UTF-8 functions.
-	 *
-	 *     $ascii = UTF8::is_ascii($str);
-	 *
-	 * @param   mixed   $str    string or array of strings to check
-	 * @return  boolean
-	 */
-	public static function is_ascii($str)
+     * Tests whether a string contains only 7-bit ASCII bytes. This is used to
+     * determine when to use native functions or UTF-8 functions.
+     *
+     *     $ascii = UTF8::is_ascii($str);
+     *
+     * @param   mixed   $str    string or array of strings to check
+     */
+    public static function is_ascii($str): bool
 	{
 		if (is_array($str)) {
-			$str = implode($str);
+			$str = implode('', $str);
 		}
 
-		return ! preg_match('/[^\x00-\x7F]/S', $str);
+		return ! preg_match('/[^\x00-\x7F]/S', (string) $str);
 	}
 
 	/**
@@ -111,7 +110,7 @@ class Kohana_UTF8
 	 * @param   string  $str    string to clean
 	 * @return  string
 	 */
-	public static function strip_ascii_ctrl($str)
+	public static function strip_ascii_ctrl($str): ?string
 	{
 		return preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]+/S', '', $str);
 	}
@@ -124,7 +123,7 @@ class Kohana_UTF8
 	 * @param   string  $str    string to clean
 	 * @return  string
 	 */
-	public static function strip_non_ascii($str)
+	public static function strip_non_ascii($str): ?string
 	{
 		return preg_replace('/[^\x00-\x7F]+/S', '', $str);
 	}

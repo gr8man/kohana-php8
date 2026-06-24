@@ -19,14 +19,14 @@ defined('SYSPATH') or die('No direct script access.');
  * @copyright  (c) 2009 Kohana Team
  * @license    http://kohanaphp.com/license
  */
-class Kohana_Database_Expression
+class Kohana_Database_Expression implements \Stringable
 {
 	/**
 	 * PHP 8 Constructor Property Promotion
 	 */
 	public function __construct(
 		protected string $_value,
-		protected array $_parameters = array()
+		protected array $_parameters = []
 	) {
 	}
 
@@ -37,7 +37,7 @@ class Kohana_Database_Expression
 	 * @param   mixed   $var    variable to use
 	 * @return  $this
 	 */
-	public function bind($param, & $var)
+	public function bind($param, & $var): static
 	{
 		$this->_parameters[$param] = & $var;
 
@@ -51,7 +51,7 @@ class Kohana_Database_Expression
 	 * @param   mixed   $value  value to use
 	 * @return  $this
 	 */
-	public function param($param, $value)
+	public function param($param, $value): static
 	{
 		$this->_parameters[$param] = $value;
 
@@ -64,7 +64,7 @@ class Kohana_Database_Expression
 	 * @param   array   $params list of parameter values
 	 * @return  $this
 	 */
-	public function parameters(array $params)
+	public function parameters(array $params): static
 	{
 		$this->_parameters = $params + $this->_parameters;
 
@@ -72,38 +72,34 @@ class Kohana_Database_Expression
 	}
 
 	/**
-	 * Get the expression value as a string.
-	 *
-	 *     $sql = $expression->value();
-	 *
-	 * @return  string
-	 */
-	public function value(): string
+     * Get the expression value as a string.
+     *
+     *     $sql = $expression->value();
+     */
+    public function value(): string
 	{
 		return $this->_value;
 	}
 
 	/**
-	 * Return the value of the expression as a string.
-	 *
-	 *     echo $expression;
-	 *
-	 * @return  string
-	 * @uses    Database_Expression::value
-	 */
-	public function __toString(): string
+     * Return the value of the expression as a string.
+     *
+     *     echo $expression;
+     *
+     * @uses    Database_Expression::value
+     */
+    public function __toString(): string
 	{
 		return $this->value();
 	}
 
 	/**
-	 * Compile the SQL expression and return it. Replaces any parameters with
-	 * their given values.
-	 *
-	 * @param   mixed    Database instance or name of instance
-	 * @return  string
-	 */
-	public function compile($db = null): string
+     * Compile the SQL expression and return it. Replaces any parameters with
+     * their given values.
+     *
+     * @param   mixed    Database instance or name of instance
+     */
+    public function compile($db = null): string
 	{
 		if (! is_object($db)) {
 			$db = Database::instance($db);
@@ -112,7 +108,7 @@ class Kohana_Database_Expression
 		$value = $this->value();
 
 		if (! empty($this->_parameters)) {
-			$params = array_map(array($db, 'quote'), $this->_parameters);
+			$params = array_map([$db, 'quote'], $this->_parameters);
 			$value = strtr($value, $params);
 		}
 

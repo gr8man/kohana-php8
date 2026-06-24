@@ -42,7 +42,7 @@ class Kohana_Kodoc_Property extends Kodoc
 	{
 		$property = new ReflectionProperty($class, $property);
 
-		list($description, $tags) = Kodoc::parse($property->getDocComment());
+		[$description, $tags] = Kodoc::parse($property->getDocComment());
 
 		$this->description = $description;
 
@@ -51,7 +51,7 @@ class Kohana_Kodoc_Property extends Kodoc
 		}
 
 		if (isset($tags['var'])) {
-			if (preg_match('/^(\S*)(?:\s*(.+?))?$/s', $tags['var'][0], $matches)) {
+			if (preg_match('/^(\S*)(?:\s*(.+?))?$/s', (string) $tags['var'][0], $matches)) {
 				$this->type = $matches[1];
 
 				if (isset($matches[2])) {
@@ -64,14 +64,9 @@ class Kohana_Kodoc_Property extends Kodoc
 
 		// Show the value of static properties, but only if they are public or we are php 5.3 or higher and can force them to be accessible
 		if ($property->isStatic() and ($property->isPublic() or version_compare(PHP_VERSION, '5.3', '>='))) {
-			// Force the property to be accessible
-			if (version_compare(PHP_VERSION, '5.3', '>=')) {
-				$property->setAccessible(true);
-			}
-
 			// Don't debug the entire object, just say what kind of object it is
 			if (is_object($property->getValue($class))) {
-				$this->value = '<pre>object '.get_class($property->getValue($class)).'()</pre>';
+				$this->value = '<pre>object '.$property->getValue($class)::class.'()</pre>';
 			} else {
 				$this->value = Debug::vars($property->getValue($class));
 			}

@@ -15,13 +15,13 @@ defined('SYSPATH') or die('No direct script access.');
  */
 class Kohana_Unittest_Tests
 {
-	protected static $cache = array();
+	protected static $cache = [];
 
 	/**
 	 * Loads test files if they cannot be found by kohana
 	 * @param <type> $class
 	 */
-	public static function autoload($class)
+	public static function autoload($class): void
 	{
 		$file = str_replace('_', '/', $class);
 
@@ -39,14 +39,14 @@ class Kohana_Unittest_Tests
 	 * * Restores exception phpunit error handlers (for cli)
 	 * * registeres an autoloader to load test files
 	 */
-	public static function configure_environment($do_whitelist = true, $do_blacklist = true)
+	public static function configure_environment($do_whitelist = true, $do_blacklist = true): void
 	{
 		restore_exception_handler();
 		restore_error_handler();
 
-		spl_autoload_register(array('Unittest_tests', 'autoload'));
+		spl_autoload_register(['Unittest_tests', 'autoload']);
 
-		Unittest_tests::$cache = (($cache = Kohana::cache('unittest_whitelist_cache')) === null) ? array() : $cache;
+		Unittest_tests::$cache = (($cache = Kohana::cache('unittest_whitelist_cache')) === null) ? [] : $cache;
 
 	}
 
@@ -55,7 +55,7 @@ class Kohana_Unittest_Tests
 	 *
 	 * @return Unittest_TestSuite
 	 */
-	public static function suite()
+	public static function suite(): \PHPUnit_Framework_TestSuite|\Unittest_TestSuite
 	{
 		static $suite = null;
 
@@ -93,7 +93,7 @@ class Kohana_Unittest_Tests
 	 * @param Unittest_TestSuite  $suite   The test suite to add to
 	 * @param array                        $files   Array of files to test
 	 */
-	public static function addTests(Unittest_TestSuite $suite, array $files)
+	public static function addTests(Unittest_TestSuite $suite, array $files): void
 	{
 
 		foreach ($files as $path => $file) {
@@ -103,9 +103,9 @@ class Kohana_Unittest_Tests
 				}
 			} else {
 				// Make sure we only include php files
-				if (is_file($file) and substr($file, -strlen(EXT)) === EXT) {
+				if (is_file($file) and str_ends_with((string) $file, EXT)) {
 					// The default PHPUnit TestCase extension
-					if (! strpos($file, 'TestCase'.EXT)) {
+					if (! strpos((string) $file, 'TestCase'.EXT)) {
 						$suite->addTestFile($file);
 					} else {
 						require_once($file);
@@ -123,7 +123,7 @@ class Kohana_Unittest_Tests
 	 * @param array $blacklist_items A set of files to blacklist
 	 * @param Unittest_TestSuite $suite The test suite
 	 */
-	public static function blacklist(array $blacklist_items, Unittest_TestSuite $suite = null)
+	public static function blacklist(array $blacklist_items, Unittest_TestSuite $suite = null): void
 	{
 		foreach ($blacklist_items as $item) {
 			if (is_dir($item)) {
@@ -143,7 +143,7 @@ class Kohana_Unittest_Tests
 	 * @param array $directories Optional directories to whitelist
 	 * @param Unittest_Testsuite $suite Suite to load the whitelist into
 	 */
-	public static function whitelist(array $directories = null, Unittest_TestSuite $suite = null)
+	public static function whitelist(array $directories = null, Unittest_TestSuite $suite = null): void
 	{
 		if (empty($directories)) {
 			$directories = self::get_config_whitelist();
@@ -160,15 +160,16 @@ class Kohana_Unittest_Tests
 	}
 
 	/**
-	 * Works out the whitelist from the config
-	 * Used only on the CLI
-	 *
-	 * @returns array Array of directories to whitelist
-	 */
-	protected static function get_config_whitelist()
+     * Works out the whitelist from the config
+     * Used only on the CLI
+     *
+     * @returns array Array of directories to whitelist
+     * @return mixed[]
+     */
+    protected static function get_config_whitelist(): array
 	{
 		$config = Kohana::$config->load('unittest');
-		$directories = array();
+		$directories = [];
 
 		if ($config->whitelist['app']) {
 			$directories['k_app'] = APPPATH;
@@ -186,7 +187,7 @@ class Kohana_Unittest_Tests
 				$modules = array_intersect_key($k_modules, array_combine($modules, $modules));
 			} else {
 				// modules are disabled
-				$modules = array();
+				$modules = [];
 			}
 
 			$directories += $modules;
@@ -213,7 +214,7 @@ class Kohana_Unittest_Tests
 				self::set_whitelist($file, $suite);
 			} else {
 				if (! isset(Unittest_tests::$cache[$file])) {
-					$relative_path = substr($file, strrpos($file, 'classes'.DIRECTORY_SEPARATOR) + 8, -strlen(EXT));
+					$relative_path = substr((string) $file, strrpos((string) $file, 'classes'.DIRECTORY_SEPARATOR) + 8, -strlen(EXT));
 					$cascading_file = Kohana::find_file('classes', $relative_path);
 
 					// The theory is that if this file is the highest one in the cascading filesystem

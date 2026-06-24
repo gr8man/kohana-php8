@@ -79,22 +79,21 @@ class Kohana_Cache_Apc extends Cache implements Cache_Arithmetic {
 	}
 
 	/**
-	 * Set a value to cache with id and lifetime
-	 *
-	 *     $data = 'bar';
-	 *
-	 *     // Set 'bar' to 'foo' in apc group, using default expiry
-	 *     Cache::instance('apc')->set('foo', $data);
-	 *
-	 *     // Set 'bar' to 'foo' in apc group for 30 seconds
-	 *     Cache::instance('apc')->set('foo', $data, 30);
-	 *
-	 * @param   string   $id        id of cache entry
-	 * @param   string   $data      data to set to cache
-	 * @param   integer  $lifetime  lifetime in seconds
-	 * @return  boolean
-	 */
-	public function set($id, $data, $lifetime = NULL)
+     * Set a value to cache with id and lifetime
+     *
+     *     $data = 'bar';
+     *
+     *     // Set 'bar' to 'foo' in apc group, using default expiry
+     *     Cache::instance('apc')->set('foo', $data);
+     *
+     *     // Set 'bar' to 'foo' in apc group for 30 seconds
+     *     Cache::instance('apc')->set('foo', $data, 30);
+     *
+     * @param   string   $id        id of cache entry
+     * @param   string   $data      data to set to cache
+     * @param   integer  $lifetime  lifetime in seconds
+     */
+    public function set($id, $data, $lifetime = NULL): bool
 	{
 		if ($lifetime === NULL)
 		{
@@ -105,62 +104,55 @@ class Kohana_Cache_Apc extends Cache implements Cache_Arithmetic {
 	}
 
 	/**
-	 * Delete a cache entry based on id
-	 *
-	 *     // Delete 'foo' entry from the apc group
-	 *     Cache::instance('apc')->delete('foo');
-	 *
-	 * @param   string  $id  id to remove from cache
-	 * @return  boolean
-	 */
-	public function delete($id)
+     * Delete a cache entry based on id
+     *
+     *     // Delete 'foo' entry from the apc group
+     *     Cache::instance('apc')->delete('foo');
+     *
+     * @param   string  $id  id to remove from cache
+     */
+    public function delete($id): bool
 	{
 		return apc_delete($this->_sanitize_id($id));
 	}
 
 	/**
-	 * Delete all cache entries.
-	 *
-	 * Beware of using this method when
-	 * using shared memory cache systems, as it will wipe every
-	 * entry within the system for all clients.
-	 *
-	 *     // Delete all cache entries in the apc group
-	 *     Cache::instance('apc')->delete_all();
-	 *
-	 * @return  boolean
-	 */
-	public function delete_all()
+     * Delete all cache entries.
+     *
+     * Beware of using this method when
+     * using shared memory cache systems, as it will wipe every
+     * entry within the system for all clients.
+     *
+     *     // Delete all cache entries in the apc group
+     *     Cache::instance('apc')->delete_all();
+     */
+    public function delete_all(): bool
 	{
 		return apc_clear_cache('user');
 	}
 
 	/**
-	 * Increments a given value by the step value supplied.
-	 * Useful for shared counters and other persistent integer based
-	 * tracking.
-	 *
-	 * @param   string    id of cache entry to increment
-	 * @param   int       step value to increment by
-	 * @return  integer
-	 * @return  boolean
-	 */
-	public function increment($id, $step = 1)
+     * Increments a given value by the step value supplied.
+     * Useful for shared counters and other persistent integer based
+     * tracking.
+     *
+     * @param   string    id of cache entry to increment
+     * @param   int       step value to increment by
+     */
+    public function increment($id, $step = 1): int
 	{
 		return apc_inc($id, $step);
 	}
 
 	/**
-	 * Decrements a given value by the step value supplied.
-	 * Useful for shared counters and other persistent integer based
-	 * tracking.
-	 *
-	 * @param   string    id of cache entry to decrement
-	 * @param   int       step value to decrement by
-	 * @return  integer
-	 * @return  boolean
-	 */
-	public function decrement($id, $step = 1)
+     * Decrements a given value by the step value supplied.
+     * Useful for shared counters and other persistent integer based
+     * tracking.
+     *
+     * @param   string    id of cache entry to decrement
+     * @param   int       step value to decrement by
+     */
+    public function decrement($id, $step = 1): int
 	{
 		return apc_dec($id, $step);
 	}

@@ -22,7 +22,7 @@ abstract class Kohana_Database_Query_Builder extends Database_Query
 	 */
 	protected function _compile_join(Database $db, array $joins)
 	{
-		$statements = array();
+		$statements = [];
 
 		foreach ($joins as $join) {
 			// Compile each of the join statements
@@ -64,7 +64,7 @@ abstract class Kohana_Database_Query_Builder extends Database_Query
 					}
 
 					// Split the condition
-					list($column, $op, $value) = $condition;
+					[$column, $op, $value] = $condition;
 
 					if ($value === null) {
 						if ($op === '=') {
@@ -77,11 +77,11 @@ abstract class Kohana_Database_Query_Builder extends Database_Query
 					}
 
 					// Database operators are always uppercase
-					$op = strtoupper($op);
+					$op = strtoupper((string) $op);
 
 					if ($op === 'BETWEEN' and is_array($value)) {
 						// BETWEEN always has exactly two arguments
-						list($min, $max) = $value;
+						[$min, $max] = $value;
 
 						if ((is_string($min) and array_key_exists($min, $this->_parameters)) === false) {
 							// Quote the value, it is not a parameter
@@ -130,10 +130,10 @@ abstract class Kohana_Database_Query_Builder extends Database_Query
 	 */
 	protected function _compile_set(Database $db, array $values)
 	{
-		$set = array();
+		$set = [];
 		foreach ($values as $group) {
 			// Split the set
-			list($column, $value) = $group;
+			[$column, $value] = $group;
 
 			// Quote the column name
 			$column = $db->quote_column($column);
@@ -150,15 +150,14 @@ abstract class Kohana_Database_Query_Builder extends Database_Query
 	}
 
 	/**
-	 * Compiles an array of GROUP BY columns into an SQL partial.
-	 *
-	 * @param   object  $db       Database instance
-	 * @param   array   $columns
-	 * @return  string
-	 */
-	protected function _compile_group_by(Database $db, array $columns)
+     * Compiles an array of GROUP BY columns into an SQL partial.
+     *
+     * @param   object  $db       Database instance
+     * @return  string
+     */
+    protected function _compile_group_by(Database $db, array $columns)
 	{
-		$group = array();
+		$group = [];
 
 		foreach ($columns as $column) {
 			if (is_array($column)) {
@@ -184,9 +183,9 @@ abstract class Kohana_Database_Query_Builder extends Database_Query
 	 */
 	protected function _compile_order_by(Database $db, array $columns)
 	{
-		$sort = array();
+		$sort = [];
 		foreach ($columns as $group) {
-			list($column, $direction) = $group;
+			[$column, $direction] = $group;
 
 			if (is_array($column)) {
 				// Use the column alias
@@ -202,7 +201,7 @@ abstract class Kohana_Database_Query_Builder extends Database_Query
 				$direction_upper = strtoupper(trim((string) $direction));
 
 				// Allow 'ASC', 'DESC', 'RAND()', 'RANDOM()' (case-insensitive)
-				if (! in_array($direction_upper, array('ASC', 'DESC', 'RAND()', 'RANDOM()'), true)) {
+				if (! in_array($direction_upper, ['ASC', 'DESC', 'RAND()', 'RANDOM()'], true)) {
 					// Reject invalid directions - default to ASC
 					$direction = ' ASC';
 				} else {

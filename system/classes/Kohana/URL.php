@@ -52,7 +52,7 @@ class Kohana_URL
 		if ($protocol instanceof Request) {
 			if (! $protocol->secure()) {
 				// Use the current protocol
-				list($protocol) = explode('/', strtolower($protocol->protocol()));
+				[$protocol] = explode('/', strtolower((string) $protocol->protocol()));
 			} else {
 				$protocol = 'https';
 			}
@@ -79,17 +79,17 @@ class Kohana_URL
 				$base_url = parse_url($base_url, PHP_URL_PATH);
 			} else {
 				// Attempt to use HTTP_HOST and fallback to SERVER_NAME
-				$host = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : $_SERVER['SERVER_NAME'];
+				$host = $_SERVER['HTTP_HOST'] ?? $_SERVER['SERVER_NAME'];
 
 				// make $host lowercase
-				$host = strtolower($host);
+				$host = strtolower((string) $host);
 
 				// check that host does not contain forbidden characters (see RFC 952 and RFC 2181)
 				// use preg_replace() instead of preg_match() to prevent DoS attacks with long host names
 				if ($host && '' !== preg_replace('/(?:^\[)?[a-zA-Z0-9-:\]_]+\.?/', '', $host)) {
 					throw new Kohana_Exception(
 						'Invalid host :host',
-						array(':host' => $host)
+						[':host' => $host]
 					);
 				}
 
@@ -97,7 +97,7 @@ class Kohana_URL
 				if (! static::is_trusted_host($host)) {
 					throw new Kohana_Exception(
 						'Untrusted host :host. If you trust :host, add it to the trusted hosts in the `url` config file.',
-						array(':host' => $host)
+						[':host' => $host]
 					);
 				}
 			}
@@ -123,7 +123,7 @@ class Kohana_URL
 	public static function site($uri = '', $protocol = null, $index = true)
 	{
 		// Fast path for simple URIs that don't need preg_replace
-		if (strpos($uri, '://') === false) {
+		if (!str_contains($uri, '://')) {
 			$path = trim($uri, '/');
 		} else {
 			// Chop off possible scheme, host, port, user and pass parts
@@ -132,7 +132,7 @@ class Kohana_URL
 
 		if ($path !== '' and ! UTF8::is_ascii($path)) {
 			// Encode all non-ASCII characters, as per RFC 1738
-			$path = preg_replace_callback('~([^/]+)~', 'URL::_rawurlencode_callback', $path);
+			$path = preg_replace_callback('~([^/]+)~', URL::_rawurlencode_callback(...), (string) $path);
 		}
 
 		// Concat the URL
@@ -146,28 +146,27 @@ class Kohana_URL
 	 * @param  array $matches  Array of matches from preg_replace_callback()
 	 * @return string          Encoded string
 	 */
-	protected static function _rawurlencode_callback($matches)
+	protected static function _rawurlencode_callback(array $matches): string
 	{
-		return rawurlencode($matches[0]);
+		return rawurlencode((string) $matches[0]);
 	}
 
 	/**
-	 * Merges the current GET parameters with an array of new or overloaded
-	 * parameters and returns the resulting query string.
-	 *
-	 *     // Returns "?sort=title&limit=10" combined with any existing GET values
-	 *     $query = URL::query(array('sort' => 'title', 'limit' => 10));
-	 *
-	 * Typically you would use this when you are sorting query results,
-	 * or something similar.
-	 *
-	 * [!!] Parameters with a NULL value are left out.
-	 *
-	 * @param   array    $params   Array of GET parameters
-	 * @param   boolean  $use_get  Include current request GET parameters
-	 * @return  string
-	 */
-	public static function query(array $params = null, $use_get = true)
+     * Merges the current GET parameters with an array of new or overloaded
+     * parameters and returns the resulting query string.
+     *
+     *     // Returns "?sort=title&limit=10" combined with any existing GET values
+     *     $query = URL::query(array('sort' => 'title', 'limit' => 10));
+     *
+     * Typically you would use this when you are sorting query results,
+     * or something similar.
+     *
+     * [!!] Parameters with a NULL value are left out.
+     *
+     * @param   array    $params   Array of GET parameters
+     * @param   boolean  $use_get  Include current request GET parameters
+     */
+    public static function query(array $params = null, $use_get = true): string
 	{
 		if ($use_get) {
 			if ($params === null) {
@@ -192,17 +191,16 @@ class Kohana_URL
 	}
 
 	/**
-	 * Convert a phrase to a URL-safe title.
-	 *
-	 *     echo URL::title('My Blog Post'); // "my-blog-post"
-	 *
-	 * @param   string   $title       Phrase to convert
-	 * @param   string   $separator   Word separator (any single character)
-	 * @param   boolean  $ascii_only  Transliterate to ASCII?
-	 * @return  string
-	 * @uses    UTF8::transliterate_to_ascii
-	 */
-	public static function title($title, $separator = '-', $ascii_only = false)
+     * Convert a phrase to a URL-safe title.
+     *
+     *     echo URL::title('My Blog Post'); // "my-blog-post"
+     *
+     * @param   string   $title       Phrase to convert
+     * @param   string   $separator   Word separator (any single character)
+     * @param   boolean  $ascii_only  Transliterate to ASCII?
+     * @uses    UTF8::transliterate_to_ascii
+     */
+    public static function title($title, $separator = '-', $ascii_only = false): string
 	{
 		if ($ascii_only === true) {
 			// Transliterate non-ASCII characters
@@ -216,23 +214,22 @@ class Kohana_URL
 		}
 
 		// Replace all separator characters and whitespace by a single separator
-		$title = preg_replace('!['.preg_quote($separator).'\s]+!u', $separator, $title);
+		$title = preg_replace('!['.preg_quote($separator).'\s]+!u', $separator, (string) $title);
 
 		// Trim separators from the beginning and end
-		return trim($title, $separator);
+		return trim((string) $title, $separator);
 	}
 
 	/**
-	 * Test if given $host should be trusted.
-	 *
-	 * Tests against given $trusted_hosts
-	 * or looks for key `trusted_hosts` in `url` config
-	 *
-	 * @param string $host
-	 * @param array $trusted_hosts
-	 * @return boolean TRUE if $host is trustworthy
-	 */
-	public static function is_trusted_host($host, array $trusted_hosts = null)
+     * Test if given $host should be trusted.
+     *
+     * Tests against given $trusted_hosts
+     * or looks for key `trusted_hosts` in `url` config
+     *
+     * @param string $host
+     * @return boolean TRUE if $host is trustworthy
+     */
+    public static function is_trusted_host($host, array $trusted_hosts = null): bool
 	{
 
 		// If list of trusted hosts is not directly provided read from config

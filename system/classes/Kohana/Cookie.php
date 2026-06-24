@@ -17,7 +17,7 @@ class Kohana_Cookie
 	/**
 	 * @var  string  Magic salt to add to the cookie
 	 */
-	public static $salt = null;
+	public static $salt;
 
 	/**
 	 * @var  integer  Number of seconds before the cookie expires
@@ -32,7 +32,7 @@ class Kohana_Cookie
 	/**
 	 * @var  string  Restrict the domain that the cookie is available to
 	 */
-	public static $domain = null;
+	public static $domain;
 
 	/**
 	 * @var  boolean  Only transmit cookies over secure connections
@@ -53,7 +53,7 @@ class Kohana_Cookie
 	/**
 	 * Initialize cookie settings from config if available
 	 */
-	public static function init()
+	public static function init(): void
 	{
 		try {
 			$config = Kohana::$config->load('cookie');
@@ -68,7 +68,7 @@ class Kohana_Cookie
 			Cookie::$secure = $config->get('secure', Cookie::$secure);
 			Cookie::$httponly = $config->get('httponly', Cookie::$httponly);
 			Cookie::$samesite = $config->get('samesite', Cookie::$samesite);
-		} catch (Exception $e) {
+		} catch (Exception) {
 			// Config not available, use defaults
 		}
 	}
@@ -100,7 +100,7 @@ class Kohana_Cookie
 
 		if (isset($cookie[$split]) and $cookie[$split] === '~') {
 			// Separate the salt and the value
-			list($hash, $value) = explode('~', $cookie, 2);
+			[$hash, $value] = explode('~', (string) $cookie, 2);
 
 			if (Security::slow_equals(Cookie::salt($key, $value), $hash)) {
 				// Cookie signature is valid
@@ -169,17 +169,16 @@ class Kohana_Cookie
 	}
 
 	/**
-	 * Generates a salt string for a cookie based on the name and value.
-	 *
-	 *     $salt = Cookie::salt('theme', 'red');
-	 *
-	 * @param   string $name name of cookie
-	 * @param   string $value value of cookie
-	 *
-	 * @throws Kohana_Exception if Cookie::$salt is not configured
-	 * @return  string
-	 */
-	public static function salt($name, $value)
+     * Generates a salt string for a cookie based on the name and value.
+     *
+     *     $salt = Cookie::salt('theme', 'red');
+     *
+     * @param   string $name name of cookie
+     * @param   string $value value of cookie
+     *
+     * @throws Kohana_Exception if Cookie::$salt is not configured
+     */
+    public static function salt(string $name, string $value): string
 	{
 		// Require a valid salt
 		if (! Cookie::$salt) {
@@ -187,51 +186,49 @@ class Kohana_Cookie
 		}
 
 		// Determine the user agent
-		$agent = isset($_SERVER['HTTP_USER_AGENT']) ? strtolower($_SERVER['HTTP_USER_AGENT']) : 'unknown';
+		$agent = isset($_SERVER['HTTP_USER_AGENT']) ? strtolower((string) $_SERVER['HTTP_USER_AGENT']) : 'unknown';
 
 		// SECURITY: Use sha256 instead of sha1 for better security
 		return hash_hmac('sha256', $agent.$name.$value.Cookie::$salt, Cookie::$salt);
 	}
 
 	/**
-	 * Proxy for the native setcookie function - to allow mocking in unit tests so that they do not fail when headers
-	 * have been sent.
-	 *
-	 * @param string  $name
-	 * @param string  $value
-	 * @param integer $expire
-	 * @param string  $path
-	 * @param string  $domain
-	 * @param boolean $secure
-	 * @param boolean $httponly
-	 *
-	 * @return bool
-	 * @see setcookie
-	 */
-	protected static function _setcookie($name, $value, $expire, $path, $domain, $secure, $httponly)
+     * Proxy for the native setcookie function - to allow mocking in unit tests so that they do not fail when headers
+     * have been sent.
+     *
+     * @param string  $name
+     * @param string  $value
+     * @param integer $expire
+     * @param string  $path
+     * @param string  $domain
+     * @param boolean $secure
+     * @param boolean $httponly
+     *
+     * @see setcookie
+     */
+    protected static function _setcookie($name, $value, $expire, $path, $domain, $secure, $httponly): bool
 	{
 		// SECURITY: Use SameSite attribute if PHP version supports it (PHP 7.3+)
 		if (PHP_VERSION_ID >= 70300 and Cookie::$samesite !== null) {
-			return setcookie($name, $value, array(
+			return setcookie($name, $value, [
 				'expires' => $expire,
 				'path' => $path,
 				'domain' => $domain,
 				'secure' => $secure,
 				'httponly' => $httponly,
 				'samesite' => Cookie::$samesite,
-			));
+			]);
 		}
 
-		return setcookie($name, $value, $expire, $path, $domain, $secure, $httponly);
+		return setcookie($name, $value, ['expires' => $expire, 'path' => $path, 'domain' => $domain, 'secure' => $secure, 'httponly' => $httponly]);
 	}
 
 	/**
-	 * Proxy for the native time function - to allow mocking of time-related logic in unit tests
-	 *
-	 * @return int
-	 * @see    time
-	 */
-	protected static function _time()
+     * Proxy for the native time function - to allow mocking of time-related logic in unit tests
+     *
+     * @see    time
+     */
+    protected static function _time(): int
 	{
 		return time();
 	}

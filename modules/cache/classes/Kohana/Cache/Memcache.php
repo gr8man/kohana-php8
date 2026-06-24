@@ -88,11 +88,9 @@ class Kohana_Cache_Memcache extends Cache implements Cache_Arithmetic {
 	const CACHE_CEILING = 2592000;
 
 	/**
-	 * Memcache resource
-	 *
-	 * @var Memcache
-	 */
-	protected $_memcache;
+     * Memcache resource
+     */
+    protected \Memcache $_memcache;
 
 	/**
 	 * Flags to use when storing values
@@ -106,7 +104,7 @@ class Kohana_Cache_Memcache extends Cache implements Cache_Arithmetic {
 	 *
 	 * @var array
 	 */
-	protected $_default_config = array();
+	protected $_default_config = [];
 
 	/**
 	 * Constructs the memcache Kohana_Cache object
@@ -128,7 +126,7 @@ class Kohana_Cache_Memcache extends Cache implements Cache_Arithmetic {
 		$this->_memcache = new Memcache;
 
 		// Load servers from configuration
-		$servers = Arr::get($this->_config, 'servers', NULL);
+		$servers = Arr::get($this->_config, 'servers');
 
 		if ( ! $servers)
 		{
@@ -137,7 +135,7 @@ class Kohana_Cache_Memcache extends Cache implements Cache_Arithmetic {
 		}
 
 		// Setup default server configuration
-		$this->_default_config = array(
+		$this->_default_config = [
 				'host'             => 'localhost',
 				'port'             => 11211,
 				'persistent'       => FALSE,
@@ -146,8 +144,8 @@ class Kohana_Cache_Memcache extends Cache implements Cache_Arithmetic {
 				'retry_interval'   => 15,
 				'status'           => TRUE,
 				'instant_death'	   => TRUE,
-				'failure_callback' => array($this, '_failed_request'),
-		);
+				'failure_callback' => $this->_failed_request(...),
+		];
 
 		// Add the memcache servers to the pool
 		foreach ($servers as $server)
@@ -157,7 +155,7 @@ class Kohana_Cache_Memcache extends Cache implements Cache_Arithmetic {
 
 			if ( ! $this->_memcache->addServer($server['host'], $server['port'], $server['persistent'], $server['weight'], $server['timeout'], $server['retry_interval'], $server['status'], $server['failure_callback']))
 			{
-				throw new Cache_Exception('Memcache could not connect to host \':host\' using port \':port\'', array(':host' => $server['host'], ':port' => $server['port']));
+				throw new Cache_Exception('Memcache could not connect to host \':host\' using port \':port\'', [':host' => $server['host'], ':port' => $server['port']]);
 			}
 		}
 
@@ -187,7 +185,7 @@ class Kohana_Cache_Memcache extends Cache implements Cache_Arithmetic {
 		// If the value wasn't found, normalise it
 		if ($value === FALSE)
 		{
-			$value = (NULL === $default) ? NULL : $default;
+			$value = $default ?? NULL;
 		}
 
 		// Return the value
@@ -195,23 +193,22 @@ class Kohana_Cache_Memcache extends Cache implements Cache_Arithmetic {
 	}
 
 	/**
-	 * Set a value to cache with id and lifetime
-	 *
-	 *     $data = 'bar';
-	 *
-	 *     // Set 'bar' to 'foo' in memcache group for 10 minutes
-	 *     if (Cache::instance('memcache')->set('foo', $data, 600))
-	 *     {
-	 *          // Cache was set successfully
-	 *          return
-	 *     }
-	 *
-	 * @param   string   $id        id of cache entry
-	 * @param   mixed    $data      data to set to cache
-	 * @param   integer  $lifetime  lifetime in seconds, maximum value 2592000
-	 * @return  boolean
-	 */
-	public function set($id, $data, $lifetime = 3600)
+     * Set a value to cache with id and lifetime
+     *
+     *     $data = 'bar';
+     *
+     *     // Set 'bar' to 'foo' in memcache group for 10 minutes
+     *     if (Cache::instance('memcache')->set('foo', $data, 600))
+     *     {
+     *          // Cache was set successfully
+     *          return
+     *     }
+     *
+     * @param   string   $id        id of cache entry
+     * @param   mixed    $data      data to set to cache
+     * @param   integer  $lifetime  lifetime in seconds, maximum value 2592000
+     */
+    public function set($id, $data, $lifetime = 3600): bool
 	{
 		// If the lifetime is greater than the ceiling
 		if ($lifetime > Cache_Memcache::CACHE_CEILING)
@@ -236,19 +233,18 @@ class Kohana_Cache_Memcache extends Cache implements Cache_Arithmetic {
 	}
 
 	/**
-	 * Delete a cache entry based on id
-	 *
-	 *     // Delete the 'foo' cache entry immediately
-	 *     Cache::instance('memcache')->delete('foo');
-	 *
-	 *     // Delete the 'bar' cache entry after 30 seconds
-	 *     Cache::instance('memcache')->delete('bar', 30);
-	 *
-	 * @param   string   $id       id of entry to delete
-	 * @param   integer  $timeout  timeout of entry, if zero item is deleted immediately, otherwise the item will delete after the specified value in seconds
-	 * @return  boolean
-	 */
-	public function delete($id, $timeout = 0)
+     * Delete a cache entry based on id
+     *
+     *     // Delete the 'foo' cache entry immediately
+     *     Cache::instance('memcache')->delete('foo');
+     *
+     *     // Delete the 'bar' cache entry after 30 seconds
+     *     Cache::instance('memcache')->delete('bar', 30);
+     *
+     * @param   string   $id       id of entry to delete
+     * @param   integer  $timeout  timeout of entry, if zero item is deleted immediately, otherwise the item will delete after the specified value in seconds
+     */
+    public function delete($id, $timeout = 0): bool
 	{
 		// Delete the id
 		return $this->_memcache->delete($this->_sanitize_id($id), $timeout);
@@ -319,37 +315,32 @@ class Kohana_Cache_Memcache extends Cache implements Cache_Arithmetic {
 				$host['timeout'],
 				$host['retry_interval'],
 				FALSE, // Server is offline
-				array($this, '_failed_request'
-				));
+				$this->_failed_request(...));
 		}
 	}
 
 	/**
-	 * Increments a given value by the step value supplied.
-	 * Useful for shared counters and other persistent integer based
-	 * tracking.
-	 *
-	 * @param   string    id of cache entry to increment
-	 * @param   int       step value to increment by
-	 * @return  integer
-	 * @return  boolean
-	 */
-	public function increment($id, $step = 1)
+     * Increments a given value by the step value supplied.
+     * Useful for shared counters and other persistent integer based
+     * tracking.
+     *
+     * @param   string    id of cache entry to increment
+     * @param   int       step value to increment by
+     */
+    public function increment($id, $step = 1): int
 	{
 		return $this->_memcache->increment($id, $step);
 	}
 
 	/**
-	 * Decrements a given value by the step value supplied.
-	 * Useful for shared counters and other persistent integer based
-	 * tracking.
-	 *
-	 * @param   string    id of cache entry to decrement
-	 * @param   int       step value to decrement by
-	 * @return  integer
-	 * @return  boolean
-	 */
-	public function decrement($id, $step = 1)
+     * Decrements a given value by the step value supplied.
+     * Useful for shared counters and other persistent integer based
+     * tracking.
+     *
+     * @param   string    id of cache entry to decrement
+     * @param   int       step value to decrement by
+     */
+    public function decrement($id, $step = 1): int
 	{
 		return $this->_memcache->decrement($id, $step);
 	}

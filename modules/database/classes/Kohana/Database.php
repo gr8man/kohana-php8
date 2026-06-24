@@ -19,7 +19,7 @@ defined('SYSPATH') or die('No direct script access.');
  * @copyright  (c) 2008-2012 Kohana Team
  * @license    http://kohanaphp.com/license
  */
-abstract class Kohana_Database
+abstract class Kohana_Database implements \Stringable
 {
 	// Query types
 	public const SELECT =  1;
@@ -35,7 +35,7 @@ abstract class Kohana_Database
 	/**
 	 * @var  array  Database instances
 	 */
-	public static $instances = array();
+	public static $instances = [];
 
 	/**
 	 * Get a singleton Database instance. If configuration is not specified,
@@ -68,7 +68,7 @@ abstract class Kohana_Database
 			if (! isset($config['type'])) {
 				throw new Kohana_Exception(
 					'Database type not defined in :name configuration',
-					array(':name' => $name)
+					[':name' => $name]
 				);
 			}
 
@@ -93,9 +93,6 @@ abstract class Kohana_Database
 	// Character that is used to quote identifiers
 	protected $_identifier = '"';
 
-	// Instance name
-	protected $_instance;
-
 	// Raw server connection
 	protected $_connection;
 
@@ -103,17 +100,12 @@ abstract class Kohana_Database
 	protected $_config;
 
 	/**
-	 * Stores the database configuration locally and name the instance.
-	 *
-	 * [!!] This method cannot be accessed directly, you must use [Database::instance].
-	 *
-	 * @return  void
-	 */
-	public function __construct($name, array $config)
+     * Stores the database configuration locally and name the instance.
+     *
+     * [!!] This method cannot be accessed directly, you must use [Database::instance].
+     */
+    public function __construct(protected $_instance, array $config)
 	{
-		// Set the instance name
-		$this->_instance = $name;
-
 		// Store the config locally
 		$this->_config = $config;
 
@@ -123,31 +115,27 @@ abstract class Kohana_Database
 	}
 
 	/**
-	 * Disconnect from the database when the object is destroyed.
-	 *
-	 *     // Destroy the database instance
-	 *     unset(Database::instances[(string) $db], $db);
-	 *
-	 * [!!] Calling `unset($db)` is not enough to destroy the database, as it
-	 * will still be stored in `Database::$instances`.
-	 *
-	 * @return  void
-	 */
-	public function __destruct()
+     * Disconnect from the database when the object is destroyed.
+     *
+     *     // Destroy the database instance
+     *     unset(Database::instances[(string) $db], $db);
+     *
+     * [!!] Calling `unset($db)` is not enough to destroy the database, as it
+     * will still be stored in `Database::$instances`.
+     */
+    public function __destruct()
 	{
 		$this->disconnect();
 	}
 
 	/**
-	 * Returns the database instance name.
-	 *
-	 *     echo (string) $db;
-	 *
-	 * @return  string
-	 */
-	public function __toString()
+     * Returns the database instance name.
+     *
+     *     echo (string) $db;
+     */
+    public function __toString(): string
 	{
-		return $this->_instance;
+		return (string) $this->_instance;
 	}
 
 	/**
@@ -277,64 +265,60 @@ abstract class Kohana_Database
 	 */
 	public function datatype($type)
 	{
-		static $types = array(
+		static $types = [
 			// SQL-92
-			'bit'                           => array('type' => 'string', 'exact' => true),
-			'bit varying'                   => array('type' => 'string'),
-			'char'                          => array('type' => 'string', 'exact' => true),
-			'char varying'                  => array('type' => 'string'),
-			'character'                     => array('type' => 'string', 'exact' => true),
-			'character varying'             => array('type' => 'string'),
-			'date'                          => array('type' => 'string'),
-			'dec'                           => array('type' => 'float', 'exact' => true),
-			'decimal'                       => array('type' => 'float', 'exact' => true),
-			'double precision'              => array('type' => 'float'),
-			'float'                         => array('type' => 'float'),
-			'int'                           => array('type' => 'int', 'min' => '-2147483648', 'max' => '2147483647'),
-			'integer'                       => array('type' => 'int', 'min' => '-2147483648', 'max' => '2147483647'),
-			'interval'                      => array('type' => 'string'),
-			'national char'                 => array('type' => 'string', 'exact' => true),
-			'national char varying'         => array('type' => 'string'),
-			'national character'            => array('type' => 'string', 'exact' => true),
-			'national character varying'    => array('type' => 'string'),
-			'nchar'                         => array('type' => 'string', 'exact' => true),
-			'nchar varying'                 => array('type' => 'string'),
-			'numeric'                       => array('type' => 'float', 'exact' => true),
-			'real'                          => array('type' => 'float'),
-			'smallint'                      => array('type' => 'int', 'min' => '-32768', 'max' => '32767'),
-			'time'                          => array('type' => 'string'),
-			'time with time zone'           => array('type' => 'string'),
-			'timestamp'                     => array('type' => 'string'),
-			'timestamp with time zone'      => array('type' => 'string'),
-			'varchar'                       => array('type' => 'string'),
+			'bit'                           => ['type' => 'string', 'exact' => true],
+			'bit varying'                   => ['type' => 'string'],
+			'char'                          => ['type' => 'string', 'exact' => true],
+			'char varying'                  => ['type' => 'string'],
+			'character'                     => ['type' => 'string', 'exact' => true],
+			'character varying'             => ['type' => 'string'],
+			'date'                          => ['type' => 'string'],
+			'dec'                           => ['type' => 'float', 'exact' => true],
+			'decimal'                       => ['type' => 'float', 'exact' => true],
+			'double precision'              => ['type' => 'float'],
+			'float'                         => ['type' => 'float'],
+			'int'                           => ['type' => 'int', 'min' => '-2147483648', 'max' => '2147483647'],
+			'integer'                       => ['type' => 'int', 'min' => '-2147483648', 'max' => '2147483647'],
+			'interval'                      => ['type' => 'string'],
+			'national char'                 => ['type' => 'string', 'exact' => true],
+			'national char varying'         => ['type' => 'string'],
+			'national character'            => ['type' => 'string', 'exact' => true],
+			'national character varying'    => ['type' => 'string'],
+			'nchar'                         => ['type' => 'string', 'exact' => true],
+			'nchar varying'                 => ['type' => 'string'],
+			'numeric'                       => ['type' => 'float', 'exact' => true],
+			'real'                          => ['type' => 'float'],
+			'smallint'                      => ['type' => 'int', 'min' => '-32768', 'max' => '32767'],
+			'time'                          => ['type' => 'string'],
+			'time with time zone'           => ['type' => 'string'],
+			'timestamp'                     => ['type' => 'string'],
+			'timestamp with time zone'      => ['type' => 'string'],
+			'varchar'                       => ['type' => 'string'],
 
 			// SQL:1999
-			'binary large object'               => array('type' => 'string', 'binary' => true),
-			'blob'                              => array('type' => 'string', 'binary' => true),
-			'boolean'                           => array('type' => 'bool'),
-			'char large object'                 => array('type' => 'string'),
-			'character large object'            => array('type' => 'string'),
-			'clob'                              => array('type' => 'string'),
-			'national character large object'   => array('type' => 'string'),
-			'nchar large object'                => array('type' => 'string'),
-			'nclob'                             => array('type' => 'string'),
-			'time without time zone'            => array('type' => 'string'),
-			'timestamp without time zone'       => array('type' => 'string'),
+			'binary large object'               => ['type' => 'string', 'binary' => true],
+			'blob'                              => ['type' => 'string', 'binary' => true],
+			'boolean'                           => ['type' => 'bool'],
+			'char large object'                 => ['type' => 'string'],
+			'character large object'            => ['type' => 'string'],
+			'clob'                              => ['type' => 'string'],
+			'national character large object'   => ['type' => 'string'],
+			'nchar large object'                => ['type' => 'string'],
+			'nclob'                             => ['type' => 'string'],
+			'time without time zone'            => ['type' => 'string'],
+			'timestamp without time zone'       => ['type' => 'string'],
 
 			// SQL:2003
-			'bigint'    => array('type' => 'int', 'min' => '-9223372036854775808', 'max' => '9223372036854775807'),
+			'bigint'    => ['type' => 'int', 'min' => '-9223372036854775808', 'max' => '9223372036854775807'],
 
 			// SQL:2008
-			'binary'            => array('type' => 'string', 'binary' => true, 'exact' => true),
-			'binary varying'    => array('type' => 'string', 'binary' => true),
-			'varbinary'         => array('type' => 'string', 'binary' => true),
-		);
+			'binary'            => ['type' => 'string', 'binary' => true, 'exact' => true],
+			'binary varying'    => ['type' => 'string', 'binary' => true],
+			'varbinary'         => ['type' => 'string', 'binary' => true],
+		];
 
-		if (isset($types[$type])) {
-			return $types[$type];
-		}
-
-		return array();
+		return $types[$type] ?? [];
 	}
 
 	/**
@@ -385,7 +369,7 @@ abstract class Kohana_Database
 	{
 		if (($open = strpos($type, '(')) === false) {
 			// No length specified
-			return array($type, null);
+			return [$type, null];
 		}
 
 		// Closing parenthesis
@@ -397,7 +381,7 @@ abstract class Kohana_Database
 		// Type without the length
 		$type = substr($type, 0, $open).substr($type, $close + 1);
 
-		return array($type, $length);
+		return [$type, $length];
 	}
 
 	/**
@@ -448,9 +432,9 @@ abstract class Kohana_Database
 				return $this->quote((string) $value);
 			}
 		} elseif (is_array($value)) {
-			return '('.implode(', ', array_map(array($this, __FUNCTION__), $value)).')';
+			return '('.implode(', ', array_map([$this, __FUNCTION__], $value)).')';
 		} elseif (is_int($value)) {
-			return (int) $value;
+			return $value;
 		} elseif (is_float($value)) {
 			// Convert to non-locale aware float to prevent possible commas
 			return sprintf('%F', $value);
@@ -484,7 +468,7 @@ abstract class Kohana_Database
 		$escaped_identifier = $this->_identifier.$this->_identifier;
 
 		if (is_array($column)) {
-			list($column, $alias) = $column;
+			[$column, $alias] = $column;
 			$alias = str_replace($this->_identifier, $escaped_identifier, $alias);
 		}
 
@@ -502,7 +486,7 @@ abstract class Kohana_Database
 
 			if ($column === '*') {
 				return $column;
-			} elseif (strpos($column, '.') !== false) {
+			} elseif (str_contains($column, '.')) {
 				$parts = explode('.', $column);
 
 				if ($prefix = $this->table_prefix()) {
@@ -554,7 +538,7 @@ abstract class Kohana_Database
 		$escaped_identifier = $this->_identifier.$this->_identifier;
 
 		if (is_array($table)) {
-			list($table, $alias) = $table;
+			[$table, $alias] = $table;
 			$alias = str_replace($this->_identifier, $escaped_identifier, $alias);
 		}
 
@@ -570,7 +554,7 @@ abstract class Kohana_Database
 
 			$table = str_replace($this->_identifier, $escaped_identifier, $table);
 
-			if (strpos($table, '.') !== false) {
+			if (str_contains($table, '.')) {
 				$parts = explode('.', $table);
 
 				if ($prefix = $this->table_prefix()) {
@@ -618,7 +602,7 @@ abstract class Kohana_Database
 		$escaped_identifier = $this->_identifier.$this->_identifier;
 
 		if (is_array($value)) {
-			list($value, $alias) = $value;
+			[$value, $alias] = $value;
 			$alias = str_replace($this->_identifier, $escaped_identifier, $alias);
 		}
 
@@ -634,7 +618,7 @@ abstract class Kohana_Database
 
 			$value = str_replace($this->_identifier, $escaped_identifier, $value);
 
-			if (strpos($value, '.') !== false) {
+			if (str_contains($value, '.')) {
 				$parts = explode('.', $value);
 
 				foreach ($parts as & $part) {

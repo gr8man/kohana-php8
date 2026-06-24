@@ -13,7 +13,7 @@ class Bench_URLSite extends Codebench
 
 	public $loops = 1000;
 
-	public $subjects = array(
+	public $subjects = [
 		'',
 		'news',
 		'news/',
@@ -24,7 +24,7 @@ class Bench_URLSite extends Codebench
 		'http://example.com/hello',
 		'http://example.com:80/',
 		'http://user:pass@example.com/',
-	);
+	];
 
 	public function __construct()
 	{
@@ -38,36 +38,36 @@ class Bench_URLSite extends Codebench
 		parent::__construct();
 	}
 
-	public function bench_original($uri)
+	public function bench_original($uri): string
 	{
 		// Get the path from the URI
-		$path = trim(parse_url($uri, PHP_URL_PATH), '/');
+		$path = trim(parse_url((string) $uri, PHP_URL_PATH), '/');
 
-		if ($query = parse_url($uri, PHP_URL_QUERY)) {
+		if ($query = parse_url((string) $uri, PHP_URL_QUERY)) {
 			$query = '?'.$query;
 		}
 
-		if ($fragment = parse_url($uri, PHP_URL_FRAGMENT)) {
+		if ($fragment = parse_url((string) $uri, PHP_URL_FRAGMENT)) {
 			$fragment = '#'.$fragment;
 		}
 
 		return $path.$query.$fragment;
 	}
 
-	public function bench_explode($uri)
+	public function bench_explode($uri): string
 	{
 		// Chop off possible scheme, host, port, user and pass parts
-		$path = preg_replace('~^[-a-z0-9+.]++://[^/]++/?~', '', trim($uri, '/'));
+		$path = preg_replace('~^[-a-z0-9+.]++://[^/]++/?~', '', trim((string) $uri, '/'));
 
 		$fragment = '';
-		$explode = explode('#', $path, 2);
+		$explode = explode('#', (string) $path, 2);
 		if (isset($explode[1])) {
 			$path = $explode[0];
 			$fragment = '#'.$explode[1];
 		}
 
 		$query = '';
-		$explode = explode('?', $path, 2);
+		$explode = explode('?', (string) $path, 2);
 		if (isset($explode[1])) {
 			$path = $explode[0];
 			$query = '?'.$explode[1];
@@ -76,9 +76,9 @@ class Bench_URLSite extends Codebench
 		return $path.$query.$fragment;
 	}
 
-	public function bench_regex($uri)
+	public function bench_regex($uri): string
 	{
-		preg_match('~^(?:[-a-z0-9+.]++://[^/]++/?)?([^?#]++)?(\?[^#]*+)?(#.*)?~', trim($uri, '/'), $matches);
+		preg_match('~^(?:[-a-z0-9+.]++://[^/]++/?)?([^?#]++)?(\?[^#]*+)?(#.*)?~', trim((string) $uri, '/'), $matches);
 		$path = Arr::get($matches, 1, '');
 		$query = Arr::get($matches, 2, '');
 		$fragment = Arr::get($matches, 3, '');
@@ -86,31 +86,31 @@ class Bench_URLSite extends Codebench
 		return $path.$query.$fragment;
 	}
 
-	public function bench_regex_without_arrget($uri)
+	public function bench_regex_without_arrget($uri): string
 	{
-		preg_match('~^(?:[-a-z0-9+.]++://[^/]++/?)?([^?#]++)?(\?[^#]*+)?(#.*)?~', trim($uri, '/'), $matches);
-		$path = isset($matches[1]) ? $matches[1] : '';
-		$query = isset($matches[2]) ? $matches[2] : '';
-		$fragment = isset($matches[3]) ? $matches[3] : '';
+		preg_match('~^(?:[-a-z0-9+.]++://[^/]++/?)?([^?#]++)?(\?[^#]*+)?(#.*)?~', trim((string) $uri, '/'), $matches);
+		$path = $matches[1] ?? '';
+		$query = $matches[2] ?? '';
+		$fragment = $matches[3] ?? '';
 
 		return $path.$query.$fragment;
 	}
 
 	// And then I thought, why do all the work of extracting the query and fragment parts and then reappending them?
 	// Just leaving them alone should be fine, right? As a bonus we get a very nice speed boost.
-	public function bench_less_is_more($uri)
+	public function bench_less_is_more($uri): string|array|null
 	{
 		// Chop off possible scheme, host, port, user and pass parts
-		$path = preg_replace('~^[-a-z0-9+.]++://[^/]++/?~', '', trim($uri, '/'));
+		$path = preg_replace('~^[-a-z0-9+.]++://[^/]++/?~', '', trim((string) $uri, '/'));
 
 		return $path;
 	}
 
 	public function bench_less_is_more_with_strpos_optimization($uri)
 	{
-		if (strpos($uri, '://') !== false) {
+		if (str_contains((string) $uri, '://')) {
 			// Chop off possible scheme, host, port, user and pass parts
-			$uri = preg_replace('~^[-a-z0-9+.]++://[^/]++/?~', '', trim($uri, '/'));
+			$uri = preg_replace('~^[-a-z0-9+.]++://[^/]++/?~', '', trim((string) $uri, '/'));
 		}
 
 		return $uri;

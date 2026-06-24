@@ -32,7 +32,7 @@ abstract class Kohana_Auth
 			}
 
 			// Set the session class name
-			$class = 'Auth_'.ucfirst($type);
+			$class = 'Auth_'.ucfirst((string) $type);
 
 			// Create a new session instance
 			Auth::$_instance = new $class($config);
@@ -43,19 +43,13 @@ abstract class Kohana_Auth
 
 	protected $_session;
 
-	protected $_config;
-
 	/**
-	 * Loads Session and configuration options.
-	 *
-	 * @param   array  $config  Config Options
-	 * @return  void
-	 */
-	public function __construct($config = array())
+     * Loads Session and configuration options.
+     *
+     * @param array $_config Config Options
+     */
+    public function __construct(protected $_config = [])
 	{
-		// Save the config in the object
-		$this->_config = $config;
-
 		$this->_session = Session::instance($this->_config['session_type']);
 	}
 
@@ -141,14 +135,14 @@ abstract class Kohana_Auth
 	{
 		if (function_exists('password_hash')) {
 			$cost = isset($this->_config['bcrypt_cost']) ? (int) $this->_config['bcrypt_cost'] : 12;
-			return password_hash($password, PASSWORD_BCRYPT, array('cost' => $cost));
+			return password_hash($password, PASSWORD_BCRYPT, ['cost' => $cost]);
 		}
 
 		if (! $this->_config['hash_key']) {
 			throw new Kohana_Exception('A valid hash key must be set in your auth config.');
 		}
 
-		return hash_hmac($this->_config['hash_method'], $password, $this->_config['hash_key']);
+		return hash_hmac((string) $this->_config['hash_method'], $password, (string) $this->_config['hash_key']);
 	}
 
 	/**
@@ -174,7 +168,7 @@ abstract class Kohana_Auth
 			throw new Kohana_Exception('A valid hash key must be set in your auth config.');
 		}
 
-		$computed = hash_hmac($this->_config['hash_method'], $password, $this->_config['hash_key']);
+		$computed = hash_hmac((string) $this->_config['hash_method'], $password, (string) $this->_config['hash_key']);
 		return hash_equals($hash, $computed);
 	}
 
@@ -188,7 +182,7 @@ abstract class Kohana_Auth
 	{
 		if (function_exists('password_needs_rehash')) {
 			$cost = isset($this->_config['bcrypt_cost']) ? (int) $this->_config['bcrypt_cost'] : 12;
-			return password_needs_rehash($hash, PASSWORD_BCRYPT, array('cost' => $cost));
+			return password_needs_rehash($hash, PASSWORD_BCRYPT, ['cost' => $cost]);
 		}
 		return false;
 	}
@@ -205,7 +199,7 @@ abstract class Kohana_Auth
 			throw new Kohana_Exception('A valid hash key must be set in your auth config.');
 		}
 
-		return hash_hmac($this->_config['hash_method'], $str, $this->_config['hash_key']);
+		return hash_hmac((string) $this->_config['hash_method'], $str, (string) $this->_config['hash_key']);
 	}
 
 	protected function complete_login($user)

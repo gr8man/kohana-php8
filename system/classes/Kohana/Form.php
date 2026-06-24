@@ -18,25 +18,24 @@ defined('SYSPATH') or die('No direct script access.');
 class Kohana_Form
 {
 	/**
-	 * Generates an opening HTML form tag.
-	 *
-	 *     // Form will submit back to the current page using POST
-	 *     echo Form::open();
-	 *
-	 *     // Form will submit to 'search' using GET
-	 *     echo Form::open('search', array('method' => 'get'));
-	 *
-	 *     // When "file" inputs are present, you must include the "enctype"
-	 *     echo Form::open(NULL, array('enctype' => 'multipart/form-data'));
-	 *
-	 * @param   mixed   $action     form action, defaults to the current request URI, or [Request] class to use
-	 * @param   array   $attributes html attributes
-	 * @return  string
-	 * @uses    Request
-	 * @uses    URL::site
-	 * @uses    HTML::attributes
-	 */
-	public static function open($action = null, array $attributes = null)
+     * Generates an opening HTML form tag.
+     *
+     *     // Form will submit back to the current page using POST
+     *     echo Form::open();
+     *
+     *     // Form will submit to 'search' using GET
+     *     echo Form::open('search', array('method' => 'get'));
+     *
+     *     // When "file" inputs are present, you must include the "enctype"
+     *     echo Form::open(NULL, array('enctype' => 'multipart/form-data'));
+     *
+     * @param   mixed   $action     form action, defaults to the current request URI, or [Request] class to use
+     * @param   array   $attributes html attributes
+     * @uses    Request
+     * @uses    URL::site
+     * @uses    HTML::attributes
+     */
+    public static function open($action = null, array $attributes = null): string
 	{
 		if ($action instanceof Request) {
 			// Use the current URI
@@ -46,7 +45,7 @@ class Kohana_Form
 		if (! $action) {
 			// Allow empty form actions (submits back to the current url).
 			$action = '';
-		} elseif (strpos($action, '://') === false) {
+		} elseif (!str_contains((string) $action, '://')) {
 			// Make the URI absolute
 			$action = URL::site($action);
 		}
@@ -66,30 +65,27 @@ class Kohana_Form
 	}
 
 	/**
-	 * Creates the closing form tag.
-	 *
-	 *     echo Form::close();
-	 *
-	 * @return  string
-	 */
-	public static function close()
+     * Creates the closing form tag.
+     *
+     *     echo Form::close();
+     */
+    public static function close(): string
 	{
 		return '</form>';
 	}
 
 	/**
-	 * Creates a form input. If no type is specified, a "text" type input will
-	 * be returned.
-	 *
-	 *     echo Form::input('username', $username);
-	 *
-	 * @param   string  $name       input name
-	 * @param   string  $value      input value
-	 * @param   array   $attributes html attributes
-	 * @return  string
-	 * @uses    HTML::attributes
-	 */
-	public static function input($name, $value = null, array $attributes = null)
+     * Creates a form input. If no type is specified, a "text" type input will
+     * be returned.
+     *
+     *     echo Form::input('username', $username);
+     *
+     * @param   string  $name       input name
+     * @param   string  $value      input value
+     * @param   array   $attributes html attributes
+     * @uses    HTML::attributes
+     */
+    public static function input($name, $value = null, array $attributes = null): string
 	{
 		// Set the input name
 		$attributes['name'] = $name;
@@ -208,44 +204,42 @@ class Kohana_Form
 	}
 
 	/**
-	 * Creates a textarea form input.
-	 *
-	 *     echo Form::textarea('about', $about);
-	 *
-	 * @param   string  $name           textarea name
-	 * @param   string  $body           textarea body
-	 * @param   array   $attributes     html attributes
-	 * @param   boolean $double_encode  encode existing HTML characters
-	 * @return  string
-	 * @uses    HTML::attributes
-	 * @uses    HTML::chars
-	 */
-	public static function textarea($name, $body = '', array $attributes = null, $double_encode = true)
+     * Creates a textarea form input.
+     *
+     *     echo Form::textarea('about', $about);
+     *
+     * @param   string  $name           textarea name
+     * @param   string  $body           textarea body
+     * @param   array   $attributes     html attributes
+     * @param   boolean $double_encode  encode existing HTML characters
+     * @uses    HTML::attributes
+     * @uses    HTML::chars
+     */
+    public static function textarea($name, $body = '', array $attributes = null, $double_encode = true): string
 	{
 		// Set the input name
 		$attributes['name'] = $name;
 
 		// Add default rows and cols attributes (required)
-		$attributes += array('rows' => 10, 'cols' => 50);
+		$attributes += ['rows' => 10, 'cols' => 50];
 
 		return '<textarea'.HTML::attributes($attributes).'>'.HTML::chars($body, $double_encode).'</textarea>';
 	}
 
 	/**
-	 * Creates a select form input.
-	 *
-	 *     echo Form::select('country', $countries, $country);
-	 *
-	 * [!!] Support for multiple selected options was added in v3.0.7.
-	 *
-	 * @param   string  $name       input name
-	 * @param   array   $options    available options
-	 * @param   mixed   $selected   selected option string, or an array of selected options
-	 * @param   array   $attributes html attributes
-	 * @return  string
-	 * @uses    HTML::attributes
-	 */
-	public static function select($name, array $options = null, $selected = null, array $attributes = null)
+     * Creates a select form input.
+     *
+     *     echo Form::select('country', $countries, $country);
+     *
+     * [!!] Support for multiple selected options was added in v3.0.7.
+     *
+     * @param   string  $name       input name
+     * @param   array   $options    available options
+     * @param   mixed   $selected   selected option string, or an array of selected options
+     * @param   array   $attributes html attributes
+     * @uses    HTML::attributes
+     */
+    public static function select($name, array $options = null, $selected = null, array $attributes = null): string
 	{
 		// Set the input name
 		$attributes['name'] = $name;
@@ -258,10 +252,10 @@ class Kohana_Form
 		if (! is_array($selected)) {
 			if ($selected === null) {
 				// Use an empty array
-				$selected = array();
+				$selected = [];
 			} else {
 				// Convert the selected options to an array
-				$selected = array( (string) $selected);
+				$selected = [ (string) $selected];
 			}
 		}
 
@@ -272,17 +266,17 @@ class Kohana_Form
 			foreach ($options as $value => $name) {
 				if (is_array($name)) {
 					// Create a new optgroup
-					$group = array('label' => $value);
+					$group = ['label' => $value];
 
 					// Create a new list of options
-					$_options = array();
+					$_options = [];
 
 					foreach ($name as $_value => $_name) {
 						// Force value to be string
 						$_value = (string) $_value;
 
 						// Create a new attribute set for this option
-						$option = array('value' => $_value);
+						$option = ['value' => $_value];
 
 						if (in_array($_value, $selected)) {
 							// This option is selected
@@ -302,7 +296,7 @@ class Kohana_Form
 					$value = (string) $value;
 
 					// Create a new attribute set for this option
-					$option = array('value' => $value);
+					$option = ['value' => $value];
 
 					if (in_array($value, $selected)) {
 						// This option is selected
@@ -354,7 +348,7 @@ class Kohana_Form
 	public static function image($name, $value, array $attributes = null, $index = false)
 	{
 		if (! empty($attributes['src'])) {
-			if (strpos($attributes['src'], '://') === false) {
+			if (!str_contains((string) $attributes['src'], '://')) {
 				// Add the base URL
 				$attributes['src'] = URL::base($index).$attributes['src'];
 			}
@@ -366,18 +360,17 @@ class Kohana_Form
 	}
 
 	/**
-	 * Creates a button form input. Note that the body of a button is NOT escaped,
-	 * to allow images and other HTML to be used.
-	 *
-	 *     echo Form::button('save', 'Save Profile', array('type' => 'submit'));
-	 *
-	 * @param   string  $name       input name
-	 * @param   string  $body       input value
-	 * @param   array   $attributes html attributes
-	 * @return  string
-	 * @uses    HTML::attributes
-	 */
-	public static function button($name, $body, array $attributes = null)
+     * Creates a button form input. Note that the body of a button is NOT escaped,
+     * to allow images and other HTML to be used.
+     *
+     *     echo Form::button('save', 'Save Profile', array('type' => 'submit'));
+     *
+     * @param   string  $name       input name
+     * @param   string  $body       input value
+     * @param   array   $attributes html attributes
+     * @uses    HTML::attributes
+     */
+    public static function button($name, string $body, array $attributes = null): string
 	{
 		// Set the input name
 		$attributes['name'] = $name;
@@ -386,21 +379,20 @@ class Kohana_Form
 	}
 
 	/**
-	 * Creates a form label. Label text is not automatically translated.
-	 *
-	 *     echo Form::label('username', 'Username');
-	 *
-	 * @param   string  $input      target input
-	 * @param   string  $text       label text
-	 * @param   array   $attributes html attributes
-	 * @return  string
-	 * @uses    HTML::attributes
-	 */
-	public static function label($input, $text = null, array $attributes = null)
+     * Creates a form label. Label text is not automatically translated.
+     *
+     *     echo Form::label('username', 'Username');
+     *
+     * @param   string  $input      target input
+     * @param   string  $text       label text
+     * @param   array   $attributes html attributes
+     * @uses    HTML::attributes
+     */
+    public static function label($input, $text = null, array $attributes = null): string
 	{
 		if ($text === null) {
 			// Use the input name as the text
-			$text = ucwords(preg_replace('/[\W_]+/', ' ', $input));
+			$text = ucwords((string) preg_replace('/[\W_]+/', ' ', $input));
 		}
 
 		// Set the label target

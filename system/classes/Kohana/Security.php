@@ -57,7 +57,7 @@ class Kohana_Security
 				$token = base64_encode(openssl_random_pseudo_bytes(32));
 			} else {
 				// Otherwise, fall back to a hashed uniqid
-				$token = sha1(uniqid(null, true));
+				$token = sha1(uniqid('', true));
 			}
 
 			// Store the new token
@@ -87,16 +87,15 @@ class Kohana_Security
 
 
 	/**
-	 * Compare two hashes in a time-invariant manner.
-	 * Prevents cryptographic side-channel attacks (timing attacks, specifically)
-	 *
-	 * SECURITY: Uses PHP's hash_equals() when available (PHP 5.6+)
-	 *
-	 * @param string $a cryptographic hash
-	 * @param string $b cryptographic hash
-	 * @return boolean
-	 */
-	public static function slow_equals($a, $b)
+     * Compare two hashes in a time-invariant manner.
+     * Prevents cryptographic side-channel attacks (timing attacks, specifically)
+     *
+     * SECURITY: Uses PHP's hash_equals() when available (PHP 5.6+)
+     *
+     * @param string $a cryptographic hash
+     * @param string $b cryptographic hash
+     */
+    public static function slow_equals($a, $b): bool
 	{
 		if (function_exists('hash_equals')) {
 			return hash_equals((string) $a, (string) $b);
@@ -121,11 +120,11 @@ class Kohana_Security
 	 * @param   string  $str    string to sanitize
 	 * @return  string
 	 */
-	public static function strip_image_tags($str)
+	public static function strip_image_tags($str): array|string|null
 	{
 		// SECURITY: Properly extract and escape the image source URL
 		// This prevents XSS attacks via malformed img tags
-		$str = preg_replace_callback('#<img\s+([^>]*)>#is', function ($matches) {
+		$str = preg_replace_callback('#<img\s+([^>]*)>#is', function ($matches): string {
 			$attrs = $matches[1];
 
 			// Extract src attribute with proper handling of quotes
@@ -148,16 +147,15 @@ class Kohana_Security
 	}
 
 	/**
-	 * Encodes PHP tags in a string.
-	 *
-	 *     $str = Security::encode_php_tags($str);
-	 *
-	 * @param   string  $str    string to sanitize
-	 * @return  string
-	 */
-	public static function encode_php_tags($str)
+     * Encodes PHP tags in a string.
+     *
+     *     $str = Security::encode_php_tags($str);
+     *
+     * @param   string  $str    string to sanitize
+     */
+    public static function encode_php_tags($str): string
 	{
-		return str_replace(array('<?', '?>'), array('&lt;?', '?&gt;'), $str);
+		return str_replace(['<?', '?>'], ['&lt;?', '?&gt;'], $str);
 	}
 
 }

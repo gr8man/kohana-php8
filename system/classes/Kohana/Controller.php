@@ -66,7 +66,7 @@ abstract class Kohana_Controller
 			throw HTTP_Exception::factory(
 				404,
 				'The requested URL :uri was not found on this server.',
-				array(':uri' => $this->request->uri())
+				[':uri' => $this->request->uri()]
 			)->request($this->request);
 		}
 
@@ -81,24 +81,20 @@ abstract class Kohana_Controller
 	}
 
 	/**
-	 * Automatically executed before the controller action. Can be used to set
-	 * class properties, do authorization checks, and execute other custom code.
-	 *
-	 * @return  void
-	 */
-	public function before()
+     * Automatically executed before the controller action. Can be used to set
+     * class properties, do authorization checks, and execute other custom code.
+     */
+    public function before(): void
 	{
 		// Nothing by default
 	}
 
 	/**
-	 * Automatically executed after the controller action. Can be used to apply
-	 * transformation to the response, add extra output, and execute
-	 * other custom code.
-	 *
-	 * @return  void
-	 */
-	public function after()
+     * Automatically executed after the controller action. Can be used to apply
+     * transformation to the response, add extra output, and execute
+     * other custom code.
+     */
+    public function after(): void
 	{
 		// Nothing by default
 	}

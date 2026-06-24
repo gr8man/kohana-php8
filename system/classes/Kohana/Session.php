@@ -12,7 +12,7 @@ defined('SYSPATH') or die('No direct script access.');
  * @copyright  (c) 2008-2012 Kohana Team
  * @license    http://kohanaframework.org/license
  */
-abstract class Kohana_Session
+abstract class Kohana_Session implements \Stringable
 {
 	/**
 	 * @var  string  default session adapter
@@ -22,7 +22,7 @@ abstract class Kohana_Session
 	/**
 	 * @var  array  session instances
 	 */
-	public static $instances = array();
+	public static $instances = [];
 
 	/**
 	 * Creates a singleton session of the given type. Some session types
@@ -56,7 +56,7 @@ abstract class Kohana_Session
 			Session::$instances[$type] = $session = new $class($config, $id);
 
 			// Write the session at shutdown
-			register_shutdown_function(array($session, 'write'));
+			register_shutdown_function([$session, 'write']);
 		}
 
 		return Session::$instances[$type];
@@ -65,7 +65,7 @@ abstract class Kohana_Session
 	/**
 	 * @var  string  cookie name
 	 */
-	protected $_name = 'session';
+	protected string $_name = 'session';
 
 	/**
 	 * @var  int  cookie lifetime
@@ -80,7 +80,7 @@ abstract class Kohana_Session
 	/**
 	 * @var  array  session data
 	 */
-	protected $_data = array();
+	protected $_data = [];
 
 	/**
 	 * @var  bool  session destroyed?
@@ -88,16 +88,15 @@ abstract class Kohana_Session
 	protected $_destroyed = false;
 
 	/**
-	 * Overloads the name, lifetime, and encrypted session settings.
-	 *
-	 * [!!] Sessions can only be created using the [Session::instance] method.
-	 *
-	 * @param   array   $config configuration
-	 * @param   string  $id     session id
-	 * @return  void
-	 * @uses    Session::read
-	 */
-	public function __construct(array $config = null, $id = null)
+     * Overloads the name, lifetime, and encrypted session settings.
+     *
+     * [!!] Sessions can only be created using the [Session::instance] method.
+     *
+     * @param   array   $config configuration
+     * @param   string  $id     session id
+     * @uses    Session::read
+     */
+    public function __construct(array $config = null, $id = null)
 	{
 		if (isset($config['name'])) {
 			// Cookie name to store the session id in
@@ -124,16 +123,15 @@ abstract class Kohana_Session
 	}
 
 	/**
-	 * Session object is rendered to a serialized string. If encryption is
-	 * enabled, the session will be encrypted. If not, the output string will
-	 * be encoded.
-	 *
-	 *     echo $session;
-	 *
-	 * @return  string
-	 * @uses    Encrypt::encode
-	 */
-	public function __toString()
+     * Session object is rendered to a serialized string. If encryption is
+     * enabled, the session will be encrypted. If not, the output string will
+     * be encoded.
+     *
+     *     echo $session;
+     *
+     * @uses    Encrypt::encode
+     */
+    public function __toString(): string
 	{
 		// Serialize the data array
 		$data = $this->_serialize($this->_data);
@@ -278,14 +276,13 @@ abstract class Kohana_Session
 	}
 
 	/**
-	 * Loads existing session data.
-	 *
-	 *     $session->read();
-	 *
-	 * @param   string  $id session id
-	 * @return  void
-	 */
-	public function read($id = null)
+     * Loads existing session data.
+     *
+     *     $session->read();
+     *
+     * @param   string  $id session id
+     */
+    public function read($id = null): void
 	{
 		$data = null;
 
@@ -304,7 +301,7 @@ abstract class Kohana_Session
 			} else {
 				// Ignore these, session is valid, likely no data though.
 			}
-		} catch (Exception $e) {
+		} catch (Exception) {
 			// Error reading the session, usually a corrupt session.
 			throw new Session_Exception('Error reading session data.', null, Session_Exception::SESSION_CORRUPT);
 		}
@@ -372,7 +369,7 @@ abstract class Kohana_Session
 		if ($this->_destroyed === false) {
 			if ($this->_destroyed = $this->_destroy()) {
 				// The session has been destroyed, clear all data
-				$this->_data = array();
+				$this->_data = [];
 			}
 		}
 
@@ -419,7 +416,7 @@ abstract class Kohana_Session
 	protected function _unserialize($data)
 	{
 		// SECURITY: Disable class instantiation during unserialization to prevent object injection attacks
-		return unserialize($data, array('allowed_classes' => false));
+		return unserialize($data, ['allowed_classes' => false]);
 	}
 
 	/**

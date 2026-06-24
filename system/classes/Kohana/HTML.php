@@ -18,7 +18,7 @@ class Kohana_HTML
 	/**
 	 * @var  array  preferred order of attributes
 	 */
-	public static $attribute_order = array(
+	public static $attribute_order = [
 		'action',
 		'method',
 		'type',
@@ -47,7 +47,7 @@ class Kohana_HTML
 		'checked',
 		'readonly',
 		'disabled',
-	);
+	];
 
 	/**
 	 * @var  boolean  use strict XHTML mode?
@@ -60,53 +60,50 @@ class Kohana_HTML
 	public static $windowed_urls = false;
 
 	/**
-	 * Convert special characters to HTML entities. All untrusted content
-	 * should be passed through this method to prevent XSS injections.
-	 *
-	 *     echo HTML::chars($username);
-	 *
-	 * @param   string  $value          string to convert
-	 * @param   boolean $double_encode  encode existing entities
-	 * @return  string
-	 */
-	public static function chars($value, $double_encode = true)
+     * Convert special characters to HTML entities. All untrusted content
+     * should be passed through this method to prevent XSS injections.
+     *
+     *     echo HTML::chars($username);
+     *
+     * @param   string  $value          string to convert
+     * @param   boolean $double_encode  encode existing entities
+     */
+    public static function chars($value, $double_encode = true): string
 	{
 		return htmlspecialchars((string) $value, ENT_QUOTES, Kohana::$charset, $double_encode);
 	}
 
 	/**
-	 * Convert all applicable characters to HTML entities. All characters
-	 * that cannot be represented in HTML with the current character set
-	 * will be converted to entities.
-	 *
-	 *     echo HTML::entities($username);
-	 *
-	 * @param   string  $value          string to convert
-	 * @param   boolean $double_encode  encode existing entities
-	 * @return  string
-	 */
-	public static function entities($value, $double_encode = true)
+     * Convert all applicable characters to HTML entities. All characters
+     * that cannot be represented in HTML with the current character set
+     * will be converted to entities.
+     *
+     *     echo HTML::entities($username);
+     *
+     * @param   string  $value          string to convert
+     * @param   boolean $double_encode  encode existing entities
+     */
+    public static function entities($value, $double_encode = true): string
 	{
 		return htmlentities((string) $value, ENT_QUOTES, Kohana::$charset, $double_encode);
 	}
 
 	/**
-	 * Create HTML link anchors. Note that the title is not escaped, to allow
-	 * HTML elements within links (images, etc).
-	 *
-	 *     echo HTML::anchor('/user/profile', 'My Profile');
-	 *
-	 * @param   string  $uri        URL or URI string
-	 * @param   string  $title      link text
-	 * @param   array   $attributes HTML anchor attributes
-	 * @param   mixed   $protocol   protocol to pass to URL::base()
-	 * @param   boolean $index      include the index page
-	 * @return  string
-	 * @uses    URL::base
-	 * @uses    URL::site
-	 * @uses    HTML::attributes
-	 */
-	public static function anchor($uri, $title = null, array $attributes = null, $protocol = null, $index = true)
+     * Create HTML link anchors. Note that the title is not escaped, to allow
+     * HTML elements within links (images, etc).
+     *
+     *     echo HTML::anchor('/user/profile', 'My Profile');
+     *
+     * @param   string  $uri        URL or URI string
+     * @param   string  $title      link text
+     * @param   array   $attributes HTML anchor attributes
+     * @param   mixed   $protocol   protocol to pass to URL::base()
+     * @param   boolean $index      include the index page
+     * @uses    URL::base
+     * @uses    URL::site
+     * @uses    HTML::attributes
+     */
+    public static function anchor($uri, $title = null, array $attributes = null, $protocol = null, $index = true): string
 	{
 		if ($title === null) {
 			// Use the URI as the title
@@ -117,7 +114,7 @@ class Kohana_HTML
 			// Only use the base URL
 			$uri = URL::base($protocol, $index);
 		} else {
-			if (strpos($uri, '://') !== false) {
+			if (str_contains($uri, '://')) {
 				if (HTML::$windowed_urls === true and empty($attributes['target'])) {
 					// Make the link open in a new window
 					$attributes['target'] = '_blank';
@@ -135,21 +132,20 @@ class Kohana_HTML
 	}
 
 	/**
-	 * Creates an HTML anchor to a file. Note that the title is not escaped,
-	 * to allow HTML elements within links (images, etc).
-	 *
-	 *     echo HTML::file_anchor('media/doc/user_guide.pdf', 'User Guide');
-	 *
-	 * @param   string  $file       name of file to link to
-	 * @param   string  $title      link text
-	 * @param   array   $attributes HTML anchor attributes
-	 * @param   mixed   $protocol   protocol to pass to URL::base()
-	 * @param   boolean $index      include the index page
-	 * @return  string
-	 * @uses    URL::base
-	 * @uses    HTML::attributes
-	 */
-	public static function file_anchor($file, $title = null, array $attributes = null, $protocol = null, $index = false)
+     * Creates an HTML anchor to a file. Note that the title is not escaped,
+     * to allow HTML elements within links (images, etc).
+     *
+     *     echo HTML::file_anchor('media/doc/user_guide.pdf', 'User Guide');
+     *
+     * @param   string  $file       name of file to link to
+     * @param   string  $title      link text
+     * @param   array   $attributes HTML anchor attributes
+     * @param   mixed   $protocol   protocol to pass to URL::base()
+     * @param   boolean $index      include the index page
+     * @uses    URL::base
+     * @uses    HTML::attributes
+     */
+    public static function file_anchor($file, $title = null, array $attributes = null, $protocol = null, $index = false): string
 	{
 		if ($title === null) {
 			// Use the file name as the title
@@ -163,18 +159,17 @@ class Kohana_HTML
 	}
 
 	/**
-	 * Creates an email (mailto:) anchor. Note that the title is not escaped,
-	 * to allow HTML elements within links (images, etc).
-	 *
-	 *     echo HTML::mailto($address);
-	 *
-	 * @param   string  $email      email address to send to
-	 * @param   string  $title      link text
-	 * @param   array   $attributes HTML anchor attributes
-	 * @return  string
-	 * @uses    HTML::attributes
-	 */
-	public static function mailto($email, $title = null, array $attributes = null)
+     * Creates an email (mailto:) anchor. Note that the title is not escaped,
+     * to allow HTML elements within links (images, etc).
+     *
+     *     echo HTML::mailto($address);
+     *
+     * @param   string  $email      email address to send to
+     * @param   string  $title      link text
+     * @param   array   $attributes HTML anchor attributes
+     * @uses    HTML::attributes
+     */
+    public static function mailto(string $email, $title = null, array $attributes = null): string
 	{
 		if ($title === null) {
 			// Use the email address as the title
@@ -185,21 +180,20 @@ class Kohana_HTML
 	}
 
 	/**
-	 * Creates a style sheet link element.
-	 *
-	 *     echo HTML::style('media/css/screen.css');
-	 *
-	 * @param   string  $file       file name
-	 * @param   array   $attributes default attributes
-	 * @param   mixed   $protocol   protocol to pass to URL::base()
-	 * @param   boolean $index      include the index page
-	 * @return  string
-	 * @uses    URL::base
-	 * @uses    HTML::attributes
-	 */
-	public static function style($file, array $attributes = null, $protocol = null, $index = false)
+     * Creates a style sheet link element.
+     *
+     *     echo HTML::style('media/css/screen.css');
+     *
+     * @param   string  $file       file name
+     * @param   array   $attributes default attributes
+     * @param   mixed   $protocol   protocol to pass to URL::base()
+     * @param   boolean $index      include the index page
+     * @uses    URL::base
+     * @uses    HTML::attributes
+     */
+    public static function style($file, array $attributes = null, $protocol = null, $index = false): string
 	{
-		if (strpos($file, '://') === false and strpos($file, '//') !== 0) {
+		if (!str_contains($file, '://') and !str_starts_with($file, '//')) {
 			// Add the base URL
 			$file = URL::site($file, $protocol, $index);
 		}
@@ -217,21 +211,20 @@ class Kohana_HTML
 	}
 
 	/**
-	 * Creates a script link.
-	 *
-	 *     echo HTML::script('media/js/jquery.min.js');
-	 *
-	 * @param   string  $file       file name
-	 * @param   array   $attributes default attributes
-	 * @param   mixed   $protocol   protocol to pass to URL::base()
-	 * @param   boolean $index      include the index page
-	 * @return  string
-	 * @uses    URL::base
-	 * @uses    HTML::attributes
-	 */
-	public static function script($file, array $attributes = null, $protocol = null, $index = false)
+     * Creates a script link.
+     *
+     *     echo HTML::script('media/js/jquery.min.js');
+     *
+     * @param   string  $file       file name
+     * @param   array   $attributes default attributes
+     * @param   mixed   $protocol   protocol to pass to URL::base()
+     * @param   boolean $index      include the index page
+     * @uses    URL::base
+     * @uses    HTML::attributes
+     */
+    public static function script($file, array $attributes = null, $protocol = null, $index = false): string
 	{
-		if (strpos($file, '://') === false and strpos($file, '//') !== 0) {
+		if (!str_contains($file, '://') and !str_starts_with($file, '//')) {
 			// Add the base URL
 			$file = URL::site($file, $protocol, $index);
 		}
@@ -246,21 +239,20 @@ class Kohana_HTML
 	}
 
 	/**
-	 * Creates a image link.
-	 *
-	 *     echo HTML::image('media/img/logo.png', array('alt' => 'My Company'));
-	 *
-	 * @param   string  $file       file name
-	 * @param   array   $attributes default attributes
-	 * @param   mixed   $protocol   protocol to pass to URL::base()
-	 * @param   boolean $index      include the index page
-	 * @return  string
-	 * @uses    URL::base
-	 * @uses    HTML::attributes
-	 */
-	public static function image($file, array $attributes = null, $protocol = null, $index = false)
+     * Creates a image link.
+     *
+     *     echo HTML::image('media/img/logo.png', array('alt' => 'My Company'));
+     *
+     * @param   string  $file       file name
+     * @param   array   $attributes default attributes
+     * @param   mixed   $protocol   protocol to pass to URL::base()
+     * @param   boolean $index      include the index page
+     * @uses    URL::base
+     * @uses    HTML::attributes
+     */
+    public static function image($file, array $attributes = null, $protocol = null, $index = false): string
 	{
-		if (strpos($file, '://') === false) {
+		if (!str_contains($file, '://')) {
 			// Add the base URL
 			$file = URL::site($file, $protocol, $index);
 		}
@@ -272,21 +264,20 @@ class Kohana_HTML
 	}
 
 	/**
-	 * Compiles an array of HTML attributes into an attribute string.
-	 * Attributes will be sorted using HTML::$attribute_order for consistency.
-	 *
-	 *     echo '<div'.HTML::attributes($attrs).'>'.$content.'</div>';
-	 *
-	 * @param   array   $attributes attribute list
-	 * @return  string
-	 */
-	public static function attributes(array $attributes = null)
+     * Compiles an array of HTML attributes into an attribute string.
+     * Attributes will be sorted using HTML::$attribute_order for consistency.
+     *
+     *     echo '<div'.HTML::attributes($attrs).'>'.$content.'</div>';
+     *
+     * @param   array   $attributes attribute list
+     */
+    public static function attributes(array $attributes = null): string
 	{
 		if (empty($attributes)) {
 			return '';
 		}
 
-		$sorted = array();
+		$sorted = [];
 		foreach (HTML::$attribute_order as $key) {
 			if (isset($attributes[$key])) {
 				// Add the attribute to the sorted list

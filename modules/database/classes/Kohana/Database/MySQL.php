@@ -15,52 +15,53 @@ class Kohana_Database_MySQL extends Database
 {
 	protected $_identifier = '`';
 
-	public function connect()
+	public function connect(): never
 	{
 		throw new Database_Exception('The ext/mysql extension was removed in PHP 7.0+. Use "mysqli" or "pdo" as the database type in your configuration.');
 	}
 
-	public function disconnect()
+	#[\Override]
+    public function disconnect(): bool
 	{
 		return true;
 	}
 
-	public function set_charset($charset)
+	public function set_charset($charset): never
 	{
 		throw new Database_Exception('The ext/mysql driver is not available.');
 	}
 
-	public function query($type, $sql, $as_object = false, array $params = null)
+	public function query($type, $sql, $as_object = false, array $params = null): never
 	{
 		throw new Database_Exception('The ext/mysql driver is not available.');
 	}
 
-	public function begin($mode = null)
+	public function begin($mode = null): never
 	{
 		throw new Database_Exception('The ext/mysql driver is not available.');
 	}
 
-	public function commit()
+	public function commit(): never
 	{
 		throw new Database_Exception('The ext/mysql driver is not available.');
 	}
 
-	public function rollback()
+	public function rollback(): never
 	{
 		throw new Database_Exception('The ext/mysql driver is not available.');
 	}
 
-	public function list_tables($like = null)
+	public function list_tables($like = null): never
 	{
 		throw new Database_Exception('The ext/mysql driver is not available.');
 	}
 
-	public function list_columns($table, $like = null, $add_prefix = true)
+	public function list_columns($table, $like = null, $add_prefix = true): never
 	{
 		throw new Database_Exception('The ext/mysql driver is not available.');
 	}
 
-	public function escape($value)
+	public function escape($value): never
 	{
 		throw new Database_Exception('The ext/mysql driver is not available.');
 	}

@@ -14,7 +14,7 @@ class Bench_GruberURL extends Codebench
 
 	public $loops = 10000;
 
-	public $subjects = array(
+	public $subjects = [
 		'http://foo.com/blah_blah',
 		'http://foo.com/blah_blah/',
 		'(Something like http://foo.com/blah_blah)',
@@ -37,26 +37,26 @@ class Bench_GruberURL extends Codebench
 		'Just a www.example.com link.',
 		// To test the use of possessive quatifiers:
 		'httpppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppp',
-	);
+	];
 
 	public function bench_daringfireball($subject)
 	{
 		// Original regex by John Gruber
-		preg_match('~\b(([\w-]+://?|www[.])[^\s()<>]+(?:\([\w\d]+\)|([^[:punct:]\s]|/)))~', $subject, $matches);
+		preg_match('~\b(([\w-]+://?|www[.])[^\s()<>]+(?:\([\w\d]+\)|([^[:punct:]\s]|/)))~', (string) $subject, $matches);
 		return (empty($matches)) ? false : $matches[0];
 	}
 
 	public function bench_daringfireball_v2($subject)
 	{
 		// Removed outer capturing parentheses, made another pair non-capturing
-		preg_match('~\b(?:[\w-]+://?|www[.])[^\s()<>]+(?:\([\w\d]+\)|(?:[^[:punct:]\s]|/))~', $subject, $matches);
+		preg_match('~\b(?:[\w-]+://?|www[.])[^\s()<>]+(?:\([\w\d]+\)|(?:[^[:punct:]\s]|/))~', (string) $subject, $matches);
 		return (empty($matches)) ? false : $matches[0];
 	}
 
 	public function bench_daringfireball_v3($subject)
 	{
 		// Made quantifiers possessive where possible
-		preg_match('~\b(?:[\w-]++://?+|www[.])[^\s()<>]+(?:\([\w\d]++\)|(?:[^[:punct:]\s]|/))~', $subject, $matches);
+		preg_match('~\b(?:[\w-]++://?+|www[.])[^\s()<>]+(?:\([\w\d]++\)|(?:[^[:punct:]\s]|/))~', (string) $subject, $matches);
 		return (empty($matches)) ? false : $matches[0];
 	}
 

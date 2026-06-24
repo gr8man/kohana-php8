@@ -13,12 +13,6 @@ defined('SYSPATH') or die('No direct script access.');
  */
 abstract class Kohana_Database_Result implements Countable, Iterator, SeekableIterator, ArrayAccess
 {
-	// Executed SQL for this result
-	protected $_query;
-
-	// Raw result resource
-	protected $_result;
-
 	// Total number of rows and current row
 	protected $_total_rows  = 0;
 	protected $_current_row = 0;
@@ -27,28 +21,20 @@ abstract class Kohana_Database_Result implements Countable, Iterator, SeekableIt
 	protected $_as_object;
 
 	// Parameters for __construct when using object results
-	protected $_object_params = null;
+	protected ?array $_object_params;
 
 	/**
-	 * Sets the total number of rows and stores the result locally.
-	 *
-	 * @param   mixed   $result     query result
-	 * @param   string  $sql        SQL query
-	 * @param   mixed   $as_object
-	 * @param   array   $params
-	 * @return  void
-	 */
-	public function __construct($result, $sql, $as_object = false, array $params = null)
+     * Sets the total number of rows and stores the result locally.
+     *
+     * @param mixed $_result query result
+     * @param string $_query SQL query
+     * @param   mixed   $as_object
+     */
+    public function __construct(protected $_result, protected $_query, $as_object = false, array $params = null)
 	{
-		// Store the result locally
-		$this->_result = $result;
-
-		// Store the SQL locally
-		$this->_query = $sql;
-
 		if (is_object($as_object)) {
 			// Get the object class name
-			$as_object = get_class($as_object);
+			$as_object = $as_object::class;
 		}
 
 		// Results as objects or associative arrays
@@ -61,11 +47,9 @@ abstract class Kohana_Database_Result implements Countable, Iterator, SeekableIt
 	}
 
 	/**
-	 * Result destruction cleans up all open result sets.
-	 *
-	 * @return  void
-	 */
-	abstract public function __destruct();
+     * Result destruction cleans up all open result sets.
+     */
+    abstract public function __destruct();
 
 	/**
 	 * Get a cached database result from the current result iterator.
@@ -98,7 +82,7 @@ abstract class Kohana_Database_Result implements Countable, Iterator, SeekableIt
 	 */
 	public function as_array($key = null, $value = null)
 	{
-		$results = array();
+		$results = [];
 
 		if ($key === null and $value === null) {
 			// Indexed rows
@@ -177,42 +161,38 @@ abstract class Kohana_Database_Result implements Countable, Iterator, SeekableIt
 	}
 
 	/**
-	 * Implements [Countable::count], returns the total number of rows.
-	 *
-	 *     echo count($result);
-	 *
-	 * @return  integer
-	 */
-	public function count(): int
+     * Implements [Countable::count], returns the total number of rows.
+     *
+     *     echo count($result);
+     */
+    public function count(): int
 	{
 		return $this->_total_rows;
 	}
 
 	/**
-	 * Implements [ArrayAccess::offsetExists], determines if row exists.
-	 *
-	 *     if (isset($result[10]))
-	 *     {
-	 *         // Row 10 exists
-	 *     }
-	 *
-	 * @param   int     $offset
-	 * @return  boolean
-	 */
-	public function offsetExists($offset): bool
+     * Implements [ArrayAccess::offsetExists], determines if row exists.
+     *
+     *     if (isset($result[10]))
+     *     {
+     *         // Row 10 exists
+     *     }
+     *
+     * @param   int     $offset
+     */
+    public function offsetExists($offset): bool
 	{
 		return ($offset >= 0 and $offset < $this->_total_rows);
 	}
 
 	/**
-	 * Implements [ArrayAccess::offsetGet], gets a given row.
-	 *
-	 *     $row = $result[10];
-	 *
-	 * @param   int     $offset
-	 * @return  mixed
-	 */
-	public function offsetGet($offset): mixed
+     * Implements [ArrayAccess::offsetGet], gets a given row.
+     *
+     *     $row = $result[10];
+     *
+     * @param   int     $offset
+     */
+    public function offsetGet($offset): mixed
 	{
 		if ($this->offsetExists($offset)) {
 			$this->seek($offset);
@@ -223,90 +203,78 @@ abstract class Kohana_Database_Result implements Countable, Iterator, SeekableIt
 	}
 
 	/**
-	 * Implements [ArrayAccess::offsetSet], throws an error.
-	 *
-	 * [!!] You cannot modify a database result.
-	 *
-	 * @param   int     $offset
-	 * @param   mixed   $value
-	 * @return  void
-	 * @throws  Kohana_Exception
-	 */
-	final public function offsetSet($offset, $value): void
+     * Implements [ArrayAccess::offsetSet], throws an error.
+     *
+     * [!!] You cannot modify a database result.
+     *
+     * @param   int     $offset
+     * @param   mixed   $value
+     * @throws  Kohana_Exception
+     */
+    final public function offsetSet($offset, $value): void
 	{
 		throw new Kohana_Exception('Database results are read-only');
 	}
 
 	/**
-	 * Implements [ArrayAccess::offsetUnset], throws an error.
-	 *
-	 * [!!] You cannot modify a database result.
-	 *
-	 * @param   int     $offset
-	 * @return  void
-	 * @throws  Kohana_Exception
-	 */
-	final public function offsetUnset($offset): void
+     * Implements [ArrayAccess::offsetUnset], throws an error.
+     *
+     * [!!] You cannot modify a database result.
+     *
+     * @param   int     $offset
+     * @throws  Kohana_Exception
+     */
+    final public function offsetUnset($offset): void
 	{
 		throw new Kohana_Exception('Database results are read-only');
 	}
 
 	/**
-	 * Implements [Iterator::key], returns the current row number.
-	 *
-	 *     echo key($result);
-	 *
-	 * @return  integer
-	 */
-	public function key(): int
+     * Implements [Iterator::key], returns the current row number.
+     *
+     *     echo key($result);
+     */
+    public function key(): int
 	{
 		return $this->_current_row;
 	}
 
 	/**
-	 * Implements [Iterator::next], moves to the next row.
-	 *
-	 *     next($result);
-	 *
-	 * @return  void
-	 */
-	public function next(): void
+     * Implements [Iterator::next], moves to the next row.
+     *
+     *     next($result);
+     */
+    public function next(): void
 	{
 		++$this->_current_row;
 	}
 
 	/**
-	 * Implements [Iterator::prev], moves to the previous row.
-	 *
-	 *     prev($result);
-	 *
-	 * @return  void
-	 */
-	public function prev(): void
+     * Implements [Iterator::prev], moves to the previous row.
+     *
+     *     prev($result);
+     */
+    public function prev(): void
 	{
 		--$this->_current_row;
 	}
 
 	/**
-	 * Implements [Iterator::rewind], sets the current row to zero.
-	 *
-	 *     rewind($result);
-	 *
-	 * @return  void
-	 */
-	public function rewind(): void
+     * Implements [Iterator::rewind], sets the current row to zero.
+     *
+     *     rewind($result);
+     */
+    public function rewind(): void
 	{
 		$this->_current_row = 0;
 	}
 
 	/**
-	 * Implements [Iterator::valid], checks if the current row exists.
-	 *
-	 * [!!] This method is only used internally.
-	 *
-	 * @return  boolean
-	 */
-	public function valid(): bool
+     * Implements [Iterator::valid], checks if the current row exists.
+     *
+     * [!!] This method is only used internally.
+     */
+    public function valid(): bool
 	{
 		return $this->offsetExists($this->_current_row);
 	}

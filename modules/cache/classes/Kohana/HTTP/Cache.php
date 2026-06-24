@@ -22,28 +22,27 @@ class Kohana_HTTP_Cache {
 	const CACHE_HIT_KEY       = 'x-cache-hits';
 
 	/**
-	 * Factory method for HTTP_Cache that provides a convenient dependency
-	 * injector for the Cache library.
-	 * 
-	 *      // Create HTTP_Cache with named cache engine
-	 *      $http_cache = HTTP_Cache::factory('memcache', array(
-	 *          'allow_private_cache' => FALSE
-	 *          )
-	 *      );
-	 * 
-	 *      // Create HTTP_Cache with supplied cache engine
-	 *      $http_cache = HTTP_Cache::factory(Cache::instance('memcache'),
-	 *          array(
-	 *              'allow_private_cache' => FALSE
-	 *          )
-	 *      );
-	 *
-	 * @uses    Cache
-	 * @param   mixed   $cache      cache engine to use
-	 * @param   array   $options    options to set to this class
-	 * @return  HTTP_Cache
-	 */
-	public static function factory($cache, array $options = array())
+     * Factory method for HTTP_Cache that provides a convenient dependency
+     * injector for the Cache library.
+     *
+     *      // Create HTTP_Cache with named cache engine
+     *      $http_cache = HTTP_Cache::factory('memcache', array(
+     *          'allow_private_cache' => FALSE
+     *          )
+     *      );
+     *
+     *      // Create HTTP_Cache with supplied cache engine
+     *      $http_cache = HTTP_Cache::factory(Cache::instance('memcache'),
+     *          array(
+     *              'allow_private_cache' => FALSE
+     *          )
+     *      );
+     *
+     * @uses    Cache
+     * @param   mixed   $cache      cache engine to use
+     * @param   array   $options    options to set to this class
+     */
+    public static function factory($cache, array $options = []): \HTTP_Cache
 	{
 		if ( ! $cache instanceof Cache)
 		{
@@ -56,17 +55,14 @@ class Kohana_HTTP_Cache {
 	}
 
 	/**
-	 * Basic cache key generator that hashes the entire request and returns
-	 * it. This is fine for static content, or dynamic content where user
-	 * specific information is encoded into the request.
-	 * 
-	 *      // Generate cache key
-	 *      $cache_key = HTTP_Cache::basic_cache_key_generator($request);
-	 *
-	 * @param   Request $request
-	 * @return  string
-	 */
-	public static function basic_cache_key_generator(Request $request)
+     * Basic cache key generator that hashes the entire request and returns
+     * it. This is fine for static content, or dynamic content where user
+     * specific information is encoded into the request.
+     *
+     *      // Generate cache key
+     *      $cache_key = HTTP_Cache::basic_cache_key_generator($request);
+     */
+    public static function basic_cache_key_generator(Request $request): string
 	{
 		$uri     = $request->uri();
 		$query   = $request->query();
@@ -103,12 +99,10 @@ class Kohana_HTTP_Cache {
 	protected $_response_time;
 
 	/**
-	 * Constructor method for this class. Allows dependency injection of the
-	 * required components such as `Cache` and the cache key generator.
-	 *
-	 * @param   array $options 
-	 */
-	public function __construct(array $options = array())
+     * Constructor method for this class. Allows dependency injection of the
+     * required components such as `Cache` and the cache key generator.
+     */
+    public function __construct(array $options = [])
 	{
 		foreach ($options as $key => $value)
 		{
@@ -141,20 +135,20 @@ class Kohana_HTTP_Cache {
 			return $client->execute_request($request, $response);
 
 		// If this is a destructive request, by-pass cache completely
-		if (in_array($request->method(), array(
+		if (in_array($request->method(), [
 			HTTP_Request::POST, 
 			HTTP_Request::PUT, 
-			HTTP_Request::DELETE)))
+			HTTP_Request::DELETE]))
 		{
 			// Kill existing caches for this request
 			$this->invalidate_cache($request);
 
 			$response = $client->execute_request($request, $response);
 
-			$cache_control = HTTP_Header::create_cache_control(array(
+			$cache_control = HTTP_Header::create_cache_control([
 				'no-cache',
 				'must-revalidate'
-			));
+			]);
 
 			// Ensure client respects destructive action
 			return $response->headers('cache-control', $cache_control);
@@ -186,21 +180,18 @@ class Kohana_HTTP_Cache {
 	}
 
 	/**
-	 * Invalidate a cached response for the [Request] supplied.
-	 * This has the effect of deleting the response from the
-	 * [Cache] entry.
-	 *
-	 * @param   Request  $request Response to remove from cache
-	 * @return  void
-	 */
-	public function invalidate_cache(Request $request)
+     * Invalidate a cached response for the [Request] supplied.
+     * This has the effect of deleting the response from the
+     * [Cache] entry.
+     *
+     * @param   Request  $request Response to remove from cache
+     */
+    public function invalidate_cache(Request $request): void
 	{
 		if (($cache = $this->cache()) instanceof Cache)
 		{
 			$cache->delete($this->create_cache_key($request, $this->_cache_key_callback));
 		}
-
-		return;
 	}
 
 	/**
@@ -297,14 +288,13 @@ class Kohana_HTTP_Cache {
 	}
 
 	/**
-	 * Controls whether the response can be cached. Uses HTTP
-	 * protocol to determine whether the response can be cached.
-	 *
-	 * @link    http://www.w3.org/Protocols/rfc2616/rfc2616.html RFC 2616
-	 * @param   Response  $response The Response
-	 * @return  boolean
-	 */
-	public function set_cache(Response $response)
+     * Controls whether the response can be cached. Uses HTTP
+     * protocol to determine whether the response can be cached.
+     *
+     * @link    http://www.w3.org/Protocols/rfc2616/rfc2616.html RFC 2616
+     * @param   Response  $response The Response
+     */
+    public function set_cache(Response $response): bool
 	{
 		$headers = $response->headers()->getArrayCopy();
 
@@ -314,7 +304,7 @@ class Kohana_HTTP_Cache {
 			$cache_control = HTTP_Header::parse_cache_control($cache_control);
 
 			// If the no-cache or no-store directive is set, return
-			if (array_intersect($cache_control, array('no-cache', 'no-store')))
+			if (array_intersect($cache_control, ['no-cache', 'no-store']))
 				return FALSE;
 
 			// Check for private cache and get out of here if invalid
@@ -354,7 +344,7 @@ class Kohana_HTTP_Cache {
 	 * @param   Response    $response   the HTTP Response
 	 * @return  mixed
 	 */
-	public function cache_response($key, Request $request, Response $response = NULL)
+	public function cache_response(string $key, Request $request, Response $response = NULL)
 	{
 		if ( ! $this->_cache instanceof Cache)
 			return FALSE;
@@ -425,7 +415,7 @@ class Kohana_HTTP_Cache {
 		// Calculate apparent age
 		if ($date = $response->headers('date'))
 		{
-			$apparent_age = max(0, $this->_response_time - strtotime($date));
+			$apparent_age = max(0, $this->_response_time - strtotime((string) $date));
 		}
 		else
 		{
@@ -487,14 +477,12 @@ class Kohana_HTTP_Cache {
 	}
 
 	/**
-	 * Returns the duration of the last request execution.
-	 * Either returns the time of completed requests or
-	 * `FALSE` if the request hasn't finished executing, or
-	 * is yet to be run.
-	 *
-	 * @return  mixed
-	 */
-	public function request_execution_time()
+     * Returns the duration of the last request execution.
+     * Either returns the time of completed requests or
+     * `FALSE` if the request hasn't finished executing, or
+     * is yet to be run.
+     */
+    public function request_execution_time(): false|int|float
 	{
 		if ($this->_request_time === NULL OR $this->_response_time === NULL)
 			return FALSE;

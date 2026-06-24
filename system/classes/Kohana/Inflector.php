@@ -20,7 +20,7 @@ class Kohana_Inflector
 	/**
 	 * @var  array  cached inflections
 	 */
-	protected static $cache = array();
+	protected static $cache = [];
 
 	/**
 	 * @var  array  uncountable words
@@ -33,20 +33,19 @@ class Kohana_Inflector
 	protected static $irregular;
 
 	/**
-	 * Checks if a word is defined as uncountable. An uncountable word has a
-	 * single form. For instance, one "fish" and many "fish", not "fishes".
-	 *
-	 *     Inflector::uncountable('fish'); // TRUE
-	 *     Inflector::uncountable('cat');  // FALSE
-	 *
-	 * If you find a word is being pluralized improperly, it has probably not
-	 * been defined as uncountable in `config/inflector.php`. If this is the
-	 * case, please report [an issue](http://dev.kohanaphp.com/projects/kohana3/issues).
-	 *
-	 * @param   string  $str    word to check
-	 * @return  boolean
-	 */
-	public static function uncountable($str)
+     * Checks if a word is defined as uncountable. An uncountable word has a
+     * single form. For instance, one "fish" and many "fish", not "fishes".
+     *
+     *     Inflector::uncountable('fish'); // TRUE
+     *     Inflector::uncountable('cat');  // FALSE
+     *
+     * If you find a word is being pluralized improperly, it has probably not
+     * been defined as uncountable in `config/inflector.php`. If this is the
+     * case, please report [an issue](http://dev.kohanaphp.com/projects/kohana3/issues).
+     *
+     * @param   string  $str    word to check
+     */
+    public static function uncountable($str): bool
 	{
 		if (Inflector::$uncountable === null) {
 			// Cache uncountables
@@ -118,7 +117,7 @@ class Kohana_Inflector
 		} elseif (preg_match('/[^aeiou]ies$/', $str)) {
 			// Replace "ies" with "y"
 			$str = substr($str, 0, -3).'y';
-		} elseif (substr($str, -1) === 's' and substr($str, -2) !== 'ss') {
+		} elseif (str_ends_with($str, 's') and !str_ends_with($str, 'ss')) {
 			// Remove singular "s"
 			$str = substr($str, 0, -1);
 		}
@@ -192,7 +191,7 @@ class Kohana_Inflector
 
 		// Convert to uppercase if necessary
 		if ($is_uppercase) {
-			$str = strtoupper($str);
+			$str = strtoupper((string) $str);
 		}
 
 		// Set the cache and return
@@ -200,35 +199,33 @@ class Kohana_Inflector
 	}
 
 	/**
-	 * Makes a phrase camel case. Spaces and underscores will be removed.
-	 *
-	 *     $str = Inflector::camelize('mother cat');     // "motherCat"
-	 *     $str = Inflector::camelize('kittens in bed'); // "kittensInBed"
-	 *
-	 * @param   string  $str    phrase to camelize
-	 * @return  string
-	 */
-	public static function camelize($str)
+     * Makes a phrase camel case. Spaces and underscores will be removed.
+     *
+     *     $str = Inflector::camelize('mother cat');     // "motherCat"
+     *     $str = Inflector::camelize('kittens in bed'); // "kittensInBed"
+     *
+     * @param   string  $str    phrase to camelize
+     */
+    public static function camelize($str): string
 	{
 		$str = 'x'.strtolower(trim($str));
-		$str = ucwords(preg_replace('/[\s_]+/', ' ', $str));
+		$str = ucwords((string) preg_replace('/[\s_]+/', ' ', $str));
 
 		return substr(str_replace(' ', '', $str), 1);
 	}
 
 	/**
-	 * Converts a camel case phrase into a spaced phrase.
-	 *
-	 *     $str = Inflector::decamelize('houseCat');    // "house cat"
-	 *     $str = Inflector::decamelize('kingAllyCat'); // "king ally cat"
-	 *
-	 * @param   string  $str    phrase to camelize
-	 * @param   string  $sep    word separator
-	 * @return  string
-	 */
-	public static function decamelize($str, $sep = ' ')
+     * Converts a camel case phrase into a spaced phrase.
+     *
+     *     $str = Inflector::decamelize('houseCat');    // "house cat"
+     *     $str = Inflector::decamelize('kingAllyCat'); // "king ally cat"
+     *
+     * @param   string  $str    phrase to camelize
+     * @param   string  $sep    word separator
+     */
+    public static function decamelize($str, string $sep = ' '): string
 	{
-		return strtolower(preg_replace('/([a-z])([A-Z])/', '$1'.$sep.'$2', trim($str)));
+		return strtolower((string) preg_replace('/([a-z])([A-Z])/', '$1'.$sep.'$2', trim($str)));
 	}
 
 	/**
@@ -239,7 +236,7 @@ class Kohana_Inflector
 	 * @param   string  $str    phrase to underscore
 	 * @return  string
 	 */
-	public static function underscore($str)
+	public static function underscore($str): ?string
 	{
 		return preg_replace('/\s+/', '_', trim($str));
 	}
@@ -253,7 +250,7 @@ class Kohana_Inflector
 	 * @param   string  $str    phrase to make human-readable
 	 * @return  string
 	 */
-	public static function humanize($str)
+	public static function humanize($str): ?string
 	{
 		return preg_replace('/[_-]+/', ' ', trim($str));
 	}

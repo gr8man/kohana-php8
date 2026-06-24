@@ -20,13 +20,13 @@ abstract class Kohana_Unittest_TestCase extends PHPUnit\Framework\TestCase
 	 * testcases
 	 * @var Kohana_Unittest_Helpers
 	 */
-	protected $_helpers = null;
+	protected $_helpers;
 
 	/**
 	 * A default set of environment to be applied before each test
 	 * @var array
 	 */
-	protected $environmentDefault = array();
+	protected $environmentDefault = [];
 
 	/**
 	 * Creates a predefined environment using the default environment
@@ -59,45 +59,20 @@ abstract class Kohana_Unittest_TestCase extends PHPUnit\Framework\TestCase
 	 */
 	public function assertInternalType(string $type, $actual, string $message = ''): void
 	{
-		switch ($type) {
-			case 'array':
-				$this->assertIsArray($actual, $message);
-				break;
-			case 'bool':
-			case 'boolean':
-				$this->assertIsBool($actual, $message);
-				break;
-			case 'float':
-				$this->assertIsFloat($actual, $message);
-				break;
-			case 'int':
-			case 'integer':
-				$this->assertIsInt($actual, $message);
-				break;
-			case 'numeric':
-				$this->assertIsNumeric($actual, $message);
-				break;
-			case 'object':
-				$this->assertIsObject($actual, $message);
-				break;
-			case 'resource':
-				$this->assertIsResource($actual, $message);
-				break;
-			case 'string':
-				$this->assertIsString($actual, $message);
-				break;
-			case 'scalar':
-				$this->assertIsScalar($actual, $message);
-				break;
-			case 'callable':
-				$this->assertIsCallable($actual, $message);
-				break;
-			case 'iterable':
-				$this->assertIsIterable($actual, $message);
-				break;
-			default:
-				throw new Exception("Invalid type $type for assertInternalType");
-		}
+		match ($type) {
+            'array' => $this->assertIsArray($actual, $message),
+            'bool', 'boolean' => $this->assertIsBool($actual, $message),
+            'float' => $this->assertIsFloat($actual, $message),
+            'int', 'integer' => $this->assertIsInt($actual, $message),
+            'numeric' => $this->assertIsNumeric($actual, $message),
+            'object' => $this->assertIsObject($actual, $message),
+            'resource' => $this->assertIsResource($actual, $message),
+            'string' => $this->assertIsString($actual, $message),
+            'scalar' => $this->assertIsScalar($actual, $message),
+            'callable' => $this->assertIsCallable($actual, $message),
+            'iterable' => $this->assertIsIterable($actual, $message),
+            default => throw new Exception("Invalid type $type for assertInternalType"),
+        };
 	}
 
 	/**
@@ -107,7 +82,6 @@ abstract class Kohana_Unittest_TestCase extends PHPUnit\Framework\TestCase
 	{
 		$reflection = new ReflectionObject($actual);
 		$property = $reflection->getProperty($attributeName);
-		$property->setAccessible(true);
 		$this->assertSame($expected, $property->getValue($actual), $message);
 	}
 
@@ -118,7 +92,6 @@ abstract class Kohana_Unittest_TestCase extends PHPUnit\Framework\TestCase
 	{
 		$reflection = new ReflectionObject($actual);
 		$property = $reflection->getProperty($attributeName);
-		$property->setAccessible(true);
 		$this->assertEquals($expected, $property->getValue($actual), $message);
 	}
 
@@ -129,7 +102,6 @@ abstract class Kohana_Unittest_TestCase extends PHPUnit\Framework\TestCase
 	{
 		$reflection = new ReflectionObject($actual);
 		$property = $reflection->getProperty($attributeName);
-		$property->setAccessible(true);
 		$this->assertNotSame($expected, $property->getValue($actual), $message);
 	}
 
@@ -140,7 +112,6 @@ abstract class Kohana_Unittest_TestCase extends PHPUnit\Framework\TestCase
 	{
 		$reflection = new ReflectionObject($actual);
 		$property = $reflection->getProperty($attributeName);
-		$property->setAccessible(true);
 		$this->assertContains($expected, $property->getValue($actual), $message);
 	}
 
@@ -151,14 +122,14 @@ abstract class Kohana_Unittest_TestCase extends PHPUnit\Framework\TestCase
 	{
 		$reflection = new ReflectionObject($actual);
 		$property = $reflection->getProperty($attributeName);
-		$property->setAccessible(true);
 		$this->assertNotContains($expected, $property->getValue($actual), $message);
 	}
 
 	/**
 	 * Overwrite assertContains to support strings in PHPUnit 9+
 	 */
-	public static function assertContains($needle, $haystack, string $message = ''): void
+	#[\Override]
+    public static function assertContains($needle, iterable $haystack, string $message = ''): void
 	{
 		if (is_string($haystack)) {
 			self::assertStringContainsString($needle, $haystack, $message);
@@ -170,7 +141,8 @@ abstract class Kohana_Unittest_TestCase extends PHPUnit\Framework\TestCase
 	/**
 	 * Overwrite assertNotContains to support strings in PHPUnit 9+
 	 */
-	public static function assertNotContains($needle, $haystack, string $message = ''): void
+	#[\Override]
+    public static function assertNotContains($needle, iterable $haystack, string $message = ''): void
 	{
 		if (is_string($haystack)) {
 			self::assertStringNotContainsString($needle, $haystack, $message);
@@ -185,7 +157,7 @@ abstract class Kohana_Unittest_TestCase extends PHPUnit\Framework\TestCase
 	public function assertTag(array $matcher, string $actual, string $message = ''): void
 	{
 		$tag = $matcher['tag'] ?? null;
-		$attributes = $matcher['attributes'] ?? array();
+		$attributes = $matcher['attributes'] ?? [];
 
 		if ($tag) {
 			$this->assertStringContainsString('<' . $tag, $actual, $message);
@@ -222,20 +194,18 @@ abstract class Kohana_Unittest_TestCase extends PHPUnit\Framework\TestCase
 		if (is_string($object)) {
 			$reflection = new ReflectionClass($object);
 			$property = $reflection->getProperty($attributeName);
-			$property->setAccessible(true);
 			return $property->getValue();
 		}
 
 		$reflection = new ReflectionObject($object);
 		$property = $reflection->getProperty($attributeName);
-		$property->setAccessible(true);
 		return $property->getValue($object);
 	}
 
 	/**
 	 * Compatibility for removed getMock
 	 */
-	public function getMock($className, $methods = array(), array $arguments = array(), $mockClassName = '', $callOriginalConstructor = true, $callOriginalClone = true, $callAutoload = true, $cloneArguments = false, $callOriginalMethods = false)
+	public function getMock(string $className, $methods = [], array $arguments = [], $mockClassName = '', $callOriginalConstructor = true, $callOriginalClone = true, $callAutoload = true, $cloneArguments = false, $callOriginalMethods = false)
 	{
 		$builder = $this->getMockBuilder($className);
 		if ($methods) {
@@ -262,7 +232,7 @@ abstract class Kohana_Unittest_TestCase extends PHPUnit\Framework\TestCase
 	/**
 	 * Compatibility for removed setExpectedException
 	 */
-	public function setExpectedException($exception, $message = '', $code = null): void
+	public function setExpectedException(string $exception, $message = '', $code = null): void
 	{
 		$this->expectException($exception);
 		if ($message) {

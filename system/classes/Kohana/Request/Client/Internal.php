@@ -20,18 +20,17 @@ class Kohana_Request_Client_Internal extends Request_Client
 	protected $_previous_environment;
 
 	/**
-	 * Processes the request, executing the controller action that handles this
-	 * request, determined by the [Route].
-	 *
-	 *     $request->execute();
-	 *
-	 * @param   Request $request
-	 * @return  Response
-	 * @throws  Kohana_Exception
-	 * @uses    [Kohana::$profiling]
-	 * @uses    [Profiler]
-	 */
-	public function execute_request(Request $request, Response $response)
+     * Processes the request, executing the controller action that handles this
+     * request, determined by the [Route].
+     *
+     *     $request->execute();
+     *
+     * @return  Response
+     * @throws  Kohana_Exception
+     * @uses    [Kohana::$profiling]
+     * @uses    [Profiler]
+     */
+    public function execute_request(Request $request, Response $response)
 	{
 		// Create the class prefix
 		$prefix = 'Controller_';
@@ -44,7 +43,7 @@ class Kohana_Request_Client_Internal extends Request_Client
 
 		if ($directory) {
 			// Add the directory name to the class prefix
-			$prefix .= str_replace(array('\\', '/'), '_', trim($directory, '/')).'_';
+			$prefix .= str_replace(['\\', '/'], '_', trim((string) $directory, '/')).'_';
 		}
 
 		if (Kohana::$profiling) {
@@ -66,15 +65,12 @@ class Kohana_Request_Client_Internal extends Request_Client
 		// Change the current request to this request
 		Request::$current = $request;
 
-		// Is this the initial request
-		$initial_request = ($request === Request::$initial);
-
 		try {
 			if (! class_exists($prefix.$controller)) {
 				throw HTTP_Exception::factory(
 					404,
 					'The requested URL :uri was not found on this server.',
-					array(':uri' => $request->uri())
+					[':uri' => $request->uri()]
 				)->request($request);
 			}
 
@@ -84,7 +80,7 @@ class Kohana_Request_Client_Internal extends Request_Client
 			if ($class->isAbstract()) {
 				throw new Kohana_Exception(
 					'Cannot create instances of abstract :controller',
-					array(':controller' => $prefix.$controller)
+					[':controller' => $prefix.$controller]
 				);
 			}
 

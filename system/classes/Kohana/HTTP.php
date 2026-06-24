@@ -32,14 +32,14 @@ abstract class Kohana_HTTP
 	 * @param  int       $code      HTTP Status code to use for the redirect
 	 * @throws HTTP_Exception
 	 */
-	public static function redirect($uri = '', $code = 302)
+	public static function redirect($uri = '', $code = 302): void
 	{
 		$e = HTTP_Exception::factory($code);
 
 		if (! $e instanceof HTTP_Exception_Redirect) {
-			throw new Kohana_Exception('Invalid redirect code \':code\'', array(
+			throw new Kohana_Exception('Invalid redirect code \':code\'', [
 				':code' => $code
-			));
+			]);
 		}
 
 		throw $e->location($uri);
@@ -95,13 +95,13 @@ abstract class Kohana_HTTP
 		if (extension_loaded('http')) {
 			// Use the fast method to parse header string
 			$headers = version_compare(phpversion('http'), '2.0.0', '>=') ?
-				\http\Header::parse($header_string) :
+				(new \http\Header())->parse($header_string) :
 				http_parse_headers($header_string);
 			return new HTTP_Header($headers);
 		}
 
 		// Otherwise we use the slower PHP parsing
-		$headers = array();
+		$headers = [];
 
 		// Match all HTTP headers
 		if (preg_match_all('/(\w[^\s:]*):[ ]*([^\r\n]*(?:\r\n[ \t][^\r\n]*)*)/', $header_string, $matches)) {
@@ -121,10 +121,10 @@ abstract class Kohana_HTTP
 					}
 					// Otherwise create a new array with the entries
 					else {
-						$headers[$matches[1][$key]] = array(
+						$headers[$matches[1][$key]] = [
 							$headers[$matches[1][$key]],
 							$matches[2][$key],
-						);
+						];
 					}
 				}
 			}
@@ -155,13 +155,13 @@ abstract class Kohana_HTTP
 		elseif (extension_loaded('http')) {
 			// Return the much faster method
 			$headers = version_compare(phpversion('http'), '2.0.0', '>=') ?
-				\http\Env::getRequestHeader() :
+				(new \http\Env())->getRequestHeader() :
 				http_get_request_headers();
 			return new HTTP_Header($headers);
 		}
 
 		// Setup the output
-		$headers = array();
+		$headers = [];
 
 		// Parse the content type
 		if (! empty($_SERVER['CONTENT_TYPE'])) {
@@ -175,12 +175,12 @@ abstract class Kohana_HTTP
 
 		foreach ($_SERVER as $key => $value) {
 			// If there is no HTTP header here, skip
-			if (strpos($key, 'HTTP_') !== 0) {
+			if (!str_starts_with((string) $key, 'HTTP_')) {
 				continue;
 			}
 
 			// This is a dirty hack to ensure HTTP_X_FOO_BAR becomes X-FOO-BAR
-			$headers[strtolower(str_replace('_', '-', substr($key, 5)))] = $value;
+			$headers[strtolower(str_replace('_', '-', substr((string) $key, 5)))] = $value;
 		}
 
 		return new HTTP_Header($headers);
@@ -193,16 +193,16 @@ abstract class Kohana_HTTP
 	 * @param   array   $params  Params
 	 * @return  string
 	 */
-	public static function www_form_urlencode(array $params = array())
+	public static function www_form_urlencode(array $params = [])
 	{
 		if (! $params) {
 			return;
 		}
 
-		$encoded = array();
+		$encoded = [];
 
 		foreach ($params as $key => $value) {
-			$encoded[] = $key.'='.rawurlencode($value);
+			$encoded[] = $key.'='.rawurlencode((string) $value);
 		}
 
 		return implode('&', $encoded);

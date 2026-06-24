@@ -26,7 +26,7 @@ class Kohana_Kodoc_Method extends Kodoc
 	/**
 	 * @var  array  The things this function can return
 	 */
-	public $return = array();
+	public $return = [];
 
 	/**
 	 * @var  string  The source code for this function
@@ -50,17 +50,17 @@ class Kohana_Kodoc_Method extends Kodoc
 			}
 		} while ($parent = $parent->getParentClass());
 
-		list($this->description, $tags) = Kodoc::parse($comment);
+		[$this->description, $tags] = Kodoc::parse($comment);
 
 		if ($file = $this->class->getFileName()) {
 			$this->source = Kodoc::source($file, $this->method->getStartLine(), $this->method->getEndLine());
 		}
 
 		if (isset($tags['param'])) {
-			$params = array();
+			$params = [];
 
 			foreach ($this->method->getParameters() as $i => $param) {
-				$param = new Kodoc_Method_Param(array($this->method->class, $this->method->name), $i);
+				$param = new Kodoc_Method_Param([$this->method->class, $this->method->name], $i);
 
 				if (isset($tags['param'][$i])) {
 					preg_match('/^(\S+)(?:\s*(?:\$'.$param->name.'\s*)?(.+))?$/s', $tags['param'][$i], $matches);
@@ -81,8 +81,8 @@ class Kohana_Kodoc_Method extends Kodoc
 
 		if (isset($tags['return'])) {
 			foreach ($tags['return'] as $return) {
-				if (preg_match('/^(\S*)(?:\s*(.+?))?$/', $return, $matches)) {
-					$this->return[] = array($matches[1], isset($matches[2]) ? $matches[2] : '');
+				if (preg_match('/^(\S*)(?:\s*(.+?))?$/', (string) $return, $matches)) {
+					$this->return[] = [$matches[1], $matches[2] ?? ''];
 				}
 			}
 
@@ -92,7 +92,7 @@ class Kohana_Kodoc_Method extends Kodoc
 		$this->tags = $tags;
 	}
 
-	public function params_short()
+	public function params_short(): string
 	{
 		$out = '';
 		$required = true;

@@ -23,7 +23,7 @@ class Kohana_AuthTest extends Unittest_TestCase
 	{
 		parent::setUp();
 
-		$this->_auth_config = array(
+		$this->_auth_config = [
 			'driver' => 'File',
 			'hash_method' => 'sha256',
 			'hash_key' => 'test_hash_key_for_unit_tests_only',
@@ -31,7 +31,7 @@ class Kohana_AuthTest extends Unittest_TestCase
 			'session_type' => 'cookie',
 			'session_key' => 'auth_user',
 			'bcrypt_cost' => 4,
-		);
+		];
 	}
 
 	public function tearDown(): void
@@ -39,7 +39,7 @@ class Kohana_AuthTest extends Unittest_TestCase
 		parent::tearDown();
 	}
 
-	public function test_bcrypt_hash_password()
+	public function test_bcrypt_hash_password(): void
 	{
 		$auth = new Auth_File($this->_auth_config);
 
@@ -51,7 +51,7 @@ class Kohana_AuthTest extends Unittest_TestCase
 		$this->assertTrue(password_verify($password, $hash));
 	}
 
-	public function test_bcrypt_different_hashes_for_same_password()
+	public function test_bcrypt_different_hashes_for_same_password(): void
 	{
 		$auth = new Auth_File($this->_auth_config);
 
@@ -64,63 +64,63 @@ class Kohana_AuthTest extends Unittest_TestCase
 		$this->assertTrue(password_verify($password, $hash2));
 	}
 
-	public function test_check_password_with_bcrypt()
+	public function test_check_password_with_bcrypt(): void
 	{
 		$auth = new Auth_File($this->_auth_config);
 
 		$password = 'my_secure_password';
-		$hash = password_hash($password, PASSWORD_BCRYPT, array('cost' => 4));
+		$hash = password_hash($password, PASSWORD_BCRYPT, ['cost' => 4]);
 
 		$this->assertTrue($auth->check_password($password, $hash));
 		$this->assertFalse($auth->check_password('wrong_password', $hash));
 	}
 
-	public function test_check_password_with_legacy_hmac()
+	public function test_check_password_with_legacy_hmac(): void
 	{
 		$auth = new Auth_File($this->_auth_config);
 
 		$password = 'my_secure_password';
-		$hash = hash_hmac('sha256', $password, $this->_auth_config['hash_key']);
+		$hash = hash_hmac('sha256', $password, (string) $this->_auth_config['hash_key']);
 
 		// Verify the hash is correct
-		$this->assertEquals($hash, hash_hmac('sha256', $password, $this->_auth_config['hash_key']));
+		$this->assertEquals($hash, hash_hmac('sha256', $password, (string) $this->_auth_config['hash_key']));
 
 		// Now test check_password
 		$this->assertTrue($auth->check_password($password, $hash));
 		$this->assertFalse($auth->check_password('wrong_password', $hash));
 	}
 
-	public function test_needs_rehash_detects_optimal_cost()
+	public function test_needs_rehash_detects_optimal_cost(): void
 	{
 		$auth_config = $this->_auth_config;
 		$auth_config['bcrypt_cost'] = 4;
 		$auth = new Auth_File($auth_config);
 
 		$password = 'test_password';
-		$hash = password_hash($password, PASSWORD_BCRYPT, array('cost' => 4));
+		$hash = password_hash($password, PASSWORD_BCRYPT, ['cost' => 4]);
 
 		// With same cost, should NOT need rehash
 		$this->assertFalse($auth->needs_rehash($hash));
 	}
 
-	public function test_needs_rehash_detects_wrong_cost()
+	public function test_needs_rehash_detects_wrong_cost(): void
 	{
 		$auth_config_low = $this->_auth_config;
 		$auth_config_low['bcrypt_cost'] = 4;
-		$auth_low = new Auth_File($auth_config_low);
+		new Auth_File($auth_config_low);
 
 		$auth_config_high = $this->_auth_config;
 		$auth_config_high['bcrypt_cost'] = 12;
 		$auth_high = new Auth_File($auth_config_high);
 
 		$password = 'test_password';
-		$hash_low_cost = password_hash($password, PASSWORD_BCRYPT, array('cost' => 4));
+		$hash_low_cost = password_hash($password, PASSWORD_BCRYPT, ['cost' => 4]);
 
 		// With higher cost, should need rehash
 		$this->assertTrue($auth_high->needs_rehash($hash_low_cost));
 	}
 
-	public function test_hash_method_exists()
+	public function test_hash_method_exists(): void
 	{
 		$auth = new Auth_File($this->_auth_config);
 
@@ -130,7 +130,7 @@ class Kohana_AuthTest extends Unittest_TestCase
 		$this->assertTrue(method_exists($auth, 'needs_rehash'));
 	}
 
-	public function test_bcrypt_cost_respected()
+	public function test_bcrypt_cost_respected(): void
 	{
 		$auth_config_low = $this->_auth_config;
 		$auth_config_low['bcrypt_cost'] = 4;
@@ -142,7 +142,7 @@ class Kohana_AuthTest extends Unittest_TestCase
 		$this->assertEquals(4, $info['options']['cost']);
 	}
 
-	public function test_hash_password_returns_different_types()
+	public function test_hash_password_returns_different_types(): void
 	{
 		$auth = new Auth_File($this->_auth_config);
 

@@ -5,7 +5,7 @@
 
 <title><?php echo $title ?> | Kohana <?php echo 'User Guide'; ?></title>
 
-<?php foreach ($styles as $style => $media) echo HTML::style($style, array('media' => $media), NULL, TRUE), "\n" ?>
+<?php foreach ($styles as $style => $media) echo HTML::style($style, ['media' => $media], NULL, TRUE), "\n" ?>
 
 <?php foreach ($scripts as $script) echo HTML::script($script, NULL, NULL, TRUE), "\n" ?>
 
@@ -18,7 +18,7 @@
 	<div id="kodoc-header">
 		<div class="container">
 			<a href="http://kohanaframework.org/" id="kodoc-logo">
-				<img src="<?php echo Route::url('docs/media', array('file' => 'img/kohana.png')) ?>" />
+				<img src="<?php echo Route::url('docs/media', ['file' => 'img/kohana.png']) ?>" />
 			</a>
 			<div id="kodoc-menu">
 				<ul>

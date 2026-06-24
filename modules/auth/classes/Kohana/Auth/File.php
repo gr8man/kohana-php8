@@ -19,12 +19,12 @@ class Kohana_Auth_File extends Auth
 	/**
 	 * Constructor loads the user list into the class.
 	 */
-	public function __construct($config = array())
+	public function __construct($config = [])
 	{
 		parent::__construct($config);
 
 		// Load user list
-		$this->_users = Arr::get($config, 'users', array());
+		$this->_users = Arr::get($config, 'users', []);
 	}
 
 	/**
@@ -81,7 +81,8 @@ class Kohana_Auth_File extends Auth
 	 * @param   string   $hash      Stored password hash (optional for File driver)
 	 * @return  boolean
 	 */
-	public function check_password($password, $hash = null)
+	#[\Override]
+    public function check_password($password, $hash = null)
 	{
 		$username = $this->get_user();
 
@@ -99,7 +100,7 @@ class Kohana_Auth_File extends Auth
 		}
 
 		// Legacy HMAC comparison
-		$computed = hash_hmac($this->_config['hash_method'], $password, $this->_config['hash_key']);
+		$computed = hash_hmac((string) $this->_config['hash_method'], $password, (string) $this->_config['hash_key']);
 		return hash_equals($hash, $computed);
 	}
 

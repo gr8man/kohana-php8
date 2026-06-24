@@ -84,22 +84,21 @@ class Kohana_Cache_Wincache extends Cache {
 	}
 
 	/**
-	 * Set a value to cache with id and lifetime
-	 *
-	 *     $data = 'bar';
-	 *
-	 *     // Set 'bar' to 'foo' in wincache group, using default expiry
-	 *     Cache::instance('wincache')->set('foo', $data);
-	 *
-	 *     // Set 'bar' to 'foo' in wincache group for 30 seconds
-	 *     Cache::instance('wincache')->set('foo', $data, 30);
-	 *
-	 * @param   string   $id        id of cache entry
-	 * @param   string   $data      data to set to cache
-	 * @param   integer  $lifetime  lifetime in seconds
-	 * @return  boolean
-	 */
-	public function set($id, $data, $lifetime = NULL)
+     * Set a value to cache with id and lifetime
+     *
+     *     $data = 'bar';
+     *
+     *     // Set 'bar' to 'foo' in wincache group, using default expiry
+     *     Cache::instance('wincache')->set('foo', $data);
+     *
+     *     // Set 'bar' to 'foo' in wincache group for 30 seconds
+     *     Cache::instance('wincache')->set('foo', $data, 30);
+     *
+     * @param   string   $id        id of cache entry
+     * @param   string   $data      data to set to cache
+     * @param   integer  $lifetime  lifetime in seconds
+     */
+    public function set($id, $data, $lifetime = NULL): bool
 	{
 		if ($lifetime === NULL)
 		{
@@ -110,32 +109,29 @@ class Kohana_Cache_Wincache extends Cache {
 	}
 
 	/**
-	 * Delete a cache entry based on id
-	 *
-	 *     // Delete 'foo' entry from the wincache group
-	 *     Cache::instance('wincache')->delete('foo');
-	 *
-	 * @param   string  $id  id to remove from cache
-	 * @return  boolean
-	 */
-	public function delete($id)
+     * Delete a cache entry based on id
+     *
+     *     // Delete 'foo' entry from the wincache group
+     *     Cache::instance('wincache')->delete('foo');
+     *
+     * @param   string  $id  id to remove from cache
+     */
+    public function delete($id): bool
 	{
 		return wincache_ucache_delete($this->_sanitize_id($id));
 	}
 
 	/**
-	 * Delete all cache entries.
-	 *
-	 * Beware of using this method when
-	 * using shared memory cache systems, as it will wipe every
-	 * entry within the system for all clients.
-	 *
-	 *     // Delete all cache entries in the wincache group
-	 *     Cache::instance('wincache')->delete_all();
-	 *
-	 * @return  boolean
-	 */
-	public function delete_all()
+     * Delete all cache entries.
+     *
+     * Beware of using this method when
+     * using shared memory cache systems, as it will wipe every
+     * entry within the system for all clients.
+     *
+     *     // Delete all cache entries in the wincache group
+     *     Cache::instance('wincache')->delete_all();
+     */
+    public function delete_all(): bool
 	{
 		return wincache_ucache_clear();
 	}

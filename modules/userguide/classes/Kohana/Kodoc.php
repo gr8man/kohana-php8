@@ -19,12 +19,11 @@ class Kohana_Kodoc
 	public static $regex_class_member = '((\w++)(?:::(\$?\w++))?(?:\(\))?)';
 
 	/**
-	 * Make a class#member API link using an array of matches from [Kodoc::$regex_class_member]
-	 *
-	 * @param   array   $matches    array( 1 => link text, 2 => class name, [3 => member name] )
-	 * @return  string
-	 */
-	public static function link_class_member($matches)
+     * Make a class#member API link using an array of matches from [Kodoc::$regex_class_member]
+     *
+     * @param   array   $matches    array( 1 => link text, 2 => class name, [3 => member name] )
+     */
+    public static function link_class_member(array $matches): string
 	{
 		$link = $matches[1];
 		$class = $matches[2];
@@ -41,10 +40,10 @@ class Kohana_Kodoc
 			}
 		}
 
-		return HTML::anchor(Route::get('docs/api')->uri(array('class' => $class)).$member, $link, null, null, true);
+		return HTML::anchor(Route::get('docs/api')->uri(['class' => $class]).$member, $link, null, null, true);
 	}
 
-	public static function factory($class)
+	public static function factory($class): \Kodoc_Class
 	{
 		return new Kodoc_Class($class);
 	}
@@ -60,7 +59,7 @@ class Kohana_Kodoc
 
 		ksort($classes);
 
-		$menu = array();
+		$menu = [];
 
 		$route = Route::get('docs/api');
 
@@ -76,7 +75,7 @@ class Kohana_Kodoc
 				continue;
 			}
 
-			$link = HTML::anchor($route->uri(array('class' => $class->class->name)), $class->class->name);
+			$link = HTML::anchor($route->uri(['class' => $class->class->name]), $class->class->name);
 
 			if (isset($class->tags['package'])) {
 				foreach ($class->tags['package'] as $package) {
@@ -106,13 +105,13 @@ class Kohana_Kodoc
 	 * @param   array   array of files, obtained using Kohana::list_files
 	 * @return  array   an array of all the class names
 	 */
-	public static function classes(array $list = null)
+	public static function classes(array $list = null): array
 	{
 		if ($list === null) {
 			$list = Kohana::list_files('classes');
 		}
 
-		$classes = array();
+		$classes = [];
 
 		// This will be used a lot!
 		$ext_length = strlen(EXT);
@@ -120,9 +119,9 @@ class Kohana_Kodoc
 		foreach ($list as $name => $path) {
 			if (is_array($path)) {
 				$classes += Kodoc::classes($path);
-			} elseif (substr($name, -$ext_length) === EXT) {
+			} elseif (substr((string) $name, -$ext_length) === EXT) {
 				// Remove "classes/" and the extension
-				$class = substr($name, 8, -$ext_length);
+				$class = substr((string) $name, 8, -$ext_length);
 
 				// Convert slashes to underscores
 				$class = str_replace(DIRECTORY_SEPARATOR, '_', $class);
@@ -135,18 +134,19 @@ class Kohana_Kodoc
 	}
 
 	/**
-	 * Get all classes and methods of files in a list.
-	 *
-	 * >  I personally don't like this as it was used on the index page.  Way too much stuff on one page.  It has potential for a package index page though.
-	 * >  For example:  class_methods( Kohana::list_files('classes/sprig') ) could make a nice index page for the sprig package in the api browser
-	 * >     ~bluehawk
-	 *
-	 */
-	public static function class_methods(array $list = null)
+     * Get all classes and methods of files in a list.
+     *
+     * >  I personally don't like this as it was used on the index page.  Way too much stuff on one page.  It has potential for a package index page though.
+     * >  For example:  class_methods( Kohana::list_files('classes/sprig') ) could make a nice index page for the sprig package in the api browser
+     * >     ~bluehawk
+     *
+     * @return array<string, list>
+     */
+    public static function class_methods(array $list = null): array
 	{
 		$list = Kodoc::classes($list);
 
-		$classes = array();
+		$classes = [];
 
 		foreach ($list as $class) {
 			// Skip transparent extension classes
@@ -156,7 +156,7 @@ class Kohana_Kodoc
 
 			$_class = new ReflectionClass($class);
 
-			$methods = array();
+			$methods = [];
 
 			foreach ($_class->getMethods() as $_method) {
 				$declares = $_method->getDeclaringClass()->name;
@@ -189,7 +189,7 @@ class Kohana_Kodoc
 	public static function format_tag($tag, $text)
 	{
 		if ($tag === 'license') {
-			if (strpos($text, '://') !== false) {
+			if (str_contains($text, '://')) {
 				return HTML::anchor($text);
 			}
 		} elseif ($tag === 'link') {
@@ -197,7 +197,7 @@ class Kohana_Kodoc
 
 			return HTML::anchor(
 				$split[0],
-				isset($split[1]) ? $split[1] : $split[0]
+				$split[1] ?? $split[0]
 			);
 		} elseif ($tag === 'copyright') {
 			// Convert the copyright symbol
@@ -207,13 +207,13 @@ class Kohana_Kodoc
 
 			if (preg_match('/^(\w+)\W(.*)$/D', $text, $matches)) {
 				return HTML::anchor(
-					$route->uri(array('class' => $matches[1])),
+					$route->uri(['class' => $matches[1]]),
 					$matches[1]
 				).' '.$matches[2];
 			}
 
 			return HTML::anchor(
-				$route->uri(array('class' => $text)),
+				$route->uri(['class' => $text]),
 				$text
 			);
 		} elseif ($tag === 'see' or $tag === 'uses') {
@@ -235,16 +235,16 @@ class Kohana_Kodoc
 	 *   to HTML (deprecated)
 	 * @return  array   array(string $description, array $tags)
 	 */
-	public static function parse($comment, $html = true)
+	public static function parse($comment, $html = true): array
 	{
 		// Normalize all new lines to \n
-		$comment = str_replace(array("\r\n", "\n"), "\n", $comment);
+		$comment = str_replace(["\r\n", "\n"], "\n", $comment);
 
 		// Split into lines while capturing without leading whitespace
 		preg_match_all('/^\s*\* ?(.*)\n/m', $comment, $lines);
 
 		// Tag content
-		$tags = array();
+		$tags = [];
 
 		/**
 		 * Process a tag and add it to $tags
@@ -253,7 +253,7 @@ class Kohana_Kodoc
 		 * @param   string  $text   Content of the tag
 		 * @return  void
 		 */
-		$add_tag = function ($tag, $text) use ($html, & $tags) {
+		$add_tag = function ($tag, $text) use ($html, & $tags): void {
 			// Don't show @access lines, they are shown elsewhere
 			if ($tag !== 'access') {
 				if ($html) {
@@ -277,7 +277,7 @@ class Kohana_Kodoc
 				}
 
 				$tag = $matches[1];
-				$text = isset($matches[2]) ? $matches[2] : '';
+				$text = $matches[2] ?? '';
 
 				if ($i === $end) {
 					// No more lines
@@ -296,14 +296,14 @@ class Kohana_Kodoc
 			}
 		}
 
-		$comment = trim($comment, "\n");
+		$comment = trim((string) $comment, "\n");
 
 		if ($comment and $html) {
 			// Parse the comment with Markdown
 			$comment = Kodoc_Markdown::markdown($comment);
 		}
 
-		return array($comment, $tags);
+		return [$comment, $tags];
 	}
 
 	/**
@@ -313,7 +313,7 @@ class Kohana_Kodoc
 	 * @param  int      start line?
 	 * @param  int      end line?
 	 */
-	public static function source($file, $start, $end)
+	public static function source($file, $start, $end): false|string
 	{
 		if (! $file) {
 			return false;
@@ -323,11 +323,11 @@ class Kohana_Kodoc
 
 		$file = array_slice($file, $start - 1, $end - $start + 1);
 
-		if (preg_match('/^(\s+)/', $file[0], $matches)) {
+		if (preg_match('/^(\s+)/', (string) $file[0], $matches)) {
 			$padding = strlen($matches[1]);
 
 			foreach ($file as & $line) {
-				$line = substr($line, $padding);
+				$line = substr((string) $line, $padding);
 			}
 		}
 
@@ -350,7 +350,7 @@ class Kohana_Kodoc
 		}
 
 		// Get the package tags for this class (as an array)
-		$packages = Arr::get($class->tags, 'package', array('None'));
+		$packages = Arr::get($class->tags, 'package', ['None']);
 
 		$show_this = false;
 
@@ -388,7 +388,7 @@ class Kohana_Kodoc
 	 * @return  string                    The name of the class that extends this (in the case provided)
 	 * @throws  InvalidArgumentException  If the $classes array is provided and the $class variable is not lowercase
 	 */
-	public static function is_transparent($class, $classes = null)
+	public static function is_transparent($class, $classes = null): false|string
 	{
 
 		static $transparent_prefixes = null;

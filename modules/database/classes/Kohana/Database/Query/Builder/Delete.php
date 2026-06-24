@@ -17,12 +17,11 @@ class Kohana_Database_Query_Builder_Delete extends Database_Query_Builder_Where
 	protected $_table;
 
 	/**
-	 * Set the table for a delete.
-	 *
-	 * @param   mixed  $table  table name or array($table, $alias) or object
-	 * @return  void
-	 */
-	public function __construct($table = null)
+     * Set the table for a delete.
+     *
+     * @param   mixed  $table  table name or array($table, $alias) or object
+     */
+    public function __construct($table = null)
 	{
 		if ($table) {
 			// Set the inital table name
@@ -39,7 +38,7 @@ class Kohana_Database_Query_Builder_Delete extends Database_Query_Builder_Where
 	 * @param   mixed  $table  table name or array($table, $alias) or object
 	 * @return  $this
 	 */
-	public function table($table)
+	public function table($table): static
 	{
 		$this->_table = $table;
 
@@ -52,7 +51,8 @@ class Kohana_Database_Query_Builder_Delete extends Database_Query_Builder_Where
 	 * @param   mixed  $db  Database instance or name of instance
 	 * @return  string
 	 */
-	public function compile($db = null)
+	#[\Override]
+    public function compile($db = null)
 	{
 		if (! is_object($db)) {
 			// Get the database instance
@@ -82,12 +82,12 @@ class Kohana_Database_Query_Builder_Delete extends Database_Query_Builder_Where
 		return parent::compile($db);
 	}
 
-	public function reset()
+	public function reset(): static
 	{
 		$this->_table = null;
-		$this->_where = array();
+		$this->_where = [];
 
-		$this->_parameters = array();
+		$this->_parameters = [];
 
 		$this->_sql = null;
 

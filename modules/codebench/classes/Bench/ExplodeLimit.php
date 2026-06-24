@@ -15,21 +15,21 @@ class Bench_ExplodeLimit extends Codebench
 
 	public $loops = 10000;
 
-	public $subjects = array(
+	public $subjects = [
 		'http://example.com/articles/123a/view',
 		'http://example.com/articles/123a/view/x/x/x/x/x',
 		'http://example.com/articles/123a/view/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x',
-	);
+	];
 
-	public function bench_explode_without_limit($subject)
+	public function bench_explode_without_limit($subject): string
 	{
-		$parts = explode('/', $subject);
+		$parts = explode('/', (string) $subject);
 		return $parts[4];
 	}
 
-	public function bench_explode_with_limit($subject)
+	public function bench_explode_with_limit($subject): string
 	{
-		$parts = explode('/', $subject, 6);
+		$parts = explode('/', (string) $subject, 6);
 		return $parts[4];
 	}
 

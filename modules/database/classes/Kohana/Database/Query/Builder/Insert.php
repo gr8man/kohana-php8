@@ -17,19 +17,18 @@ class Kohana_Database_Query_Builder_Insert extends Database_Query_Builder
 	protected $_table;
 
 	// (...)
-	protected $_columns = array();
+	protected $_columns = [];
 
 	// VALUES (...)
-	protected $_values = array();
+	protected $_values = [];
 
 	/**
-	 * Set the table and columns for an insert.
-	 *
-	 * @param   mixed  $table    table name or array($table, $alias) or object
-	 * @param   array  $columns  column names
-	 * @return  void
-	 */
-	public function __construct($table = null, array $columns = null)
+     * Set the table and columns for an insert.
+     *
+     * @param   mixed  $table    table name or array($table, $alias) or object
+     * @param   array  $columns  column names
+     */
+    public function __construct($table = null, array $columns = null)
 	{
 		if ($table) {
 			// Set the inital table name
@@ -51,7 +50,7 @@ class Kohana_Database_Query_Builder_Insert extends Database_Query_Builder
 	 * @param   string  $table  table name
 	 * @return  $this
 	 */
-	public function table($table)
+	public function table($table): static
 	{
 		if (! is_string($table)) {
 			throw new Kohana_Exception('INSERT INTO syntax does not allow table aliasing');
@@ -68,7 +67,7 @@ class Kohana_Database_Query_Builder_Insert extends Database_Query_Builder
 	 * @param   array  $columns  column names
 	 * @return  $this
 	 */
-	public function columns(array $columns)
+	public function columns(array $columns): static
 	{
 		$this->_columns = $columns;
 
@@ -82,7 +81,7 @@ class Kohana_Database_Query_Builder_Insert extends Database_Query_Builder
 	 * @param   ...
 	 * @return  $this
 	 */
-	public function values(array $values)
+	public function values(array $values): static
 	{
 		if (! is_array($this->_values)) {
 			throw new Kohana_Exception('INSERT INTO ... SELECT statements cannot be combined with INSERT INTO ... VALUES');
@@ -104,7 +103,7 @@ class Kohana_Database_Query_Builder_Insert extends Database_Query_Builder
 	 * @param   object  $query  Database_Query of SELECT type
 	 * @return  $this
 	 */
-	public function select(Database_Query $query)
+	public function select(Database_Query $query): static
 	{
 		if ($query->type() !== Database::SELECT) {
 			throw new Kohana_Exception('Only SELECT queries can be combined with INSERT queries');
@@ -121,7 +120,8 @@ class Kohana_Database_Query_Builder_Insert extends Database_Query_Builder
 	 * @param   mixed  $db  Database instance or name of instance
 	 * @return  string
 	 */
-	public function compile($db = null)
+	#[\Override]
+    public function compile($db = null)
 	{
 		if (! is_object($db)) {
 			// Get the database instance
@@ -132,13 +132,13 @@ class Kohana_Database_Query_Builder_Insert extends Database_Query_Builder
 		$query = 'INSERT INTO '.$db->quote_table($this->_table);
 
 		// Add the column names
-		$query .= ' ('.implode(', ', array_map(array($db, 'quote_column'), $this->_columns)).') ';
+		$query .= ' ('.implode(', ', array_map([$db, 'quote_column'], $this->_columns)).') ';
 
 		if (is_array($this->_values)) {
 			// Callback for quoting values
-			$quote = array($db, 'quote');
+			$quote = [$db, 'quote'];
 
-			$groups = array();
+			$groups = [];
 			foreach ($this->_values as $group) {
 				foreach ($group as $offset => $value) {
 					if ((is_string($value) and array_key_exists($value, $this->_parameters)) === false) {
@@ -163,14 +163,14 @@ class Kohana_Database_Query_Builder_Insert extends Database_Query_Builder
 		;
 	}
 
-	public function reset()
+	public function reset(): static
 	{
 		$this->_table = null;
 
 		$this->_columns =
-		$this->_values  = array();
+		$this->_values  = [];
 
-		$this->_parameters = array();
+		$this->_parameters = [];
 
 		$this->_sql = null;
 

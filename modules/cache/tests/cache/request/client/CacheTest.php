@@ -18,28 +18,24 @@ declare(strict_types=1); defined('SYSPATH') OR die('Kohana bootstrap needs to be
 class Kohana_Request_Client_CacheTest extends Unittest_TestCase {
 
 	/**
-	 * Sets up a test route for caching
-	 *
-	 * @return void
-	 */
-	public function setUp()
+     * Sets up a test route for caching
+     */
+    public function setUp(): void
 	{
 		Route::set('welcome', 'welcome/index')
-			->defaults(array(
+			->defaults([
 				'controller' => 'welcome',
 				'action'     => 'index'
-			));
+			]);
 
 		parent::setUp();
 	}
 
 	/**
-	 * Tests the Client does not attempt to load cache if no Cache library
-	 * is present
-	 *
-	 * @return void
-	 */
-	public function test_cache_not_called_with_no_cache()
+     * Tests the Client does not attempt to load cache if no Cache library
+     * is present
+     */
+    public function test_cache_not_called_with_no_cache(): void
 	{
 		$request       = new Request('welcome/index');
 		$response      = new Response;
@@ -57,20 +53,18 @@ class Kohana_Request_Client_CacheTest extends Unittest_TestCase {
 	}
 
 	/**
-	 * Tests that the client attempts to load a cached response from the
-	 * cache library, but fails.
-	 *
-	 * @return void
-	 */
-	public function test_cache_miss()
+     * Tests that the client attempts to load a cached response from the
+     * cache library, but fails.
+     */
+    public function test_cache_miss(): void
 	{
 		$route = new Route('welcome/index');
-		$route->defaults(array(
+		$route->defaults([
 			'controller' => 'Kohana_Request_CacheTest_Dummy',
 			'action'     => 'index',
-		));
+		]);
 
-		$request       = new Request('welcome/index', NULL, array($route));
+		$request       = new Request('welcome/index', NULL, [$route]);
 		$cache_mock    = $this->_get_cache_mock();
 
 		$request->client()->cache(HTTP_Cache::factory($cache_mock));
@@ -80,27 +74,25 @@ class Kohana_Request_Client_CacheTest extends Unittest_TestCase {
 			->with($request->client()->cache()->create_cache_key($request))
 			->will($this->returnValue(FALSE));
 
-		$response = $request->client()->execute($request);
+		$response = $request->client()->execute();
 
 		$this->assertSame(HTTP_Cache::CACHE_STATUS_MISS, 
 			$response->headers(HTTP_Cache::CACHE_STATUS_KEY));
 	}
 
 	/**
-	 * Tests the client saves a response if the correct headers are set
-	 *
-	 * @return void
-	 */
-	public function test_cache_save()
+     * Tests the client saves a response if the correct headers are set
+     */
+    public function test_cache_save(): void
 	{
 		$lifetime      = 800;
 		$request       = new Request('welcome/index');
 		$cache_mock    = $this->_get_cache_mock();
 		$response      = Response::factory();
 
-		$request->client()->cache(new HTTP_Cache(array(
+		$request->client()->cache(new HTTP_Cache([
 			'cache' => $cache_mock
-			)
+			]
 		));
 
 		$response->headers('cache-control', 'max-age='.$lifetime);
@@ -126,28 +118,26 @@ class Kohana_Request_Client_CacheTest extends Unittest_TestCase {
 	}
 
 	/**
-	 * Tests the client handles a cache HIT event correctly
-	 *
-	 * @return void
-	 */
-	public function test_cache_hit()
+     * Tests the client handles a cache HIT event correctly
+     */
+    public function test_cache_hit(): void
 	{
 		$lifetime      = 800;
 		$request       = new Request('welcome/index');
 		$cache_mock    = $this->_get_cache_mock();
 
-		$request->client()->cache(new HTTP_Cache(array(
+		$request->client()->cache(new HTTP_Cache([
 			'cache' => $cache_mock
-			)
+			]
 		));
 
 		$response = Response::factory();
 
-		$response->headers(array(
+		$response->headers([
 			'cache-control'                  => 'max-age='.$lifetime,
 			HTTP_Cache::CACHE_STATUS_KEY => 
 				HTTP_Cache::CACHE_STATUS_HIT
-		));
+		]);
 
 		$key = $request->client()->cache()->create_cache_key($request);
 
@@ -164,74 +154,70 @@ class Kohana_Request_Client_CacheTest extends Unittest_TestCase {
 
 
 	/**
-	 * Data provider for test_set_cache
-	 *
-	 * @return array
-	 */
-	public function provider_set_cache()
+     * Data provider for test_set_cache
+     */
+    public function provider_set_cache(): array
 	{
-		return array(
-			array(
-				new HTTP_Header(array('cache-control' => 'no-cache')),
-				array('no-cache' => NULL),
+		return [
+			[
+				new HTTP_Header(['cache-control' => 'no-cache']),
+				['no-cache' => NULL],
 				FALSE,
-			),
-			array(
-				new HTTP_Header(array('cache-control' => 'no-store')),
-				array('no-store' => NULL),
+			],
+			[
+				new HTTP_Header(['cache-control' => 'no-store']),
+				['no-store' => NULL],
 				FALSE,
-			),
-			array(
-				new HTTP_Header(array('cache-control' => 'max-age=100')),
-				array('max-age' => '100'),
+			],
+			[
+				new HTTP_Header(['cache-control' => 'max-age=100']),
+				['max-age' => '100'],
 				TRUE
-			),
-			array(
-				new HTTP_Header(array('cache-control' => 'private')),
-				array('private' => NULL),
+			],
+			[
+				new HTTP_Header(['cache-control' => 'private']),
+				['private' => NULL],
 				FALSE
-			),
-			array(
-				new HTTP_Header(array('cache-control' => 'private, max-age=100')),
-				array('private' => NULL, 'max-age' => '100'),
+			],
+			[
+				new HTTP_Header(['cache-control' => 'private, max-age=100']),
+				['private' => NULL, 'max-age' => '100'],
 				FALSE
-			),
-			array(
-				new HTTP_Header(array('cache-control' => 'private, s-maxage=100')),
-				array('private' => NULL, 's-maxage' => '100'),
+			],
+			[
+				new HTTP_Header(['cache-control' => 'private, s-maxage=100']),
+				['private' => NULL, 's-maxage' => '100'],
 				TRUE
-			),
-			array(
-				new HTTP_Header(array(
+			],
+			[
+				new HTTP_Header([
 					'expires' => date('m/d/Y', strtotime('-1 day')),
-				)),
-				array(),
+				]),
+				[],
 				FALSE
-			),
-			array(
-				new HTTP_Header(array(
+			],
+			[
+				new HTTP_Header([
 					'expires' => date('m/d/Y', strtotime('+1 day')),
-				)),
-				array(),
+				]),
+				[],
 				TRUE
-			),
-			array(
-				new HTTP_Header(array()),
-				array(),
+			],
+			[
+				new HTTP_Header([]),
+				[],
 				TRUE
-			),
-		);
+			],
+		];
 	}
 
 	/**
-	 * Tests the set_cache() method
-	 *
-	 * @test
-	 * @dataProvider provider_set_cache
-	 *
-	 * @return null
-	 */
-	public function test_set_cache($headers, $cache_control, $expected)
+     * Tests the set_cache() method
+     *
+     * @test
+     * @dataProvider provider_set_cache
+     */
+    public function test_set_cache(\HTTP_Header $headers, array $cache_control, bool $expected): void
 	{
 		/**
 		 * Set up a mock response object to test with
@@ -254,7 +240,7 @@ class Kohana_Request_Client_CacheTest extends Unittest_TestCase {
 	 */
 	protected function _get_cache_mock()
 	{
-		return $this->getMock('Cache_File', array(), array(), '', FALSE);
+		return $this->getMock('Cache_File', [], [], '', FALSE);
 	}
 } // End Kohana_Request_Client_CacheTest
 

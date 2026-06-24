@@ -15,7 +15,7 @@ class Bench_Transliterate extends Codebench
 
 	public $loops = 10;
 
-	public $subjects = array(
+	public $subjects = [
 		// ASCII
 		'a', 'b', 'c', 'd', '1', '2', '3',
 
@@ -50,18 +50,18 @@ class Bench_Transliterate extends Codebench
 		'Â', 'Ľ', 'Ẅ', 'Ż', 'Ī', 'Ã', 'Ġ',
 		'Ṁ', 'Ō', 'Ĩ', 'Ù', 'Į', 'Ź', 'Á',
 		'Û', 'Þ', 'Ð', 'Æ', 'İ',
-	);
+	];
 
 	public function bench_utf8($subject)
 	{
 		return UTF8::transliterate_to_ascii($subject);
 	}
 
-	public function bench_iconv($subject)
+	public function bench_iconv($subject): ?string
 	{
 		// Note: need to suppress errors on iconv because some chars trigger the following notice:
 		// "Detected an illegal character in input string"
-		return preg_replace('~[^-a-z0-9]+~i', '', @iconv('UTF-8', 'ASCII//TRANSLIT', $subject));
+		return preg_replace('~[^-a-z0-9]+~i', '', @iconv('UTF-8', 'ASCII//TRANSLIT', (string) $subject));
 	}
 
 }

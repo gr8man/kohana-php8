@@ -7,7 +7,7 @@ class Kohana_Minion_CLI
 {
 	public static $wait_msg = 'Press any key to continue...';
 
-	protected static $foreground_colors = array(
+	protected static $foreground_colors = [
 		'black'        => '0;30',
 		'dark_gray'    => '1;30',
 		'blue'         => '0;34',
@@ -24,8 +24,8 @@ class Kohana_Minion_CLI
 		'yellow'       => '1;33',
 		'light_gray'   => '0;37',
 		'white'        => '1;37',
-	);
-	protected static $background_colors = array(
+	];
+	protected static $background_colors = [
 		'black'      => '40',
 		'red'        => '41',
 		'green'      => '42',
@@ -34,7 +34,7 @@ class Kohana_Minion_CLI
 		'magenta'    => '45',
 		'cyan'       => '46',
 		'light_gray' => '47',
-	);
+	];
 
 	/**
 	 * Returns one or more command-line options. Options are specified using
@@ -54,7 +54,7 @@ class Kohana_Minion_CLI
 		$options = func_get_args();
 
 		// Found option values
-		$values = array();
+		$values = [];
 
 		// Skip the first option, it is always the file executed
 		for ($i = 1; $i < $_SERVER['argc']; $i++) {
@@ -66,18 +66,18 @@ class Kohana_Minion_CLI
 			// Get the option
 			$opt = $_SERVER['argv'][$i];
 
-			if (substr($opt, 0, 2) !== '--') {
+			if (!str_starts_with((string) $opt, '--')) {
 				// This is a positional argument
 				$values[] = $opt;
 				continue;
 			}
 
 			// Remove the "--" prefix
-			$opt = substr($opt, 2);
+			$opt = substr((string) $opt, 2);
 
 			if (strpos($opt, '=')) {
 				// Separate the name and value
-				list($opt, $value) = explode('=', $opt, 2);
+				[$opt, $value] = explode('=', $opt, 2);
 			} else {
 				$value = null;
 			}
@@ -115,7 +115,7 @@ class Kohana_Minion_CLI
 	 * @param  array   $options array of options the user is shown
 	 * @return string  the user input
 	 */
-	public static function read($text = '', array $options = null)
+	public static function read(string $text = '', array $options = null)
 	{
 		// If a question has been asked with the read
 		$options_output = '';
@@ -140,18 +140,17 @@ class Kohana_Minion_CLI
 	}
 
 	/**
-	 * Experimental feature.
-	 *
-	 * Reads hidden input from the user
-	 *
-	 * Usage:
-	 *
-	 * $password = Minion_CLI::password('Enter your password');
-	 *
-	 * @author Mathew Davies.
-	 * @return string
-	 */
-	public static function password($text = '')
+     * Experimental feature.
+     *
+     * Reads hidden input from the user
+     *
+     * Usage:
+     *
+     * $password = Minion_CLI::password('Enter your password');
+     *
+     * @author Mathew Davies.
+     */
+    public static function password(string $text = ''): string
 	{
 		$text .= ': ';
 
@@ -180,7 +179,7 @@ class Kohana_Minion_CLI
 	 *
 	 * @param string|array $text the text to output, or array of lines
 	 */
-	public static function write($text = '')
+	public static function write($text = ''): void
 	{
 		if (is_array($text)) {
 			foreach ($text as $line) {
@@ -207,7 +206,7 @@ class Kohana_Minion_CLI
 	 * @param string  $text      the text to output
 	 * @param boolean $end_line  whether the line is done being replaced
 	 */
-	public static function write_replace($text = '', $end_line = false)
+	public static function write_replace($text = '', $end_line = false): void
 	{
 		// Append a newline if $end_line is TRUE
 		$text = $end_line ? $text.PHP_EOL : $text;
@@ -225,7 +224,7 @@ class Kohana_Minion_CLI
 	 * @param int $seconds number of seconds
 	 * @param bool $countdown show a countdown or not
 	 */
-	public static function wait($seconds = 0, $countdown = false)
+	public static function wait($seconds = 0, $countdown = false): void
 	{
 		if ($countdown === true) {
 			$time = $seconds;
@@ -260,7 +259,7 @@ class Kohana_Minion_CLI
 	 * @param string $background the background color
 	 * @return string the color coded string
 	 */
-	public static function color($text, $foreground, $background = null)
+	public static function color(string $text, string $foreground, $background = null): string
 	{
 
 		if (Kohana::$is_windows) {
@@ -281,9 +280,7 @@ class Kohana_Minion_CLI
 			$string .= "\033[".Minion_CLI::$background_colors[$background]."m";
 		}
 
-		$string .= $text."\033[0m";
-
-		return $string;
+		return $string . ($text . "\033[0m");
 	}
 
 }

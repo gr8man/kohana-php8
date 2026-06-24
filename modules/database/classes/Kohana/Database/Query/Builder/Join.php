@@ -16,28 +16,21 @@ class Kohana_Database_Query_Builder_Join extends Database_Query_Builder
 	// Type of JOIN
 	protected $_type;
 
-	// JOIN ...
-	protected $_table;
-
 	// ON ...
-	protected $_on = array();
+	protected $_on = [];
 
 	// USING ...
-	protected $_using = array();
+	protected $_using = [];
 
 	/**
-	 * Creates a new JOIN statement for a table. Optionally, the type of JOIN
-	 * can be specified as the second parameter.
-	 *
-	 * @param   mixed   $table  column name or array($column, $alias) or object
-	 * @param   string  $type   type of JOIN: INNER, RIGHT, LEFT, etc
-	 * @return  void
-	 */
-	public function __construct($table, $type = null)
+     * Creates a new JOIN statement for a table. Optionally, the type of JOIN
+     * can be specified as the second parameter.
+     *
+     * @param mixed $_table column name or array($column, $alias) or object
+     * @param   string  $type   type of JOIN: INNER, RIGHT, LEFT, etc
+     */
+    public function __construct(protected $_table, $type = null)
 	{
-		// Set the table to JOIN on
-		$this->_table = $table;
-
 		if ($type !== null) {
 			// Set the JOIN type
 			$this->_type = (string) $type;
@@ -52,13 +45,13 @@ class Kohana_Database_Query_Builder_Join extends Database_Query_Builder
 	 * @param   mixed   $c2  column name or array($column, $alias) or object
 	 * @return  $this
 	 */
-	public function on($c1, $op, $c2)
+	public function on($c1, $op, $c2): static
 	{
 		if (! empty($this->_using)) {
 			throw new Kohana_Exception('JOIN ... ON ... cannot be combined with JOIN ... USING ...');
 		}
 
-		$this->_on[] = array($c1, $op, $c2);
+		$this->_on[] = [$c1, $op, $c2];
 
 		return $this;
 	}
@@ -69,7 +62,7 @@ class Kohana_Database_Query_Builder_Join extends Database_Query_Builder
 	 * @param   string  $columns  column name
 	 * @return  $this
 	 */
-	public function using($columns)
+	public function using($columns): static
 	{
 		if (! empty($this->_on)) {
 			throw new Kohana_Exception('JOIN ... ON ... cannot be combined with JOIN ... USING ...');
@@ -83,12 +76,12 @@ class Kohana_Database_Query_Builder_Join extends Database_Query_Builder
 	}
 
 	/**
-	 * Compile the SQL partial for a JOIN statement and return it.
-	 *
-	 * @param   mixed  $db  Database instance or name of instance
-	 * @return  string
-	 */
-	public function compile($db = null)
+     * Compile the SQL partial for a JOIN statement and return it.
+     *
+     * @param   mixed  $db  Database instance or name of instance
+     */
+    #[\Override]
+    public function compile($db = null): string
 	{
 		if (! is_object($db)) {
 			// Get the database instance
@@ -96,7 +89,7 @@ class Kohana_Database_Query_Builder_Join extends Database_Query_Builder
 		}
 
 		if ($this->_type) {
-			$sql = strtoupper($this->_type).' JOIN';
+			$sql = strtoupper((string) $this->_type).' JOIN';
 		} else {
 			$sql = 'JOIN';
 		}
@@ -106,12 +99,12 @@ class Kohana_Database_Query_Builder_Join extends Database_Query_Builder
 
 		if (! empty($this->_using)) {
 			// Quote and concat the columns
-			$sql .= ' USING ('.implode(', ', array_map(array($db, 'quote_column'), $this->_using)).')';
+			$sql .= ' USING ('.implode(', ', array_map([$db, 'quote_column'], $this->_using)).')';
 		} else {
-			$conditions = array();
+			$conditions = [];
 			foreach ($this->_on as $condition) {
 				// Split the condition
-				list($c1, $op, $c2) = $condition;
+				[$c1, $op, $c2] = $condition;
 
 				if ($op) {
 					// Make the operator uppercase and spaced
@@ -129,12 +122,12 @@ class Kohana_Database_Query_Builder_Join extends Database_Query_Builder
 		return $sql;
 	}
 
-	public function reset()
+	public function reset(): void
 	{
 		$this->_type =
 		$this->_table = null;
 
-		$this->_on = array();
+		$this->_on = [];
 	}
 
 } // End Database_Query_Builder_Join

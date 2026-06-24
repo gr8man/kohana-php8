@@ -15,13 +15,12 @@ defined('SYSPATH') or die('No direct script access.');
 class Kohana_Feed
 {
 	/**
-	 * Parses a remote feed into an array.
-	 *
-	 * @param   string  $feed   remote feed URL
-	 * @param   integer $limit  item limit to fetch
-	 * @return  array
-	 */
-	public static function parse($feed, $limit = 0)
+     * Parses a remote feed into an array.
+     *
+     * @param   string  $feed   remote feed URL
+     * @param   integer $limit  item limit to fetch
+     */
+    public static function parse($feed, $limit = 0): array
 	{
 		// Check if SimpleXML is installed
 		if (! function_exists('simplexml_load_file')) {
@@ -45,14 +44,14 @@ class Kohana_Feed
 		}
 
 		// Load the feed
-		$feed = simplexml_load_string($feed, 'SimpleXMLElement', LIBXML_NOCDATA);
+		$feed = simplexml_load_string((string) $feed, 'SimpleXMLElement', LIBXML_NOCDATA);
 
 		// Restore error reporting
 		error_reporting($error_level);
 
 		// Feed could not be loaded
 		if ($feed === false) {
-			return array();
+			return [];
 		}
 
 		$namespaces = $feed->getNamespaces(true);
@@ -61,7 +60,7 @@ class Kohana_Feed
 		$feed = isset($feed->channel) ? $feed->xpath('//item') : $feed->entry;
 
 		$i = 0;
-		$items = array();
+		$items = [];
 
 		foreach ($feed as $item) {
 			if ($limit > 0 and $i++ === $limit) {
@@ -87,9 +86,9 @@ class Kohana_Feed
 	 * @param   string  $encoding   define which encoding to use
 	 * @return  string
 	 */
-	public static function create($info, $items, $encoding = 'UTF-8')
+	public static function create($info, $items, string $encoding = 'UTF-8')
 	{
-		$info += array('title' => 'Generated Feed', 'link' => '', 'generator' => 'KohanaPHP');
+		$info += ['title' => 'Generated Feed', 'link' => '', 'generator' => 'KohanaPHP'];
 
 		$feed = '<?xml version="1.0" encoding="'.$encoding.'"?><rss version="2.0"><channel></channel></rss>';
 		$feed = simplexml_load_string($feed);
@@ -103,12 +102,12 @@ class Kohana_Feed
 					throw new Kohana_Exception('Feed images require a link, url, and title');
 				}
 
-				if (strpos($value['link'], '://') === false) {
+				if (!str_contains($value['link'], '://')) {
 					// Convert URIs to URLs
 					$value['link'] = URL::site($value['link'], 'http');
 				}
 
-				if (strpos($value['url'], '://') === false) {
+				if (!str_contains((string) $value['url'], '://')) {
 					// Convert URIs to URLs
 					$value['url'] = URL::site($value['url'], 'http');
 				}
@@ -121,7 +120,7 @@ class Kohana_Feed
 				if (($name === 'pubDate' or $name === 'lastBuildDate') and (is_int($value) or ctype_digit((string) $value))) {
 					// Convert timestamps to RFC 822 formatted dates
 					$value = date('r', $value);
-				} elseif (($name === 'link' or $name === 'docs') and strpos($value, '://') === false) {
+				} elseif (($name === 'link' or $name === 'docs') and !str_contains((string) $value, '://')) {
 					// Convert URIs to URLs
 					$value = URL::site($value, 'http');
 				}
@@ -139,7 +138,7 @@ class Kohana_Feed
 				if ($name === 'pubDate' and (is_int($value) or ctype_digit((string) $value))) {
 					// Convert timestamps to RFC 822 formatted dates
 					$value = date('r', $value);
-				} elseif (($name === 'link' or $name === 'guid') and strpos($value, '://') === false) {
+				} elseif (($name === 'link' or $name === 'guid') and !str_contains((string) $value, '://')) {
 					// Convert URIs to URLs
 					$value = URL::site($value, 'http');
 				}

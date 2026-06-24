@@ -53,7 +53,7 @@ class Kohana_Date
 	 * @param   mixed   $now    UNIX timestamp or date string
 	 * @return  integer
 	 */
-	public static function offset($remote, $local = null, $now = null)
+	public static function offset($remote, $local = null, $now = null): int|float
 	{
 		if ($local === null) {
 			// Use the default timezone
@@ -90,12 +90,12 @@ class Kohana_Date
 	 * @param   integer $end    end value
 	 * @return  array   A mirrored (foo => foo) array from 1-60.
 	 */
-	public static function seconds($step = 1, $start = 0, $end = 60)
+	public static function seconds($step = 1, $start = 0, $end = 60): array
 	{
 		// Always integer
 		$step = (int) $step;
 
-		$seconds = array();
+		$seconds = [];
 
 		for ($i = $start; $i < $end; $i += $step) {
 			$seconds[$i] = sprintf('%02d', $i);
@@ -134,19 +134,19 @@ class Kohana_Date
 	 * @param   integer $start  the hour to start at
 	 * @return  array   A mirrored (foo => foo) array from start-12 or start-23.
 	 */
-	public static function hours($step = 1, $long = false, $start = null)
+	public static function hours($step = 1, $long = false, $start = null): array
 	{
 		// Default values
 		$step = (int) $step;
 		$long = (bool) $long;
-		$hours = array();
+		$hours = [];
 
 		// Set the default start if none was specified.
 		if ($start === null) {
 			$start = ($long === false) ? 1 : 0;
 		}
 
-		$hours = array();
+		$hours = [];
 
 		// 24-hour time has 24 hours, instead of 12
 		$size = ($long === true) ? 23 : 12;
@@ -159,15 +159,14 @@ class Kohana_Date
 	}
 
 	/**
-	 * Returns AM or PM, based on a given hour (in 24 hour format).
-	 *
-	 *     $type = Date::ampm(12); // PM
-	 *     $type = Date::ampm(1);  // AM
-	 *
-	 * @param   integer $hour   number of the hour
-	 * @return  string
-	 */
-	public static function ampm($hour)
+     * Returns AM or PM, based on a given hour (in 24 hour format).
+     *
+     *     $type = Date::ampm(12); // PM
+     *     $type = Date::ampm(1);  // AM
+     *
+     * @param   integer $hour   number of the hour
+     */
+    public static function ampm($hour): string
 	{
 		// Always integer
 		$hour = (int) $hour;
@@ -176,15 +175,14 @@ class Kohana_Date
 	}
 
 	/**
-	 * Adjusts a non-24-hour number into a 24-hour number.
-	 *
-	 *     $hour = Date::adjust(3, 'pm'); // 15
-	 *
-	 * @param   integer $hour   hour to adjust
-	 * @param   string  $ampm   AM or PM
-	 * @return  string
-	 */
-	public static function adjust($hour, $ampm)
+     * Adjusts a non-24-hour number into a 24-hour number.
+     *
+     *     $hour = Date::adjust(3, 'pm'); // 15
+     *
+     * @param   integer $hour   hour to adjust
+     * @param   string  $ampm   AM or PM
+     */
+    public static function adjust($hour, $ampm): string
 	{
 		$hour = (int) $hour;
 		$ampm = strtolower($ampm);
@@ -230,7 +228,7 @@ class Kohana_Date
 
 		// We use caching for months, because time functions are used
 		if (empty($months[$year][$month])) {
-			$months[$year][$month] = array();
+			$months[$year][$month] = [];
 
 			// Use date to find the number of days in the given month
 			$total = date('t', mktime(1, 0, 0, $month, 1, $year)) + 1;
@@ -268,7 +266,7 @@ class Kohana_Date
 	 */
 	public static function months($format = null)
 	{
-		$months = array();
+		$months = [];
 
 		if ($format === Date::MONTHS_LONG or $format === Date::MONTHS_SHORT) {
 			$date_format = ($format === Date::MONTHS_LONG) ? 'F' : 'M';
@@ -283,23 +281,22 @@ class Kohana_Date
 	}
 
 	/**
-	 * Returns an array of years between a starting and ending year. By default,
-	 * the the current year - 5 and current year + 5 will be used. Typically used
-	 * as a shortcut for generating a list that can be used in a form.
-	 *
-	 *     $years = Date::years(2000, 2010); // 2000, 2001, ..., 2009, 2010
-	 *
-	 * @param   integer $start  starting year (default is current year - 5)
-	 * @param   integer $end    ending year (default is current year + 5)
-	 * @return  array
-	 */
-	public static function years($start = false, $end = false)
+     * Returns an array of years between a starting and ending year. By default,
+     * the the current year - 5 and current year + 5 will be used. Typically used
+     * as a shortcut for generating a list that can be used in a form.
+     *
+     *     $years = Date::years(2000, 2010); // 2000, 2001, ..., 2009, 2010
+     *
+     * @param   integer $start  starting year (default is current year - 5)
+     * @param   integer $end    ending year (default is current year + 5)
+     */
+    public static function years($start = false, $end = false): array
 	{
 		// Default values
 		$start = ($start === false) ? (date('Y') - 5) : (int) $start;
 		$end   = ($end   === false) ? (date('Y') + 5) : (int) $end;
 
-		$years = array();
+		$years = [];
 
 		for ($i = $start; $i <= $end; $i++) {
 			$years[$i] = (string) $i;
@@ -322,7 +319,7 @@ class Kohana_Date
 	 * @return  string   when only a single output is requested
 	 * @return  array    associative list of all outputs requested
 	 */
-	public static function span($remote, $local = null, $output = 'years,months,weeks,days,hours,minutes,seconds')
+	public static function span($remote, $local = null, $output = 'years,months,weeks,days,hours,minutes,seconds'): false|int|array
 	{
 		// Normalize output
 		$output = trim(strtolower((string) $output));
@@ -388,21 +385,20 @@ class Kohana_Date
 	}
 
 	/**
-	 * Returns the difference between a time and now in a "fuzzy" way.
-	 * Displaying a fuzzy time instead of a date is usually faster to read and understand.
-	 *
-	 *     $span = Date::fuzzy_span(time() - 10); // "moments ago"
-	 *     $span = Date::fuzzy_span(time() + 20); // "in moments"
-	 *
-	 * A second parameter is available to manually set the "local" timestamp,
-	 * however this parameter shouldn't be needed in normal usage and is only
-	 * included for unit tests
-	 *
-	 * @param   integer $timestamp          "remote" timestamp
-	 * @param   integer $local_timestamp    "local" timestamp, defaults to time()
-	 * @return  string
-	 */
-	public static function fuzzy_span($timestamp, $local_timestamp = null)
+     * Returns the difference between a time and now in a "fuzzy" way.
+     * Displaying a fuzzy time instead of a date is usually faster to read and understand.
+     *
+     *     $span = Date::fuzzy_span(time() - 10); // "moments ago"
+     *     $span = Date::fuzzy_span(time() + 20); // "in moments"
+     *
+     * A second parameter is available to manually set the "local" timestamp,
+     * however this parameter shouldn't be needed in normal usage and is only
+     * included for unit tests
+     *
+     * @param   integer $timestamp          "remote" timestamp
+     * @param   integer $local_timestamp    "local" timestamp, defaults to time()
+     */
+    public static function fuzzy_span($timestamp, $local_timestamp = null): string
 	{
 		$local_timestamp = ($local_timestamp === null) ? time() : (int) $local_timestamp;
 
@@ -461,16 +457,15 @@ class Kohana_Date
 	}
 
 	/**
-	 * Converts a UNIX timestamp to DOS format. There are very few cases where
-	 * this is needed, but some binary formats use it (eg: zip files.)
-	 * Converting the other direction is done using {@link Date::dos2unix}.
-	 *
-	 *     $dos = Date::unix2dos($unix);
-	 *
-	 * @param   integer $timestamp  UNIX timestamp
-	 * @return  integer
-	 */
-	public static function unix2dos($timestamp = false)
+     * Converts a UNIX timestamp to DOS format. There are very few cases where
+     * this is needed, but some binary formats use it (eg: zip files.)
+     * Converting the other direction is done using {@link Date::dos2unix}.
+     *
+     *     $dos = Date::unix2dos($unix);
+     *
+     * @param   integer $timestamp  UNIX timestamp
+     */
+    public static function unix2dos($timestamp = false): int
 	{
 		$timestamp = ($timestamp === false) ? getdate() : getdate($timestamp);
 
@@ -497,7 +492,7 @@ class Kohana_Date
 	 * @param   integer $timestamp  DOS timestamp
 	 * @return  integer
 	 */
-	public static function dos2unix($timestamp = false)
+	public static function dos2unix($timestamp = false): int|false
 	{
 		$sec  = 2 * ($timestamp & 0x1f);
 		$min  = ($timestamp >>  5) & 0x3f;
@@ -510,22 +505,21 @@ class Kohana_Date
 	}
 
 	/**
-	 * Returns a date/time string with the specified timestamp format
-	 *
-	 *     $time = Date::formatted_time('5 minutes ago');
-	 *
-	 * @link    http://www.php.net/manual/datetime.construct
-	 * @param   string  $datetime_str       datetime string
-	 * @param   string  $timestamp_format   timestamp format
-	 * @param   string  $timezone           timezone identifier
-	 * @return  string
-	 */
-	public static function formatted_time($datetime_str = 'now', $timestamp_format = null, $timezone = null)
+     * Returns a date/time string with the specified timestamp format
+     *
+     *     $time = Date::formatted_time('5 minutes ago');
+     *
+     * @link    http://www.php.net/manual/datetime.construct
+     * @param   string  $datetime_str       datetime string
+     * @param   string  $timestamp_format   timestamp format
+     * @param   string  $timezone           timezone identifier
+     */
+    public static function formatted_time($datetime_str = 'now', $timestamp_format = null, $timezone = null): string
 	{
 		$timestamp_format = ($timestamp_format == null) ? Date::$timestamp_format : $timestamp_format;
-		$timezone         = ($timezone === null) ? Date::$timezone : $timezone;
+		$timezone ??= Date::$timezone;
 
-		$tz   = new DateTimeZone($timezone ? $timezone : date_default_timezone_get());
+		$tz   = new DateTimeZone($timezone ?: date_default_timezone_get());
 		$time = new DateTime($datetime_str, $tz);
 
 		// Convert the time back to the expected timezone if required (in case the datetime_str provided a timezone,

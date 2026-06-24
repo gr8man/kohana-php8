@@ -92,7 +92,7 @@ abstract class Kohana_Cache {
 	/**
 	 * @var   Kohana_Cache instances
 	 */
-	public static $instances = array();
+	public static $instances = [];
 
 	/**
 	 * Creates a singleton of a Kohana Cache group. If no group is supplied
@@ -132,14 +132,14 @@ abstract class Kohana_Cache {
 		{
 			throw new Cache_Exception(
 				'Failed to load Kohana Cache group: :group',
-				array(':group' => $group)
+				[':group' => $group]
 			);
 		}
 
 		$config = $config->get($group);
 
 		// Create a new cache type instance
-		$cache_class = 'Cache_'.ucfirst($config['driver']);
+		$cache_class = 'Cache_'.ucfirst((string) $config['driver']);
 		Cache::$instances[$group] = new $cache_class($config);
 
 		// Return the instance
@@ -149,7 +149,7 @@ abstract class Kohana_Cache {
 	/**
 	 * @var  Config
 	 */
-	protected $_config = array();
+	protected $_config = [];
 
 	/**
 	 * Ensures singleton pattern is observed, loads the default expiry
@@ -203,12 +203,11 @@ abstract class Kohana_Cache {
 	}
 
 	/**
-	 * Overload the __clone() method to prevent cloning
-	 *
-	 * @return  void
-	 * @throws  Cache_Exception
-	 */
-	final public function __clone()
+     * Overload the __clone() method to prevent cloning
+     *
+     * @throws  Cache_Exception
+     */
+    final public function __clone()
 	{
 		throw new Cache_Exception('Cloning of Kohana_Cache objects is forbidden');
 	}
@@ -300,7 +299,7 @@ abstract class Kohana_Cache {
 	protected function _sanitize_id($id)
 	{
 		// Change slashes and spaces to underscores
-		return str_replace(array('/', '\\', ' '), '_', $id);
+		return str_replace(['/', '\\', ' '], '_', $id);
 	}
 }
 // End Kohana_Cache

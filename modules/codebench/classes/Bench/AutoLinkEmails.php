@@ -14,19 +14,19 @@ class Bench_AutoLinkEmails extends Codebench
 
 	public $loops = 1000;
 
-	public $subjects = array(
+	public $subjects = [
 		'<ul>
 		    <li>voorzitter@xxxx.com</li>
 		    <li>vicevoorzitter@xxxx.com</li>
 		</ul>',
-	);
+	];
 
 	// The original function, with str_replace replaced by preg_replace. Looks clean.
 	public function bench_match_all_loop($subject)
 	{
-		if (preg_match_all('~\b(?<!href="mailto:|">|58;)(?!\.)[-+_a-z0-9.]++(?<!\.)@(?![-.])[-a-z0-9.]+(?<!\.)\.[a-z]{2,6}\b~i', $subject, $matches)) {
+		if (preg_match_all('~\b(?<!href="mailto:|">|58;)(?!\.)[-+_a-z0-9.]++(?<!\.)@(?![-.])[-a-z0-9.]+(?<!\.)\.[a-z]{2,6}\b~i', (string) $subject, $matches)) {
 			foreach ($matches[0] as $match) {
-				$subject = preg_replace('!\b'.preg_quote($match).'\b!', HTML::mailto($match), $subject);
+				$subject = preg_replace('!\b'.preg_quote($match).'\b!', HTML::mailto($match), (string) $subject);
 			}
 		}
 
@@ -34,36 +34,36 @@ class Bench_AutoLinkEmails extends Codebench
 	}
 
 	// The "e" modifier was removed in PHP 7.0; replaced with preg_replace_callback.
-	public function bench_replace_e($subject)
+	public function bench_replace_e($subject): string|array|null
 	{
 		return preg_replace_callback(
 			'~\b(?<!href="mailto:|">|58;)(?!\.)[-+_a-z0-9.]++(?<!\.)@(?![-.])[-a-z0-9.]+(?<!\.)\.[a-z]{2,6}\b~i',
-			fn ($matches) => HTML::mailto($matches[0]),
-			$subject
+			fn ($matches): string => HTML::mailto($matches[0]),
+			(string) $subject
 		);
 	}
 
 	// This one should be quite okay, it just requires an otherwise useless single-purpose callback.
-	public function bench_replace_callback_external($subject)
+	public function bench_replace_callback_external($subject): string|array|null
 	{
 		return preg_replace_callback(
 			'~\b(?<!href="mailto:|">|58;)(?!\.)[-+_a-z0-9.]++(?<!\.)@(?![-.])[-a-z0-9.]+(?<!\.)\.[a-z]{2,6}\b~i',
-			array($this, '_callback_external'),
-			$subject
+			$this->_callback_external(...),
+			(string) $subject
 		);
 	}
-	protected function _callback_external($matches)
+	protected function _callback_external($matches): string
 	{
 		return HTML::mailto($matches[0]);
 	}
 
 	// This one clearly is the ugliest, the slowest and consumes a lot of memory!
-	public function bench_replace_callback_internal($subject)
+	public function bench_replace_callback_internal($subject): string|array|null
 	{
 		return preg_replace_callback(
 			'~\b(?<!href="mailto:|">|58;)(?!\.)[-+_a-z0-9.]++(?<!\.)@(?![-.])[-a-z0-9.]+(?<!\.)\.[a-z]{2,6}\b~i',
-			fn ($matches) => HTML::mailto($matches[0]),
-			$subject
+			fn ($matches): string => HTML::mailto($matches[0]),
+			(string) $subject
 		);
 	}
 

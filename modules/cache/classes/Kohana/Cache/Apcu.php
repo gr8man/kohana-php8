@@ -79,22 +79,21 @@ class Kohana_Cache_Apcu extends Cache implements Cache_Arithmetic {
 	}
 
 	/**
-	 * Set a value to cache with id and lifetime
-	 *
-	 *     $data = 'bar';
-	 *
-	 *     // Set 'bar' to 'foo' in apcu group, using default expiry
-	 *     Cache::instance('apcu')->set('foo', $data);
-	 *
-	 *     // Set 'bar' to 'foo' in apcu group for 30 seconds
-	 *     Cache::instance('apcu')->set('foo', $data, 30);
-	 *
-	 * @param   string   $id        id of cache entry
-	 * @param   string   $data      data to set to cache
-	 * @param   integer  $lifetime  lifetime in seconds
-	 * @return  boolean
-	 */
-	public function set($id, $data, $lifetime = NULL)
+     * Set a value to cache with id and lifetime
+     *
+     *     $data = 'bar';
+     *
+     *     // Set 'bar' to 'foo' in apcu group, using default expiry
+     *     Cache::instance('apcu')->set('foo', $data);
+     *
+     *     // Set 'bar' to 'foo' in apcu group for 30 seconds
+     *     Cache::instance('apcu')->set('foo', $data, 30);
+     *
+     * @param   string   $id        id of cache entry
+     * @param   string   $data      data to set to cache
+     * @param   integer  $lifetime  lifetime in seconds
+     */
+    public function set($id, $data, $lifetime = NULL): bool
 	{
 		if ($lifetime === NULL)
 		{
@@ -105,32 +104,29 @@ class Kohana_Cache_Apcu extends Cache implements Cache_Arithmetic {
 	}
 
 	/**
-	 * Delete a cache entry based on id
-	 *
-	 *     // Delete 'foo' entry from the apcu group
-	 *     Cache::instance('apcu')->delete('foo');
-	 *
-	 * @param   string  $id  id to remove from cache
-	 * @return  boolean
-	 */
-	public function delete($id)
+     * Delete a cache entry based on id
+     *
+     *     // Delete 'foo' entry from the apcu group
+     *     Cache::instance('apcu')->delete('foo');
+     *
+     * @param   string  $id  id to remove from cache
+     */
+    public function delete($id): bool
 	{
 		return apcu_delete($this->_sanitize_id($id));
 	}
 
 	/**
-	 * Delete all cache entries.
-	 *
-	 * Beware of using this method when
-	 * using shared memory cache systems, as it will wipe every
-	 * entry within the system for all clients.
-	 *
-	 *     // Delete all cache entries in the apcu group
-	 *     Cache::instance('apcu')->delete_all();
-	 *
-	 * @return  boolean
-	 */
-	public function delete_all()
+     * Delete all cache entries.
+     *
+     * Beware of using this method when
+     * using shared memory cache systems, as it will wipe every
+     * entry within the system for all clients.
+     *
+     *     // Delete all cache entries in the apcu group
+     *     Cache::instance('apcu')->delete_all();
+     */
+    public function delete_all(): bool
 	{
 		return apcu_clear_cache();
 	}
@@ -145,7 +141,7 @@ class Kohana_Cache_Apcu extends Cache implements Cache_Arithmetic {
 	 * @return  integer
 	 * @return  boolean
 	 */
-	public function increment($id, $step = 1)
+	public function increment($id, $step = 1): int|false
 	{
 		if (apcu_exists($id)) {
 			return apcu_inc($id, $step);
@@ -164,7 +160,7 @@ class Kohana_Cache_Apcu extends Cache implements Cache_Arithmetic {
 	 * @return  integer
 	 * @return  boolean
 	 */
-	public function decrement($id, $step = 1)
+	public function decrement($id, $step = 1): int|false
 	{
 		if (apcu_exists($id)) {
 			return apcu_dec($id, $step);

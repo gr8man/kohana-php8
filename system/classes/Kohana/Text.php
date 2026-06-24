@@ -17,7 +17,7 @@ class Kohana_Text
 	/**
 	 * @var  array   number units and text equivalents
 	 */
-	public static $units = array(
+	public static $units = [
 		1000000000 => 'billion',
 		1000000    => 'million',
 		1000       => 'thousand',
@@ -49,7 +49,7 @@ class Kohana_Text
 		3  => 'three',
 		2  => 'two',
 		1  => 'one',
-	);
+	];
 
 	/**
 	 * Limits a phrase to a given number of words.
@@ -64,7 +64,7 @@ class Kohana_Text
 	public static function limit_words($str, $limit = 100, $end_char = null)
 	{
 		$limit = (int) $limit;
-		$end_char = ($end_char === null) ? '…' : $end_char;
+		$end_char ??= '…';
 
 		if (trim($str) === '') {
 			return $str;
@@ -95,7 +95,7 @@ class Kohana_Text
 	 */
 	public static function limit_chars($str, $limit = 100, $end_char = null, $preserve_words = false)
 	{
-		$end_char = ($end_char === null) ? '…' : $end_char;
+		$end_char ??= '…';
 
 		$limit = (int) $limit;
 
@@ -147,34 +147,33 @@ class Kohana_Text
 	}
 
 	/**
-	 * Generates a random string of a given type and length.
-	 *
-	 *
-	 *     $str = Text::random(); // 8 character random string
-	 *
-	 * The following types are supported:
-	 *
-	 * alnum
-	 * :  Upper and lower case a-z, 0-9 (default)
-	 *
-	 * alpha
-	 * :  Upper and lower case a-z
-	 *
-	 * hexdec
-	 * :  Hexadecimal characters a-f, 0-9
-	 *
-	 * distinct
-	 * :  Uppercase characters and numbers that cannot be confused
-	 *
-	 * You can also create a custom type by providing the "pool" of characters
-	 * as the type.
-	 *
-	 * @param   string  $type   a type of pool, or a string of characters to use as the pool
-	 * @param   integer $length length of string to return
-	 * @return  string
-	 * @uses    UTF8::split
-	 */
-	public static function random($type = null, $length = 8)
+     * Generates a random string of a given type and length.
+     *
+     *
+     *     $str = Text::random(); // 8 character random string
+     *
+     * The following types are supported:
+     *
+     * alnum
+     * :  Upper and lower case a-z, 0-9 (default)
+     *
+     * alpha
+     * :  Upper and lower case a-z
+     *
+     * hexdec
+     * :  Hexadecimal characters a-f, 0-9
+     *
+     * distinct
+     * :  Uppercase characters and numbers that cannot be confused
+     *
+     * You can also create a custom type by providing the "pool" of characters
+     * as the type.
+     *
+     * @param   string  $type   a type of pool, or a string of characters to use as the pool
+     * @param   integer $length length of string to return
+     * @uses    UTF8::split
+     */
+    public static function random($type = null, $length = 8): string
 	{
 		if ($type === null) {
 			// Default is to generate an alphanumeric string
@@ -215,7 +214,7 @@ class Kohana_Text
 			if (ctype_alpha($str)) {
 				// Add a random digit
 				$str[mt_rand(0, $length - 1)] = chr(mt_rand(48, 57));
-			} elseif (ctype_digit((string) $str)) {
+			} elseif (ctype_digit($str)) {
 				// Add a random letter
 				$str[mt_rand(0, $length - 1)] = chr(mt_rand(65, 90));
 			}
@@ -225,20 +224,19 @@ class Kohana_Text
 	}
 
 	/**
-	 * Uppercase words that are not separated by spaces, using a custom
-	 * delimiter or the default.
-	 *
-	 *      $str = Text::ucfirst('content-type'); // returns "Content-Type"
-	 *
-	 * @param   string  $string     string to transform
-	 * @param   string  $delimiter  delimiter to use
-	 * @uses    UTF8::ucfirst
-	 * @return  string
-	 */
-	public static function ucfirst($string, $delimiter = '-')
+     * Uppercase words that are not separated by spaces, using a custom
+     * delimiter or the default.
+     *
+     *      $str = Text::ucfirst('content-type'); // returns "Content-Type"
+     *
+     * @param   string  $string     string to transform
+     * @param   string  $delimiter  delimiter to use
+     * @uses    UTF8::ucfirst
+     */
+    public static function ucfirst($string, $delimiter = '-'): string
 	{
 		// Put the keys back the Case-Convention expected
-		return implode($delimiter, array_map('UTF8::ucfirst', explode($delimiter, $string)));
+		return implode($delimiter, array_map(UTF8::ucfirst(...), explode($delimiter, $string)));
 	}
 
 	/**
@@ -249,7 +247,7 @@ class Kohana_Text
 	 * @param   string  $str    string to reduce slashes of
 	 * @return  string
 	 */
-	public static function reduce_slashes($str)
+	public static function reduce_slashes($str): ?string
 	{
 		return preg_replace('#(?<!:)//+#', '/', $str);
 	}
@@ -269,7 +267,7 @@ class Kohana_Text
 	 * @return  string
 	 * @uses    UTF8::strlen
 	 */
-	public static function censor($str, $badwords, $replacement = '#', $replace_partial_words = true)
+	public static function censor($str, $badwords, $replacement = '#', $replace_partial_words = true): ?string
 	{
 		foreach ((array) $badwords as $key => $badword) {
 			$badwords[$key] = str_replace('\*', '\S*?', preg_quote((string) $badword));
@@ -286,9 +284,7 @@ class Kohana_Text
 
 		// if $replacement is a single character: replace each of the characters of the badword with $replacement
 		if (UTF8::strlen($replacement) == 1) {
-			return preg_replace_callback($regex, function ($matches) use ($replacement) {
-				return str_repeat($replacement, UTF8::strlen($matches[1]));
-			}, $str);
+			return preg_replace_callback($regex, fn($matches) => str_repeat($replacement, UTF8::strlen($matches[1])), $str);
 		}
 
 		// if $replacement is not a single character, fully replace the badword with $replacement
@@ -296,19 +292,18 @@ class Kohana_Text
 	}
 
 	/**
-	 * Finds the text that is similar between a set of words.
-	 *
-	 *     $match = Text::similar(array('fred', 'fran', 'free'); // "fr"
-	 *
-	 * @param   array   $words  words to find similar text of
-	 * @return  string
-	 */
-	public static function similar(array $words)
+     * Finds the text that is similar between a set of words.
+     *
+     *     $match = Text::similar(array('fred', 'fran', 'free'); // "fr"
+     *
+     * @param   array   $words  words to find similar text of
+     */
+    public static function similar(array $words): string
 	{
 		// First word is the word to match against
 		$word = current($words);
 
-		for ($i = 0, $max = strlen($word); $i < $max; ++$i) {
+		for ($i = 0, $max = strlen((string) $word); $i < $max; ++$i) {
 			foreach ($words as $w) {
 				// Once a difference is found, break out of the loops
 				if (! isset($w[$i]) or $w[$i] !== $word[$i]) {
@@ -318,7 +313,7 @@ class Kohana_Text
 		}
 
 		// Return the similar text
-		return substr($word, 0, $i);
+		return substr((string) $word, 0, $i);
 	}
 
 	/**
@@ -351,21 +346,21 @@ class Kohana_Text
 	 * @return  string
 	 * @uses    HTML::anchor
 	 */
-	public static function auto_link_urls($text)
+	public static function auto_link_urls($text): ?string
 	{
 		// Find and replace all http/https/ftp/ftps links that are not part of an existing html anchor
-		$text = preg_replace_callback('~\b(?<!href="|">)(?:ht|f)tps?://[^<\s]+(?:/|\b)~i', 'Text::_auto_link_urls_callback1', $text);
+		$text = preg_replace_callback('~\b(?<!href="|">)(?:ht|f)tps?://[^<\s]+(?:/|\b)~i', Text::_auto_link_urls_callback1(...), $text);
 
 		// Find and replace all naked www.links.com (without http://)
-		return preg_replace_callback('~\b(?<!://|">)www(?:\.[a-z0-9][-a-z0-9]*+)+\.[a-z]{2,6}[^<\s]*\b~i', 'Text::_auto_link_urls_callback2', $text);
+		return preg_replace_callback('~\b(?<!://|">)www(?:\.[a-z0-9][-a-z0-9]*+)+\.[a-z]{2,6}[^<\s]*\b~i', Text::_auto_link_urls_callback2(...), (string) $text);
 	}
 
-	protected static function _auto_link_urls_callback1($matches)
+	protected static function _auto_link_urls_callback1($matches): string
 	{
 		return HTML::anchor($matches[0]);
 	}
 
-	protected static function _auto_link_urls_callback2($matches)
+	protected static function _auto_link_urls_callback2($matches): string
 	{
 		return HTML::anchor('http://'.$matches[0], $matches[0]);
 	}
@@ -382,15 +377,15 @@ class Kohana_Text
 	 * @return  string
 	 * @uses    HTML::mailto
 	 */
-	public static function auto_link_emails($text)
+	public static function auto_link_emails($text): ?string
 	{
 		// Find and replace all email addresses that are not part of an existing html mailto anchor
 		// Note: The "58;" negative lookbehind prevents matching of existing encoded html mailto anchors
 		//       The html entity for a colon (:) is &#58; or &#058; or &#0058; etc.
-		return preg_replace_callback('~\b(?<!href="mailto:|58;)(?!\.)[-+_a-z0-9.]++(?<!\.)@(?![-.])[-a-z0-9.]+(?<!\.)\.[a-z]{2,6}\b(?!</a>)~i', 'Text::_auto_link_emails_callback', $text);
+		return preg_replace_callback('~\b(?<!href="mailto:|58;)(?!\.)[-+_a-z0-9.]++(?<!\.)@(?![-.])[-a-z0-9.]+(?<!\.)\.[a-z]{2,6}\b(?!</a>)~i', Text::_auto_link_emails_callback(...), $text);
 	}
 
-	protected static function _auto_link_emails_callback($matches)
+	protected static function _auto_link_emails_callback($matches): string
 	{
 		return HTML::mailto($matches[0]);
 	}
@@ -407,7 +402,7 @@ class Kohana_Text
 	 * @param   boolean $br     convert single linebreaks to <br />
 	 * @return  string
 	 */
-	public static function auto_p($str, $br = true)
+	public static function auto_p($str, $br = true): string|array|null
 	{
 		// Trim whitespace
 		if (($str = trim($str)) === '') {
@@ -415,67 +410,66 @@ class Kohana_Text
 		}
 
 		// Standardize newlines
-		$str = str_replace(array("\r\n", "\r"), "\n", $str);
+		$str = str_replace(["\r\n", "\r"], "\n", $str);
 
 		// Trim whitespace on each line
 		$str = preg_replace('~^[ \t]+~m', '', $str);
-		$str = preg_replace('~[ \t]+$~m', '', $str);
+		$str = preg_replace('~[ \t]+$~m', '', (string) $str);
 
 		// The following regexes only need to be executed if the string contains html
-		if ($html_found = (strpos($str, '<') !== false)) {
+		if ($html_found = (str_contains((string) $str, '<'))) {
 			// Elements that should not be surrounded by p tags
 			$no_p = '(?:p|div|h[1-6r]|ul|ol|li|blockquote|d[dlt]|pre|t[dhr]|t(?:able|body|foot|head)|c(?:aption|olgroup)|form|s(?:elect|tyle)|a(?:ddress|rea)|ma(?:p|th))';
 
 			// Put at least two linebreaks before and after $no_p elements
-			$str = preg_replace('~^<'.$no_p.'[^>]*+>~im', "\n$0", $str);
-			$str = preg_replace('~</'.$no_p.'\s*+>$~im', "$0\n", $str);
+			$str = preg_replace('~^<'.$no_p.'[^>]*+>~im', "\n$0", (string) $str);
+			$str = preg_replace('~</'.$no_p.'\s*+>$~im', "$0\n", (string) $str);
 		}
 
 		// Do the <p> magic!
-		$str = '<p>'.trim($str).'</p>';
+		$str = '<p>'.trim((string) $str).'</p>';
 		$str = preg_replace('~\n{2,}~', "</p>\n\n<p>", $str);
 
 		// The following regexes only need to be executed if the string contains html
 		if ($html_found !== false) {
 			// Remove p tags around $no_p elements
-			$str = preg_replace('~<p>(?=</?'.$no_p.'[^>]*+>)~i', '', $str);
-			$str = preg_replace('~(</?'.$no_p.'[^>]*+>)</p>~i', '$1', $str);
+			$str = preg_replace('~<p>(?=</?'.$no_p.'[^>]*+>)~i', '', (string) $str);
+			$str = preg_replace('~(</?'.$no_p.'[^>]*+>)</p>~i', '$1', (string) $str);
 		}
 
 		// Convert single linebreaks to <br />
 		if ($br === true) {
-			$str = preg_replace('~(?<!\n)\n(?!\n)~', "<br />\n", $str);
+			$str = preg_replace('~(?<!\n)\n(?!\n)~', "<br />\n", (string) $str);
 		}
 
 		return $str;
 	}
 
 	/**
-	 * Returns human readable sizes. Based on original functions written by
-	 * [Aidan Lister](http://aidanlister.com/repos/v/function.size_readable.php)
-	 * and [Quentin Zervaas](http://www.phpriot.com/d/code/strings/filesize-format/).
-	 *
-	 *     echo Text::bytes(filesize($file));
-	 *
-	 * @param   integer $bytes      size in bytes
-	 * @param   string  $force_unit a definitive unit
-	 * @param   string  $format     the return string format
-	 * @param   boolean $si         whether to use SI prefixes or IEC
-	 * @return  string
-	 */
-	public static function bytes($bytes, $force_unit = null, $format = null, $si = true)
+     * Returns human readable sizes. Based on original functions written by
+     * [Aidan Lister](http://aidanlister.com/repos/v/function.size_readable.php)
+     * and [Quentin Zervaas](http://www.phpriot.com/d/code/strings/filesize-format/).
+     *
+     *     echo Text::bytes(filesize($file));
+     *
+     * @param   integer $bytes      size in bytes
+     * @param   string  $force_unit a definitive unit
+     * @param   string  $format     the return string format
+     * @param   boolean $si         whether to use SI prefixes or IEC
+     */
+    public static function bytes($bytes, $force_unit = null, $format = null, $si = true): string
 	{
 		// Format string
 		$format = ($format === null) ? '%01.2f %s' : (string) $format;
 
 		// IEC prefixes (binary)
-		if ($si == false or strpos((string) $force_unit, 'i') !== false) {
-			$units = array('B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB');
+		if ($si == false or str_contains((string) $force_unit, 'i')) {
+			$units = ['B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB'];
 			$mod   = 1024;
 		}
 		// SI prefixes (decimal)
 		else {
-			$units = array('B', 'kB', 'MB', 'GB', 'TB', 'PB');
+			$units = ['B', 'kB', 'MB', 'GB', 'TB', 'PB'];
 			$mod   = 1000;
 		}
 
@@ -484,29 +478,28 @@ class Kohana_Text
 			$power = ($bytes > 0) ? floor(log($bytes, $mod)) : 0;
 		}
 
-		return sprintf($format, $bytes / pow($mod, $power), $units[$power]);
+		return sprintf($format, $bytes / $mod ** $power, $units[$power]);
 	}
 
 	/**
-	 * Format a number to human-readable text.
-	 *
-	 *     // Display: one thousand and twenty-four
-	 *     echo Text::number(1024);
-	 *
-	 *     // Display: five million, six hundred and thirty-two
-	 *     echo Text::number(5000632);
-	 *
-	 * @param   integer $number number to format
-	 * @return  string
-	 * @since   3.0.8
-	 */
-	public static function number($number)
+     * Format a number to human-readable text.
+     *
+     *     // Display: one thousand and twenty-four
+     *     echo Text::number(1024);
+     *
+     *     // Display: five million, six hundred and thirty-two
+     *     echo Text::number(5000632);
+     *
+     * @param   integer $number number to format
+     * @since   3.0.8
+     */
+    public static function number($number): string
 	{
 		// The number must always be an integer
 		$number = (int) $number;
 
 		// Uncompiled text version
-		$text = array();
+		$text = [];
 
 		// Last matched unit within the loop
 		$last_unit = null;
@@ -569,7 +562,7 @@ class Kohana_Text
 	 * @param   string  $str    text to remove widows from
 	 * @return  string
 	 */
-	public static function widont($str)
+	public static function widont($str): ?string
 	{
 		// use '%' as delimiter and 'x' as modifier
 		$widont_regex = "%
@@ -604,7 +597,7 @@ class Kohana_Text
 	public static function user_agent($agent, $value)
 	{
 		if (is_array($value)) {
-			$data = array();
+			$data = [];
 			foreach ($value as $part) {
 				// Add each part to the set
 				$data[$part] = Text::user_agent($agent, $part);
@@ -615,17 +608,17 @@ class Kohana_Text
 
 		if ($value === 'browser' or $value == 'version') {
 			// Extra data will be captured
-			$info = array();
+			$info = [];
 
 			// Load browsers
 			$browsers = Kohana::$config->load('user_agents')->browser;
 
 			foreach ($browsers as $search => $name) {
-				if (stripos($agent, $search) !== false) {
+				if (stripos($agent, (string) $search) !== false) {
 					// Set the browser name
 					$info['browser'] = $name;
 
-					if (preg_match('#'.preg_quote($search).'[^0-9.]*+([0-9.][0-9.a-z]*)#i', $agent, $matches)) {
+					if (preg_match('#'.preg_quote((string) $search).'[^0-9.]*+([0-9.][0-9.a-z]*)#i', $agent, $matches)) {
 						// Set the version number
 						$info['version'] = $matches[1];
 					} else {
@@ -641,7 +634,7 @@ class Kohana_Text
 			$group = Kohana::$config->load('user_agents')->$value;
 
 			foreach ($group as $search => $name) {
-				if (stripos($agent, $search) !== false) {
+				if (stripos($agent, (string) $search) !== false) {
 					// Set the value name
 					return $name;
 				}

@@ -85,12 +85,12 @@ class Kohana_File
 	 * @param string $extension Extension to lookup
 	 * @return array Array of MIMEs associated with the specified extension
 	 */
-	public static function mimes_by_ext($extension)
+	public static function mimes_by_ext($extension): array
 	{
 		// Load all of the mime types
 		$mimes = Kohana::$config->load('mimes');
 
-		return isset($mimes[$extension]) ? ((array) $mimes[$extension]) : array();
+		return isset($mimes[$extension]) ? ((array) $mimes[$extension]) : [];
 	}
 
 	/**
@@ -101,7 +101,7 @@ class Kohana_File
 	 */
 	public static function exts_by_mime($type)
 	{
-		static $types = array();
+		static $types = [];
 
 		// Fill the static array
 		if (empty($types)) {
@@ -113,7 +113,7 @@ class Kohana_File
 					}
 
 					if (! isset($types[$mime])) {
-						$types[$mime] = array( (string) $ext);
+						$types[$mime] = [ (string) $ext];
 					} elseif (! in_array($ext, $types[$mime])) {
 						$types[$mime][] = (string) $ext;
 					}
@@ -121,7 +121,7 @@ class Kohana_File
 			}
 		}
 
-		return isset($types[$type]) ? $types[$type] : false;
+		return $types[$type] ?? false;
 	}
 
 	/**
@@ -130,7 +130,7 @@ class Kohana_File
 	 * @param   string  $type  MIME type to lookup
 	 * @return  mixed          First file extension matching or false
 	 */
-	public static function ext_by_mime($type)
+	public static function ext_by_mime($type): mixed
 	{
 		return current(File::exts_by_mime($type));
 	}
@@ -145,7 +145,7 @@ class Kohana_File
 	 * @param   integer $piece_size size, in MB, for each piece to be
 	 * @return  integer The number of pieces that were created
 	 */
-	public static function split($filename, $piece_size = 10)
+	public static function split(string $filename, $piece_size = 10): int
 	{
 		// Open the input file
 		$file = fopen($filename, 'rb');
@@ -196,7 +196,7 @@ class Kohana_File
 	 * @param   string  $filename   split filename, without .000 extension
 	 * @return  integer The number of pieces that were joined.
 	 */
-	public static function join($filename)
+	public static function join(string $filename): int
 	{
 		// Open the file
 		$file = fopen($filename, 'wb+');

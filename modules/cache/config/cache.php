@@ -1,8 +1,8 @@
 <?php
 
 declare(strict_types=1); defined('SYSPATH') or die('No direct script access.');
-return array
-(
+return 
+[
 /*	'memcache' => array(
 		'driver'             => 'memcache',
 		'default_expire'     => 3600,
@@ -69,4 +69,4 @@ return array
 		)
 	)
 */
-);
+];

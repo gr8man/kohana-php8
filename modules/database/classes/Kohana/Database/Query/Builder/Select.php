@@ -14,39 +14,38 @@ defined('SYSPATH') or die('No direct script access.');
 class Kohana_Database_Query_Builder_Select extends Database_Query_Builder_Where
 {
 	// SELECT ...
-	protected $_select = array();
+	protected $_select = [];
 
 	// DISTINCT
 	protected $_distinct = false;
 
 	// FROM ...
-	protected $_from = array();
+	protected $_from = [];
 
 	// JOIN ...
-	protected $_join = array();
+	protected $_join = [];
 
 	// GROUP BY ...
-	protected $_group_by = array();
+	protected $_group_by = [];
 
 	// HAVING ...
-	protected $_having = array();
+	protected $_having = [];
 
 	// OFFSET ...
-	protected $_offset = null;
+	protected $_offset;
 
 	// UNION ...
-	protected $_union = array();
+	protected $_union = [];
 
 	// The last JOIN statement created
 	protected $_last_join;
 
 	/**
-	 * Sets the initial columns to select from.
-	 *
-	 * @param   array  $columns  column list
-	 * @return  void
-	 */
-	public function __construct(array $columns = null)
+     * Sets the initial columns to select from.
+     *
+     * @param   array  $columns  column list
+     */
+    public function __construct(array $columns = null)
 	{
 		if (! empty($columns)) {
 			// Set the initial columns
@@ -63,7 +62,7 @@ class Kohana_Database_Query_Builder_Select extends Database_Query_Builder_Where
 	 * @param   boolean  $value  enable or disable distinct columns
 	 * @return  $this
 	 */
-	public function distinct($value)
+	public function distinct($value): static
 	{
 		$this->_distinct = (bool) $value;
 
@@ -76,7 +75,7 @@ class Kohana_Database_Query_Builder_Select extends Database_Query_Builder_Where
 	 * @param   mixed  $columns  column name or array($column, $alias) or object
 	 * @return  $this
 	 */
-	public function select($columns = null)
+	public function select($columns = null): static
 	{
 		$columns = func_get_args();
 
@@ -91,7 +90,7 @@ class Kohana_Database_Query_Builder_Select extends Database_Query_Builder_Where
 	 * @param   array  $columns  list of column names or aliases
 	 * @return  $this
 	 */
-	public function select_array(array $columns)
+	public function select_array(array $columns): static
 	{
 		$this->_select = array_merge($this->_select, $columns);
 
@@ -104,7 +103,7 @@ class Kohana_Database_Query_Builder_Select extends Database_Query_Builder_Where
 	 * @param   mixed  $table  table name or array($table, $alias) or object
 	 * @return  $this
 	 */
-	public function from($tables)
+	public function from($tables): static
 	{
 		$tables = func_get_args();
 
@@ -120,7 +119,7 @@ class Kohana_Database_Query_Builder_Select extends Database_Query_Builder_Where
 	 * @param   string  $type   join type (LEFT, RIGHT, INNER, etc)
 	 * @return  $this
 	 */
-	public function join($table, $type = null)
+	public function join($table, $type = null): static
 	{
 		$this->_join[] = $this->_last_join = new Database_Query_Builder_Join($table, $type);
 
@@ -135,7 +134,7 @@ class Kohana_Database_Query_Builder_Select extends Database_Query_Builder_Where
 	 * @param   mixed   $c2  column name or array($column, $alias) or object
 	 * @return  $this
 	 */
-	public function on($c1, $op, $c2)
+	public function on($c1, $op, $c2): static
 	{
 		$this->_last_join->on($c1, $op, $c2);
 
@@ -148,11 +147,11 @@ class Kohana_Database_Query_Builder_Select extends Database_Query_Builder_Where
 	 * @param   string  $columns  column name
 	 * @return  $this
 	 */
-	public function using($columns)
+	public function using($columns): static
 	{
 		$columns = func_get_args();
 
-		call_user_func_array(array($this->_last_join, 'using'), $columns);
+		call_user_func_array([$this->_last_join, 'using'], $columns);
 
 		return $this;
 	}
@@ -163,7 +162,7 @@ class Kohana_Database_Query_Builder_Select extends Database_Query_Builder_Where
 	 * @param   mixed   $columns  column name or array($column, $alias) or object
 	 * @return  $this
 	 */
-	public function group_by($columns)
+	public function group_by($columns): static
 	{
 		$columns = func_get_args();
 
@@ -193,9 +192,9 @@ class Kohana_Database_Query_Builder_Select extends Database_Query_Builder_Where
 	 * @param   mixed   $value   column value
 	 * @return  $this
 	 */
-	public function and_having($column, $op, $value = null)
+	public function and_having($column, $op, $value = null): static
 	{
-		$this->_having[] = array('AND' => array($column, $op, $value));
+		$this->_having[] = ['AND' => [$column, $op, $value]];
 
 		return $this;
 	}
@@ -208,9 +207,9 @@ class Kohana_Database_Query_Builder_Select extends Database_Query_Builder_Where
 	 * @param   mixed   $value   column value
 	 * @return  $this
 	 */
-	public function or_having($column, $op, $value = null)
+	public function or_having($column, $op, $value = null): static
 	{
-		$this->_having[] = array('OR' => array($column, $op, $value));
+		$this->_having[] = ['OR' => [$column, $op, $value]];
 
 		return $this;
 	}
@@ -230,9 +229,9 @@ class Kohana_Database_Query_Builder_Select extends Database_Query_Builder_Where
 	 *
 	 * @return  $this
 	 */
-	public function and_having_open()
+	public function and_having_open(): static
 	{
-		$this->_having[] = array('AND' => '(');
+		$this->_having[] = ['AND' => '('];
 
 		return $this;
 	}
@@ -242,9 +241,9 @@ class Kohana_Database_Query_Builder_Select extends Database_Query_Builder_Where
 	 *
 	 * @return  $this
 	 */
-	public function or_having_open()
+	public function or_having_open(): static
 	{
-		$this->_having[] = array('OR' => '(');
+		$this->_having[] = ['OR' => '('];
 
 		return $this;
 	}
@@ -264,9 +263,9 @@ class Kohana_Database_Query_Builder_Select extends Database_Query_Builder_Where
 	 *
 	 * @return  $this
 	 */
-	public function and_having_close()
+	public function and_having_close(): static
 	{
-		$this->_having[] = array('AND' => ')');
+		$this->_having[] = ['AND' => ')'];
 
 		return $this;
 	}
@@ -276,9 +275,9 @@ class Kohana_Database_Query_Builder_Select extends Database_Query_Builder_Where
 	 *
 	 * @return  $this
 	 */
-	public function or_having_close()
+	public function or_having_close(): static
 	{
-		$this->_having[] = array('OR' => ')');
+		$this->_having[] = ['OR' => ')'];
 
 		return $this;
 	}
@@ -291,7 +290,7 @@ class Kohana_Database_Query_Builder_Select extends Database_Query_Builder_Where
 	 * @param boolean $all  decides if it's an UNION or UNION ALL clause
 	 * @return $this
 	 */
-	public function union($select, $all = true)
+	public function union($select, $all = true): static
 	{
 		if (is_string($select)) {
 			$select = DB::select()->from($select);
@@ -299,7 +298,7 @@ class Kohana_Database_Query_Builder_Select extends Database_Query_Builder_Where
 		if (! $select instanceof Database_Query_Builder_Select) {
 			throw new Kohana_Exception('first parameter must be a string or an instance of Database_Query_Builder_Select');
 		}
-		$this->_union [] = array('select' => $select, 'all' => $all);
+		$this->_union [] = ['select' => $select, 'all' => $all];
 		return $this;
 	}
 
@@ -309,7 +308,7 @@ class Kohana_Database_Query_Builder_Select extends Database_Query_Builder_Where
 	 * @param   integer   $number  starting result number or NULL to reset
 	 * @return  $this
 	 */
-	public function offset($number)
+	public function offset($number): static
 	{
 		$this->_offset = ($number === null) ? null : (int) $number;
 
@@ -322,7 +321,8 @@ class Kohana_Database_Query_Builder_Select extends Database_Query_Builder_Where
 	 * @param   mixed  $db  Database instance or name of instance
 	 * @return  string
 	 */
-	public function compile($db = null)
+	#[\Override]
+    public function compile($db = null)
 	{
 		if (! is_object($db)) {
 			// Get the database instance
@@ -330,10 +330,10 @@ class Kohana_Database_Query_Builder_Select extends Database_Query_Builder_Where
 		}
 
 		// Callback to quote columns
-		$quote_column = array($db, 'quote_column');
+		$quote_column = [$db, 'quote_column'];
 
 		// Callback to quote tables
-		$quote_table = array($db, 'quote_table');
+		$quote_table = [$db, 'quote_table'];
 
 		// Start a selection query
 		$query = 'SELECT ';
@@ -407,7 +407,7 @@ class Kohana_Database_Query_Builder_Select extends Database_Query_Builder_Where
 		return parent::compile($db);
 	}
 
-	public function reset()
+	public function reset(): static
 	{
 		$this->_select   =
 		$this->_from     =
@@ -416,7 +416,7 @@ class Kohana_Database_Query_Builder_Select extends Database_Query_Builder_Where
 		$this->_group_by =
 		$this->_having   =
 		$this->_order_by =
-		$this->_union = array();
+		$this->_union = [];
 
 		$this->_distinct = false;
 
@@ -424,7 +424,7 @@ class Kohana_Database_Query_Builder_Select extends Database_Query_Builder_Where
 		$this->_offset    =
 		$this->_last_join = null;
 
-		$this->_parameters = array();
+		$this->_parameters = [];
 
 		$this->_sql = null;
 

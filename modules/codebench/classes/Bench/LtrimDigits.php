@@ -13,18 +13,18 @@ class Bench_LtrimDigits extends Codebench
 
 	public $loops = 100000;
 
-	public $subjects = array(
+	public $subjects = [
 		'123digits',
 		'no-digits',
-	);
+	];
 
-	public function bench_regex($subject)
+	public function bench_regex($subject): string|array|null
 	{
-		return preg_replace('/^\d+/', '', $subject);
+		return preg_replace('/^\d+/', '', (string) $subject);
 	}
 
-	public function bench_ltrim($subject)
+	public function bench_ltrim($subject): string
 	{
-		return ltrim($subject, '0..9');
+		return ltrim((string) $subject, '0..9');
 	}
 }

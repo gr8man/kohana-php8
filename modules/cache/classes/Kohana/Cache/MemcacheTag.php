@@ -67,13 +67,12 @@ class Kohana_Cache_MemcacheTag extends Cache_Memcache implements Cache_Tagging {
 	}
 
 	/**
-	 * Find cache entries based on a tag
-	 *
-	 * @param   string  $tag  tag
-	 * @return  void
-	 * @throws  Cache_Exception
-	 */
-	public function find($tag)
+     * Find cache entries based on a tag
+     *
+     * @param   string  $tag  tag
+     * @throws  Cache_Exception
+     */
+    public function find($tag): never
 	{
 		throw new Cache_Exception('Memcached-tags does not support finding by tag');
 	}

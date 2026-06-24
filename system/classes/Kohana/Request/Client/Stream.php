@@ -22,15 +22,14 @@ defined('SYSPATH') or die('No direct script access.');
 class Kohana_Request_Client_Stream extends Request_Client_External
 {
 	/**
-	 * Sends the HTTP message [Request] to a remote server and processes
-	 * the response.
-	 *
-	 * @param   Request   $request  request to send
-	 * @param   Response  $request  response to send
-	 * @return  Response
-	 * @uses    [PHP cURL](http://php.net/manual/en/book.curl.php)
-	 */
-	public function _send_message(Request $request, Response $response)
+     * Sends the HTTP message [Request] to a remote server and processes
+     * the response.
+     *
+     * @param   Request   $request  request to send
+     * @param   Response  $request  response to send
+     * @uses    [PHP cURL](http://php.net/manual/en/book.curl.php)
+     */
+    public function _send_message(Request $request, Response $response): Response
 	{
 		// Calculate stream mode
 		$mode = ($request->method() === HTTP_Request::GET) ? 'r' : 'r+';
@@ -48,18 +47,18 @@ class Kohana_Request_Client_Stream extends Request_Client_External
 		}
 
 		// Set the content length
-		$request->headers('content-length', (string) strlen($body));
+		$request->headers('content-length', (string) strlen((string) $body));
 
-		list($protocol) = explode('/', $request->protocol());
+		[$protocol] = explode('/', (string) $request->protocol());
 
 		// Create the context
-		$options = array(
-			strtolower($protocol) => array(
+		$options = [
+			strtolower($protocol) => [
 				'method'     => $request->method(),
 				'header'     => (string) $request->headers(),
 				'content'    => $body
-			)
-		);
+			]
+		];
 
 		// Create the context stream
 		$context = stream_context_create($options);
@@ -79,7 +78,7 @@ class Kohana_Request_Client_Stream extends Request_Client_External
 		// Get the HTTP response code
 		$http_response = array_shift($meta_data['wrapper_data']);
 
-		if (preg_match_all('/(\w+\/\d\.\d) (\d{3})/', $http_response, $matches) !== false
+		if (preg_match_all('/(\w+\/\d\.\d) (\d{3})/', (string) $http_response, $matches) !== false
 			and ! empty($matches[1])) {
 			$protocol = $matches[1][0];
 			$status   = (int) $matches[2][0];
@@ -92,7 +91,7 @@ class Kohana_Request_Client_Stream extends Request_Client_External
 		$response_header = $response->headers();
 
 		// Process headers
-		array_map(array($response_header, 'parse_header_string'), array(), $meta_data['wrapper_data']);
+		array_map([$response_header, 'parse_header_string'], [], $meta_data['wrapper_data']);
 
 		$response->status($status)
 			->protocol($protocol)

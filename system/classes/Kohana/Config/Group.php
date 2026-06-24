@@ -17,7 +17,7 @@ defined('SYSPATH') or die('No direct script access.');
  * @copyright  (c) 2012-2014 Kohana Team
  * @license    http://kohanaframework.org/license
  */
-class Kohana_Config_Group extends ArrayObject
+class Kohana_Config_Group extends ArrayObject implements \Stringable
 {
 	/**
 	 * Constructs the group object.  Kohana_Config passes the config group
@@ -30,19 +30,17 @@ class Kohana_Config_Group extends ArrayObject
 	public function __construct(
 		protected Kohana_Config $_parent_instance,
 		protected string $_group_name,
-		array $config = array()
+		array $config = []
 	) {
 		parent::__construct($config, ArrayObject::ARRAY_AS_PROPS);
 	}
 
 	/**
-	 * Return the current group in serialized form.
-	 *
-	 *     echo $config;
-	 *
-	 * @return  string
-	 */
-	public function __toString()
+     * Return the current group in serialized form.
+     *
+     *     echo $config;
+     */
+    public function __toString(): string
 	{
 		return serialize($this->getArrayCopy());
 	}
@@ -52,7 +50,7 @@ class Kohana_Config_Group extends ArrayObject
 	 *
 	 * @return array Array copy of the group's config
 	 */
-	public function as_array()
+	public function as_array(): array
 	{
 		return $this->getArrayCopy();
 	}
@@ -62,7 +60,7 @@ class Kohana_Config_Group extends ArrayObject
 	 *
 	 * @return string The group name
 	 */
-	public function group_name()
+	public function group_name(): string
 	{
 		return $this->_group_name;
 	}
@@ -90,7 +88,7 @@ class Kohana_Config_Group extends ArrayObject
 	 * @param   mixed   $value  array value
 	 * @return  $this
 	 */
-	public function set($key, $value)
+	public function set($key, $value): static
 	{
 		$this->offsetSet($key, $value);
 
@@ -98,20 +96,19 @@ class Kohana_Config_Group extends ArrayObject
 	}
 
 	/**
-	 * Overrides ArrayObject::offsetSet()
-	 * This method is called when config is changed via
-	 *
-	 *     $config->var = 'asd';
-	 *
-	 *     // OR
-	 *
-	 *     $config['var'] = 'asd';
-	 *
-	 * @param mixed  $key   The key of the config item we're changing
-	 * @param mixed  $value The new array value
-	 * @return void
-	 */
-	public function offsetSet(mixed $key, mixed $value): void
+     * Overrides ArrayObject::offsetSet()
+     * This method is called when config is changed via
+     *
+     *     $config->var = 'asd';
+     *
+     *     // OR
+     *
+     *     $config['var'] = 'asd';
+     *
+     * @param mixed  $key   The key of the config item we're changing
+     * @param mixed  $value The new array value
+     */
+    public function offsetSet(mixed $key, mixed $value): void
 	{
 		$this->_parent_instance->_write_config($this->_group_name, $key, $value);
 

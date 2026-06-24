@@ -15,18 +15,16 @@ include_once(Kohana::find_file('tests/cache', 'CacheBasicMethodsTest'));
 class Kohana_Cache_FileTest extends Kohana_CacheBasicMethodsTest {
 
 	/**
-	 * This method MUST be implemented by each driver to setup the `Cache`
-	 * instance for each test.
-	 * 
-	 * This method should do the following tasks for each driver test:
-	 * 
-	 *  - Test the Cache instance driver is available, skip test otherwise
-	 *  - Setup the Cache instance
-	 *  - Call the parent setup method, `parent::setUp()`
-	 *
-	 * @return  void
-	 */
-	public function setUp()
+     * This method MUST be implemented by each driver to setup the `Cache`
+     * instance for each test.
+     *
+     * This method should do the following tasks for each driver test:
+     *
+     *  - Test the Cache instance driver is available, skip test otherwise
+     *  - Setup the Cache instance
+     *  - Call the parent setup method, `parent::setUp()`
+     */
+    public function setUp(): void
 	{
 		parent::setUp();
 
@@ -35,17 +33,17 @@ class Kohana_Cache_FileTest extends Kohana_CacheBasicMethodsTest {
 			Kohana::$config->load('cache')
 				->set(
 					'file',
-					array(
+					[
 						'driver'             => 'file',
 						'cache_dir'          => APPPATH.'cache',
 						'default_expire'     => 3600,
-						'ignore_on_delete'   => array(
+						'ignore_on_delete'   => [
 							'file_we_want_to_keep.cache',
 							'.gitignore',
 							'.git',
 							'.svn'
-						)
-					)
+						]
+					]
 			    );
 		}
 
@@ -53,11 +51,9 @@ class Kohana_Cache_FileTest extends Kohana_CacheBasicMethodsTest {
 	}
 
 	/**
-	 * Tests that ignored files are not removed from file cache
-	 *
-	 * @return  void
-	 */
-	public function test_ignore_delete_file()
+     * Tests that ignored files are not removed from file cache
+     */
+    public function test_ignore_delete_file(): void
 	{
 		$cache = $this->cache();
 		$config = Kohana::$config->load('cache')->file;
@@ -80,30 +76,28 @@ class Kohana_Cache_FileTest extends Kohana_CacheBasicMethodsTest {
 	 */
 	public function provider_utf8()
 	{
-		return array(
-			array(
+		return [
+			[
 				'This is â ütf-8 Ӝ☃ string',
 				'This is â ütf-8 Ӝ☃ string'
-			),
-			array(
+			],
+			[
 				'㆓㆕㆙㆛',
 				'㆓㆕㆙㆛'
-			),
-			array(
+			],
+			[
 				'அஆஇஈஊ',
 				'அஆஇஈஊ'
-			)
-		);
+			]
+		];
 	}
 
 	/**
-	 * Tests the file driver supports utf-8 strings
-	 *
-	 * @dataProvider provider_utf8
-	 *
-	 * @return  void
-	 */
-	public function test_utf8($input, $expected)
+     * Tests the file driver supports utf-8 strings
+     *
+     * @dataProvider provider_utf8
+     */
+    public function test_utf8($input, $expected): void
 	{
 		$cache = $this->cache();
 		$cache->set('utf8', $input);
@@ -117,7 +111,7 @@ class Kohana_Cache_FileTest extends Kohana_CacheBasicMethodsTest {
 	 *
 	 * @test
 	 */
-	public function test_garbage_collection()
+	public function test_garbage_collection(): void
 	{
 		$cache = $this->cache();
 		$cache->set('persistent', 'dummy persistent data', 3);
@@ -147,11 +141,8 @@ class Kohana_Cache_FileTest extends Kohana_CacheBasicMethodsTest {
 		$cache = $this->cache();
 
 		$method_sanitize_id = new ReflectionMethod($cache, '_sanitize_id');
-		$method_sanitize_id->setAccessible(TRUE);
 		$method_filename = new ReflectionMethod($cache, 'filename');
-		$method_filename->setAccessible(TRUE);
 		$method_resolve_directory = new ReflectionMethod($cache, '_resolve_directory');
-		$method_resolve_directory->setAccessible(TRUE);
 
 		$sanitized_id = $method_sanitize_id->invoke($cache, $id);
 		$filename = $method_filename->invoke($cache, $sanitized_id);

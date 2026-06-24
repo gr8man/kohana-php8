@@ -26,7 +26,8 @@ class Kohana_Database_Result_Cached extends Database_Result
 		// Cached results do not use resources
 	}
 
-	public function cached()
+	#[\Override]
+    public function cached(): static
 	{
 		return $this;
 	}

@@ -15,43 +15,33 @@ class Bench_UserFuncArray extends Codebench
 
 	public $loops = 100000;
 
-	public $subjects = array(
+	public $subjects = [
 		// Argument sets
-		array(),
-		array('one'),
-		array('one', 'two'),
-		array('one', 'two', 'three'),
-	);
+		[],
+		['one'],
+		['one', 'two'],
+		['one', 'two', 'three'],
+	];
 
-	public function bench_count_args($args)
+	public function bench_count_args($args): void
 	{
 		$name = 'callme';
-		switch (count($args)) {
-			case 1:
-				$this->$name($args[0]);
-				break;
-			case 2:
-				$this->$name($args[0], $args[1]);
-				break;
-			case 3:
-				$this->$name($args[0], $args[1], $args[2]);
-				break;
-			case 4:
-				$this->$name($args[0], $args[1], $args[2], $args[3]);
-				break;
-			default:
-				call_user_func_array(array($this, $name), $args);
-				break;
-		}
+		match (count($args)) {
+            1 => $this->$name($args[0]),
+            2 => $this->$name($args[0], $args[1]),
+            3 => $this->$name($args[0], $args[1], $args[2]),
+            4 => $this->$name($args[0], $args[1], $args[2], $args[3]),
+            default => call_user_func_array([$this, $name], $args),
+        };
 	}
 
-	public function bench_direct_call($args)
+	public function bench_direct_call($args): void
 	{
 		$name = 'callme';
-		call_user_func_array(array($this, $name), $args);
+		call_user_func_array([$this, $name], $args);
 	}
 
-	protected function callme()
+	protected function callme(): int
 	{
 		return count(func_get_args());
 	}

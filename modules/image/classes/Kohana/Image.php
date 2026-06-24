@@ -11,7 +11,7 @@ defined('SYSPATH') or die('No direct script access.');
  * @copyright  (c) 2008-2009 Kohana Team
  * @license    http://kohanaphp.com/license.html
  */
-abstract class Kohana_Image
+abstract class Kohana_Image implements \Stringable
 {
 	// Resizing constraints
 	public const NONE    = 0x01;
@@ -49,7 +49,7 @@ abstract class Kohana_Image
 		if ($driver === null) {
 			// Use the driver from configuration file or default one
 			$configured_driver = Kohana::$config->load('image.default_driver');
-			$driver = ($configured_driver) ? $configured_driver : Image::$default_driver;
+			$driver = $configured_driver ?: Image::$default_driver;
 		}
 
 		// Set the class name
@@ -84,14 +84,13 @@ abstract class Kohana_Image
 	public $mime;
 
 	/**
-	 * Loads information about the image. Will throw an exception if the image
-	 * does not exist or is not an image.
-	 *
-	 * @param   string  $file  image file path
-	 * @return  void
-	 * @throws  Kohana_Exception
-	 */
-	public function __construct($file)
+     * Loads information about the image. Will throw an exception if the image
+     * does not exist or is not an image.
+     *
+     * @param   string  $file  image file path
+     * @throws  Kohana_Exception
+     */
+    public function __construct($file)
 	{
 		try {
 			// Get the real path to the file
@@ -99,14 +98,14 @@ abstract class Kohana_Image
 
 			// Get the image information
 			$info = getimagesize($file);
-		} catch (Exception $e) {
+		} catch (Exception) {
 			// Ignore all errors while reading the image
 		}
 
 		if (empty($file) or empty($info)) {
 			throw new Kohana_Exception(
 				'Not an image or invalid image: :file',
-				array(':file' => Debug::path($file))
+				[':file' => Debug::path($file)]
 			);
 		}
 
@@ -119,16 +118,14 @@ abstract class Kohana_Image
 	}
 
 	/**
-	 * Render the current image.
-	 *
-	 *     echo $image;
-	 *
-	 * [!!] The output of this function is binary and must be rendered with the
-	 * appropriate Content-Type header or it will not be displayed correctly!
-	 *
-	 * @return  string
-	 */
-	public function __toString()
+     * Render the current image.
+     *
+     *     echo $image;
+     *
+     * [!!] The output of this function is binary and must be rendered with the
+     * appropriate Content-Type header or it will not be displayed correctly!
+     */
+    public function __toString(): string
 	{
 		try {
 			// Render the current image
@@ -521,7 +518,7 @@ abstract class Kohana_Image
 		}
 
 		// Convert the hex into RGB values
-		list($r, $g, $b) = array_map('hexdec', str_split($color, 2));
+		[$r, $g, $b] = array_map(hexdec(...), str_split((string) $color, 2));
 
 		// The opacity must be in the range of 0 to 100
 		$opacity = min(max($opacity, 0), 100);
@@ -563,7 +560,7 @@ abstract class Kohana_Image
 			if (! is_writable($file)) {
 				throw new Kohana_Exception(
 					'File must be writable: :file',
-					array(':file' => Debug::path($file))
+					[':file' => Debug::path($file)]
 				);
 			}
 		} else {
@@ -573,7 +570,7 @@ abstract class Kohana_Image
 			if (! is_dir($directory) or ! is_writable($directory)) {
 				throw new Kohana_Exception(
 					'Directory must be writable: :directory',
-					array(':directory' => Debug::path($directory))
+					[':directory' => Debug::path($directory)]
 				);
 			}
 		}

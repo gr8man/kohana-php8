@@ -23,7 +23,7 @@ class Kohana_Encrypt
 	/**
 	 * @var  array  Encrypt class instances
 	 */
-	public static $instances = array();
+	public static $instances = [];
 
 	/**
 	 * @var int the size of the Initialization Vector (IV) in bytes
@@ -54,7 +54,7 @@ class Kohana_Encrypt
 				// No default encryption key is provided!
 				throw new Kohana_Exception(
 					'No encryption key is defined in the encryption configuration group: :group',
-					array(':group' => $name)
+					[':group' => $name]
 				);
 			}
 
@@ -85,18 +85,17 @@ class Kohana_Encrypt
 	}
 
 	/**
-	 * Encrypts a string and returns an encrypted string that can be decoded.
-	 *
-	 *     $data = $encrypt->encode($data);
-	 *
-	 * The encrypted binary data is encoded using [base64](http://php.net/base64_encode)
-	 * to convert it to a string. This string can be stored in a database,
-	 * displayed, and passed using most other means without corruption.
-	 *
-	 * @param   string  $data   data to be encrypted
-	 * @return  string
-	 */
-	public function encode($data)
+     * Encrypts a string and returns an encrypted string that can be decoded.
+     *
+     *     $data = $encrypt->encode($data);
+     *
+     * The encrypted binary data is encoded using [base64](http://php.net/base64_encode)
+     * to convert it to a string. This string can be stored in a database,
+     * displayed, and passed using most other means without corruption.
+     *
+     * @param   string  $data   data to be encrypted
+     */
+    public function encode($data): string
 	{
 		// Generate initialization vector
 		$iv = openssl_random_pseudo_bytes($this->_iv_size);
@@ -117,7 +116,7 @@ class Kohana_Encrypt
 	 * @return  FALSE   if decryption fails
 	 * @return  string
 	 */
-	public function decode($data)
+	public function decode($data): false|string
 	{
 		// Convert the data back to binary
 		$data = base64_decode($data, true);

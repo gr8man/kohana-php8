@@ -14,7 +14,7 @@ include_once(Kohana::find_file('tests/cache', 'CacheBasicMethodsTest'));
  */
 abstract class Kohana_CacheArithmeticMethodsTest extends Kohana_CacheBasicMethodsTest {
 
-	public function tearDown()
+	public function tearDown(): void
 	{
 		parent::tearDown();
 
@@ -34,55 +34,54 @@ abstract class Kohana_CacheArithmeticMethodsTest extends Kohana_CacheBasicMethod
 	 */
 	public function provider_increment()
 	{
-		return array(
-			array(
+		return [
+			[
 				0,
-				array(
+				[
 					'id'    => 'increment_test_1',
 					'step'  => 1
-				),
+				],
 				1
-			),
-			array(
+			],
+			[
 				1,
-				array(
+				[
 					'id'    => 'increment_test_2',
 					'step'  => 1
-				),
+				],
 				2
-			),
-			array(
+			],
+			[
 				5,
-				array(
+				[
 					'id'    => 'increment_test_3',
 					'step'  => 5
-				),
+				],
 				10
-			),
-			array(
+			],
+			[
 				NULL,
-				array(
+				[
 					'id'    => 'increment_test_4',
 					'step'  => 1
-				),
+				],
 				FALSE
-			),
-		);
+			],
+		];
 	}
 
 	/**
-	 * Test for [Cache_Arithmetic::increment()]
-	 * 
-	 * @dataProvider provider_increment
-	 *
-	 * @param   integer  start state
-	 * @param   array    increment arguments
-	 * @return  void
-	 */
-	public function test_increment(
+     * Test for [Cache_Arithmetic::increment()]
+     *
+     * @dataProvider provider_increment
+     *
+     * @param   integer  start state
+     * @param   array    increment arguments
+     */
+    public function test_increment(
 		$start_state = NULL,
-		array $inc_args,
-		$expected)
+		array $inc_args = [],
+		$expected = null): void
 	{
 		$cache = $this->cache();
 
@@ -107,54 +106,53 @@ abstract class Kohana_CacheArithmeticMethodsTest extends Kohana_CacheBasicMethod
 	 */
 	public function provider_decrement()
 	{
-		return array(
-			array(
+		return [
+			[
 				10,
-				array(
+				[
 					'id'    => 'decrement_test_1',
 					'step'  => 1
-				),
+				],
 				9
-			),
-			array(
+			],
+			[
 				10,
-				array(
+				[
 					'id'    => 'decrement_test_2',
 					'step'  => 2
-				),
+				],
 				8
-			),
-			array(
+			],
+			[
 				50,
-				array(
+				[
 					'id'    => 'decrement_test_3',
 					'step'  => 5
-				),
+				],
 				45
-			),
-			array(
+			],
+			[
 				NULL,
-				array(
+				[
 					'id'    => 'decrement_test_4',
 					'step'  => 1
-				),
+				],
 				FALSE
-			),
-		);	}
+			],
+		];	}
 
 	/**
-	 * Test for [Cache_Arithmetic::decrement()]
-	 * 
-	 * @dataProvider provider_decrement
-	 *
-	 * @param   integer  start state
-	 * @param   array    decrement arguments
-	 * @return  void
-	 */
-	public function test_decrement(
+     * Test for [Cache_Arithmetic::decrement()]
+     *
+     * @dataProvider provider_decrement
+     *
+     * @param   integer  start state
+     * @param   array    decrement arguments
+     */
+    public function test_decrement(
 		$start_state = NULL,
-		array $dec_args,
-		$expected)
+		array $dec_args = [],
+		$expected = null): void
 	{
 		$cache = $this->cache();
 

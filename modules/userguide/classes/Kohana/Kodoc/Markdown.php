@@ -29,12 +29,12 @@ class Kohana_Kodoc_Markdown extends MarkdownExtra_Parser
 	 *
 	 * @var  array
 	 */
-	protected $_heading_ids = array();
+	protected $_heading_ids = [];
 
 	/**
 	 * @var  string   the generated table of contents
 	 */
-	protected static $_toc = "";
+	protected static $_toc = [];
 
 	/**
 	 * Slightly less terrible way to make it so the TOC only shows up when we
@@ -96,7 +96,7 @@ class Kohana_Kodoc_Markdown extends MarkdownExtra_Parser
 	 */
 	public function _doHeaders_callback_setext($matches)
 	{
-		if ($matches[3] == '-' and preg_match('{^- }', $matches[1])) {
+		if ($matches[3] == '-' and preg_match('{^- }', (string) $matches[1])) {
 			return $matches[0];
 		}
 		$level = ($matches[3][0] == '=') ? 1 : 2;
@@ -124,7 +124,7 @@ class Kohana_Kodoc_Markdown extends MarkdownExtra_Parser
 	 */
 	public function _doHeaders_callback_atx($matches)
 	{
-		$level = strlen($matches[1]);
+		$level = strlen((string) $matches[1]);
 		$attr  = $this->_doHeaders_attr($id = & $matches[3]);
 
 		// Only auto-generate id if one doesn't exist
@@ -166,11 +166,11 @@ class Kohana_Kodoc_Markdown extends MarkdownExtra_Parser
 
 	public function doIncludeViews($text)
 	{
-		if (preg_match_all('/{{([^\s{}]++)}}/', $text, $matches, PREG_SET_ORDER)) {
-			$replace = array();
+		if (preg_match_all('/{{([^\s{}]++)}}/', (string) $text, $matches, PREG_SET_ORDER)) {
+			$replace = [];
 
 			foreach ($matches as $set) {
-				list($search, $view) = $set;
+				[$search, $view] = $set;
 
 				if (Kohana::find_file('views', $view)) {
 					try {
@@ -205,7 +205,7 @@ class Kohana_Kodoc_Markdown extends MarkdownExtra_Parser
 	public function doBaseURL($text)
 	{
 		// URLs containing "://" are left untouched
-		return preg_replace('~(?<!!)(\[.+?\]\()(?!\w++://)(?!#)(\S*(?:\s*+".+?")?\))~', '$1'.Kodoc_Markdown::$base_url.'$2', $text);
+		return preg_replace('~(?<!!)(\[.+?\]\()(?!\w++://)(?!#)(\S*(?:\s*+".+?")?\))~', '$1'.Kodoc_Markdown::$base_url.'$2', (string) $text);
 	}
 
 	/**
@@ -219,7 +219,7 @@ class Kohana_Kodoc_Markdown extends MarkdownExtra_Parser
 	public function doImageURL($text)
 	{
 		// URLs containing "://" are left untouched
-		return preg_replace('~(!\[.+?\]\()(?!\w++://)(\S*(?:\s*+".+?")?\))~', '$1'.Kodoc_Markdown::$image_url.'$2', $text);
+		return preg_replace('~(!\[.+?\]\()(?!\w++://)(\S*(?:\s*+".+?")?\))~', '$1'.Kodoc_Markdown::$image_url.'$2', (string) $text);
 	}
 
 	/**
@@ -232,7 +232,7 @@ class Kohana_Kodoc_Markdown extends MarkdownExtra_Parser
 	 */
 	public function doAPI($text)
 	{
-		return preg_replace_callback('/\['.Kodoc::$regex_class_member.'\]/i', 'Kodoc::link_class_member', $text);
+		return preg_replace_callback('/\['.Kodoc::$regex_class_member.'\]/i', Kodoc::link_class_member(...), (string) $text);
 	}
 
 	/**
@@ -245,7 +245,7 @@ class Kohana_Kodoc_Markdown extends MarkdownExtra_Parser
 	 */
 	public function doNotes($text)
 	{
-		if (! preg_match('/^\[!!\]\s*+(.+?)(?=\n[2,]|$)/s', $text, $match)) {
+		if (! preg_match('/^\[!!\]\s*+(.+?)(?=\n[2,]|$)/s', (string) $text, $match)) {
 			return $text;
 		}
 
@@ -254,10 +254,10 @@ class Kohana_Kodoc_Markdown extends MarkdownExtra_Parser
 
 	protected function _add_to_toc($level, $name, $id)
 	{
-		self::$_toc[] = array(
+		self::$_toc[] = [
 			'level' => $level,
 			'name'  => $name,
-			'id'    => $id);
+			'id'    => $id];
 	}
 
 	public function doTOC($text)
@@ -269,7 +269,7 @@ class Kohana_Kodoc_Markdown extends MarkdownExtra_Parser
 				->render()
 			;
 
-			if (($offset = strpos($text, '<p>')) !== false) {
+			if (($offset = strpos((string) $text, '<p>')) !== false) {
 				// Insert the page TOC just before the first <p>, which every
 				// Markdown page should (will?) have.
 				$text = substr_replace($text, $toc, $offset, 0);

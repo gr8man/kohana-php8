@@ -19,13 +19,10 @@ class Kohana_Session_Cookie extends Session
 	 */
 	protected function _read($id = null)
 	{
-		return Cookie::get($this->_name, null);
+		return Cookie::get($this->_name);
 	}
 
-	/**
-	 * @return  null
-	 */
-	protected function _regenerate()
+	protected function _regenerate(): null
 	{
 		// Cookie sessions have no id
 		return null;
@@ -39,10 +36,7 @@ class Kohana_Session_Cookie extends Session
 		return Cookie::set($this->_name, $this->__toString(), $this->_lifetime);
 	}
 
-	/**
-	 * @return  bool
-	 */
-	protected function _restart()
+	protected function _restart(): bool
 	{
 		return true;
 	}
