@@ -36,7 +36,7 @@ class Kohana_Fragment
 	/**
 	 * @var  array  list of buffer => cache key
 	 */
-	protected static $_caches = array();
+	protected static $_caches = [];
 
 	/**
 	 * Generate the cache key name for a fragment.

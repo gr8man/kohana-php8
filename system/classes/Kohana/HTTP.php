@@ -32,14 +32,14 @@ abstract class Kohana_HTTP
 	 * @param  int       $code      HTTP Status code to use for the redirect
 	 * @throws HTTP_Exception
 	 */
-	public static function redirect($uri = '', $code = 302): void
+	public static function redirect(?string $uri = '', $code = 302): void
 	{
 		$e = HTTP_Exception::factory($code);
 
 		if (! $e instanceof HTTP_Exception_Redirect) {
-			throw new Kohana_Exception('Invalid redirect code \':code\'', array(
+			throw new Kohana_Exception('Invalid redirect code \':code\'', [
 				':code' => $code
-			));
+			]);
 		}
 
 		throw $e->location($uri);
@@ -101,7 +101,7 @@ abstract class Kohana_HTTP
 		}
 
 		// Otherwise we use the slower PHP parsing
-		$headers = array();
+		$headers = [];
 
 		// Match all HTTP headers
 		if (preg_match_all('/(\w[^\s:]*):[ ]*([^\r\n]*(?:\r\n[ \t][^\r\n]*)*)/', $header_string, $matches)) {
@@ -121,10 +121,10 @@ abstract class Kohana_HTTP
 					}
 					// Otherwise create a new array with the entries
 					else {
-						$headers[$matches[1][$key]] = array(
+						$headers[$matches[1][$key]] = [
 							$headers[$matches[1][$key]],
 							$matches[2][$key],
-						);
+						];
 					}
 				}
 			}
@@ -161,7 +161,7 @@ abstract class Kohana_HTTP
 		}
 
 		// Setup the output
-		$headers = array();
+		$headers = [];
 
 		// Parse the content type
 		if (! empty($_SERVER['CONTENT_TYPE'])) {
@@ -194,13 +194,13 @@ abstract class Kohana_HTTP
 	 *
 	 * @return null|string
 	 */
-	public static function www_form_urlencode(array $params = array())
+	public static function www_form_urlencode(array $params = [])
 	{
 		if (! $params) {
 			return;
 		}
 
-		$encoded = array();
+		$encoded = [];
 
 		foreach ($params as $key => $value) {
 			$encoded[] = $key.'='.rawurlencode((string) $value);

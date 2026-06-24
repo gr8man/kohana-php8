@@ -195,14 +195,12 @@ class Kohana_HTTP_Cache {
 	}
 
 	/**
-	 * Getter and setter for the internal caching engine,
-	 * used to cache responses if available and valid.
-	 *
-	 * @param Kohana_Cache  $cache    engine to use for caching
-	 *
-	 * @return Cache|static
-	 */
-	public function cache(Cache $cache = NULL): static|Cache
+				 * Getter and setter for the internal caching engine,
+				 * used to cache responses if available and valid.
+				 *
+				 * @param Kohana_Cache  $cache    engine to use for caching
+				 */
+				public function cache(Cache $cache = NULL): static|Cache
 	{
 		if ($cache === NULL)
 			return $this->_cache;

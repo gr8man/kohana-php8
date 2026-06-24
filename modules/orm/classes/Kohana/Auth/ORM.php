@@ -49,7 +49,7 @@ class Kohana_Auth_ORM extends Auth
 			} else {
 				if (! is_object($role)) {
 					// Load the role
-					$roles = ORM::factory('Role', array('name' => $role));
+					$roles = ORM::factory('Role', ['name' => $role]);
 
 					if (! $roles->loaded()) {
 						return false;
@@ -86,14 +86,14 @@ class Kohana_Auth_ORM extends Auth
 		$password_valid = $this->check_password($password, $user->password);
 
 		// If the passwords match, perform a login
-		if ($user->has('roles', ORM::factory('Role', array('name' => 'login'))) and $password_valid) {
+		if ($user->has('roles', ORM::factory('Role', ['name' => 'login'])) and $password_valid) {
 			if ($remember === true) {
 				// Token data
-				$data = array(
+				$data = [
 					'user_id'    => $user->pk(),
 					'expires'    => time() + $this->_config['lifetime'],
 					'user_agent' => sha1(Request::$user_agent),
-				);
+				];
 
 				// Create a new autologin token
 				$token = ORM::factory('User_Token')
@@ -148,7 +148,7 @@ class Kohana_Auth_ORM extends Auth
 	{
 		if ($token = Cookie::get('authautologin')) {
 			// Load the token and user
-			$token = ORM::factory('User_Token', array('token' => $token));
+			$token = ORM::factory('User_Token', ['token' => $token]);
 
 			if ($token->loaded() and $token->user->loaded()) {
 				if ($token->user_agent === sha1(Request::$user_agent)) {
@@ -213,7 +213,7 @@ class Kohana_Auth_ORM extends Auth
 			Cookie::delete('authautologin');
 
 			// Clear the autologin token from the database
-			$token = ORM::factory('User_Token', array('token' => $token));
+			$token = ORM::factory('User_Token', ['token' => $token]);
 
 			if ($token->loaded() and $logout_all) {
 				// Delete all user tokens. This isn't the most elegant solution but does the job
@@ -258,7 +258,7 @@ class Kohana_Auth_ORM extends Auth
 	 * @return  void
 	 */
 	#[\Override]
-	protected function complete_login($user)
+	protected function complete_login(string|object $user)
 	{
 		$user->complete_login();
 
