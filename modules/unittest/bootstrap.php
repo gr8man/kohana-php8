@@ -31,7 +31,7 @@ $system = 'system';
  *
  * @link http://kohanaframework.org/guide/about.install#ext
  */
-define('EXT', '.php');
+defined('EXT') or define('EXT', '.php');
 
 /**
  * Set the path to the document root
@@ -40,7 +40,7 @@ define('EXT', '.php');
  * this bootstrap file somewhere else then you'll need to modify this value to
  * compensate.
  */
-define('DOCROOT', realpath(__DIR__.'/../../').DIRECTORY_SEPARATOR);
+defined('DOCROOT') or define('DOCROOT', realpath(__DIR__.'/../../').DIRECTORY_SEPARATOR);
 
 /**
  * Set the PHP error reporting level. If you set this in php.ini, you remove this.
@@ -80,9 +80,9 @@ if (! is_dir($system) and is_dir(DOCROOT.$system)) {
 }
 
 // Define the absolute paths for configured directories
-define('APPPATH', realpath($application).DIRECTORY_SEPARATOR);
-define('MODPATH', realpath($modules).DIRECTORY_SEPARATOR);
-define('SYSPATH', realpath($system).DIRECTORY_SEPARATOR);
+defined('APPPATH') or define('APPPATH', realpath($application).DIRECTORY_SEPARATOR);
+defined('MODPATH') or define('MODPATH', realpath($modules).DIRECTORY_SEPARATOR);
+defined('SYSPATH') or define('SYSPATH', realpath($system).DIRECTORY_SEPARATOR);
 
 // Clean up the configuration vars
 unset($application, $modules, $system);

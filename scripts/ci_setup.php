@@ -126,10 +126,7 @@ PHP;
 // Step 5: Verify database connection from Kohana
 function verify_kohana_db(): void
 {
-    // Suppress constant redefinition warnings from bootstrap
-    $old_level = error_reporting(E_ALL & ~E_WARNING & ~E_NOTICE & ~E_DEPRECATED & ~E_USER_DEPRECATED);
     require __DIR__ . '/../modules/unittest/bootstrap.php';
-    error_reporting($old_level);
 
     try {
         $db = Database::instance();
