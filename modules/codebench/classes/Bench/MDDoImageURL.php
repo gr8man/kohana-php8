@@ -15,7 +15,7 @@ class Bench_MDDoImageURL extends Codebench
 
 	public $loops = 10000;
 
-	public $subjects = [
+	public $subjects = array(
 		// Valid matches
 		'![Alt text](http://img.skitch.com/20091019-rud5mmqbf776jwua6hx9nm1n.png)',
 		'![Alt text](https://img.skitch.com/20091019-rud5mmqbf776jwua6hx9nm1n.png)',
@@ -26,7 +26,7 @@ class Bench_MDDoImageURL extends Codebench
 
 		// Invalid matches
 		'![Alt text](img/install.png                 "No closing parenthesis"',
-	];
+	);
 
 	public function bench_original($subject): string|array|null
 	{

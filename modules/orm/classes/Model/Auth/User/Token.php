@@ -13,14 +13,14 @@ defined('SYSPATH') or die('No direct access allowed.');
 class Model_Auth_User_Token extends ORM
 {
 	// Relationships
-	protected $_belongs_to = [
-		'user' => ['model' => 'User'],
-	];
+	protected $_belongs_to = array(
+		'user' => array('model' => 'User'),
+	);
 
-	protected $_created_column = [
+	protected $_created_column = array(
 		'column' => 'created',
 		'format' => true,
-	];
+	);
 
 	/**
 	 * Handles garbage collection and deleting of expired objects.
@@ -67,7 +67,7 @@ class Model_Auth_User_Token extends ORM
 	{
 		do {
 			$token = sha1(uniqid(Text::random('alnum', 32), true));
-		} while (ORM::factory('User_Token', ['token' => $token])->loaded());
+		} while (ORM::factory('User_Token', array('token' => $token))->loaded());
 
 		return $token;
 	}

@@ -6,25 +6,31 @@ echo "========================================="
 
 # 1. Coding Standards
 echo ""
-echo "[1/4] Checking Coding Standards (PHP CS Fixer)..."
+echo "[1/5] Checking Coding Standards (PHP CS Fixer)..."
 vendor/bin/php-cs-fixer fix --dry-run --verbose --ansi
 CS_EXIT=$?
 
 # 2. Static Analysis
 echo ""
-echo "[2/4] Running Static Analysis (PHPStan)..."
+echo "[2/5] Running Static Analysis (PHPStan)..."
 vendor/bin/phpstan analyse -c phpstan.neon
 PHPSTAN_EXIT=$?
 
 # 3. Rector Dry-run
 echo ""
-echo "[3/4] Checking Modernization Rules (Rector)..."
+echo "[3/5] Checking Modernization Rules (Rector)..."
 vendor/bin/rector process --dry-run
 RECTOR_EXIT=$?
 
-# 4. Unit Tests
+# 4. Static Analysis (Psalm)
 echo ""
-echo "[4/4] Running Unit Tests (PHPUnit)..."
+echo "[4/5] Running Static Analysis (Psalm)..."
+vendor/bin/psalm --show-info=false
+PSALM_EXIT=$?
+
+# 5. Unit Tests
+echo ""
+echo "[5/5] Running Unit Tests (PHPUnit)..."
 php -d error_reporting="E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED" vendor/bin/phpunit
 PHPUNIT_EXIT=$?
 
@@ -51,6 +57,12 @@ else
     echo "  - Rector:        FAILED"
 fi
 
+if [ $PSALM_EXIT -eq 0 ]; then
+    echo "  - Psalm:         PASSED"
+else
+    echo "  - Psalm:         FAILED"
+fi
+
 if [ $PHPUNIT_EXIT -eq 0 ]; then
     echo "  - PHPUnit:       PASSED"
 else
@@ -59,7 +71,7 @@ fi
 echo "========================================="
 
 # Exit with non-zero if any test failed
-if [ $CS_EXIT -ne 0 ] || [ $PHPSTAN_EXIT -ne 0 ] || [ $RECTOR_EXIT -ne 0 ] || [ $PHPUNIT_EXIT -ne 0 ]; then
+if [ $CS_EXIT -ne 0 ] || [ $PHPSTAN_EXIT -ne 0 ] || [ $RECTOR_EXIT -ne 0 ] || [ $PSALM_EXIT -ne 0 ] || [ $PHPUNIT_EXIT -ne 0 ]; then
     exit 1
 fi
 

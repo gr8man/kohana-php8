@@ -22,10 +22,10 @@ defined('SYSPATH') or die('No direct script access.');
 class Kohana_Config
 {
 	// Configuration readers
-	protected $_sources = [];
+	protected $_sources = array();
 
 	// Array of config groups
-	protected $_groups = [];
+	protected $_groups = array();
 
 	/**
 	 * Attach a configuration reader. By default, the reader will be added as
@@ -50,7 +50,7 @@ class Kohana_Config
 		}
 
 		// Clear any cached _groups
-		$this->_groups = [];
+		$this->_groups = array();
 
 		return $this;
 	}
@@ -112,7 +112,7 @@ class Kohana_Config
 			return $this->_groups[$group];
 		}
 
-		$config = [];
+		$config = array();
 
 		// We search from the "lowest" source and work our way up
 		$sources = array_reverse($this->_sources);

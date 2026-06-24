@@ -3,7 +3,7 @@
 declare(strict_types=1);
 defined('SYSPATH') or die('No direct access allowed.');
 
-return [
+return array(
 
 	/**
 	 * The maximum execution time, in seconds. If set to zero, no time limit is imposed.
@@ -16,4 +16,4 @@ return [
 	 */
 	'expand_all' => false,
 
-];
+);

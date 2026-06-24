@@ -66,7 +66,7 @@ abstract class Kohana_Controller
 			throw HTTP_Exception::factory(
 				404,
 				'The requested URL :uri was not found on this server.',
-				[':uri' => $this->request->uri()]
+				array(':uri' => $this->request->uri())
 			)->request($this->request);
 		}
 

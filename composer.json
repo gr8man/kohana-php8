@@ -8,11 +8,28 @@
 	"require-dev": {
 		"friendsofphp/php-cs-fixer": "^3.95",
 		"phpstan/phpstan": "^2.2",
-		"rector/rector": "^2.5"
+		"rector/rector": "^2.5",
+		"vimeo/psalm": "^6.16"
 	},
 	"scripts": {
-		"fix": "php-cs-fixer fix",
-		"php-fix": "php-cs-fixer fix",
-		"rector": "rector process"
+		"rector": "rector process",
+		"cs-fix": "php-cs-fixer fix",
+		"fix": [
+			"@rector",
+			"@cs-fix"
+		],
+		"php-fix": [
+			"@rector",
+			"@cs-fix"
+		],
+		"psalm": "psalm --show-info=false",
+		"test": [
+			"@fix",
+			"@phpstan",
+			"@psalm",
+			"@phpunit"
+		],
+		"phpstan": "phpstan analyse -c phpstan.neon",
+		"phpunit": "php -d error_reporting='E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED' vendor/bin/phpunit"
 	}
 }

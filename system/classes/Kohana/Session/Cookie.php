@@ -28,10 +28,7 @@ class Kohana_Session_Cookie extends Session
 		return null;
 	}
 
-	/**
-	 * @return  bool
-	 */
-	protected function _write()
+	protected function _write(): bool
 	{
 		return Cookie::set($this->_name, $this->__toString(), $this->_lifetime);
 	}
@@ -41,10 +38,7 @@ class Kohana_Session_Cookie extends Session
 		return true;
 	}
 
-	/**
-	 * @return  bool
-	 */
-	protected function _destroy()
+	protected function _destroy(): bool
 	{
 		return Cookie::delete($this->_name);
 	}

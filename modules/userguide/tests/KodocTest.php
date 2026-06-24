@@ -15,17 +15,17 @@ class Kohana_KodocTest extends PHPUnit_Framework_TestCase
 {
 	public function provider_parse_basic()
 	{
-		return [
-			[
+		return array(
+			array(
 <<<'COMMENT'
 /**
  * Description
  */
 COMMENT
 ,
-				["<p>Description</p>\n", []],
-			],
-			[
+				array("<p>Description</p>\n", array()),
+			),
+			array(
 <<<'COMMENT'
 /**
  * Description spanning
@@ -33,9 +33,9 @@ COMMENT
  */
 COMMENT
 ,
-				["<p>Description spanning\nmultiple lines</p>\n", []],
-			],
-			[
+				array("<p>Description spanning\nmultiple lines</p>\n", array()),
+			),
+			array(
 <<<'COMMENT'
 /**
  * Description including
@@ -44,27 +44,27 @@ COMMENT
  */
 COMMENT
 ,
-				["<p>Description including</p>\n\n<pre><code>a code block\n</code></pre>\n", []],
-			],
-			[
+				array("<p>Description including</p>\n\n<pre><code>a code block\n</code></pre>\n", array()),
+			),
+			array(
 <<<'COMMENT'
 	/**
 	 * Indented
 	 */
 COMMENT
 ,
-				["<p>Indented</p>\n", []],
-			],
-			[
+				array("<p>Indented</p>\n", array()),
+			),
+			array(
 <<<'COMMENT'
 /**
  * @tag Content
  */
 COMMENT
 ,
-				['', ['tag' => ['Content']]],
-			],
-			[
+				array('', array('tag' => array('Content'))),
+			),
+			array(
 <<<'COMMENT'
 /**
  * @tag Multiple
@@ -72,9 +72,9 @@ COMMENT
  */
 COMMENT
 ,
-				['', ['tag' => ['Multiple', 'Tags']]],
-			],
-			[
+				array('', array('tag' => array('Multiple', 'Tags'))),
+			),
+			array(
 <<<'COMMENT'
 /**
  * Description with tag
@@ -82,21 +82,21 @@ COMMENT
  */
 COMMENT
 ,
-				[
+				array(
 					"<p>Description with tag</p>\n",
-					['tag' => ['Content']],
-				],
-			],
-			[
+					array('tag' => array('Content')),
+				),
+			),
+			array(
 <<<'COMMENT'
 /**
  * @trailingspace
  */
 COMMENT
 ,
-				['', ['trailingspace' => ['']]],
-			],
-			[
+				array('', array('trailingspace' => array(''))),
+			),
+			array(
 <<<'COMMENT'
 /**
  * @tag Content that spans
@@ -104,12 +104,12 @@ COMMENT
  */
 COMMENT
 ,
-				[
+				array(
 					'',
-					['tag' => ["Content that spans\nmultiple lines"]],
-				],
-			],
-			[
+					array('tag' => array("Content that spans\nmultiple lines")),
+				),
+			),
+			array(
 <<<'COMMENT'
 /**
  * @tag Content that spans
@@ -117,12 +117,12 @@ COMMENT
  */
 COMMENT
 ,
-				[
+				array(
 					'',
-					['tag' => ["Content that spans\n   multiple lines indented"]],
-				],
-			],
-		];
+					array('tag' => array("Content that spans\n   multiple lines indented")),
+				),
+			),
+		);
 	}
 
 	/**
@@ -142,179 +142,179 @@ COMMENT
 	{
 		$route_api = Route::get('docs/api');
 
-		return [
-			[
+		return array(
+			array(
 <<<'COMMENT'
 /**
  * @access public
  */
 COMMENT
 ,
-				['', []],
-			],
-			[
+				array('', array()),
+			),
+			array(
 <<<'COMMENT'
 /**
  * @copyright Some plain text
  */
 COMMENT
 ,
-				['', ['copyright' => ['Some plain text']]],
-			],
-			[
+				array('', array('copyright' => array('Some plain text'))),
+			),
+			array(
 <<<'COMMENT'
 /**
  * @copyright (c) 2008-2013 Kohana Team
  */
 COMMENT
 ,
-				['', ['copyright' => ['&copy; 2008-2013 Kohana Team']]],
-			],
-			[
+				array('', array('copyright' => array('&copy; 2008-2013 Kohana Team'))),
+			),
+			array(
 <<<'COMMENT'
 /**
  * @license Kohana
  */
 COMMENT
 ,
-				['', ['license' => ['Kohana']]],
-			],
-			[
+				array('', array('license' => array('Kohana'))),
+			),
+			array(
 <<<'COMMENT'
 /**
  * @license http://kohanaframework.org/license
  */
 COMMENT
 ,
-				['', ['license' => ['<a href="http://kohanaframework.org/license">http://kohanaframework.org/license</a>']]],
-			],
-			[
+				array('', array('license' => array('<a href="http://kohanaframework.org/license">http://kohanaframework.org/license</a>'))),
+			),
+			array(
 <<<'COMMENT'
 /**
  * @link http://kohanaframework.org
  */
 COMMENT
 ,
-				['', ['link' => ['<a href="http://kohanaframework.org">http://kohanaframework.org</a>']]],
-			],
-			[
+				array('', array('link' => array('<a href="http://kohanaframework.org">http://kohanaframework.org</a>'))),
+			),
+			array(
 <<<'COMMENT'
 /**
  * @link http://kohanaframework.org Description
  */
 COMMENT
 ,
-				['', ['link' => ['<a href="http://kohanaframework.org">Description</a>']]],
-			],
-			[
+				array('', array('link' => array('<a href="http://kohanaframework.org">Description</a>'))),
+			),
+			array(
 <<<'COMMENT'
 /**
  * @see MyClass
  */
 COMMENT
 ,
-				[
+				array(
 					'',
-					[
-						'see' => [
+					array(
+						'see' => array(
 							'<a href="'.URL::site(
-								$route_api->uri(['class' => 'MyClass'])
+								$route_api->uri(array('class' => 'MyClass'))
 							).'">MyClass</a>',
-						],
-					],
-				],
-			],
-			[
+						),
+					),
+				),
+			),
+			array(
 <<<'COMMENT'
 /**
  * @see MyClass::method()
  */
 COMMENT
 ,
-				[
+				array(
 					'',
-					[
-						'see' => [
+					array(
+						'see' => array(
 							'<a href="'.URL::site(
-								$route_api->uri(['class' => 'MyClass']).'#method'
+								$route_api->uri(array('class' => 'MyClass')).'#method'
 							).'">MyClass::method()</a>',
-						],
-					],
-				],
-			],
-			[
+						),
+					),
+				),
+			),
+			array(
 <<<'COMMENT'
 /**
  * @throws Exception
  */
 COMMENT
 ,
-				[
+				array(
 					'',
-					[
-						'throws' => [
+					array(
+						'throws' => array(
 							'<a href="'.URL::site(
-								$route_api->uri(['class' => 'Exception'])
+								$route_api->uri(array('class' => 'Exception'))
 							).'">Exception</a>',
-						],
-					],
-				],
-			],
-			[
+						),
+					),
+				),
+			),
+			array(
 <<<'COMMENT'
 /**
  * @throws Exception During failure
  */
 COMMENT
 ,
-				[
+				array(
 					'',
-					[
-						'throws' => [
+					array(
+						'throws' => array(
 							'<a href="'.URL::site(
-								$route_api->uri(['class' => 'Exception'])
+								$route_api->uri(array('class' => 'Exception'))
 							).'">Exception</a> During failure',
-						],
-					],
-				],
-			],
-			[
+						),
+					),
+				),
+			),
+			array(
 <<<'COMMENT'
 /**
  * @uses MyClass
  */
 COMMENT
 ,
-				[
+				array(
 					'',
-					[
-						'uses' => [
+					array(
+						'uses' => array(
 							'<a href="'.URL::site(
-								$route_api->uri(['class' => 'MyClass'])
+								$route_api->uri(array('class' => 'MyClass'))
 							).'">MyClass</a>',
-						],
-					],
-				],
-			],
-			[
+						),
+					),
+				),
+			),
+			array(
 <<<'COMMENT'
 /**
  * @uses MyClass::method()
  */
 COMMENT
 ,
-				[
+				array(
 					'',
-					[
-						'uses' => [
+					array(
+						'uses' => array(
 							'<a href="'.URL::site(
-								$route_api->uri(['class' => 'MyClass']).'#method'
+								$route_api->uri(array('class' => 'MyClass')).'#method'
 							).'">MyClass::method()</a>',
-						],
-					],
-				],
-			],
-		];
+						),
+					),
+				),
+			),
+		);
 	}
 
 	/**
@@ -337,18 +337,18 @@ COMMENT
 	 */
 	public function provider_transparent_classes()
 	{
-		return [
+		return array(
 			// Kohana_Core is a special case
-			['Kohana','Kohana_Core',null],
-			['Controller_Template','Kohana_Controller_Template',null],
-			['Controller_Template','Kohana_Controller_Template',
-				['Kohana_Controller_Template' => 'Kohana_Controller_Template',
-					'Controller_Template' => 'Controller_Template']
-			],
-			[false,'Kohana_Controller_Template',
-				['Kohana_Controller_Template' => 'Kohana_Controller_Template']],
-			[false,'Controller_Template',null],
-		];
+			array('Kohana','Kohana_Core',null),
+			array('Controller_Template','Kohana_Controller_Template',null),
+			array('Controller_Template','Kohana_Controller_Template',
+				array('Kohana_Controller_Template' => 'Kohana_Controller_Template',
+					'Controller_Template' => 'Controller_Template')
+			),
+			array(false,'Kohana_Controller_Template',
+				array('Kohana_Controller_Template' => 'Kohana_Controller_Template')),
+			array(false,'Controller_Template',null),
+		);
 	}
 
 	/**

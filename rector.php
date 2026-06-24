@@ -22,4 +22,5 @@ return RectorConfig::configure()
     ->withPreparedSets(
         deadCode: true,
         typeDeclarations: true
-    );
+    )
+    ->withIndent("\t", 1);
