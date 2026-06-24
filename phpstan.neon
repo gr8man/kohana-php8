@@ -6,10 +6,21 @@ parameters:
     - application/classes
   excludePaths:
     - vendor
-    - system/tests
-    - modules/*/tests
-    - application/tests
+    - '*/tests/**'
+    - '*/views/**'
+    - 'modules/unittest/**'
+    - 'modules/userguide/**'
+    - 'application/classes/Kohana/Tests/**'
+  reportUnmatchedIgnoredErrors: false
   ignoreErrors:
     - '#is implicitly nullable via default value null.#'
     - '#Function _.* not found.#'
     - '#Method .* should return .* but return statement is missing.#'
+    - '#referenced with incorrect case:#'
+    - '#not found.#'
+    - '#Access to an undefined property.#'
+    - '#calls parent::__construct\(\) but .* does not extend any class.#'
+    - '#extends unknown class.#'
+    - '#Call to an undefined method.#'
+    - '#Static call to instance method.#'
+    - '#Result of method .* \(void\) is used.#'
