@@ -19,7 +19,7 @@
 - [ ] `Log_Writer::write()` abstract → dodać `: void`
 
 ## 🟠 Średni priorytet
-- [ ] `composer.json` — dodać `"php": ">=8.3"` w root; zaktualizować `system/composer.json`
+- [x] `composer.json` — dodać `"php": ">=8.2"` w root; zaktualizować `system/composer.json`
 - [ ] Podnieść poziom static analysis (phpstan level 2+, psalm level 4+)
 - [ ] Usunąć martwy kod:
   - `Core.php:50` — `$magic_quotes` property
