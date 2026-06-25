@@ -9,6 +9,7 @@
             <file>application/tests/Migration/RequestResponseTest.php</file>
             <file>application/tests/Migration/DatabaseTest.php</file>
             <file>application/tests/Migration/ExternalRequestTest.php</file>
+            <file>application/tests/Migration/ApplicationTest.php</file>
         </testsuite>
         <testsuite name="System">
             <directory>system/tests/kohana</directory>
