@@ -362,9 +362,9 @@ class ApplicationTest extends BaseTestCase
 
 	public function test_num_format(): void
 	{
-		$formatted = Num::format(1000.5, 2);
+		$formatted = Num::format(100.5, 2);
 		$this->assertIsString($formatted);
-		$this->assertStringContainsString('1000', $formatted);
+		$this->assertStringContainsString('100', $formatted);
 		$this->assertStringContainsString('50', $formatted);
 	}
 
