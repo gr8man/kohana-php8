@@ -341,9 +341,6 @@ class Kohana_Date
 		// Convert the list of outputs to an associative array
 		$output = array_combine($output, array_fill(0, count($output), 0));
 
-		// Make the output values into keys
-		extract(array_flip($output), EXTR_SKIP);
-
 		if ($local === null) {
 			// Calculate the span from the current time
 			$local = time();

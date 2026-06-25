@@ -48,13 +48,11 @@ abstract class Kohana_Log_Writer implements \Stringable
 	public static $strace_level = LOG_DEBUG;
 
 	/**
-	 * Write an array of messages.
-	 *
-	 *     $writer->write($messages);
-	 *
-	 * @return  void
-	 */
-	abstract public function write(array $messages);
+				 * Write an array of messages.
+				 *
+				 *     $writer->write($messages);
+				 */
+	abstract public function write(array $messages): void;
 
 	/**
 	 * Allows the writer to have a unique key when stored.

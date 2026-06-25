@@ -169,43 +169,40 @@ class Kohana_View implements \Stringable
 	}
 
 	/**
-	 * Magic method, calls [View::set] with the same parameters.
-	 *
-	 *     $view->foo = 'something';
-	 *
-	 * @param   string  $key    variable name
-	 * @param   mixed   $value  value
-	 * @return  void
-	 */
-	public function __set(string $key, mixed $value)
+				 * Magic method, calls [View::set] with the same parameters.
+				 *
+				 *     $view->foo = 'something';
+				 *
+				 * @param   string  $key    variable name
+				 * @param   mixed   $value  value
+				 */
+	public function __set(string $key, mixed $value): void
 	{
 		$this->set($key, $value);
 	}
 
 	/**
-	 * Magic method, determines if a variable is set.
-	 *
-	 *     isset($view->foo);
-	 *
-	 * [!!] `NULL` variables are not considered to be set by [isset](http://php.net/isset).
-	 *
-	 * @param   string  $key    variable name
-	 * @return  boolean
-	 */
-	public function __isset(string $key)
+				 * Magic method, determines if a variable is set.
+				 *
+				 *     isset($view->foo);
+				 *
+				 * [!!] `NULL` variables are not considered to be set by [isset](http://php.net/isset).
+				 *
+				 * @param   string  $key    variable name
+				 */
+	public function __isset(string $key): bool
 	{
 		return (isset($this->_data[$key]) or isset(View::$_global_data[$key]));
 	}
 
 	/**
-	 * Magic method, unsets a given variable.
-	 *
-	 *     unset($view->foo);
-	 *
-	 * @param   string  $key    variable name
-	 * @return  void
-	 */
-	public function __unset(string $key)
+				 * Magic method, unsets a given variable.
+				 *
+				 *     unset($view->foo);
+				 *
+				 * @param   string  $key    variable name
+				 */
+	public function __unset(string $key): void
 	{
 		unset($this->_data[$key], View::$_global_data[$key]);
 	}

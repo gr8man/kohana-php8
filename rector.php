@@ -19,7 +19,7 @@ return RectorConfig::configure()
         \Rector\Php54\Rector\Array_\LongArrayToShortArrayRector::class,
     ])
     ->withPhpSets(
-        php82: true
+        php83: true
     )
     ->withPreparedSets(
         deadCode: true,

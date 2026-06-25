@@ -477,12 +477,11 @@ class Kohana_ORM extends Model implements \Stringable
 	}
 
 	/**
-	 * Checks if object data is set.
-	 *
-	 * @param  string $column Column name
-	 * @return boolean
-	 */
-	public function __isset(string $column)
+				 * Checks if object data is set.
+				 *
+				 * @param  string $column Column name
+				 */
+	public function __isset(string $column): bool
 	{
 		return (isset($this->_object[$column]) or
 			isset($this->_related[$column]) or
@@ -492,12 +491,11 @@ class Kohana_ORM extends Model implements \Stringable
 	}
 
 	/**
-	 * Unsets object data.
-	 *
-	 * @param  string $column Column name
-	 * @return void
-	 */
-	public function __unset(string $column)
+				 * Unsets object data.
+				 *
+				 * @param  string $column Column name
+				 */
+	public function __unset(string $column): void
 	{
 		unset($this->_object[$column], $this->_changed[$column], $this->_related[$column]);
 	}
@@ -512,12 +510,10 @@ class Kohana_ORM extends Model implements \Stringable
 	}
 
 	/**
-	 * Allows serialization of only the object data and state, to prevent
-	 * "stale" objects being unserialized, which also requires less memory.
-	 *
-	 * @return array
-	 */
-	public function __serialize()
+				 * Allows serialization of only the object data and state, to prevent
+				 * "stale" objects being unserialized, which also requires less memory.
+				 */
+	public function __serialize(): array
 	{
 		// Store only information about the object
 		foreach (array('_primary_key_value', '_object', '_changed', '_loaded', '_saved', '_sorting', '_original_values') as $var) {

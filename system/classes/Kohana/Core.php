@@ -45,16 +45,6 @@ class Kohana_Core
 	public static $is_windows = false;
 
 	/**
-	 * @var  boolean  True if [magic quotes](http://php.net/manual/en/security.magicquotes.php) is enabled.
-	 */
-	public static $magic_quotes = false;
-
-	/**
-	 * @var  boolean  TRUE if PHP safe mode is on
-	 */
-	public static $safe_mode = false;
-
-	/**
 	 * @var  string
 	 */
 	public static $content_type = 'text/html';
@@ -225,9 +215,6 @@ class Kohana_Core
 		// Enable the Kohana shutdown handler, which catches E_FATAL errors.
 		register_shutdown_function(array('Kohana', 'shutdown_handler'));
 
-		// Dead code removal: register_globals was removed in PHP 5.4
-		// Dead code removal: safe_mode was removed in PHP 5.4
-
 		if (isset($settings['expose'])) {
 			Kohana::$expose = (bool) $settings['expose'];
 		}
@@ -299,9 +286,6 @@ class Kohana_Core
 			// Set the index file
 			Kohana::$index_file = trim($settings['index_file'], '/');
 		}
-
-		// Determine if the extremely evil magic quotes are enabled
-		Kohana::$magic_quotes = false;
 
 		// Sanitize all request variables
 		$_GET    = Kohana::sanitize($_GET);

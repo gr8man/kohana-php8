@@ -185,8 +185,11 @@ class Kohana_Kohana_Exception extends Exception
 			 * method. We need to remove that entry from the trace and overwrite
 			 * the variables from above.
 			 */
-			if ($e instanceof HTTP_Exception and ! empty($trace) and $trace[0]['function'] == 'factory') {
-				extract(array_shift($trace));
+			if ($e instanceof HTTP_Exception and ! empty($trace) and ($trace[0]['function'] ?? '') === 'factory') {
+				$frame = array_shift($trace);
+				$file   = $frame['file'] ?? $file;
+				$line   = $frame['line'] ?? $line;
+				$class  = $frame['class'] ?? $class;
 			}
 
 
