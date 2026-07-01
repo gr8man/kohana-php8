@@ -2,7 +2,7 @@
 
 [![PHP Version](https://img.shields.io/badge/PHP-8.3%2B-blue.svg)](https://php.net/)
 [![License](https://img.shields.io/badge/License-BSD-brightgreen.svg)](http://kohanaframework.org/license)
-[![Coverage Status](https://coveralls.io/repos/github/gr8man/kohana-php8/badge.svg)](https://coveralls.io/github/gr8man/kohana-php8)
+[![Coverage Status](https://coveralls.io/repos/github/gr8man/kohana-php8/badge.svg?branch=dev)](https://coveralls.io/github/gr8man/kohana-php8?branch=dev)
 
 A modernized fork of the Kohana framework, ensuring full support for PHP 8.3+ while preserving the elegant HMVC architecture developers love.
 
