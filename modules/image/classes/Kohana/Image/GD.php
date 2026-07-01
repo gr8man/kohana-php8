@@ -550,7 +550,7 @@ class Kohana_Image_GD extends Image
 	 * @return false|string
 	 */
 	#[\Override]
-	protected function _do_render($type, $quality): string|false|false
+	protected function _do_render($type, $quality): string|false
 	{
 		// Loads image if not yet loaded
 		$this->_load_image();
@@ -629,7 +629,7 @@ class Kohana_Image_GD extends Image
 	 * @param integer   $width   image width
 	 * @param integer   $height  image height
 	 */
-	protected function _create($width, $height): GdImage|false|false
+	protected function _create($width, $height): GdImage|false
 	{
 		// Create an empty image
 		$image = imagecreatetruecolor($width, $height);

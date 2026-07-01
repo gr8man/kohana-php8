@@ -21,6 +21,18 @@
         <testsuite name="Database">
             <directory>modules/database/tests</directory>
         </testsuite>
+        <testsuite name="ORM">
+            <directory>modules/orm/tests</directory>
+        </testsuite>
+        <testsuite name="Image">
+            <directory>modules/image/tests</directory>
+        </testsuite>
+        <testsuite name="Codebench">
+            <directory>modules/codebench/tests</directory>
+        </testsuite>
+        <testsuite name="Minion">
+            <directory>modules/minion/tests</directory>
+        </testsuite>
     </testsuites>
     <php>
         <env name="KOHANA_ENV" value="testing"/>

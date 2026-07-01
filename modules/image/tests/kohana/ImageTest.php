@@ -13,10 +13,13 @@ defined('SYSPATH') or die('Kohana bootstrap needs to be included before tests ru
  * @license    http://http://kohanaframework.org/license
  */
 
-class Kohana_ImageTest extends PHPUnit_Framework_TestCase
+#[AllowDynamicProperties]
+class Kohana_ImageTest extends Unittest_TestCase
 {
-	protected function setUp()
+	public function setUp(): void
 	{
+		parent::setUp();
+
 		if (! extension_loaded('gd')) {
 			$this->markTestSkipped('The GD extension is not available.');
 		}
