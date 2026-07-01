@@ -123,7 +123,7 @@ class Kohana_Database_Result_CachedTest extends Unittest_TestCase
 	/**
 	 * @test
 	 * @covers Database_Result::next
-	 * @covers Database_Result::current
+	 * @covers Database_Result_Cached::current
 	 */
 	public function test_next(): void
 	{
@@ -142,7 +142,7 @@ class Kohana_Database_Result_CachedTest extends Unittest_TestCase
 	/**
 	 * @test
 	 * @covers Database_Result::prev
-	 * @covers Database_Result::current
+	 * @covers Database_Result_Cached::current
 	 */
 	public function test_prev(): void
 	{
@@ -162,7 +162,7 @@ class Kohana_Database_Result_CachedTest extends Unittest_TestCase
 	/**
 	 * @test
 	 * @covers Database_Result::rewind
-	 * @covers Database_Result::current
+	 * @covers Database_Result_Cached::current
 	 */
 	public function test_rewind(): void
 	{
@@ -242,7 +242,7 @@ class Kohana_Database_Result_CachedTest extends Unittest_TestCase
 	/**
 	 * @test
 	 * @covers Database_Result_Cached::seek
-	 * @covers Database_Result::current
+	 * @covers Database_Result_Cached::current
 	 */
 	public function test_seek_invalid_offset(): void
 	{
