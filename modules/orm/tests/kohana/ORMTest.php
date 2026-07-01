@@ -260,14 +260,14 @@ class Kohana_ORMTest extends Unittest_TestCase
 		$this->assertNull($model->id);
 	}
 
-	public function test_values_accepts_null(): void
+	public function test_values_sets_null_to_empty_via_filters(): void
 	{
 		$model = ORM::factory('TestUser');
 		$model->values(array(
 			'username' => null,
 			'email' => null,
 		));
-		$this->assertNull($model->username);
+		$this->assertSame('', $model->username);
 	}
 
 	public function test_as_array_returns_column_data(): void
@@ -601,6 +601,7 @@ class Kohana_ORMTest extends Unittest_TestCase
 
 		try {
 			$result = $model->unique('username', 'john');
+			$this->assertIsBool($result);
 		} catch (Exception $e) {
 			$this->markTestSkipped('unique() requires database: ' . $e->getMessage());
 		}

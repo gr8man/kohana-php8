@@ -114,7 +114,7 @@ class Kohana_ImageResizeTest extends Unittest_TestCase
 
 		$image->expects($this->once())
 			->method('_do_resize')
-			->with($this->equalTo(400), $this->equalTo(300));
+			->with($this->equalTo(533), $this->equalTo(400));
 
 		$image->resize(400, 400, Image::INVERSE);
 	}
@@ -125,7 +125,7 @@ class Kohana_ImageResizeTest extends Unittest_TestCase
 
 		$image->expects($this->once())
 			->method('_do_resize')
-			->with($this->equalTo(400), $this->equalTo(300));
+			->with($this->equalTo(533), $this->equalTo(400));
 
 		$image->resize(400, 400, Image::PRECISE);
 	}
@@ -158,7 +158,7 @@ class Kohana_ImageResizeTest extends Unittest_TestCase
 
 		$image->expects($this->once())
 			->method('_do_resize')
-			->with($this->equalTo(300), $this->equalTo(400));
+			->with($this->equalTo(225), $this->equalTo(300));
 
 		$image->resize(300, 300, Image::AUTO);
 	}

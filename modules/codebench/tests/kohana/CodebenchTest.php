@@ -45,7 +45,7 @@ class Kohana_CodebenchTest extends Unittest_TestCase
 
 		$this->assertTrue($refl->hasProperty('loops'));
 		$this->assertTrue($refl->hasProperty('subjects'));
-		$this->assertTrue($refl->hasProperty('benchmarks'));
+		$this->assertTrue($refl->hasProperty('grades'));
 	}
 
 	public function test_arr_callback_bench_exists(): void

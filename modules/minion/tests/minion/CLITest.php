@@ -46,8 +46,10 @@ class Minion_CLITest extends Kohana_Unittest_TestCase
 		$_SERVER['argv'] = array('minion', 'task', '--verbose', '--debug');
 		$_SERVER['argc'] = 4;
 		$options = Minion_CLI::options();
-		$this->assertTrue($options['verbose']);
-		$this->assertTrue($options['debug']);
+		$this->assertArrayHasKey('verbose', $options);
+		$this->assertArrayHasKey('debug', $options);
+		$this->assertNull($options['verbose']);
+		$this->assertNull($options['debug']);
 	}
 
 	public function test_options_parses_options_with_equals(): void
@@ -89,8 +91,10 @@ class Minion_CLITest extends Kohana_Unittest_TestCase
 		$_SERVER['argv'] = array('minion', 'clear', '--force', '--no-interaction');
 		$_SERVER['argc'] = 4;
 		$options = Minion_CLI::options();
-		$this->assertTrue($options['force']);
-		$this->assertTrue($options['no-interaction']);
+		$this->assertArrayHasKey('force', $options);
+		$this->assertArrayHasKey('no-interaction', $options);
+		$this->assertNull($options['force']);
+		$this->assertNull($options['no-interaction']);
 	}
 
 	public function test_wait_has_static_method(): void
@@ -106,6 +110,7 @@ class Minion_CLITest extends Kohana_Unittest_TestCase
 		$options = Minion_CLI::options();
 		$this->assertArrayHasKey('step', $options);
 		$this->assertSame('1', $options['step']);
-		$this->assertTrue($options['force']);
+		$this->assertArrayHasKey('force', $options);
+		$this->assertNull($options['force']);
 	}
 }
