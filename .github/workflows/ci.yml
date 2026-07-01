@@ -22,16 +22,22 @@ jobs:
         with:
           php-version: '8.2'
           extensions: intl, mbstring, sqlite3, json, mysqli, pdo_mysql, curl
-          coverage: none
+          coverage: pcov
 
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress
 
       - name: Run PHPUnit
-        run: vendor/bin/phpunit
+        run: vendor/bin/phpunit --coverage-clover build/logs/clover.xml
 
       - name: Coveralls GitHub Action
         uses: coverallsapp/github-action@v2.3.6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          file: build/logs/clover.xml
+          format: php-clover
+        env:
+          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
 
   integration:
     needs: [tests]
