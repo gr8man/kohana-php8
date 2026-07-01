@@ -33,6 +33,9 @@
         <testsuite name="Minion">
             <directory>modules/minion/tests</directory>
         </testsuite>
+        <testsuite name="Unittest">
+            <directory>modules/unittest/tests</directory>
+        </testsuite>
     </testsuites>
     <php>
         <env name="KOHANA_ENV" value="testing"/>
