@@ -25,4 +25,11 @@
     <php>
         <env name="KOHANA_ENV" value="testing"/>
     </php>
+    <coverage processUncoveredFiles="true">
+        <include>
+            <directory suffix=".php">application/classes</directory>
+            <directory suffix=".php">modules/*/classes</directory>
+            <directory suffix=".php">system/classes</directory>
+        </include>
+    </coverage>
 </phpunit>
