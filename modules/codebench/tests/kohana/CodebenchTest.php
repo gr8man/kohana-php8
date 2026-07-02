@@ -143,7 +143,6 @@ class Kohana_CodebenchTest extends Unittest_TestCase
 	public function test_method_filter_accepts_bench_prefix(): void
 	{
 		$ref = new ReflectionMethod(Kohana_Codebench::class, '_method_filter');
-		$ref->setAccessible(true);
 		$bench = $this->getMockForAbstractClass(Kohana_Codebench::class);
 
 		$this->assertTrue($ref->invoke($bench, 'benchSomething'));
@@ -153,7 +152,6 @@ class Kohana_CodebenchTest extends Unittest_TestCase
 	public function test_method_filter_rejects_non_bench(): void
 	{
 		$ref = new ReflectionMethod(Kohana_Codebench::class, '_method_filter');
-		$ref->setAccessible(true);
 		$bench = $this->getMockForAbstractClass(Kohana_Codebench::class);
 
 		$this->assertFalse($ref->invoke($bench, 'somethingElse'));
@@ -164,7 +162,6 @@ class Kohana_CodebenchTest extends Unittest_TestCase
 	public function test_grade_returns_correct_letter(): void
 	{
 		$ref = new ReflectionMethod(Kohana_Codebench::class, '_grade');
-		$ref->setAccessible(true);
 		$bench = $this->getMockForAbstractClass(Kohana_Codebench::class);
 
 		$this->assertSame('A', $ref->invoke($bench, 100));
@@ -184,7 +181,6 @@ class Kohana_CodebenchTest extends Unittest_TestCase
 	public function test_grade_handles_zero_score(): void
 	{
 		$ref = new ReflectionMethod(Kohana_Codebench::class, '_grade');
-		$ref->setAccessible(true);
 		$bench = $this->getMockForAbstractClass(Kohana_Codebench::class);
 
 		$this->assertSame('A', $ref->invoke($bench, 0));
