@@ -24,20 +24,55 @@ class Kohana_EncryptTest extends Unittest_TestCase
 	{
 		parent::setUp();
 
-		if (! function_exists('mcrypt_encrypt')) {
-			$this->markTestSkipped('Mcrypt extension is not available.');
+		if (!extension_loaded('openssl')) {
+			$this->markTestSkipped('OpenSSL extension is not available.');
 		}
 	}
 
-	public function test_instance_throw_exception_when_no_key_provided()
+	public function test_construct_and_encode_decode(): void
 	{
-		if (! function_exists('mcrypt_encrypt')) {
-			$this->markTestSkipped('Mcrypt extension is not available.');
-		}
+		$key = 'test-encryption-key-32bytes!';
+		$encrypt = new Encrypt($key, 'aes-256-cbc');
 
-		$this->expectException('Kohana_Exception');
-		$this->expectExceptionMessage('No encryption key is defined in the encryption configuration group');
-		Encrypt::instance();
+		$original = 'Hello, World!';
+		$encoded = $encrypt->encode($original);
+
+		$this->assertIsString($encoded);
+		$this->assertNotSame($original, $encoded);
+
+		$decoded = $encrypt->decode($encoded);
+		$this->assertSame($original, $decoded);
 	}
 
+	public function test_decode_invalid_base64_returns_false(): void
+	{
+		$encrypt = new Encrypt('test-key-16-bytes!', 'aes-128-cbc');
+		$result = $encrypt->decode('!!!invalid-base64!!!');
+		$this->assertFalse($result);
+	}
+
+	public function test_decode_truncated_data_returns_false(): void
+	{
+		$encrypt = new Encrypt('test-key-16-bytes!', 'aes-128-cbc');
+		$result = $encrypt->decode('YWJjZA==');
+		$this->assertFalse($result);
+	}
+
+	public function test_different_keys_produce_different_results(): void
+	{
+		$encrypt1 = new Encrypt('key-one-16-bytes!', 'aes-128-cbc');
+		$encrypt2 = new Encrypt('key-two-16-bytes!!', 'aes-128-cbc');
+
+		$data = 'secret data';
+		$encoded1 = $encrypt1->encode($data);
+		$encoded2 = $encrypt2->encode($data);
+
+		$this->assertNotSame($encoded1, $encoded2);
+
+		$decoded1 = $encrypt1->decode($encoded1);
+		$this->assertSame($data, $decoded1);
+
+		$decoded_with_wrong = $encrypt1->decode($encoded2);
+		$this->assertFalse($decoded_with_wrong);
+	}
 }

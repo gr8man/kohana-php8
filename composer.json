@@ -31,6 +31,7 @@
 			"@phpunit"
 		],
 		"phpstan": "phpstan analyse -c phpstan.neon",
-		"phpunit": "php -d error_reporting='E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED' vendor/bin/phpunit"
+		"phpunit": "php -d error_reporting='E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED' vendor/bin/phpunit",
+		"test-coverage": "XDEBUG_MODE=coverage php -d error_reporting='E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED' vendor/bin/phpunit --coverage-text --coverage-html coverage"
 	}
 }

@@ -94,4 +94,38 @@ class Kohana_SecurityTest extends Unittest_TestCase
 		$this->assertSame($expected, Security::token(false));
 		Session::instance()->delete(Security::$token_name);
 	}
+
+	public function test_check_returns_true_for_valid_token(): void
+	{
+		$token = Security::token(true);
+		$this->assertTrue(Security::check($token));
+		Session::instance()->delete(Security::$token_name);
+	}
+
+	public function test_check_returns_false_for_invalid_token(): void
+	{
+		$this->assertFalse(Security::check('invalid_token_value'));
+	}
+
+	public function provider_slow_equals(): array
+	{
+		return array(
+			array(true, 'abc', 'abc'),
+			array(true, '', ''),
+			array(true, '1234567890', '1234567890'),
+			array(false, 'abc', 'abd'),
+			array(false, 'abc', 'abcd'),
+			array(false, 'abc', 'ab'),
+			array(false, 'ABC', 'abc'),
+			array(false, '', 'a'),
+		);
+	}
+
+	/**
+	 * @dataProvider provider_slow_equals
+	 */
+	public function test_slow_equals(bool $expected, string $a, string $b): void
+	{
+		$this->assertSame($expected, Security::slow_equals($a, $b));
+	}
 }
