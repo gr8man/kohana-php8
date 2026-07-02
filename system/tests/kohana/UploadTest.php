@@ -225,4 +225,71 @@ class Kohana_UploadTest extends Unittest_TestCase
 
 		$this->assertFalse(Upload::type($_FILES['unit_test'], array('docx')));
 	}
+
+	/**
+	 * Tests Upload::not_empty
+	 *
+	 * @test
+	 * @covers Upload::not_empty
+	 */
+	public function test_not_empty_missing_keys()
+	{
+		$this->assertFalse(Upload::not_empty(array()));
+		$this->assertFalse(Upload::not_empty(array('error' => UPLOAD_ERR_OK)));
+	}
+
+	/**
+	 * Tests Upload::not_empty with upload error
+	 *
+	 * @test
+	 * @covers Upload::not_empty
+	 */
+	public function test_not_empty_upload_error()
+	{
+		$this->assertFalse(Upload::not_empty(array(
+			'error' => UPLOAD_ERR_NO_FILE,
+			'tmp_name' => '/tmp/foo',
+		)));
+	}
+
+	/**
+	 * Tests Upload::not_empty with non-uploaded file
+	 *
+	 * @test
+	 * @covers Upload::not_empty
+	 */
+	public function test_not_empty_non_uploaded_file()
+	{
+		$tmp = tmpfile();
+		$path = stream_get_meta_data($tmp)['uri'];
+		$this->assertFalse(Upload::not_empty(array(
+			'error' => UPLOAD_ERR_OK,
+			'tmp_name' => $path,
+		)));
+		fclose($tmp);
+	}
+
+	/**
+	 * Tests Upload::save returns false for non-uploaded files
+	 *
+	 * @test
+	 * @covers Upload::save
+	 */
+	public function test_save_non_uploaded_file()
+	{
+		$this->assertFalse(Upload::save(array(
+			'tmp_name' => '/tmp/nonexistent',
+		)));
+	}
+
+	/**
+	 * Tests Upload::save returns false when tmp_name is missing
+	 *
+	 * @test
+	 * @covers Upload::save
+	 */
+	public function test_save_missing_tmp_name()
+	{
+		$this->assertFalse(Upload::save(array()));
+	}
 }

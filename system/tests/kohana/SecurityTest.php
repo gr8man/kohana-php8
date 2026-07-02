@@ -25,6 +25,11 @@ class Kohana_SecurityTest extends Unittest_TestCase
 	{
 		return array(
 			array("&lt;?php echo 'helloo'; ?&gt;", "<?php echo 'helloo'; ?>"),
+			array("&lt;? echo 'short'; ?&gt;", "<? echo 'short'; ?>"),
+			array("no tags", "no tags"),
+			array("", ""),
+			array("&lt;?= \$var ?&gt;", "<?= \$var ?>"),
+			array("&lt;?php ?&gt;", "<?php ?>"),
 		);
 	}
 
@@ -33,7 +38,7 @@ class Kohana_SecurityTest extends Unittest_TestCase
 	 *
 	 * @test
 	 * @dataProvider provider_encode_php_tags
-	 * @covers Security::encode_php_tags
+	 * @covers Kohana_Security::encode_php_tags
 	 */
 	public function test_encode_php_tags($expected, $input)
 	{
@@ -49,6 +54,11 @@ class Kohana_SecurityTest extends Unittest_TestCase
 	{
 		return array(
 			array('foo', '<img src="foo" />'),
+			array('https://example.com/image.png', '<img src="https://example.com/image.png" />'),
+			array('/images/photo.jpg', '<img src="/images/photo.jpg" alt="photo">'),
+			array('test', '<img src=test>'),
+			array('', '<img>'),
+			array('', '<img alt="no src">'),
 		);
 	}
 
@@ -57,7 +67,7 @@ class Kohana_SecurityTest extends Unittest_TestCase
 	 *
 	 * @test
 	 * @dataProvider provider_strip_image_tags
-	 * @covers Security::strip_image_tags
+	 * @covers Kohana_Security::strip_image_tags
 	 */
 	public function test_strip_image_tags($expected, $input)
 	{
@@ -84,7 +94,7 @@ class Kohana_SecurityTest extends Unittest_TestCase
 	 *
 	 * @test
 	 * @dataProvider provider_csrf_token
-	 * @covers Security::token
+	 * @covers Kohana_Security::token
 	 */
 	public function test_csrf_token($expected, $input, $iteration)
 	{

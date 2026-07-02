@@ -139,4 +139,60 @@ class Kohana_CodebenchTest extends Unittest_TestCase
 		$init_file = MODPATH . 'codebench/init.php';
 		$this->assertFileExists($init_file);
 	}
+
+	public function test_method_filter_accepts_bench_prefix(): void
+	{
+		$ref = new ReflectionMethod(Kohana_Codebench::class, '_method_filter');
+		$ref->setAccessible(true);
+		$bench = $this->getMockForAbstractClass(Kohana_Codebench::class);
+
+		$this->assertTrue($ref->invoke($bench, 'benchSomething'));
+		$this->assertTrue($ref->invoke($bench, 'bench'));
+	}
+
+	public function test_method_filter_rejects_non_bench(): void
+	{
+		$ref = new ReflectionMethod(Kohana_Codebench::class, '_method_filter');
+		$ref->setAccessible(true);
+		$bench = $this->getMockForAbstractClass(Kohana_Codebench::class);
+
+		$this->assertFalse($ref->invoke($bench, 'somethingElse'));
+		$this->assertFalse($ref->invoke($bench, 'notBench'));
+		$this->assertFalse($ref->invoke($bench, ''));
+	}
+
+	public function test_grade_returns_correct_letter(): void
+	{
+		$ref = new ReflectionMethod(Kohana_Codebench::class, '_grade');
+		$ref->setAccessible(true);
+		$bench = $this->getMockForAbstractClass(Kohana_Codebench::class);
+
+		$this->assertSame('A', $ref->invoke($bench, 100));
+		$this->assertSame('A', $ref->invoke($bench, 125));
+		$this->assertSame('B', $ref->invoke($bench, 126));
+		$this->assertSame('B', $ref->invoke($bench, 150));
+		$this->assertSame('C', $ref->invoke($bench, 151));
+		$this->assertSame('C', $ref->invoke($bench, 200));
+		$this->assertSame('D', $ref->invoke($bench, 201));
+		$this->assertSame('D', $ref->invoke($bench, 300));
+		$this->assertSame('E', $ref->invoke($bench, 301));
+		$this->assertSame('E', $ref->invoke($bench, 500));
+		$this->assertSame('F', $ref->invoke($bench, 501));
+		$this->assertSame('F', $ref->invoke($bench, 999999));
+	}
+
+	public function test_grade_handles_zero_score(): void
+	{
+		$ref = new ReflectionMethod(Kohana_Codebench::class, '_grade');
+		$ref->setAccessible(true);
+		$bench = $this->getMockForAbstractClass(Kohana_Codebench::class);
+
+		$this->assertSame('A', $ref->invoke($bench, 0));
+	}
+
+	public function test_construct_sets_time_limit(): void
+	{
+		$bench = $this->getMockForAbstractClass(Kohana_Codebench::class);
+		$this->assertNotNull($bench);
+	}
 }
