@@ -27,6 +27,7 @@ class Kohana_HTTP_Exception_RedirectTest extends Unittest_TestCase
 		parent::setUp();
 		$_SERVER['SERVER_NAME'] = 'localhost';
 		$_SERVER['SERVER_PORT'] = '80';
+		unset($_SERVER['HTTP_HOST']);
 		Kohana::$config->load('url')->set('trusted_hosts', array('localhost'));
 	}
 

@@ -336,33 +336,87 @@ class Kohana_CookieTest extends Unittest_TestCase
 		$old_path = Cookie::$path;
 		$old_httponly = Cookie::$httponly;
 		$old_samesite = Cookie::$samesite;
+		$cookie_config = Kohana::$config->load('cookie');
+		$old_cfg_salt = $cookie_config->get('salt');
+		$old_cfg_expiration = $cookie_config->get('expiration');
+		$old_cfg_path = $cookie_config->get('path');
+		$old_cfg_domain = $cookie_config->get('domain');
+		$old_cfg_secure = $cookie_config->get('secure');
+		$old_cfg_httponly = $cookie_config->get('httponly');
+		$old_cfg_samesite = $cookie_config->get('samesite');
 
-		Cookie::$salt = null;
-		Cookie::$expiration = 0;
-		Cookie::$path = '/test';
-		Cookie::$httponly = false;
-		Cookie::$samesite = null;
+		try {
+			Cookie::$salt = null;
+			Cookie::$expiration = 0;
+			Cookie::$path = '/test';
+			Cookie::$httponly = false;
+			Cookie::$samesite = null;
 
-		Kohana::$config->load('cookie')
-			->set('salt', 'config-salt')
-			->set('expiration', 3600)
-			->set('path', '/config')
-			->set('httponly', true)
-			->set('samesite', 'Strict');
+			Kohana::$config->load('cookie')
+				->set('salt', 'config-salt')
+				->set('expiration', 3600)
+				->set('path', '/config')
+				->set('httponly', true)
+				->set('samesite', 'Strict');
 
-		Cookie::init();
+			Cookie::init();
 
-		$this->assertSame('config-salt', Cookie::$salt);
-		$this->assertSame(3600, Cookie::$expiration);
-		$this->assertSame('/config', Cookie::$path);
-		$this->assertTrue(Cookie::$httponly);
-		$this->assertSame('Strict', Cookie::$samesite);
+			$this->assertSame('config-salt', Cookie::$salt);
+			$this->assertSame(3600, Cookie::$expiration);
+			$this->assertSame('/config', Cookie::$path);
+			$this->assertTrue(Cookie::$httponly);
+			$this->assertSame('Strict', Cookie::$samesite);
+		} finally {
+			Cookie::$salt = $old_salt;
+			Cookie::$expiration = $old_expiration;
+			Cookie::$path = $old_path;
+			Cookie::$httponly = $old_httponly;
+			Cookie::$samesite = $old_samesite;
+			$cookie_config->set('salt', $old_cfg_salt);
+			$cookie_config->set('expiration', $old_cfg_expiration);
+			$cookie_config->set('path', $old_cfg_path);
+			$cookie_config->set('domain', $old_cfg_domain);
+			$cookie_config->set('secure', $old_cfg_secure);
+			$cookie_config->set('httponly', $old_cfg_httponly);
+			$cookie_config->set('samesite', $old_cfg_samesite);
+		}
+	}
 
-		Cookie::$salt = $old_salt;
-		Cookie::$expiration = $old_expiration;
-		Cookie::$path = $old_path;
-		Cookie::$httponly = $old_httponly;
-		Cookie::$samesite = $old_samesite;
+	/**
+	 * Tests Cookie::init() reads existing config defaults
+	 *
+	 * @test
+	 */
+	public function test_init_reads_existing_config_defaults()
+	{
+		$old_salt = Cookie::$salt;
+		$old_expiration = Cookie::$expiration;
+		$old_path = Cookie::$path;
+		$old_domain = Cookie::$domain;
+		$old_secure = Cookie::$secure;
+		$old_httponly = Cookie::$httponly;
+		$old_samesite = Cookie::$samesite;
+
+		try {
+			Cookie::init();
+
+			$this->assertSame(
+				'kohana_test_cookie_salt_for_unit_testing_only_change_in_production',
+				Cookie::$salt
+			);
+			$this->assertSame(0, Cookie::$expiration);
+			$this->assertSame('/', Cookie::$path);
+			$this->assertTrue(Cookie::$httponly);
+			$this->assertSame('Lax', Cookie::$samesite);
+		} finally {
+			Cookie::$salt = $old_salt;
+			Cookie::$expiration = $old_expiration;
+			Cookie::$path = $old_path;
+			Cookie::$domain = $old_domain;
+			Cookie::$secure = $old_secure;
+			Cookie::$httponly = $old_httponly;
+			Cookie::$samesite = $old_samesite;
+		}
 	}
 
 	/**
