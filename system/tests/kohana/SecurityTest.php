@@ -57,7 +57,7 @@ class Kohana_SecurityTest extends Unittest_TestCase
 			array('https://example.com/image.png', '<img src="https://example.com/image.png" />'),
 			array('/images/photo.jpg', '<img src="/images/photo.jpg" alt="photo">'),
 			array('test', '<img src=test>'),
-			array('', '<img>'),
+			array('<img>', '<img>'),
 			array('', '<img alt="no src">'),
 		);
 	}
