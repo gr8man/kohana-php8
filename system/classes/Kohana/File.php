@@ -132,7 +132,8 @@ class Kohana_File
 	 */
 	public static function ext_by_mime($type): mixed
 	{
-		return current(File::exts_by_mime($type));
+		$exts = File::exts_by_mime($type);
+		return $exts ? current($exts) : false;
 	}
 
 	/**

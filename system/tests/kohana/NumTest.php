@@ -99,6 +99,7 @@ class Kohana_NumTest extends Unittest_TestCase
 	 *
 	 * @test
 	 * @dataProvider provider_ordinal
+	 * @covers Num::ordinal
 	 * @param integer $number
 	 * @param <type> $expected
 	 */
@@ -128,6 +129,7 @@ class Kohana_NumTest extends Unittest_TestCase
 	 * @todo test locales
 	 * @test
 	 * @dataProvider provider_format
+	 * @covers Num::format
 	 * @param integer $number
 	 * @param integer $places
 	 * @param boolean $monetary
@@ -202,6 +204,7 @@ class Kohana_NumTest extends Unittest_TestCase
 	/**
 	 * @test
 	 * @dataProvider provider_round
+	 * @covers Num::round
 	 * @param number $input
 	 * @param integer $precision
 	 * @param integer $mode

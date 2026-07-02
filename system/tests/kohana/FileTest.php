@@ -78,4 +78,49 @@ class Kohana_FileTest extends Unittest_TestCase
 			unlink($file);
 		}
 	}
+
+	public function test_mime_by_ext_known(): void
+	{
+		$this->assertSame('image/png', File::mime_by_ext('png'));
+		$this->assertSame('text/plain', File::mime_by_ext('txt'));
+	}
+
+	public function test_mime_by_ext_unknown(): void
+	{
+		$this->assertFalse(File::mime_by_ext('someunknownunittestextension'));
+	}
+
+	public function test_mimes_by_ext_known(): void
+	{
+		$mimes = File::mimes_by_ext('png');
+		$this->assertIsArray($mimes);
+		$this->assertContains('image/png', $mimes);
+	}
+
+	public function test_mimes_by_ext_unknown(): void
+	{
+		$this->assertSame(array(), File::mimes_by_ext('someunknownunittestextension'));
+	}
+
+	public function test_exts_by_mime_known(): void
+	{
+		$exts = File::exts_by_mime('text/plain');
+		$this->assertIsArray($exts);
+		$this->assertContains('txt', $exts);
+	}
+
+	public function test_exts_by_mime_unknown(): void
+	{
+		$this->assertFalse(File::exts_by_mime('application/x-nonexistent'));
+	}
+
+	public function test_ext_by_mime_known(): void
+	{
+		$this->assertIsString(File::ext_by_mime('text/plain'));
+	}
+
+	public function test_ext_by_mime_unknown(): void
+	{
+		$this->assertFalse(File::ext_by_mime('application/x-nonexistent'));
+	}
 }

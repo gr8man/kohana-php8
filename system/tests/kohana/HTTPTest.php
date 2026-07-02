@@ -4,7 +4,7 @@ declare(strict_types=1);
 defined('SYSPATH') or die('Kohana bootstrap needs to be included before tests run');
 
 /**
- * Tests HTTP
+ * Tests Kohana_HTTP
  *
  * @group kohana
  * @group kohana.core
@@ -13,175 +13,97 @@ defined('SYSPATH') or die('Kohana bootstrap needs to be included before tests ru
  * @package    Kohana
  * @category   Tests
  * @author     Kohana Team
- * @copyright  (c) 2008-2012 Kohana Team
+ * @copyright  (c) 2008-2014 Kohana Team
  * @license    http://kohanaframework.org/license
  */
 #[AllowDynamicProperties]
 class Kohana_HTTPTest extends Unittest_TestCase
 {
-	protected $_initial_request;
-
-	/**
-	 * Sets up the environment
-	 */
-	// @codingStandardsIgnoreStart
-	public function setUp(): void
-	// @codingStandardsIgnoreEnd
+	public function test_www_form_urlencode_with_params(): void
 	{
-		parent::setUp();
-		Kohana::$config->load('url')->set('trusted_hosts', array('www\.example\.com'));
-		$this->_initial_request = Request::$initial;
-		Request::$initial = new Request('/');
+		$result = HTTP::www_form_urlencode(array('foo' => 'bar', 'baz' => 'qux'));
+		$this->assertSame('foo=bar&baz=qux', $result);
 	}
 
-	/**
-	 * Tears down whatever is setUp
-	 */
-	// @codingStandardsIgnoreStart
-	public function tearDown(): void
-	// @codingStandardsIgnoreEnd
+	public function test_www_form_urlencode_encodes_values(): void
 	{
-		Request::$initial = $this->_initial_request;
-		parent::tearDown();
-	}
-	// @codingStandardsIgnoreStart
-
-	/**
-	 * Defaults for this test
-	 * @var array
-	 */
-	// @codingStandardsIgnoreStart
-	protected $environmentDefault = array(
-		'Kohana::$base_url'    => '/kohana/',
-		'Kohana::$index_file'  => 'index.php',
-		'HTTP_HOST'	           => 'www.example.com',
-	);
-	// @codingStandardsIgnoreEnd
-
-	/**
-	 * Provides test data for test_attributes()
-	 *
-	 * @return array
-	 */
-	public function provider_redirect()
-	{
-		return array(
-			array(
-				'http://www.example.org/',
-				301,
-				'HTTP_Exception_301',
-				'http://www.example.org/'
-			),
-			array(
-				'/page_one',
-				302,
-				'HTTP_Exception_302',
-				'http://www.example.com/kohana/index.php/page_one'
-			),
-			array(
-				'page_two',
-				303,
-				'HTTP_Exception_303',
-				'http://www.example.com/kohana/index.php/page_two'
-			),
-		);
+		$result = HTTP::www_form_urlencode(array('key' => 'value with spaces'));
+		$this->assertSame('key=value%20with%20spaces', $result);
 	}
 
-	/**
-	 * Tests HTTP::redirect()
-	 *
-	 * @test
-	 * @dataProvider provider_redirect
-	 * @param array  $location            Location to redirect to
-	 * @param array  $code                HTTP Code to use for the redirect
-	 * @param string $expected_exception  Expected exception
-	 * @param string $expected_location   Expected exception
-	 */
-	public function test_redirect($location, $code, $expected_exception, $expected_location)
+	public function test_www_form_urlencode_empty_array(): void
 	{
-		try {
-			HTTP::redirect($location, $code);
-		} catch (HTTP_Exception_Redirect $e) {
-			$response = $e->get_response();
-
-			$this->assertInstanceOf($expected_exception, $e);
-			$this->assertEquals($expected_location, $response->headers('Location'));
-
-			return;
-		}
-
-		$this->fail('HTTP_Exception_Redirect not thrown');
+		$this->assertNull(HTTP::www_form_urlencode(array()));
 	}
 
-	/**
-	 * Provides test data for test_request_headers
-	 *
-	 * @return array
-	 */
-	public function provider_request_headers()
+	public function test_www_form_urlencode_special_chars(): void
 	{
-		return array(
-			array(
-				array(
-					'CONTENT_TYPE' => 'text/html; charset=utf-8',
-					'CONTENT_LENGTH' => '3547',
-					'HTTP_ACCEPT' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-					'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, sdch',
-					'HTTP_ACCEPT_LANGUAGE' => 'en-US,en;q=0.8,fr;q=0.6,hy;q=0.4',
-				),
-				array(
-					'content-type' => 'text/html; charset=utf-8',
-					'content-length' => '3547',
-					'accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-					'accept-encoding' => 'gzip, deflate, sdch',
-					'accept-language' => 'en-US,en;q=0.8,fr;q=0.6,hy;q=0.4',
-				)
-			),
-			array(
-				array(
-					'HTTP_WEIRD_HTTP_HEADER' => 'A weird value for a weird header',
-				),
-				array(
-					'weird-http-header' => 'A weird value for a weird header',
-				)
-			),
-		);
+		$result = HTTP::www_form_urlencode(array('q' => 'a+b&c=d'));
+		$this->assertSame('q=a%2Bb%26c%3Dd', $result);
 	}
 
-	/**
-	 * Tests HTTP::request_headers()
-	 *
-	 * HTTP::request_headers relies on the $_SERVER superglobal if the function
-	 * `apache_request_headers` or the PECL `http` extension are not available.
-	 *
-	 * The test feeds the $_SERVER superglobal with the test cases' datasets
-	 * and then restores the $_SERVER superglobal so that it does not affect
-	 * other tests.
-	 *
-	 * @test
-	 * @dataProvider provider_request_headers
-	 * @param array  $server_globals      globals to feed $_SERVER
-	 * @param array  $expected_headers    Expected, cleaned HTTP headers
-	 */
-	public function test_request_headers(array $server_globals, array $expected_headers)
+	public function test_parse_header_string_simple(): void
 	{
-		// Skip if PECL http extension is loaded (returns empty in CLI) and apache_request_headers is not available
-		if (extension_loaded('http') and !function_exists('apache_request_headers')) {
-			$this->markTestSkipped('Cannot test $_SERVER fallback when PECL http extension is loaded in CLI');
-		}
+		$headers = HTTP::parse_header_string("Content-Type: text/html\r\n");
+		$this->assertInstanceOf(HTTP_Header::class, $headers);
+		$this->assertSame('text/html', (string) $headers['content-type']);
+	}
 
-		// save the $_SERVER super-global into temporary local var
-		$tmp_server = $_SERVER;
+	public function test_parse_header_string_multiple(): void
+	{
+		$headers = HTTP::parse_header_string("Content-Type: text/html\r\nX-Custom: value1\r\nAccept: */*\r\n");
+		$this->assertSame('text/html', (string) $headers['content-type']);
+		$this->assertSame('value1', (string) $headers['x-custom']);
+		$this->assertSame('*/*', (string) $headers['accept']);
+	}
 
-		$_SERVER = array_replace_recursive($_SERVER, $server_globals);
+	public function test_parse_header_string_duplicate(): void
+	{
+		$headers = HTTP::parse_header_string("X-Custom: first\r\nX-Custom: second\r\n");
+		$this->assertIsArray($headers['x-custom']);
+		$this->assertCount(2, $headers['x-custom']);
+		$this->assertContains('first', $headers['x-custom']);
+		$this->assertContains('second', $headers['x-custom']);
+	}
+
+	public function test_parse_header_string_empty(): void
+	{
+		$headers = HTTP::parse_header_string('');
+		$this->assertInstanceOf(HTTP_Header::class, $headers);
+	}
+
+	public function test_request_headers_from_server(): void
+	{
+		$server = $_SERVER;
+		$_SERVER['HTTP_HOST'] = 'example.com';
+		$_SERVER['HTTP_ACCEPT'] = 'text/html';
+		$_SERVER['CONTENT_TYPE'] = 'application/json';
 
 		$headers = HTTP::request_headers();
+		$this->assertInstanceOf(HTTP_Header::class, $headers);
+		$this->assertSame('example.com', (string) $headers['host']);
+		$this->assertSame('application/json', (string) $headers['content-type']);
 
-		$actual_headers = array_intersect_key($headers->getArrayCopy(), $expected_headers);
+		$_SERVER = $server;
+	}
 
-		$this->assertSame($expected_headers, $actual_headers);
+	public function test_redirect_throws_redirect_exception(): void
+	{
+		Kohana::$config->load('url')->set('trusted_hosts', array('localhost'));
+		$this->setEnvironment(array(
+			'_SERVER' => array(
+				'SERVER_NAME' => 'localhost',
+				'HTTP_HOST' => 'localhost',
+			) + $_SERVER,
+		));
+		$this->expectException(HTTP_Exception_Redirect::class);
+		HTTP::redirect('/some/path', 302);
+	}
 
-		// revert the super-global to its previous state
-		$_SERVER = $tmp_server;
+	public function test_redirect_throws_for_invalid_code(): void
+	{
+		$this->expectException(Kohana_Exception::class);
+		$this->expectExceptionMessage('Invalid redirect code');
+		HTTP::redirect('/path', 400);
 	}
 }

@@ -192,4 +192,11 @@ class Kohana_LogTest extends Unittest_TestCase
 		$this->assertCount(1, $writer->written);
 		Log::$write_on_add = false;
 	}
+
+	public function test_instance_returns_singleton(): void
+	{
+		$instance1 = Log::instance();
+		$instance2 = Log::instance();
+		$this->assertSame($instance1, $instance2);
+	}
 }

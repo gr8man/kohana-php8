@@ -325,6 +325,75 @@ class Kohana_CookieTest extends Unittest_TestCase
 	}
 
 	/**
+	 * Tests Cookie::init() loads config and sets properties
+	 *
+	 * @test
+	 */
+	public function test_init_loads_config()
+	{
+		$old_salt = Cookie::$salt;
+		$old_expiration = Cookie::$expiration;
+		$old_path = Cookie::$path;
+		$old_httponly = Cookie::$httponly;
+		$old_samesite = Cookie::$samesite;
+
+		Cookie::$salt = null;
+		Cookie::$expiration = 0;
+		Cookie::$path = '/test';
+		Cookie::$httponly = false;
+		Cookie::$samesite = null;
+
+		Kohana::$config->load('cookie')
+			->set('salt', 'config-salt')
+			->set('expiration', 3600)
+			->set('path', '/config')
+			->set('httponly', true)
+			->set('samesite', 'Strict');
+
+		Cookie::init();
+
+		$this->assertSame('config-salt', Cookie::$salt);
+		$this->assertSame(3600, Cookie::$expiration);
+		$this->assertSame('/config', Cookie::$path);
+		$this->assertTrue(Cookie::$httponly);
+		$this->assertSame('Strict', Cookie::$samesite);
+
+		Cookie::$salt = $old_salt;
+		Cookie::$expiration = $old_expiration;
+		Cookie::$path = $old_path;
+		Cookie::$httponly = $old_httponly;
+		Cookie::$samesite = $old_samesite;
+	}
+
+	/**
+	 * Tests Cookie::init() does not override when config has no salt
+	 *
+	 * @test
+	 */
+	public function test_init_preserves_existing_salt_when_no_config_salt()
+	{
+		$old_salt = Cookie::$salt;
+		Cookie::$salt = 'my-salt';
+
+		Kohana::$config->load('cookie')->set('salt', null);
+		Cookie::init();
+
+		$this->assertSame('my-salt', Cookie::$salt);
+		Cookie::$salt = $old_salt;
+	}
+
+	/**
+	 * Tests Cookie::init() does not throw when config not available
+	 *
+	 * @test
+	 */
+	public function test_init_handles_missing_config()
+	{
+		Cookie::init();
+		$this->assertTrue(true);
+	}
+
+	/**
 	 * Tests Cookie::set() with custom path
 	 *
 	 * @test

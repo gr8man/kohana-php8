@@ -50,7 +50,7 @@ class Kohana_FeedTest extends Unittest_TestCase
 	 *
 	 * @test
 	 * @dataProvider provider_parse
-	 * @covers feed::parse
+	 * @covers Kohana_Feed::parse
 	 * @param string  $source   URL to test
 	 * @param integer $expected Count of items
 	 */
@@ -122,7 +122,7 @@ class Kohana_FeedTest extends Unittest_TestCase
 	 *
 	 * @dataProvider provider_create
 	 *
-	 * @covers feed::create
+	 * @covers Kohana_Feed::create
 	 *
 	 * @param string  $info     info to pass
 	 * @param integer $items    items to add

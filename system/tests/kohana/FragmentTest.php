@@ -58,6 +58,7 @@ class Kohana_FragmentTest extends Unittest_TestCase
 
 	public function test_load_returns_false_when_no_cache(): void
 	{
+		Fragment::delete('test_nonexistent');
 		$result = Fragment::load('test_nonexistent');
 		$this->assertFalse($result);
 		while (ob_get_level() > 1) {
@@ -81,5 +82,112 @@ class Kohana_FragmentTest extends Unittest_TestCase
 	{
 		Fragment::$i18n = true;
 		$this->assertTrue(Fragment::$i18n);
+	}
+
+	public function test_load_and_save_cycle(): void
+	{
+		$name = 'test_cycle_' . uniqid();
+		Fragment::delete($name);
+
+		$result = Fragment::load($name);
+		$this->assertFalse($result);
+
+		$content = 'cached content for ' . $name;
+		echo $content;
+
+		Fragment::save();
+
+		while (ob_get_level() > 1) {
+			ob_end_clean();
+		}
+
+		ob_start();
+		$cached = Fragment::load($name);
+		$cached_output = ob_get_clean();
+		$this->assertTrue($cached);
+		$this->assertSame($content, $cached_output);
+
+		Fragment::delete($name);
+	}
+
+	public function test_delete_removes_cached_fragment(): void
+	{
+		$name = 'test_delete_' . uniqid();
+
+		Fragment::delete($name);
+		$result = Fragment::load($name);
+		$this->assertFalse($result);
+		echo 'to delete';
+		Fragment::save();
+
+		Fragment::delete($name);
+
+		$result2 = Fragment::load($name);
+		$this->assertFalse($result2);
+		while (ob_get_level() > 1) {
+			ob_end_clean();
+		}
+	}
+
+	public function test_load_with_explicit_lifetime(): void
+	{
+		$name = 'test_lifetime_' . uniqid();
+		Fragment::delete($name);
+
+		$result = Fragment::load($name, 60);
+		$this->assertFalse($result);
+		echo 'lifetime test';
+		Fragment::save();
+
+		while (ob_get_level() > 1) {
+			ob_end_clean();
+		}
+
+		$result2 = Fragment::load($name, 60);
+		$this->assertTrue($result2);
+
+		Fragment::delete($name);
+	}
+
+	public function test_load_with_i18n_true(): void
+	{
+		$name = 'test_i18n_' . uniqid();
+		Fragment::delete($name);
+
+		$result = Fragment::load($name, null, true);
+		$this->assertFalse($result);
+		echo 'i18n content';
+		Fragment::save();
+
+		while (ob_get_level() > 1) {
+			ob_end_clean();
+		}
+
+		$result2 = Fragment::load($name, null, true);
+		$this->assertTrue($result2);
+
+		Fragment::delete($name);
+	}
+
+	public function test_load_with_i18n_false_override(): void
+	{
+		Fragment::$i18n = true;
+		$name = 'test_i18n_false_' . uniqid();
+		Fragment::delete($name);
+
+		$result = Fragment::load($name, null, false);
+		$this->assertFalse($result);
+		echo 'no i18n';
+		Fragment::save();
+
+		while (ob_get_level() > 1) {
+			ob_end_clean();
+		}
+
+		$result2 = Fragment::load($name, null, false);
+		$this->assertTrue($result2);
+
+		Fragment::delete($name);
+		Fragment::$i18n = false;
 	}
 }
