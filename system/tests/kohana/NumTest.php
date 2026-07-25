@@ -205,10 +205,9 @@ class Kohana_NumTest extends Unittest_TestCase
 	 * @test
 	 * @dataProvider provider_round
 	 * @covers Num::round
-	 * @param number $input
+	 * @param float   $input
 	 * @param integer $precision
-	 * @param integer $mode
-	 * @param number $expected
+	 * @param array   $expected
 	 */
 	public function test_round($input, $precision, $expected)
 	{
