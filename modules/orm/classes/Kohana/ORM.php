@@ -1580,7 +1580,7 @@ class Kohana_ORM extends Model implements \Stringable
 		return $this;
 	}
 
-	protected function _serialize_value($value)
+	protected function _serialize_value($value): string|false
 	{
 		return json_encode($value);
 	}
@@ -1681,13 +1681,12 @@ class Kohana_ORM extends Model implements \Stringable
 	}
 
 	/**
-	 * Alias of and_where()
-	 *
-	 * @param   mixed   $column  column name or array($column, $alias) or object
-	 * @param   string  $op      logic operator
-	 * @param   mixed   $value   column value
-	 * @return  $this
-	 */
+				 * Alias of and_where()
+				 *
+				 * @param   mixed   $column  column name or array($column, $alias) or object
+				 * @param   string  $op      logic operator
+				 * @param   mixed   $value   column value
+				 */
 	public function where($column, $op, $value): static
 	{
 		// Add pending database call which is executed after query type is determined
@@ -1700,13 +1699,12 @@ class Kohana_ORM extends Model implements \Stringable
 	}
 
 	/**
-	 * Creates a new "AND WHERE" condition for the query.
-	 *
-	 * @param   mixed   $column  column name or array($column, $alias) or object
-	 * @param   string  $op      logic operator
-	 * @param   mixed   $value   column value
-	 * @return  $this
-	 */
+				 * Creates a new "AND WHERE" condition for the query.
+				 *
+				 * @param   mixed   $column  column name or array($column, $alias) or object
+				 * @param   string  $op      logic operator
+				 * @param   mixed   $value   column value
+				 */
 	public function and_where($column, $op, $value): static
 	{
 		// Add pending database call which is executed after query type is determined
@@ -1719,13 +1717,12 @@ class Kohana_ORM extends Model implements \Stringable
 	}
 
 	/**
-	 * Creates a new "OR WHERE" condition for the query.
-	 *
-	 * @param   mixed   $column  column name or array($column, $alias) or object
-	 * @param   string  $op      logic operator
-	 * @param   mixed   $value   column value
-	 * @return  $this
-	 */
+				 * Creates a new "OR WHERE" condition for the query.
+				 *
+				 * @param   mixed   $column  column name or array($column, $alias) or object
+				 * @param   string  $op      logic operator
+				 * @param   mixed   $value   column value
+				 */
 	public function or_where($column, $op, $value): static
 	{
 		// Add pending database call which is executed after query type is determined
@@ -1738,20 +1735,16 @@ class Kohana_ORM extends Model implements \Stringable
 	}
 
 	/**
-	 * Alias of and_where_open()
-	 *
-	 * @return  $this
-	 */
+				 * Alias of and_where_open()
+				 */
 	public function where_open(): static
 	{
 		return $this->and_where_open();
 	}
 
 	/**
-	 * Opens a new "AND WHERE (...)" grouping.
-	 *
-	 * @return  $this
-	 */
+				 * Opens a new "AND WHERE (...)" grouping.
+				 */
 	public function and_where_open(): static
 	{
 		// Add pending database call which is executed after query type is determined
@@ -1764,10 +1757,8 @@ class Kohana_ORM extends Model implements \Stringable
 	}
 
 	/**
-	 * Opens a new "OR WHERE (...)" grouping.
-	 *
-	 * @return  $this
-	 */
+				 * Opens a new "OR WHERE (...)" grouping.
+				 */
 	public function or_where_open(): static
 	{
 		// Add pending database call which is executed after query type is determined
@@ -1780,20 +1771,16 @@ class Kohana_ORM extends Model implements \Stringable
 	}
 
 	/**
-	 * Closes an open "AND WHERE (...)" grouping.
-	 *
-	 * @return  $this
-	 */
+				 * Closes an open "AND WHERE (...)" grouping.
+				 */
 	public function where_close(): static
 	{
 		return $this->and_where_close();
 	}
 
 	/**
-	 * Closes an open "AND WHERE (...)" grouping.
-	 *
-	 * @return  $this
-	 */
+				 * Closes an open "AND WHERE (...)" grouping.
+				 */
 	public function and_where_close(): static
 	{
 		// Add pending database call which is executed after query type is determined
@@ -1806,10 +1793,8 @@ class Kohana_ORM extends Model implements \Stringable
 	}
 
 	/**
-	 * Closes an open "OR WHERE (...)" grouping.
-	 *
-	 * @return  $this
-	 */
+				 * Closes an open "OR WHERE (...)" grouping.
+				 */
 	public function or_where_close(): static
 	{
 		// Add pending database call which is executed after query type is determined
@@ -1822,12 +1807,11 @@ class Kohana_ORM extends Model implements \Stringable
 	}
 
 	/**
-	 * Applies sorting with "ORDER BY ..."
-	 *
-	 * @param   mixed   $column     column name or array($column, $alias) or object
-	 * @param   string  $direction  direction of sorting
-	 * @return  $this
-	 */
+				 * Applies sorting with "ORDER BY ..."
+				 *
+				 * @param   mixed   $column     column name or array($column, $alias) or object
+				 * @param   string  $direction  direction of sorting
+				 */
 	public function order_by($column, $direction = null): static
 	{
 		// Add pending database call which is executed after query type is determined
@@ -1840,11 +1824,10 @@ class Kohana_ORM extends Model implements \Stringable
 	}
 
 	/**
-	 * Return up to "LIMIT ..." results
-	 *
-	 * @param   integer  $number  maximum results to return
-	 * @return  $this
-	 */
+				 * Return up to "LIMIT ..." results
+				 *
+				 * @param   integer  $number  maximum results to return
+				 */
 	public function limit($number): static
 	{
 		// Add pending database call which is executed after query type is determined
@@ -1857,11 +1840,10 @@ class Kohana_ORM extends Model implements \Stringable
 	}
 
 	/**
-	 * Enables or disables selecting only unique columns using "SELECT DISTINCT"
-	 *
-	 * @param   boolean  $value  enable or disable distinct columns
-	 * @return  $this
-	 */
+				 * Enables or disables selecting only unique columns using "SELECT DISTINCT"
+				 *
+				 * @param   boolean  $value  enable or disable distinct columns
+				 */
 	public function distinct($value): static
 	{
 		// Add pending database call which is executed after query type is determined
@@ -1874,12 +1856,11 @@ class Kohana_ORM extends Model implements \Stringable
 	}
 
 	/**
-	 * Choose the columns to select from.
-	 *
-	 * @param   mixed  $columns  column name or array($column, $alias) or object
-	 * @param   ...
-	 * @return  $this
-	 */
+				 * Choose the columns to select from.
+				 *
+				 * @param   mixed  $columns  column name or array($column, $alias) or object
+				 * @param   ...
+				 */
 	public function select($columns = null): static
 	{
 		$columns = func_get_args();
@@ -1894,12 +1875,11 @@ class Kohana_ORM extends Model implements \Stringable
 	}
 
 	/**
-	 * Choose the tables to select "FROM ..."
-	 *
-	 * @param   mixed  $tables  table name or array($table, $alias) or object
-	 * @param   ...
-	 * @return  $this
-	 */
+				 * Choose the tables to select "FROM ..."
+				 *
+				 * @param   mixed  $tables  table name or array($table, $alias) or object
+				 * @param   ...
+				 */
 	public function from($tables): static
 	{
 		$tables = func_get_args();
@@ -1914,12 +1894,11 @@ class Kohana_ORM extends Model implements \Stringable
 	}
 
 	/**
-	 * Adds addition tables to "JOIN ...".
-	 *
-	 * @param   mixed   $table  column name or array($column, $alias) or object
-	 * @param   string  $type   join type (LEFT, RIGHT, INNER, etc)
-	 * @return  $this
-	 */
+				 * Adds addition tables to "JOIN ...".
+				 *
+				 * @param   mixed   $table  column name or array($column, $alias) or object
+				 * @param   string  $type   join type (LEFT, RIGHT, INNER, etc)
+				 */
 	public function join($table, $type = null): static
 	{
 		// Add pending database call which is executed after query type is determined
@@ -1932,13 +1911,12 @@ class Kohana_ORM extends Model implements \Stringable
 	}
 
 	/**
-	 * Adds "ON ..." conditions for the last created JOIN statement.
-	 *
-	 * @param   mixed   $c1  column name or array($column, $alias) or object
-	 * @param   string  $op  logic operator
-	 * @param   mixed   $c2  column name or array($column, $alias) or object
-	 * @return  $this
-	 */
+				 * Adds "ON ..." conditions for the last created JOIN statement.
+				 *
+				 * @param   mixed   $c1  column name or array($column, $alias) or object
+				 * @param   string  $op  logic operator
+				 * @param   mixed   $c2  column name or array($column, $alias) or object
+				 */
 	public function on($c1, $op, $c2): static
 	{
 		// Add pending database call which is executed after query type is determined
@@ -1951,12 +1929,11 @@ class Kohana_ORM extends Model implements \Stringable
 	}
 
 	/**
-	 * Creates a "GROUP BY ..." filter.
-	 *
-	 * @param   mixed   $columns  column name or array($column, $alias) or object
-	 * @param   ...
-	 * @return  $this
-	 */
+				 * Creates a "GROUP BY ..." filter.
+				 *
+				 * @param   mixed   $columns  column name or array($column, $alias) or object
+				 * @param   ...
+				 */
 	public function group_by($columns): static
 	{
 		$columns = func_get_args();
@@ -1971,26 +1948,24 @@ class Kohana_ORM extends Model implements \Stringable
 	}
 
 	/**
-	 * Alias of and_having()
-	 *
-	 * @param   mixed   $column  column name or array($column, $alias) or object
-	 * @param   string  $op      logic operator
-	 * @param   mixed   $value   column value
-	 * @return  $this
-	 */
+				 * Alias of and_having()
+				 *
+				 * @param   mixed   $column  column name or array($column, $alias) or object
+				 * @param   string  $op      logic operator
+				 * @param   mixed   $value   column value
+				 */
 	public function having($column, $op, $value = null): static
 	{
 		return $this->and_having($column, $op, $value);
 	}
 
 	/**
-	 * Creates a new "AND HAVING" condition for the query.
-	 *
-	 * @param   mixed   $column  column name or array($column, $alias) or object
-	 * @param   string  $op      logic operator
-	 * @param   mixed   $value   column value
-	 * @return  $this
-	 */
+				 * Creates a new "AND HAVING" condition for the query.
+				 *
+				 * @param   mixed   $column  column name or array($column, $alias) or object
+				 * @param   string  $op      logic operator
+				 * @param   mixed   $value   column value
+				 */
 	public function and_having($column, $op, $value = null): static
 	{
 		// Add pending database call which is executed after query type is determined
@@ -2003,13 +1978,12 @@ class Kohana_ORM extends Model implements \Stringable
 	}
 
 	/**
-	 * Creates a new "OR HAVING" condition for the query.
-	 *
-	 * @param   mixed   $column  column name or array($column, $alias) or object
-	 * @param   string  $op      logic operator
-	 * @param   mixed   $value   column value
-	 * @return  $this
-	 */
+				 * Creates a new "OR HAVING" condition for the query.
+				 *
+				 * @param   mixed   $column  column name or array($column, $alias) or object
+				 * @param   string  $op      logic operator
+				 * @param   mixed   $value   column value
+				 */
 	public function or_having($column, $op, $value = null): static
 	{
 		// Add pending database call which is executed after query type is determined
@@ -2022,20 +1996,16 @@ class Kohana_ORM extends Model implements \Stringable
 	}
 
 	/**
-	 * Alias of and_having_open()
-	 *
-	 * @return  $this
-	 */
+				 * Alias of and_having_open()
+				 */
 	public function having_open(): static
 	{
 		return $this->and_having_open();
 	}
 
 	/**
-	 * Opens a new "AND HAVING (...)" grouping.
-	 *
-	 * @return  $this
-	 */
+				 * Opens a new "AND HAVING (...)" grouping.
+				 */
 	public function and_having_open(): static
 	{
 		// Add pending database call which is executed after query type is determined
@@ -2048,10 +2018,8 @@ class Kohana_ORM extends Model implements \Stringable
 	}
 
 	/**
-	 * Opens a new "OR HAVING (...)" grouping.
-	 *
-	 * @return  $this
-	 */
+				 * Opens a new "OR HAVING (...)" grouping.
+				 */
 	public function or_having_open(): static
 	{
 		// Add pending database call which is executed after query type is determined
@@ -2064,20 +2032,16 @@ class Kohana_ORM extends Model implements \Stringable
 	}
 
 	/**
-	 * Closes an open "AND HAVING (...)" grouping.
-	 *
-	 * @return  $this
-	 */
+				 * Closes an open "AND HAVING (...)" grouping.
+				 */
 	public function having_close(): static
 	{
 		return $this->and_having_close();
 	}
 
 	/**
-	 * Closes an open "AND HAVING (...)" grouping.
-	 *
-	 * @return  $this
-	 */
+				 * Closes an open "AND HAVING (...)" grouping.
+				 */
 	public function and_having_close(): static
 	{
 		// Add pending database call which is executed after query type is determined
@@ -2090,10 +2054,8 @@ class Kohana_ORM extends Model implements \Stringable
 	}
 
 	/**
-	 * Closes an open "OR HAVING (...)" grouping.
-	 *
-	 * @return  $this
-	 */
+				 * Closes an open "OR HAVING (...)" grouping.
+				 */
 	public function or_having_close(): static
 	{
 		// Add pending database call which is executed after query type is determined
@@ -2106,11 +2068,10 @@ class Kohana_ORM extends Model implements \Stringable
 	}
 
 	/**
-	 * Start returning results after "OFFSET ..."
-	 *
-	 * @param   integer   $number  starting result number
-	 * @return  $this
-	 */
+				 * Start returning results after "OFFSET ..."
+				 *
+				 * @param   integer   $number  starting result number
+				 */
 	public function offset($number): static
 	{
 		// Add pending database call which is executed after query type is determined
@@ -2123,12 +2084,11 @@ class Kohana_ORM extends Model implements \Stringable
 	}
 
 	/**
-	 * Enables the query to be cached for a specified amount of time.
-	 *
-	 * @param   integer  $lifetime  number of seconds to cache
-	 * @return  $this
-	 * @uses    Kohana::$cache_life
-	 */
+				 * Enables the query to be cached for a specified amount of time.
+				 *
+				 * @param   integer  $lifetime  number of seconds to cache
+				 * @uses    Kohana::$cache_life
+				 */
 	public function cached($lifetime = null): static
 	{
 		// Add pending database call which is executed after query type is determined
@@ -2141,12 +2101,11 @@ class Kohana_ORM extends Model implements \Stringable
 	}
 
 	/**
-	 * Set the value of a parameter in the query.
-	 *
-	 * @param   string   $param  parameter key to replace
-	 * @param   mixed    $value  value to use
-	 * @return  $this
-	 */
+				 * Set the value of a parameter in the query.
+				 *
+				 * @param   string   $param  parameter key to replace
+				 * @param   mixed    $value  value to use
+				 */
 	public function param($param, $value): static
 	{
 		// Add pending database call which is executed after query type is determined
@@ -2159,11 +2118,10 @@ class Kohana_ORM extends Model implements \Stringable
 	}
 
 	/**
-	 * Adds "USING ..." conditions for the last created JOIN statement.
-	 *
-	 * @param   string  $columns  column name
-	 * @return  $this
-	 */
+				 * Adds "USING ..." conditions for the last created JOIN statement.
+				 *
+				 * @param   string  $columns  column name
+				 */
 	public function using($columns): static
 	{
 		// Add pending database call which is executed after query type is determined

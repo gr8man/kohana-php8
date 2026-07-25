@@ -38,13 +38,12 @@ class Kohana_Database_Query_Builder_Join extends Database_Query_Builder
 	}
 
 	/**
-	 * Adds a new condition for joining.
-	 *
-	 * @param   mixed   $c1  column name or array($column, $alias) or object
-	 * @param   string  $op  logic operator
-	 * @param   mixed   $c2  column name or array($column, $alias) or object
-	 * @return  $this
-	 */
+				 * Adds a new condition for joining.
+				 *
+				 * @param   mixed   $c1  column name or array($column, $alias) or object
+				 * @param   string  $op  logic operator
+				 * @param   mixed   $c2  column name or array($column, $alias) or object
+				 */
 	public function on($c1, $op, $c2): static
 	{
 		if (! empty($this->_using)) {
@@ -57,11 +56,10 @@ class Kohana_Database_Query_Builder_Join extends Database_Query_Builder
 	}
 
 	/**
-	 * Adds a new condition for joining.
-	 *
-	 * @param   string  $columns  column name
-	 * @return  $this
-	 */
+				 * Adds a new condition for joining.
+				 *
+				 * @param   string  $columns  column name
+				 */
 	public function using($columns): static
 	{
 		if (! empty($this->_on)) {

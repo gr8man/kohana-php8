@@ -136,32 +136,28 @@ class Kohana_Cache_Apc extends Cache implements Cache_Arithmetic {
 	}
 
 	/**
-     * Increments a given value by the step value supplied.
-     * Useful for shared counters and other persistent integer based
-     * tracking.
-     *
-     * @param string    id of cache entry to increment
-     * @param int       step value to increment by
-     *
-     * @return false|int
-     */
-    #[\Override]
+				 * Increments a given value by the step value supplied.
+				 * Useful for shared counters and other persistent integer based
+				 * tracking.
+				 *
+				 * @param string    id of cache entry to increment
+				 * @param int       step value to increment by
+				 */
+				#[\Override]
     public function increment($id, $step = 1): int|false
 	{
 		return apc_inc($id, $step);
 	}
 
 	/**
-     * Decrements a given value by the step value supplied.
-     * Useful for shared counters and other persistent integer based
-     * tracking.
-     *
-     * @param string    id of cache entry to decrement
-     * @param int       step value to decrement by
-     *
-     * @return false|int
-     */
-    #[\Override]
+				 * Decrements a given value by the step value supplied.
+				 * Useful for shared counters and other persistent integer based
+				 * tracking.
+				 *
+				 * @param string    id of cache entry to decrement
+				 * @param int       step value to decrement by
+				 */
+				#[\Override]
     public function decrement($id, $step = 1): int|false
 	{
 		return apc_dec($id, $step);

@@ -254,24 +254,23 @@ class Kohana_View implements \Stringable
 	}
 
 	/**
-	 * Assigns a variable by name. Assigned values will be available as a
-	 * variable within the view file:
-	 *
-	 *     // This value can be accessed as $foo within the view
-	 *     $view->set('foo', 'my value');
-	 *
-	 * You can also use an array or Traversable object to set several values at once:
-	 *
-	 *     // Create the values $food and $beverage in the view
-	 *     $view->set(array('food' => 'bread', 'beverage' => 'water'));
-	 *
-	 * [!!] Note: When setting with using Traversable object we're not attaching the whole object to the view,
-	 * i.e. the object's standard properties will not be available in the view context.
-	 *
-	 * @param   string|array|Traversable  $key    variable name or an array of variables
-	 * @param   mixed                     $value  value
-	 * @return  $this
-	 */
+				 * Assigns a variable by name. Assigned values will be available as a
+				 * variable within the view file:
+				 *
+				 *     // This value can be accessed as $foo within the view
+				 *     $view->set('foo', 'my value');
+				 *
+				 * You can also use an array or Traversable object to set several values at once:
+				 *
+				 *     // Create the values $food and $beverage in the view
+				 *     $view->set(array('food' => 'bread', 'beverage' => 'water'));
+				 *
+				 * [!!] Note: When setting with using Traversable object we're not attaching the whole object to the view,
+				 * i.e. the object's standard properties will not be available in the view context.
+				 *
+				 * @param   string|array|Traversable  $key    variable name or an array of variables
+				 * @param   mixed                     $value  value
+				 */
 	public function set($key, $value = null): static
 	{
 		if (is_array($key) or $key instanceof Traversable) {
@@ -286,18 +285,17 @@ class Kohana_View implements \Stringable
 	}
 
 	/**
-	 * Assigns a value by reference. The benefit of binding is that values can
-	 * be altered without re-setting them. It is also possible to bind variables
-	 * before they have values. Assigned values will be available as a
-	 * variable within the view file:
-	 *
-	 *     // This reference can be accessed as $ref within the view
-	 *     $view->bind('ref', $bar);
-	 *
-	 * @param   string  $key    variable name
-	 * @param   mixed   $value  referenced variable
-	 * @return  $this
-	 */
+				 * Assigns a value by reference. The benefit of binding is that values can
+				 * be altered without re-setting them. It is also possible to bind variables
+				 * before they have values. Assigned values will be available as a
+				 * variable within the view file:
+				 *
+				 *     // This reference can be accessed as $ref within the view
+				 *     $view->bind('ref', $bar);
+				 *
+				 * @param   string  $key    variable name
+				 * @param   mixed   $value  referenced variable
+				 */
 	public function bind($key, & $value): static
 	{
 		$this->_data[$key] = & $value;

@@ -33,11 +33,10 @@ class Kohana_Database_Query_Builder_Delete extends Database_Query_Builder_Where
 	}
 
 	/**
-	 * Sets the table to delete from.
-	 *
-	 * @param   mixed  $table  table name or array($table, $alias) or object
-	 * @return  $this
-	 */
+				 * Sets the table to delete from.
+				 *
+				 * @param   mixed  $table  table name or array($table, $alias) or object
+				 */
 	public function table($table): static
 	{
 		$this->_table = $table;

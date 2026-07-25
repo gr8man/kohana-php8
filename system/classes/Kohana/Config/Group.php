@@ -81,14 +81,13 @@ class Kohana_Config_Group extends ArrayObject implements \Stringable
 	}
 
 	/**
-	 * Sets a value in the configuration array.
-	 *
-	 *     $config->set($key, $new_value);
-	 *
-	 * @param   string  $key    array key
-	 * @param   mixed   $value  array value
-	 * @return  $this
-	 */
+				 * Sets a value in the configuration array.
+				 *
+				 *     $config->set($key, $new_value);
+				 *
+				 * @param   string  $key    array key
+				 * @param   mixed   $value  array value
+				 */
 	public function set($key, $value): static
 	{
 		$this->offsetSet($key, $value);

@@ -63,13 +63,12 @@ class Kohana_Database_Query implements \Stringable
 	}
 
 	/**
-	 * Enables the query to be cached for a specified amount of time.
-	 *
-	 * @param   integer  $lifetime  number of seconds to cache, 0 deletes it from the cache
-	 * @param   boolean  whether or not to execute the query during a cache hit
-	 * @return  $this
-	 * @uses    Kohana::$cache_life
-	 */
+				 * Enables the query to be cached for a specified amount of time.
+				 *
+				 * @param   integer  $lifetime  number of seconds to cache, 0 deletes it from the cache
+				 * @param   boolean  whether or not to execute the query during a cache hit
+				 * @uses    Kohana::$cache_life
+				 */
 	public function cached($lifetime = null, $force = false): static
 	{
 		if ($lifetime === null) {
@@ -84,10 +83,8 @@ class Kohana_Database_Query implements \Stringable
 	}
 
 	/**
-	 * Returns results as associative arrays
-	 *
-	 * @return  $this
-	 */
+				 * Returns results as associative arrays
+				 */
 	public function as_assoc(): static
 	{
 		$this->_as_object = false;
@@ -98,11 +95,10 @@ class Kohana_Database_Query implements \Stringable
 	}
 
 	/**
-	 * Returns results as objects
-	 *
-	 * @param   string  $class  classname or TRUE for stdClass
-	 * @return  $this
-	 */
+				 * Returns results as objects
+				 *
+				 * @param   string  $class  classname or TRUE for stdClass
+				 */
 	public function as_object($class = true, array $params = null): static
 	{
 		$this->_as_object = $class;
@@ -116,12 +112,11 @@ class Kohana_Database_Query implements \Stringable
 	}
 
 	/**
-	 * Set the value of a parameter in the query.
-	 *
-	 * @param   string   $param  parameter key to replace
-	 * @param   mixed    $value  value to use
-	 * @return  $this
-	 */
+				 * Set the value of a parameter in the query.
+				 *
+				 * @param   string   $param  parameter key to replace
+				 * @param   mixed    $value  value to use
+				 */
 	public function param($param, $value): static
 	{
 		// Add or overload a new parameter
@@ -131,12 +126,11 @@ class Kohana_Database_Query implements \Stringable
 	}
 
 	/**
-	 * Bind a variable to a parameter in the query.
-	 *
-	 * @param   string  $param  parameter key to replace
-	 * @param   mixed   $var    variable to use
-	 * @return  $this
-	 */
+				 * Bind a variable to a parameter in the query.
+				 *
+				 * @param   string  $param  parameter key to replace
+				 * @param   mixed   $var    variable to use
+				 */
 	public function bind($param, & $var): static
 	{
 		// Bind a value to a variable
@@ -146,11 +140,10 @@ class Kohana_Database_Query implements \Stringable
 	}
 
 	/**
-	 * Add multiple parameters to the query.
-	 *
-	 * @param   array  $params  list of parameters
-	 * @return  $this
-	 */
+				 * Add multiple parameters to the query.
+				 *
+				 * @param   array  $params  list of parameters
+				 */
 	public function parameters(array $params): static
 	{
 		// Merge the new parameters in

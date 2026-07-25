@@ -140,12 +140,11 @@ class Kohana_Validation implements ArrayAccess
 	}
 
 	/**
-	 * Sets or overwrites the label name for a field.
-	 *
-	 * @param   string  $field  field name
-	 * @param   string  $label  label
-	 * @return  $this
-	 */
+				 * Sets or overwrites the label name for a field.
+				 *
+				 * @param   string  $field  field name
+				 * @param   string  $label  label
+				 */
 	public function label($field, $label): static
 	{
 		// Set the label for this field
@@ -155,11 +154,10 @@ class Kohana_Validation implements ArrayAccess
 	}
 
 	/**
-	 * Sets labels using an array.
-	 *
-	 * @param   array   $labels list of field => label names
-	 * @return  $this
-	 */
+				 * Sets labels using an array.
+				 *
+				 * @param   array   $labels list of field => label names
+				 */
 	public function labels(array $labels): static
 	{
 		$this->_labels = $labels + $this->_labels;
@@ -168,41 +166,40 @@ class Kohana_Validation implements ArrayAccess
 	}
 
 	/**
-	 * Overwrites or appends rules to a field. Each rule will be executed once.
-	 * All rules must be string names of functions method names. Parameters must
-	 * match the parameters of the callback function exactly
-	 *
-	 * Aliases you can use in callback parameters:
-	 * - :validation - the validation object
-	 * - :field - the field name
-	 * - :value - the value of the field
-	 *
-	 *     // The "username" must not be empty and have a minimum length of 4
-	 *     $validation->rule('username', 'not_empty')
-	 *                ->rule('username', 'min_length', array(':value', 4));
-	 *
-	 *     // The "password" field must match the "password_repeat" field
-	 *     $validation->rule('password', 'matches', array(':validation', 'password', 'password_repeat'));
-	 *
-	 *     // Using closure (anonymous function)
-	 *     $validation->rule('index',
-	 *         function(Validation $array, $field, $value)
-	 *         {
-	 *             if ($value > 6 AND $value < 10)
-	 *             {
-	 *                 $array->error($field, 'custom');
-	 *             }
-	 *         }
-	 *         , array(':validation', ':field', ':value')
-	 *     );
-	 *
-	 * [!!] Errors must be added manually when using closures!
-	 *
-	 * @param   string      $field  field name
-	 * @param   callback    $rule   valid PHP callback or closure
-	 * @param   array       $params extra parameters for the rule
-	 * @return  $this
-	 */
+				 * Overwrites or appends rules to a field. Each rule will be executed once.
+				 * All rules must be string names of functions method names. Parameters must
+				 * match the parameters of the callback function exactly
+				 *
+				 * Aliases you can use in callback parameters:
+				 * - :validation - the validation object
+				 * - :field - the field name
+				 * - :value - the value of the field
+				 *
+				 *     // The "username" must not be empty and have a minimum length of 4
+				 *     $validation->rule('username', 'not_empty')
+				 *                ->rule('username', 'min_length', array(':value', 4));
+				 *
+				 *     // The "password" field must match the "password_repeat" field
+				 *     $validation->rule('password', 'matches', array(':validation', 'password', 'password_repeat'));
+				 *
+				 *     // Using closure (anonymous function)
+				 *     $validation->rule('index',
+				 *         function(Validation $array, $field, $value)
+				 *         {
+				 *             if ($value > 6 AND $value < 10)
+				 *             {
+				 *                 $array->error($field, 'custom');
+				 *             }
+				 *         }
+				 *         , array(':validation', ':field', ':value')
+				 *     );
+				 *
+				 * [!!] Errors must be added manually when using closures!
+				 *
+				 * @param   string      $field  field name
+				 * @param   callback    $rule   valid PHP callback or closure
+				 * @param   array       $params extra parameters for the rule
+				 */
 	public function rule($field, $rule, array $params = null): static
 	{
 		if ($params === null) {
@@ -222,12 +219,11 @@ class Kohana_Validation implements ArrayAccess
 	}
 
 	/**
-	 * Add rules using an array.
-	 *
-	 * @param   string  $field  field name
-	 * @param   array   $rules  list of callbacks
-	 * @return  $this
-	 */
+				 * Add rules using an array.
+				 *
+				 * @param   string  $field  field name
+				 * @param   array   $rules  list of callbacks
+				 */
 	public function rules($field, array $rules): static
 	{
 		foreach ($rules as $rule) {
@@ -238,16 +234,15 @@ class Kohana_Validation implements ArrayAccess
 	}
 
 	/**
-	 * Bind a value to a parameter definition.
-	 *
-	 *     // This allows you to use :model in the parameter definition of rules
-	 *     $validation->bind(':model', $model)
-	 *         ->rule('status', 'valid_status', array(':model'));
-	 *
-	 * @param   string  $key    variable name or an array of variables
-	 * @param   mixed   $value  value
-	 * @return  $this
-	 */
+				 * Bind a value to a parameter definition.
+				 *
+				 *     // This allows you to use :model in the parameter definition of rules
+				 *     $validation->bind(':model', $model)
+				 *         ->rule('status', 'valid_status', array(':model'));
+				 *
+				 * @param   string  $key    variable name or an array of variables
+				 * @param   mixed   $value  value
+				 */
 	public function bind($key, $value = null): static
 	{
 		if (is_array($key)) {
@@ -414,12 +409,11 @@ class Kohana_Validation implements ArrayAccess
 	}
 
 	/**
-	 * Add an error to a field.
-	 *
-	 * @param   string  $field  field name
-	 * @param   string  $error  error message
-	 * @return  $this
-	 */
+				 * Add an error to a field.
+				 *
+				 * @param   string  $field  field name
+				 * @param   string  $error  error message
+				 */
 	public function error($field, $error, array $params = null): static
 	{
 		$this->_errors[$field] = array($error, $params);

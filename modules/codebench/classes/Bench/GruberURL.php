@@ -39,9 +39,6 @@ class Bench_GruberURL extends Codebench
 		'httpppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppp',
 	);
 
-	/**
-	 * @return false|string
-	 */
 	public function bench_daringfireball($subject): string|false
 	{
 		// Original regex by John Gruber
@@ -49,9 +46,6 @@ class Bench_GruberURL extends Codebench
 		return (empty($matches)) ? false : $matches[0];
 	}
 
-	/**
-	 * @return false|string
-	 */
 	public function bench_daringfireball_v2($subject): string|false
 	{
 		// Removed outer capturing parentheses, made another pair non-capturing
@@ -59,9 +53,6 @@ class Bench_GruberURL extends Codebench
 		return (empty($matches)) ? false : $matches[0];
 	}
 
-	/**
-	 * @return false|string
-	 */
 	public function bench_daringfireball_v3($subject): string|false
 	{
 		// Made quantifiers possessive where possible

@@ -45,11 +45,10 @@ class Kohana_Database_Query_Builder_Insert extends Database_Query_Builder
 	}
 
 	/**
-	 * Sets the table to insert into.
-	 *
-	 * @param   string  $table  table name
-	 * @return  $this
-	 */
+				 * Sets the table to insert into.
+				 *
+				 * @param   string  $table  table name
+				 */
 	public function table($table): static
 	{
 		if (! is_string($table)) {
@@ -62,11 +61,10 @@ class Kohana_Database_Query_Builder_Insert extends Database_Query_Builder
 	}
 
 	/**
-	 * Set the columns that will be inserted.
-	 *
-	 * @param   array  $columns  column names
-	 * @return  $this
-	 */
+				 * Set the columns that will be inserted.
+				 *
+				 * @param   array  $columns  column names
+				 */
 	public function columns(array $columns): static
 	{
 		$this->_columns = $columns;
@@ -75,12 +73,11 @@ class Kohana_Database_Query_Builder_Insert extends Database_Query_Builder
 	}
 
 	/**
-	 * Adds or overwrites values. Multiple value sets can be added.
-	 *
-	 * @param   array   $values  values list
-	 * @param   ...
-	 * @return  $this
-	 */
+				 * Adds or overwrites values. Multiple value sets can be added.
+				 *
+				 * @param   array   $values  values list
+				 * @param   ...
+				 */
 	public function values(array $values): static
 	{
 		if (! is_array($this->_values)) {
@@ -98,12 +95,10 @@ class Kohana_Database_Query_Builder_Insert extends Database_Query_Builder
 	}
 
 	/**
-	 * Use a sub-query to for the inserted values.
-	 *
-	 * @param Database_Query $query Database_Query of SELECT type
-	 *
-	 * @return $this
-	 */
+				 * Use a sub-query to for the inserted values.
+				 *
+				 * @param Database_Query $query Database_Query of SELECT type
+				 */
 	public function select(Database_Query $query): static
 	{
 		if ($query->type() !== Database::SELECT) {

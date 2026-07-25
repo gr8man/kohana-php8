@@ -28,17 +28,16 @@ class Kohana_Config
 	protected $_groups = array();
 
 	/**
-	 * Attach a configuration reader. By default, the reader will be added as
-	 * the first used reader. However, if the reader should be used only when
-	 * all other readers fail, use `FALSE` for the second parameter.
-	 *
-	 *     $config->attach($reader);        // Try first
-	 *     $config->attach($reader, FALSE); // Try last
-	 *
-	 * @param   Kohana_Config_Source    $source instance
-	 * @param   boolean                 $first  add the reader as the first used object
-	 * @return  $this
-	 */
+				 * Attach a configuration reader. By default, the reader will be added as
+				 * the first used reader. However, if the reader should be used only when
+				 * all other readers fail, use `FALSE` for the second parameter.
+				 *
+				 *     $config->attach($reader);        // Try first
+				 *     $config->attach($reader, FALSE); // Try last
+				 *
+				 * @param   Kohana_Config_Source    $source instance
+				 * @param   boolean                 $first  add the reader as the first used object
+				 */
 	public function attach(Kohana_Config_Source $source, $first = true): static
 	{
 		if ($first === true) {
@@ -56,13 +55,12 @@ class Kohana_Config
 	}
 
 	/**
-	 * Detach a configuration reader.
-	 *
-	 *     $config->detach($reader);
-	 *
-	 * @param   Kohana_Config_Source    $source instance
-	 * @return  $this
-	 */
+				 * Detach a configuration reader.
+				 *
+				 *     $config->detach($reader);
+				 *
+				 * @param   Kohana_Config_Source    $source instance
+				 */
 	public function detach(Kohana_Config_Source $source): static
 	{
 		if (($key = array_search($source, $this->_sources)) !== false) {
@@ -135,13 +133,12 @@ class Kohana_Config
 	}
 
 	/**
-	 * Copy one configuration group to all of the other writers.
-	 *
-	 *     $config->copy($name);
-	 *
-	 * @param   string  $group  configuration group name
-	 * @return  $this
-	 */
+				 * Copy one configuration group to all of the other writers.
+				 *
+				 *     $config->copy($name);
+				 *
+				 * @param   string  $group  configuration group name
+				 */
 	public function copy($group): static
 	{
 		// Load the configuration group

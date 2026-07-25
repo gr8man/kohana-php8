@@ -36,11 +36,10 @@ class Kohana_Database_Query_Builder_Update extends Database_Query_Builder_Where
 	}
 
 	/**
-	 * Sets the table to update.
-	 *
-	 * @param   mixed  $table  table name or array($table, $alias) or object
-	 * @return  $this
-	 */
+				 * Sets the table to update.
+				 *
+				 * @param   mixed  $table  table name or array($table, $alias) or object
+				 */
 	public function table($table): static
 	{
 		$this->_table = $table;
@@ -49,11 +48,10 @@ class Kohana_Database_Query_Builder_Update extends Database_Query_Builder_Where
 	}
 
 	/**
-	 * Set the values to update with an associative array.
-	 *
-	 * @param   array   $pairs  associative (column => value) list
-	 * @return  $this
-	 */
+				 * Set the values to update with an associative array.
+				 *
+				 * @param   array   $pairs  associative (column => value) list
+				 */
 	public function set(array $pairs): static
 	{
 		foreach ($pairs as $column => $value) {
@@ -64,12 +62,11 @@ class Kohana_Database_Query_Builder_Update extends Database_Query_Builder_Where
 	}
 
 	/**
-	 * Set the value of a single column.
-	 *
-	 * @param   mixed  $column  table name or array($table, $alias) or object
-	 * @param   mixed  $value   column value
-	 * @return  $this
-	 */
+				 * Set the value of a single column.
+				 *
+				 * @param   mixed  $column  table name or array($table, $alias) or object
+				 * @param   mixed  $value   column value
+				 */
 	public function value($column, $value): static
 	{
 		$this->_set[] = array($column, $value);

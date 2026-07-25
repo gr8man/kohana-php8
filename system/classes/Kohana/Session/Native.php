@@ -13,9 +13,6 @@ defined('SYSPATH') or die('No direct script access.');
  */
 class Kohana_Session_Native extends Session
 {
-	/**
-	 * @return false|string
-	 */
 	#[\Override]
 	public function id(): string|false
 	{
@@ -75,9 +72,6 @@ class Kohana_Session_Native extends Session
 		return null;
 	}
 
-	/**
-	 * @return false|string
-	 */
 	#[\Override]
 	protected function _regenerate(): string|false
 	{

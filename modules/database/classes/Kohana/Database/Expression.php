@@ -31,12 +31,11 @@ class Kohana_Database_Expression implements \Stringable
 	}
 
 	/**
-	 * Bind a variable to a parameter.
-	 *
-	 * @param   string  $param  parameter key to replace
-	 * @param   mixed   $var    variable to use
-	 * @return  $this
-	 */
+				 * Bind a variable to a parameter.
+				 *
+				 * @param   string  $param  parameter key to replace
+				 * @param   mixed   $var    variable to use
+				 */
 	public function bind($param, & $var): static
 	{
 		$this->_parameters[$param] = & $var;
@@ -45,12 +44,11 @@ class Kohana_Database_Expression implements \Stringable
 	}
 
 	/**
-	 * Set the value of a parameter.
-	 *
-	 * @param   string  $param  parameter key to replace
-	 * @param   mixed   $value  value to use
-	 * @return  $this
-	 */
+				 * Set the value of a parameter.
+				 *
+				 * @param   string  $param  parameter key to replace
+				 * @param   mixed   $value  value to use
+				 */
 	public function param($param, $value): static
 	{
 		$this->_parameters[$param] = $value;
@@ -59,11 +57,10 @@ class Kohana_Database_Expression implements \Stringable
 	}
 
 	/**
-	 * Add multiple parameter values.
-	 *
-	 * @param   array   $params list of parameter values
-	 * @return  $this
-	 */
+				 * Add multiple parameter values.
+				 *
+				 * @param   array   $params list of parameter values
+				 */
 	public function parameters(array $params): static
 	{
 		$this->_parameters = $params + $this->_parameters;

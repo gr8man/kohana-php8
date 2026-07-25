@@ -342,33 +342,32 @@ class Kohana_Route
 	}
 
 	/**
-	 * Filters to be run before route parameters are returned:
-	 *
-	 *     $route->filter(
-	 *         function(Route $route, $params, Request $request)
-	 *         {
-	 *             if ($request->method() !== HTTP_Request::POST)
-	 *             {
-	 *                 return FALSE; // This route only matches POST requests
-	 *             }
-	 *             if ($params AND $params['controller'] === 'welcome')
-	 *             {
-	 *                 $params['controller'] = 'home';
-	 *             }
-	 *
-	 *             return $params;
-	 *         }
-	 *     );
-	 *
-	 * To prevent a route from matching, return `FALSE`. To replace the route
-	 * parameters, return an array.
-	 *
-	 * [!!] Default parameters are added before filters are called!
-	 *
-	 * @throws  Kohana_Exception
-	 * @param   array   $callback   callback string, array, or closure
-	 * @return  $this
-	 */
+				 * Filters to be run before route parameters are returned:
+				 *
+				 *     $route->filter(
+				 *         function(Route $route, $params, Request $request)
+				 *         {
+				 *             if ($request->method() !== HTTP_Request::POST)
+				 *             {
+				 *                 return FALSE; // This route only matches POST requests
+				 *             }
+				 *             if ($params AND $params['controller'] === 'welcome')
+				 *             {
+				 *                 $params['controller'] = 'home';
+				 *             }
+				 *
+				 *             return $params;
+				 *         }
+				 *     );
+				 *
+				 * To prevent a route from matching, return `FALSE`. To replace the route
+				 * parameters, return an array.
+				 *
+				 * [!!] Default parameters are added before filters are called!
+				 *
+				 * @throws  Kohana_Exception
+				 * @param   array   $callback   callback string, array, or closure
+				 */
 	public function filter($callback): static
 	{
 		if (! is_callable($callback)) {

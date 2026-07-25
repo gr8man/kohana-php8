@@ -57,11 +57,10 @@ class Kohana_Database_Query_Builder_Select extends Database_Query_Builder_Where
 	}
 
 	/**
-	 * Enables or disables selecting only unique columns using "SELECT DISTINCT"
-	 *
-	 * @param   boolean  $value  enable or disable distinct columns
-	 * @return  $this
-	 */
+				 * Enables or disables selecting only unique columns using "SELECT DISTINCT"
+				 *
+				 * @param   boolean  $value  enable or disable distinct columns
+				 */
 	public function distinct($value): static
 	{
 		$this->_distinct = (bool) $value;
@@ -70,11 +69,10 @@ class Kohana_Database_Query_Builder_Select extends Database_Query_Builder_Where
 	}
 
 	/**
-	 * Choose the columns to select from.
-	 *
-	 * @param   mixed  $columns  column name or array($column, $alias) or object
-	 * @return  $this
-	 */
+				 * Choose the columns to select from.
+				 *
+				 * @param   mixed  $columns  column name or array($column, $alias) or object
+				 */
 	public function select($columns = null): static
 	{
 		$columns = func_get_args();
@@ -85,11 +83,10 @@ class Kohana_Database_Query_Builder_Select extends Database_Query_Builder_Where
 	}
 
 	/**
-	 * Choose the columns to select from, using an array.
-	 *
-	 * @param   array  $columns  list of column names or aliases
-	 * @return  $this
-	 */
+				 * Choose the columns to select from, using an array.
+				 *
+				 * @param   array  $columns  list of column names or aliases
+				 */
 	public function select_array(array $columns): static
 	{
 		$this->_select = array_merge($this->_select, $columns);
@@ -98,15 +95,14 @@ class Kohana_Database_Query_Builder_Select extends Database_Query_Builder_Where
 	}
 
 	/**
-	 * Choose the tables to select "FROM ..."
-	 *
-	 * @param mixed  $table  table name or array($table, $alias) or object
-	 * @param string|string[] $tables
-	 *
-	 * @return $this
-	 *
-	 * @psalm-param list{string, string}|string $tables
-	 */
+				 * Choose the tables to select "FROM ..."
+				 *
+				 * @param mixed  $table  table name or array($table, $alias) or object
+				 * @param string|string[] $tables
+				 *
+				 *
+				 * @psalm-param list{string, string}|string $tables
+				 */
 	public function from(array|string $tables): static
 	{
 		$tables = func_get_args();
@@ -117,12 +113,11 @@ class Kohana_Database_Query_Builder_Select extends Database_Query_Builder_Where
 	}
 
 	/**
-	 * Adds addition tables to "JOIN ...".
-	 *
-	 * @param   mixed   $table  column name or array($column, $alias) or object
-	 * @param   string  $type   join type (LEFT, RIGHT, INNER, etc)
-	 * @return  $this
-	 */
+				 * Adds addition tables to "JOIN ...".
+				 *
+				 * @param   mixed   $table  column name or array($column, $alias) or object
+				 * @param   string  $type   join type (LEFT, RIGHT, INNER, etc)
+				 */
 	public function join($table, $type = null): static
 	{
 		$this->_join[] = $this->_last_join = new Database_Query_Builder_Join($table, $type);
@@ -131,13 +126,12 @@ class Kohana_Database_Query_Builder_Select extends Database_Query_Builder_Where
 	}
 
 	/**
-	 * Adds "ON ..." conditions for the last created JOIN statement.
-	 *
-	 * @param   mixed   $c1  column name or array($column, $alias) or object
-	 * @param   string  $op  logic operator
-	 * @param   mixed   $c2  column name or array($column, $alias) or object
-	 * @return  $this
-	 */
+				 * Adds "ON ..." conditions for the last created JOIN statement.
+				 *
+				 * @param   mixed   $c1  column name or array($column, $alias) or object
+				 * @param   string  $op  logic operator
+				 * @param   mixed   $c2  column name or array($column, $alias) or object
+				 */
 	public function on($c1, $op, $c2): static
 	{
 		$this->_last_join->on($c1, $op, $c2);
@@ -146,11 +140,10 @@ class Kohana_Database_Query_Builder_Select extends Database_Query_Builder_Where
 	}
 
 	/**
-	 * Adds "USING ..." conditions for the last created JOIN statement.
-	 *
-	 * @param   string  $columns  column name
-	 * @return  $this
-	 */
+				 * Adds "USING ..." conditions for the last created JOIN statement.
+				 *
+				 * @param   string  $columns  column name
+				 */
 	public function using($columns): static
 	{
 		$columns = func_get_args();
@@ -161,11 +154,10 @@ class Kohana_Database_Query_Builder_Select extends Database_Query_Builder_Where
 	}
 
 	/**
-	 * Creates a "GROUP BY ..." filter.
-	 *
-	 * @param   mixed   $columns  column name or array($column, $alias) or object
-	 * @return  $this
-	 */
+				 * Creates a "GROUP BY ..." filter.
+				 *
+				 * @param   mixed   $columns  column name or array($column, $alias) or object
+				 */
 	public function group_by($columns): static
 	{
 		$columns = func_get_args();
@@ -176,26 +168,24 @@ class Kohana_Database_Query_Builder_Select extends Database_Query_Builder_Where
 	}
 
 	/**
-	 * Alias of and_having()
-	 *
-	 * @param   mixed   $column  column name or array($column, $alias) or object
-	 * @param   string  $op      logic operator
-	 * @param   mixed   $value   column value
-	 * @return  $this
-	 */
+				 * Alias of and_having()
+				 *
+				 * @param   mixed   $column  column name or array($column, $alias) or object
+				 * @param   string  $op      logic operator
+				 * @param   mixed   $value   column value
+				 */
 	public function having($column, $op, $value = null): static
 	{
 		return $this->and_having($column, $op, $value);
 	}
 
 	/**
-	 * Creates a new "AND HAVING" condition for the query.
-	 *
-	 * @param   mixed   $column  column name or array($column, $alias) or object
-	 * @param   string  $op      logic operator
-	 * @param   mixed   $value   column value
-	 * @return  $this
-	 */
+				 * Creates a new "AND HAVING" condition for the query.
+				 *
+				 * @param   mixed   $column  column name or array($column, $alias) or object
+				 * @param   string  $op      logic operator
+				 * @param   mixed   $value   column value
+				 */
 	public function and_having($column, $op, $value = null): static
 	{
 		$this->_having[] = array('AND' => array($column, $op, $value));
@@ -204,13 +194,12 @@ class Kohana_Database_Query_Builder_Select extends Database_Query_Builder_Where
 	}
 
 	/**
-	 * Creates a new "OR HAVING" condition for the query.
-	 *
-	 * @param   mixed   $column  column name or array($column, $alias) or object
-	 * @param   string  $op      logic operator
-	 * @param   mixed   $value   column value
-	 * @return  $this
-	 */
+				 * Creates a new "OR HAVING" condition for the query.
+				 *
+				 * @param   mixed   $column  column name or array($column, $alias) or object
+				 * @param   string  $op      logic operator
+				 * @param   mixed   $value   column value
+				 */
 	public function or_having($column, $op, $value = null): static
 	{
 		$this->_having[] = array('OR' => array($column, $op, $value));
@@ -219,20 +208,16 @@ class Kohana_Database_Query_Builder_Select extends Database_Query_Builder_Where
 	}
 
 	/**
-	 * Alias of and_having_open()
-	 *
-	 * @return  $this
-	 */
+				 * Alias of and_having_open()
+				 */
 	public function having_open(): static
 	{
 		return $this->and_having_open();
 	}
 
 	/**
-	 * Opens a new "AND HAVING (...)" grouping.
-	 *
-	 * @return  $this
-	 */
+				 * Opens a new "AND HAVING (...)" grouping.
+				 */
 	public function and_having_open(): static
 	{
 		$this->_having[] = array('AND' => '(');
@@ -241,10 +226,8 @@ class Kohana_Database_Query_Builder_Select extends Database_Query_Builder_Where
 	}
 
 	/**
-	 * Opens a new "OR HAVING (...)" grouping.
-	 *
-	 * @return  $this
-	 */
+				 * Opens a new "OR HAVING (...)" grouping.
+				 */
 	public function or_having_open(): static
 	{
 		$this->_having[] = array('OR' => '(');
@@ -253,20 +236,16 @@ class Kohana_Database_Query_Builder_Select extends Database_Query_Builder_Where
 	}
 
 	/**
-	 * Closes an open "AND HAVING (...)" grouping.
-	 *
-	 * @return  $this
-	 */
+				 * Closes an open "AND HAVING (...)" grouping.
+				 */
 	public function having_close(): static
 	{
 		return $this->and_having_close();
 	}
 
 	/**
-	 * Closes an open "AND HAVING (...)" grouping.
-	 *
-	 * @return  $this
-	 */
+				 * Closes an open "AND HAVING (...)" grouping.
+				 */
 	public function and_having_close(): static
 	{
 		$this->_having[] = array('AND' => ')');
@@ -275,10 +254,8 @@ class Kohana_Database_Query_Builder_Select extends Database_Query_Builder_Where
 	}
 
 	/**
-	 * Closes an open "OR HAVING (...)" grouping.
-	 *
-	 * @return  $this
-	 */
+				 * Closes an open "OR HAVING (...)" grouping.
+				 */
 	public function or_having_close(): static
 	{
 		$this->_having[] = array('OR' => ')');
@@ -287,13 +264,12 @@ class Kohana_Database_Query_Builder_Select extends Database_Query_Builder_Where
 	}
 
 	/**
-	 * Adds an other UNION clause.
-	 *
-	 * @param mixed $select  if string, it must be the name of a table. Else
-	 *  must be an instance of Database_Query_Builder_Select
-	 * @param boolean $all  decides if it's an UNION or UNION ALL clause
-	 * @return $this
-	 */
+				 * Adds an other UNION clause.
+				 *
+				 * @param mixed $select  if string, it must be the name of a table. Else
+				 *  must be an instance of Database_Query_Builder_Select
+				 * @param boolean $all  decides if it's an UNION or UNION ALL clause
+				 */
 	public function union($select, $all = true): static
 	{
 		if (is_string($select)) {
@@ -307,11 +283,10 @@ class Kohana_Database_Query_Builder_Select extends Database_Query_Builder_Where
 	}
 
 	/**
-	 * Start returning results after "OFFSET ..."
-	 *
-	 * @param   integer   $number  starting result number or NULL to reset
-	 * @return  $this
-	 */
+				 * Start returning results after "OFFSET ..."
+				 *
+				 * @param   integer   $number  starting result number or NULL to reset
+				 */
 	public function offset($number): static
 	{
 		$this->_offset = ($number === null) ? null : (int) $number;

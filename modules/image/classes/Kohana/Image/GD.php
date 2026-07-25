@@ -542,13 +542,11 @@ class Kohana_Image_GD extends Image
 	}
 
 	/**
-	 * Execute a render.
-	 *
-	 * @param string    $type     image type: png, jpg, gif, etc
-	 * @param integer   $quality  quality
-	 *
-	 * @return false|string
-	 */
+				 * Execute a render.
+				 *
+				 * @param string    $type     image type: png, jpg, gif, etc
+				 * @param integer   $quality  quality
+				 */
 	#[\Override]
 	protected function _do_render($type, $quality): string|false
 	{
