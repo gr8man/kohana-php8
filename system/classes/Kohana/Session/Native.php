@@ -42,29 +42,37 @@ class Kohana_Session_Native extends Session
 			? ini_get('session.cookie_domain')
 			: Cookie::$domain;
 
-		// Sync up the session cookie with Cookie parameters
-		session_set_cookie_params(array(
-			'lifetime' => $this->_lifetime,
-			'path' => Cookie::$path,
-			'domain' => $session_cookie_domain,
-			'secure' => Cookie::$secure,
-			'httponly' => Cookie::$httponly,
-			'samesite' => Cookie::$samesite,
-		));
+		if (! headers_sent()) {
+			// Sync up the session cookie with Cookie parameters
+			session_set_cookie_params(array(
+				'lifetime' => $this->_lifetime,
+				'path' => Cookie::$path,
+				'domain' => $session_cookie_domain,
+				'secure' => Cookie::$secure,
+				'httponly' => Cookie::$httponly,
+				'samesite' => Cookie::$samesite,
+			));
 
-		// Do not allow PHP to send Cache-Control headers
-		session_cache_limiter('');
+			// Do not allow PHP to send Cache-Control headers
+			session_cache_limiter('');
 
-		// Set the session cookie name
-		session_name($this->_name);
+			// Set the session cookie name
+			session_name($this->_name);
+		}
 
 		if ($id) {
 			// Set the session id
 			session_id($id);
 		}
 
-		// Start the session
-		session_start();
+		if (session_status() !== PHP_SESSION_ACTIVE) {
+			// Start the session
+			@session_start();
+		}
+
+		if (! isset($_SESSION) || ! is_array($_SESSION)) {
+			$_SESSION = array();
+		}
 
 		// Use the $_SESSION global for storing data
 		$this->_data = & $_SESSION;
@@ -97,7 +105,11 @@ class Kohana_Session_Native extends Session
 	protected function _restart()
 	{
 		// Fire up a new session
-		$status = session_start();
+		$status = @session_start();
+
+		if (! isset($_SESSION) || ! is_array($_SESSION)) {
+			$_SESSION = array();
+		}
 
 		// Use the $_SESSION global for storing data
 		$this->_data = & $_SESSION;

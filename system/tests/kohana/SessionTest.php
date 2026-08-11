@@ -33,6 +33,179 @@ class Kohana_SessionTest extends Unittest_TestCase
 	}
 
 	/**
+	 * name() should return the configured session name
+	 *
+	 * @test
+	 * @covers Session::name
+	 */
+	public function test_name_returns_configured_name()
+	{
+		$session = $this->getMockSession(array('name' => 'custom_name'));
+		$this->assertSame('custom_name', $session->name());
+	}
+
+	/**
+	 * name() should return the default session name if not configured
+	 *
+	 * @test
+	 * @covers Session::name
+	 */
+	public function test_name_returns_default_name()
+	{
+		$session = $this->getMockSession();
+		$this->assertSame('session', $session->name());
+	}
+
+	/**
+	 * write() should return false after the session has been destroyed
+	 *
+	 * @test
+	 * @covers Session::write
+	 */
+	public function test_write_returns_false_after_destroy()
+	{
+		$session = $this->getMockSession();
+
+		$session->expects($this->once())
+			->method('_destroy')
+			->will($this->returnValue(true));
+
+		$session->destroy();
+
+		$this->assertFalse($session->write());
+	}
+
+	/**
+	 * restart() should call _restart() and return its result
+	 *
+	 * @test
+	 * @covers Session::restart
+	 */
+	public function test_restart_calls_restart_on_driver()
+	{
+		$session = $this->getMockSession();
+
+		$session->expects($this->once())
+			->method('_restart')
+			->will($this->returnValue(true));
+
+		$this->assertTrue($session->restart());
+	}
+
+	/**
+	 * restart() calls destroy before restarting a non-destroyed session
+	 *
+	 * @test
+	 * @covers Session::restart
+	 */
+	public function test_restart_calls_destroy_then_restart()
+	{
+		$session = $this->getMockSession();
+
+		$session->expects($this->once())
+			->method('_destroy')
+			->will($this->returnValue(true));
+
+		$session->expects($this->once())
+			->method('_restart')
+			->will($this->returnValue(true));
+
+		$this->assertTrue($session->restart());
+	}
+
+	/**
+	 * restart() skips destroy when already destroyed
+	 *
+	 * @test
+	 * @covers Session::restart
+	 */
+	public function test_restart_skips_destroy_when_already_destroyed()
+	{
+		$session = $this->getMockSession();
+
+		$session->expects($this->once())
+			->method('_destroy')
+			->will($this->returnValue(true));
+
+		$session->destroy();
+
+		$session->expects($this->once())
+			->method('_restart')
+			->will($this->returnValue(true));
+
+		$this->assertTrue($session->restart());
+		$this->assertAttributeSame(false, '_destroyed', $session);
+	}
+
+	/**
+	 * __toString() returns base64-encoded serialized data
+	 *
+	 * @test
+	 * @covers Session::__toString
+	 */
+	public function test_to_string_returns_encoded_data()
+	{
+		$session = $this->getMockSession();
+
+		$session->set('foo', 'bar');
+
+		$data = $session->as_array();
+		$expected = base64_encode(serialize($data));
+
+		$this->assertSame($expected, (string) $session);
+	}
+
+	/**
+	 * destroy() should only call _destroy() once on multiple calls
+	 *
+	 * @test
+	 * @covers Session::destroy
+	 */
+	public function test_destroy_only_destroys_once()
+	{
+		$session = $this->getMockSession();
+
+		$session->set('foo', 'bar');
+
+		$session->expects($this->once())
+			->method('_destroy')
+			->will($this->returnValue(true));
+
+		$this->assertTrue($session->destroy());
+		$this->assertAttributeSame(array(), '_data', $session);
+
+		// Second call should not call _destroy() again
+		$this->assertTrue($session->destroy());
+	}
+
+	/**
+	 * bind() should return $this for chaining
+	 *
+	 * @test
+	 * @covers Session::bind
+	 */
+	public function test_bind_returns_this()
+	{
+		$session = $this->getMockSession();
+
+		$var = 'test';
+		$this->assertSame($session, $session->bind('key', $var));
+	}
+
+	/**
+	 * base id() returns null
+	 *
+	 * @test
+	 * @covers Session::id
+	 */
+	public function test_id_returns_null()
+	{
+		$session = $this->getMockSession();
+
+		$this->assertNull($session->id());
+	}
+
+	/**
 	 * Provides test data for
 	 *
 	 * test_constructor_uses_name_from_config_and_casts()

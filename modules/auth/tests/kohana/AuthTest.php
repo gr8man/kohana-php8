@@ -34,11 +34,6 @@ class Kohana_AuthTest extends Unittest_TestCase
 		);
 	}
 
-	public function tearDown(): void
-	{
-		parent::tearDown();
-	}
-
 	public function test_bcrypt_hash_password(): void
 	{
 		$auth = new Auth_File($this->_auth_config);

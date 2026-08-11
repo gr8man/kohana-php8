@@ -524,4 +524,108 @@ class Kohana_CoreTest extends Unittest_TestCase
 	{
 		$this->assertSame(array(), Kohana::list_files('invalid_dir_name'));
 	}
+
+	/**
+	 * Tests Kohana::version() includes framework name, version, and codename
+	 *
+	 * @test
+	 * @covers Kohana::version
+	 */
+	public function test_version_format()
+	{
+		$version = Kohana::version();
+		$this->assertStringStartsWith('Kohana Framework ', $version);
+		$this->assertStringContainsString(Kohana::VERSION, $version);
+		$this->assertStringContainsString(Kohana::CODENAME, $version);
+	}
+
+	/**
+	 * Tests Kohana::auto_load_lowercase() returns FALSE for non-existent class
+	 *
+	 * @test
+	 * @covers Kohana::auto_load_lowercase
+	 */
+	public function test_auto_load_lowercase_nonexistent()
+	{
+		$result = Kohana::auto_load_lowercase('class_that_does_not_exist_xyz');
+		$this->assertFalse($result);
+	}
+
+	/**
+	 * Tests Kohana::find_file() with config dir returns array
+	 *
+	 * @test
+	 * @covers Kohana::find_file
+	 */
+	public function test_find_file_config_returns_array()
+	{
+		$result = Kohana::find_file('config', 'cookie');
+		$this->assertInternalType('array', $result);
+		$this->assertNotEmpty($result);
+	}
+
+	/**
+	 * Tests Kohana::find_file() with messages dir returns array
+	 *
+	 * @test
+	 * @covers Kohana::find_file
+	 */
+	public function test_find_file_messages_returns_array()
+	{
+		$result = Kohana::find_file('messages', 'test_messages_file');
+		$this->assertInternalType('array', $result);
+	}
+
+	/**
+	 * Tests Kohana::find_file() with i18n dir returns array
+	 *
+	 * @test
+	 * @covers Kohana::find_file
+	 */
+	public function test_find_file_i18n_returns_array()
+	{
+		$result = Kohana::find_file('i18n', 'en');
+		$this->assertInternalType('array', $result);
+	}
+
+	/**
+	 * Tests Kohana::find_file() with explicit extension
+	 *
+	 * @test
+	 * @covers Kohana::find_file
+	 */
+	public function test_find_file_with_extension()
+	{
+		$path = Kohana::find_file('classes', 'Kohana/Core', 'php');
+		$this->assertInternalType('string', $path);
+		$this->assertFileExists($path);
+	}
+
+	/**
+	 * Tests Kohana::load() with an existing PHP file
+	 *
+	 * @test
+	 * @covers Kohana::load
+	 */
+	public function test_load_existing_file()
+	{
+		$result = Kohana::load(APPPATH.'config/cookie.php');
+		$this->assertInternalType('array', $result);
+		$this->assertArrayHasKey('salt', $result);
+	}
+
+	/**
+	 * Tests Kohana::error_handler() returns TRUE when errors are suppressed
+	 *
+	 * @test
+	 * @covers Kohana::error_handler
+	 */
+	public function test_error_handler_suppressed()
+	{
+		$error_level = error_reporting();
+		error_reporting(0);
+		$result = Kohana::error_handler(E_NOTICE, 'suppressed test', 'test.php', 1);
+		$this->assertTrue($result);
+		error_reporting($error_level);
+	}
 }

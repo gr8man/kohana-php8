@@ -87,6 +87,34 @@ class Kohana_HTTPTest extends Unittest_TestCase
 		$_SERVER = $server;
 	}
 
+	public function test_request_headers_with_content_length(): void
+	{
+		$server = $_SERVER;
+		$_SERVER['CONTENT_LENGTH'] = '42';
+		$_SERVER['HTTP_HOST'] = 'example.com';
+
+		$headers = HTTP::request_headers();
+		$this->assertSame('42', (string) $headers['content-length']);
+
+		$_SERVER = $server;
+	}
+
+	public function test_request_headers_skips_non_http_server_keys(): void
+	{
+		$server = $_SERVER;
+		$_SERVER = array(
+			'SERVER_NAME' => 'localhost',
+			'SERVER_PORT' => '80',
+			'CONTENT_TYPE' => 'text/plain',
+		);
+
+		$headers = HTTP::request_headers();
+		$this->assertSame('text/plain', (string) $headers['content-type']);
+		$this->assertFalse($headers->offsetExists('server_name'));
+
+		$_SERVER = $server;
+	}
+
 	public function test_redirect_throws_redirect_exception(): void
 	{
 		Kohana::$config->load('url')->set('trusted_hosts', array('localhost'));
@@ -105,5 +133,122 @@ class Kohana_HTTPTest extends Unittest_TestCase
 		$this->expectException(Kohana_Exception::class);
 		$this->expectExceptionMessage('Invalid redirect code');
 		HTTP::redirect('/path', 400);
+	}
+
+	public function test_redirect_with_301(): void
+	{
+		Kohana::$config->load('url')->set('trusted_hosts', array('localhost'));
+		$this->setEnvironment(array(
+			'_SERVER' => array(
+				'SERVER_NAME' => 'localhost',
+				'HTTP_HOST' => 'localhost',
+			) + $_SERVER,
+		));
+		$this->expectException(HTTP_Exception_Redirect::class);
+		HTTP::redirect('/moved', 301);
+	}
+
+	public function test_redirect_with_303(): void
+	{
+		Kohana::$config->load('url')->set('trusted_hosts', array('localhost'));
+		$this->setEnvironment(array(
+			'_SERVER' => array(
+				'SERVER_NAME' => 'localhost',
+				'HTTP_HOST' => 'localhost',
+			) + $_SERVER,
+		));
+		$this->expectException(HTTP_Exception_Redirect::class);
+		HTTP::redirect('/see-other', 303);
+	}
+
+	public function test_redirect_with_307(): void
+	{
+		Kohana::$config->load('url')->set('trusted_hosts', array('localhost'));
+		$this->setEnvironment(array(
+			'_SERVER' => array(
+				'SERVER_NAME' => 'localhost',
+				'HTTP_HOST' => 'localhost',
+			) + $_SERVER,
+		));
+		$this->expectException(HTTP_Exception_Redirect::class);
+		HTTP::redirect('/temp', 307);
+	}
+
+	public function test_check_cache_adds_etag_and_cache_control(): void
+	{
+		$response = new Response();
+		$response->body('response body');
+
+		$request = new Request('test-route');
+
+		$result = HTTP::check_cache($request, $response);
+
+		$this->assertSame($response, $result);
+		$this->assertNotNull($response->headers('etag'));
+		$this->assertSame('must-revalidate', $response->headers('cache-control'));
+	}
+
+	public function test_check_cache_appends_to_existing_cache_control(): void
+	{
+		$response = new Response();
+		$response->body('response body');
+		$response->headers('cache-control', 'public');
+
+		$request = new Request('test-route');
+
+		$result = HTTP::check_cache($request, $response);
+
+		$this->assertSame('public, must-revalidate', $response->headers('cache-control'));
+	}
+
+	public function test_check_cache_uses_provided_etag(): void
+	{
+		$response = new Response();
+		$response->body('response body');
+
+		$request = new Request('test-route');
+
+		HTTP::check_cache($request, $response, '"custom-etag"');
+
+		$this->assertSame('"custom-etag"', (string) $response->headers('etag'));
+	}
+
+	public function test_check_cache_throws_304_when_etag_matches(): void
+	{
+		$etag = '"matching-etag"';
+
+		$response = new Response();
+		$response->body('response body');
+
+		$request = new Request('test-route');
+		$request->headers('if-none-match', $etag);
+
+		$this->expectException(HTTP_Exception_304::class);
+		HTTP::check_cache($request, $response, $etag);
+	}
+
+	public function test_check_cache_throws_304_with_generated_etag(): void
+	{
+		$response = new Response();
+		$response->body('response body');
+
+		$request = new Request('test-route');
+		$request->headers('if-none-match', $response->generate_etag());
+
+		$this->expectException(HTTP_Exception_304::class);
+		HTTP::check_cache($request, $response);
+	}
+
+	public function test_check_cache_does_not_throw_when_etag_differs(): void
+	{
+		$response = new Response();
+		$response->body('response body');
+
+		$request = new Request('test-route');
+		$request->headers('if-none-match', '"non-matching"');
+
+		$result = HTTP::check_cache($request, $response, '"actual-etag"');
+
+		$this->assertSame($response, $result);
 	}
 }

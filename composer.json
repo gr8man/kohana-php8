@@ -13,7 +13,7 @@
 		"vimeo/psalm": "^6.16"
 	},
 	"scripts": {
-		"rector": "rector process",
+		"rector": "php vendor/bin/rector process --no-ansi --no-progress-bar",
 		"cs-fix": "php-cs-fixer fix",
 		"fix": [
 			"@rector",

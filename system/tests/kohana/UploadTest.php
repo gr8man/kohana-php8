@@ -21,165 +21,27 @@ defined('SYSPATH') or die('Kohana bootstrap needs to be included before tests ru
 class Kohana_UploadTest extends Unittest_TestCase
 {
 	/**
-	 * Provides test data for test_size()
-	 *
-	 * @return array
-	 */
-	public function provider_size()
-	{
-		return array(
-			// $field, $bytes, $environment, $expected
-			array(
-				'unit_test',
-				5,
-				array('_FILES' => array('unit_test' => array('error' => UPLOAD_ERR_INI_SIZE))),
-				false
-			),
-			array(
-				'unit_test',
-				5,
-				array('_FILES' => array('unit_test' => array('error' => UPLOAD_ERR_NO_FILE))),
-				true
-			),
-			array(
-				'unit_test',
-				'6K',
-				array('_FILES' => array(
-					'unit_test' => array(
-						'error' => UPLOAD_ERR_OK,
-						'name' => 'Unit_Test File',
-						'type' => 'image/png',
-						'tmp_name' => Kohana::find_file('tests', 'test_data/github', 'png'),
-						'size' => filesize(Kohana::find_file('tests', 'test_data/github', 'png')),
-						)
-					)
-				),
-				true
-			),
-			array(
-				'unit_test',
-				'1B',
-				array('_FILES' => array(
-						'unit_test' => array(
-							'error' => UPLOAD_ERR_OK,
-							'name' => 'Unit_Test File',
-							'type' => 'image/png',
-							'tmp_name' => Kohana::find_file('tests', 'test_data/github', 'png'),
-							'size' => filesize(Kohana::find_file('tests', 'test_data/github', 'png')),
-						)
-					)
-				),
-				false
-			),
-		);
-	}
-
-	/**
-	 * Tests Upload::size
-	 *
-	 * @test
-	 * @dataProvider provider_size
-	 * @covers Kohana_Upload::size
-	 * @param string $field the files field to test
-	 * @param string $bytes valid bite size
-	 * @param array $environment set the $_FILES array
-	 * @param bool $expected what to expect
-	 */
-	public function test_size($field, $bytes, $environment, $expected)
-	{
-		$this->setEnvironment($environment);
-
-		$this->assertSame($expected, Upload::size($_FILES[$field], $bytes));
-	}
-
-	/**
-	 * size() should throw an exception of the supplied max size is invalid
-	 *
-	 * @test
-	 * @covers Kohana_Upload::size
-	 */
-	public function test_size_throws_exception_for_invalid_size()
-	{
-		$this->expectException('Kohana_Exception');
-		$this->setEnvironment(array(
-			'_FILES' => array(
-				'unit_test' => array(
-					'error' => UPLOAD_ERR_OK,
-					'name' => 'Unit_Test File',
-					'type' => 'image/png',
-					'tmp_name' => Kohana::find_file('tests', 'test_data/github', 'png'),
-					'size' => filesize(Kohana::find_file('tests', 'test_data/github', 'png')),
-				)
-			)
-		));
-
-		Upload::size($_FILES['unit_test'], '1DooDah');
-	}
-
-	/**
 	 * Provides test data for test_valid()
 	 *
 	 * @return array
 	 */
-	public function provider_valid()
+	public function provider_valid(): array
 	{
-		return array(
-			array(
-				true,
-				array(
-					'error' => UPLOAD_ERR_OK,
-					'name' => 'Unit_Test File',
-					'type' => 'image/png',
-					'tmp_name' => Kohana::find_file('tests', 'test_data/github', 'png'),
-					'size' => filesize(Kohana::find_file('tests', 'test_data/github', 'png')),
-				)
-			),
-			array(
-				false,
-				array(
-					'name' => 'Unit_Test File',
-					'type' => 'image/png',
-					'tmp_name' => Kohana::find_file('tests', 'test_data/github', 'png'),
-					'size' => filesize(Kohana::find_file('tests', 'test_data/github', 'png')),
-				)
-			),
-			array(
-				false,
-				array(
-					'error' => UPLOAD_ERR_OK,
-					'type' => 'image/png',
-					'tmp_name' => Kohana::find_file('tests', 'test_data/github', 'png'),
-					'size' => filesize(Kohana::find_file('tests', 'test_data/github', 'png')),
-				)
-			),
-			array(
-				false,
-				array(
-					'name' => 'Unit_Test File',
-					'error' => UPLOAD_ERR_OK,
-					'tmp_name' => Kohana::find_file('tests', 'test_data/github', 'png'),
-					'size' => filesize(Kohana::find_file('tests', 'test_data/github', 'png')),
-				)
-			),
-			array(
-				false,
-				array(
-					'error' => UPLOAD_ERR_OK,
-					'name' => 'Unit_Test File',
-					'type' => 'image/png',
-					'size' => filesize(Kohana::find_file('tests', 'test_data/github', 'png')),
-				)
-			),
-			array(
-				false,
-				array(
-					'error' => UPLOAD_ERR_OK,
-					'name' => 'Unit_Test File',
-					'type' => 'image/png',
-					'tmp_name' => Kohana::find_file('tests', 'test_data/github', 'png'),
-				)
-			),
+		$complete = array(
+			'error' => UPLOAD_ERR_OK,
+			'name' => 'test.txt',
+			'type' => 'text/plain',
+			'tmp_name' => '/tmp/test.txt',
+			'size' => 100,
+		);
 
+		return array(
+			array(true, $complete),
+			array(false, array_diff_key($complete, array('error' => 1))),
+			array(false, array_diff_key($complete, array('name' => 1))),
+			array(false, array_diff_key($complete, array('type' => 1))),
+			array(false, array_diff_key($complete, array('tmp_name' => 1))),
+			array(false, array_diff_key($complete, array('size' => 1))),
 		);
 	}
 
@@ -188,51 +50,20 @@ class Kohana_UploadTest extends Unittest_TestCase
 	 *
 	 * @test
 	 * @dataProvider provider_valid
-	 * @covers Upload::valid
+	 * @covers Kohana_Upload::valid
 	 */
-	public function test_valid($expected, $file)
+	public function test_valid(bool $expected, array $file): void
 	{
-		$this->setEnvironment(array(
-			'_FILES' => array(
-				'unit_test' => $file,
-			),
-		));
-
-		$this->assertSame($expected, Upload::valid($_FILES['unit_test']));
+		$this->assertSame($expected, Upload::valid($file));
 	}
 
 	/**
-	 * Tests Upload::type
+	 * Tests Upload::not_empty with missing keys
 	 *
 	 * @test
-	 * @covers Upload::type
+	 * @covers Kohana_Upload::not_empty
 	 */
-	public function test_type()
-	{
-		$this->setEnvironment(array(
-			'_FILES' => array(
-				'unit_test' => array(
-					'error' => UPLOAD_ERR_OK,
-					'name' => 'github.png',
-					'type' => 'image/png',
-					'tmp_name' => Kohana::find_file('tests', 'test_data/github', 'png'),
-					'size' => filesize(Kohana::find_file('tests', 'test_data/github', 'png')),
-				)
-			)
-		));
-
-		$this->assertTrue(Upload::type($_FILES['unit_test'], array('jpg', 'png', 'gif')));
-
-		$this->assertFalse(Upload::type($_FILES['unit_test'], array('docx')));
-	}
-
-	/**
-	 * Tests Upload::not_empty
-	 *
-	 * @test
-	 * @covers Upload::not_empty
-	 */
-	public function test_not_empty_missing_keys()
+	public function test_not_empty_missing_keys(): void
 	{
 		$this->assertFalse(Upload::not_empty(array()));
 		$this->assertFalse(Upload::not_empty(array('error' => UPLOAD_ERR_OK)));
@@ -242,9 +73,9 @@ class Kohana_UploadTest extends Unittest_TestCase
 	 * Tests Upload::not_empty with upload error
 	 *
 	 * @test
-	 * @covers Upload::not_empty
+	 * @covers Kohana_Upload::not_empty
 	 */
-	public function test_not_empty_upload_error()
+	public function test_not_empty_upload_error(): void
 	{
 		$this->assertFalse(Upload::not_empty(array(
 			'error' => UPLOAD_ERR_NO_FILE,
@@ -255,10 +86,12 @@ class Kohana_UploadTest extends Unittest_TestCase
 	/**
 	 * Tests Upload::not_empty with non-uploaded file
 	 *
+	 * In CLI is_uploaded_file() always returns false.
+	 *
 	 * @test
-	 * @covers Upload::not_empty
+	 * @covers Kohana_Upload::not_empty
 	 */
-	public function test_not_empty_non_uploaded_file()
+	public function test_not_empty_non_uploaded_file(): void
 	{
 		$tmp = tmpfile();
 		$path = stream_get_meta_data($tmp)['uri'];
@@ -270,26 +103,170 @@ class Kohana_UploadTest extends Unittest_TestCase
 	}
 
 	/**
-	 * Tests Upload::save returns false for non-uploaded files
+	 * Provides test data for test_type()
 	 *
-	 * @test
-	 * @covers Upload::save
+	 * @return array
 	 */
-	public function test_save_non_uploaded_file()
+	public function provider_type(): array
 	{
-		$this->assertFalse(Upload::save(array(
-			'tmp_name' => '/tmp/nonexistent',
-		)));
+		return array(
+			// Matching extension
+			array(
+				array('error' => UPLOAD_ERR_OK, 'name' => 'test.png'),
+				array('jpg', 'png', 'gif'),
+				true,
+			),
+			// Non-matching extension
+			array(
+				array('error' => UPLOAD_ERR_OK, 'name' => 'test.png'),
+				array('docx'),
+				false,
+			),
+			// Case-insensitive
+			array(
+				array('error' => UPLOAD_ERR_OK, 'name' => 'test.PNG'),
+				array('jpg', 'png', 'gif'),
+				true,
+			),
+			// Upload error returns true regardless of extension
+			array(
+				array('error' => UPLOAD_ERR_NO_FILE, 'name' => 'test.png'),
+				array('jpg'),
+				true,
+			),
+			// No extension
+			array(
+				array('error' => UPLOAD_ERR_OK, 'name' => 'test'),
+				array('jpg'),
+				false,
+			),
+			// Multiple dots in filename
+			array(
+				array('error' => UPLOAD_ERR_OK, 'name' => 'test.file.png'),
+				array('png'),
+				true,
+			),
+		);
 	}
 
 	/**
-	 * Tests Upload::save returns false when tmp_name is missing
+	 * Tests Upload::type
 	 *
 	 * @test
-	 * @covers Upload::save
+	 * @dataProvider provider_type
+	 * @covers Kohana_Upload::type
 	 */
-	public function test_save_missing_tmp_name()
+	public function test_type(array $file, array $allowed, bool $expected): void
 	{
-		$this->assertFalse(Upload::save(array()));
+		$this->assertSame($expected, Upload::type($file, $allowed));
+	}
+
+	/**
+	 * Provides test data for test_size()
+	 *
+	 * @return array
+	 */
+	public function provider_size(): array
+	{
+		return array(
+			// UPLOAD_ERR_INI_SIZE returns false
+			array(
+				array('error' => UPLOAD_ERR_INI_SIZE, 'size' => 5000),
+				'10K',
+				false,
+			),
+			// Other errors return true
+			array(
+				array('error' => UPLOAD_ERR_NO_FILE, 'size' => 5000),
+				'10K',
+				true,
+			),
+			// Valid size within limit
+			array(
+				array('error' => UPLOAD_ERR_OK, 'size' => 5000),
+				'10K',
+				true,
+			),
+			// Exceeded size
+			array(
+				array('error' => UPLOAD_ERR_OK, 'size' => 15000),
+				'10K',
+				false,
+			),
+			// Equal size (boundary)
+			array(
+				array('error' => UPLOAD_ERR_OK, 'size' => 10240),
+				'10K',
+				true,
+			),
+		);
+	}
+
+	/**
+	 * Tests Upload::size
+	 *
+	 * @test
+	 * @dataProvider provider_size
+	 * @covers Kohana_Upload::size
+	 */
+	public function test_size(array $file, string $size, bool $expected): void
+	{
+		$this->assertSame($expected, Upload::size($file, $size));
+	}
+
+	/**
+	 * size() should throw an exception if the supplied max size is invalid
+	 *
+	 * @test
+	 * @covers Kohana_Upload::size
+	 */
+	public function test_size_throws_exception_for_invalid_size(): void
+	{
+		$this->expectException(Kohana_Exception::class);
+
+		Upload::size(array(
+			'error' => UPLOAD_ERR_OK,
+			'size' => 100,
+		), '1DooDah');
+	}
+
+	/**
+	 * Tests Upload::image with various inputs
+	 *
+	 * In CLI, is_uploaded_file() always returns false,
+	 * so image() should return false for all these cases.
+	 *
+	 * @test
+	 * @covers Kohana_Upload::image
+	 */
+	public function test_image_returns_false(): void
+	{
+		// Empty array
+		$this->assertFalse(Upload::image(array()));
+
+		// Missing error key
+		$this->assertFalse(Upload::image(array('tmp_name' => '/tmp/foo')));
+
+		// Missing tmp_name key
+		$this->assertFalse(Upload::image(array('error' => UPLOAD_ERR_OK)));
+
+		// Upload error
+		$this->assertFalse(Upload::image(array(
+			'error' => UPLOAD_ERR_NO_FILE,
+			'tmp_name' => '/tmp/foo',
+		)));
+
+		// Non-uploaded file (is_uploaded_file fails in CLI)
+		$tmp = tmpfile();
+		$path = stream_get_meta_data($tmp)['uri'];
+		$this->assertFalse(Upload::image(array(
+			'error' => UPLOAD_ERR_OK,
+			'tmp_name' => $path,
+		)));
+		fclose($tmp);
+
+		// With width/height params
+		$this->assertFalse(Upload::image(array(), 100, 100));
+		$this->assertFalse(Upload::image(array(), 100, 100, true));
 	}
 }

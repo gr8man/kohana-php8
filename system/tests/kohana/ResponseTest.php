@@ -364,4 +364,744 @@ class Kohana_ResponseTest extends Unittest_TestCase
 		$response->body(0);
 		$this->assertSame('0', $response->body());
 	}
+
+	/**
+	 * Tests Response::factory() returns Response instance
+	 *
+	 * @test
+	 */
+	public function test_factory()
+	{
+		$response = Response::factory();
+		$this->assertInstanceOf('Response', $response);
+	}
+
+	/**
+	 * Tests Response::factory() with config array
+	 *
+	 * @test
+	 */
+	public function test_factory_with_config()
+	{
+		$response = Response::factory(array('_status' => 404));
+		$this->assertSame(404, $response->status());
+	}
+
+	/**
+	 * Tests Response::__construct() with header config
+	 *
+	 * @test
+	 */
+	public function test_construct_with_header_config()
+	{
+		$response = new Response(array(
+			'_header' => array('X-Custom' => 'foo'),
+		));
+		$this->assertSame('foo', (string) $response->headers('X-Custom'));
+	}
+
+	/**
+	 * Tests Response::__construct() with body config
+	 *
+	 * @test
+	 */
+	public function test_construct_with_body_config()
+	{
+		$response = new Response(array('_body' => 'hello'));
+		$this->assertSame('hello', $response->body());
+	}
+
+	/**
+	 * Tests Response::__construct() with protocol config
+	 *
+	 * @test
+	 */
+	public function test_construct_with_protocol_config()
+	{
+		$response = new Response(array('_protocol' => 'HTTP/2.0'));
+		$this->assertSame('HTTP/2.0', $response->protocol());
+	}
+
+	/**
+	 * Tests Response::__toString() returns body
+	 *
+	 * @test
+	 */
+	public function test_to_string()
+	{
+		$response = new Response();
+		$response->body('test content');
+		$this->assertSame('test content', (string) $response);
+	}
+
+	/**
+	 * Tests Response::__toString() with empty body
+	 *
+	 * @test
+	 */
+	public function test_to_string_empty()
+	{
+		$response = new Response();
+		$this->assertSame('', (string) $response);
+	}
+
+	/**
+	 * Tests Response::protocol() returns default protocol
+	 *
+	 * @test
+	 */
+	public function test_protocol_default()
+	{
+		$response = new Response();
+		$this->assertSame(HTTP::$protocol, $response->protocol());
+	}
+
+	/**
+	 * Tests Response::protocol() chainability
+	 *
+	 * @test
+	 */
+	public function test_protocol_chain()
+	{
+		$response = new Response();
+		$result = $response->protocol('HTTP/1.1');
+		$this->assertSame($response, $result);
+	}
+
+	/**
+	 * Tests Response::protocol() converts to uppercase
+	 *
+	 * @test
+	 */
+	public function test_protocol_uppercase()
+	{
+		$response = new Response();
+		$response->protocol('http/1.0');
+		$this->assertSame('HTTP/1.0', $response->protocol());
+	}
+
+	/**
+	 * Tests Response::status() defaults to 200
+	 *
+	 * @test
+	 */
+	public function test_status_default()
+	{
+		$response = new Response();
+		$this->assertSame(200, $response->status());
+	}
+
+	/**
+	 * Tests Response::status() with various valid codes
+	 *
+	 * @test
+	 */
+	public function test_status_various()
+	{
+		$response = new Response();
+		$response->status(404);
+		$this->assertSame(404, $response->status());
+
+		$response->status(500);
+		$this->assertSame(500, $response->status());
+
+		$response->status(301);
+		$this->assertSame(301, $response->status());
+
+		$response->status(204);
+		$this->assertSame(204, $response->status());
+	}
+
+	/**
+	 * Tests Response::headers() returns single header string
+	 *
+	 * @test
+	 */
+	public function test_headers_get_single()
+	{
+		$response = new Response();
+		$response->headers('Content-Type', 'text/plain');
+		$this->assertSame('text/plain', (string) $response->headers('Content-Type'));
+	}
+
+	/**
+	 * Tests Response::content_length()
+	 *
+	 * @test
+	 */
+	public function test_content_length()
+	{
+		$response = new Response();
+		$response->body('hello');
+		$this->assertSame(5, $response->content_length());
+	}
+
+	/**
+	 * Tests Response::content_length() with empty body
+	 *
+	 * @test
+	 */
+	public function test_content_length_empty()
+	{
+		$response = new Response();
+		$this->assertSame(0, $response->content_length());
+	}
+
+	/**
+	 * Tests Response::content_length() after body update
+	 *
+	 * @test
+	 */
+	public function test_content_length_after_update()
+	{
+		$response = new Response();
+		$response->body('hello');
+		$this->assertSame(5, $response->content_length());
+		$response->body('hi');
+		$this->assertSame(2, $response->content_length());
+	}
+
+	/**
+	 * Tests Response::cookie() with array input for multiple cookies
+	 *
+	 * @test
+	 */
+	public function test_cookie_set_array()
+	{
+		$response = new Response();
+		$response->cookie(array(
+			'test1' => 'value1',
+			'test2' => array(
+				'value' => 'value2',
+				'expiration' => 999999,
+			),
+		));
+		$cookies = $response->cookie();
+		$this->assertCount(2, $cookies);
+		$this->assertSame('value1', $cookies['test1']['value']);
+		$this->assertSame('value2', $cookies['test2']['value']);
+		$this->assertSame(999999, $cookies['test2']['expiration']);
+	}
+
+	/**
+	 * Tests Response::delete_cookies() removes all cookies
+	 *
+	 * @test
+	 */
+	public function test_delete_cookies()
+	{
+		$response = new Response();
+		$response->cookie('a', '1');
+		$response->cookie('b', '2');
+		$response->delete_cookies();
+		$this->assertSame(array(), $response->cookie());
+	}
+
+	/**
+	 * Tests Response::delete_cookies() chainability
+	 *
+	 * @test
+	 */
+	public function test_delete_cookies_chain()
+	{
+		$response = new Response();
+		$result = $response->delete_cookies();
+		$this->assertSame($response, $result);
+	}
+
+	/**
+	 * Tests Response::delete_cookie() chainability
+	 *
+	 * @test
+	 */
+	public function test_delete_cookie_chain()
+	{
+		$response = new Response();
+		$response->cookie('a', '1');
+		$result = $response->delete_cookie('a');
+		$this->assertSame($response, $result);
+	}
+
+	/**
+	 * Tests Response::send_headers() with replace parameter
+	 *
+	 * @test
+	 */
+	public function test_send_headers_with_replace()
+	{
+		$response = new Response();
+		$result = $response->send_headers(true);
+		$this->assertSame($response, $result);
+	}
+
+	/**
+	 * Tests Response::send_headers() with callback
+	 *
+	 * @test
+	 */
+	public function test_send_headers_with_callback()
+	{
+		$response = new Response();
+		$response->status(200);
+		$response->protocol('HTTP/1.1');
+
+		$captured = null;
+		$callback = function ($resp, $headers, $replace) use (&$captured) {
+			$captured = $headers;
+			return $resp;
+		};
+
+		$result = $response->send_headers(false, $callback);
+		$this->assertSame($response, $result);
+		$this->assertNotNull($captured);
+		$this->assertIsArray($captured);
+		$this->assertStringContainsString('200 OK', $captured[0]);
+	}
+
+	/**
+	 * Tests Response::render() basic output
+	 *
+	 * @test
+	 */
+	public function test_render_basic()
+	{
+		$orig_protocol = HTTP::$protocol;
+		$orig_content_type = Kohana::$content_type;
+		$orig_charset = Kohana::$charset;
+		$orig_expose = Kohana::$expose;
+
+		HTTP::$protocol = 'HTTP/1.1';
+		Kohana::$content_type = 'text/html';
+		Kohana::$charset = 'UTF-8';
+		Kohana::$expose = false;
+
+		$response = new Response();
+		$response->status(200);
+		$response->protocol('HTTP/1.1');
+		$response->body('test body');
+
+		$output = $response->render();
+
+		$this->assertStringContainsString('HTTP/1.1 200 OK', $output);
+		$this->assertStringContainsString('Content-Type: text/html; charset=UTF-8', $output);
+		$this->assertStringContainsString('Content-Length: 9', $output);
+		$this->assertStringContainsString('test body', $output);
+
+		HTTP::$protocol = $orig_protocol;
+		Kohana::$content_type = $orig_content_type;
+		Kohana::$charset = $orig_charset;
+		Kohana::$expose = $orig_expose;
+	}
+
+	/**
+	 * Tests Response::render() with cookies
+	 *
+	 * @test
+	 */
+	public function test_render_with_cookies()
+	{
+		$orig_protocol = HTTP::$protocol;
+		$orig_content_type = Kohana::$content_type;
+		$orig_charset = Kohana::$charset;
+		$orig_expose = Kohana::$expose;
+
+		HTTP::$protocol = 'HTTP/1.1';
+		Kohana::$content_type = 'text/html';
+		Kohana::$charset = 'UTF-8';
+		Kohana::$expose = false;
+
+		$response = new Response();
+		$response->status(200);
+		$response->body('body');
+		$response->cookie('session', 'abc123');
+
+		$output = $response->render();
+
+		$this->assertStringContainsString('session=abc123', $output);
+		$this->assertStringContainsString('set-cookie', strtolower($output));
+
+		HTTP::$protocol = $orig_protocol;
+		Kohana::$content_type = $orig_content_type;
+		Kohana::$charset = $orig_charset;
+		Kohana::$expose = $orig_expose;
+	}
+
+	/**
+	 * Tests Response::render() preserves custom content-type
+	 *
+	 * @test
+	 */
+	public function test_render_custom_content_type()
+	{
+		$orig_protocol = HTTP::$protocol;
+		$orig_content_type = Kohana::$content_type;
+		$orig_charset = Kohana::$charset;
+		$orig_expose = Kohana::$expose;
+
+		HTTP::$protocol = 'HTTP/1.1';
+		Kohana::$content_type = 'text/html';
+		Kohana::$charset = 'UTF-8';
+		Kohana::$expose = false;
+
+		$response = new Response();
+		$response->status(200);
+		$response->headers('content-type', 'application/json');
+		$response->body('{}');
+
+		$output = $response->render();
+
+		$this->assertStringContainsString('application/json', $output);
+		$this->assertStringNotContainsString('text/html', $output);
+
+		HTTP::$protocol = $orig_protocol;
+		Kohana::$content_type = $orig_content_type;
+		Kohana::$charset = $orig_charset;
+		Kohana::$expose = $orig_expose;
+	}
+
+	/**
+	 * Tests Response::render() with Kohana expose
+	 *
+	 * @test
+	 */
+	public function test_render_with_expose()
+	{
+		$orig_protocol = HTTP::$protocol;
+		$orig_content_type = Kohana::$content_type;
+		$orig_charset = Kohana::$charset;
+		$orig_expose = Kohana::$expose;
+
+		HTTP::$protocol = 'HTTP/1.1';
+		Kohana::$content_type = 'text/html';
+		Kohana::$charset = 'UTF-8';
+		Kohana::$expose = true;
+
+		$response = new Response();
+		$response->status(200);
+		$response->body('content');
+
+		$output = $response->render();
+
+		$this->assertStringContainsString('user-agent:', strtolower($output));
+
+		HTTP::$protocol = $orig_protocol;
+		Kohana::$content_type = $orig_content_type;
+		Kohana::$charset = $orig_charset;
+		Kohana::$expose = $orig_expose;
+	}
+
+	/**
+	 * Tests Response::generate_etag() generates etag
+	 *
+	 * @test
+	 */
+	public function test_generate_etag()
+	{
+		$orig_protocol = HTTP::$protocol;
+		$orig_content_type = Kohana::$content_type;
+		$orig_charset = Kohana::$charset;
+		$orig_expose = Kohana::$expose;
+
+		HTTP::$protocol = 'HTTP/1.1';
+		Kohana::$content_type = 'text/html';
+		Kohana::$charset = 'UTF-8';
+		Kohana::$expose = false;
+
+		$response = new Response();
+		$response->body('content');
+		$etag = $response->generate_etag();
+
+		$this->assertStringStartsWith('"', $etag);
+		$this->assertStringEndsWith('"', $etag);
+		$this->assertSame(42, strlen($etag));
+
+		HTTP::$protocol = $orig_protocol;
+		Kohana::$content_type = $orig_content_type;
+		Kohana::$charset = $orig_charset;
+		Kohana::$expose = $orig_expose;
+	}
+
+	/**
+	 * Tests Response::generate_etag() throws for empty body
+	 *
+	 * @test
+	 */
+	public function test_generate_etag_empty_body()
+	{
+		$this->expectException(\Request_Exception::class);
+		$response = new Response();
+		$response->generate_etag();
+	}
+
+	/**
+	 * Tests Response::_parse_byte_range() returns false when no header
+	 *
+	 * @test
+	 */
+	public function test_parse_byte_range_no_header()
+	{
+		$orig_range = $_SERVER['HTTP_RANGE'] ?? null;
+		unset($_SERVER['HTTP_RANGE']);
+
+		$response = new Response();
+		$method = new ReflectionMethod($response, '_parse_byte_range');
+		$method->setAccessible(true);
+		$result = $method->invoke($response);
+		$this->assertFalse($result);
+
+		if ($orig_range !== null) {
+			$_SERVER['HTTP_RANGE'] = $orig_range;
+		}
+	}
+
+	/**
+	 * Tests Response::_parse_byte_range() parses valid range
+	 *
+	 * @test
+	 */
+	public function test_parse_byte_range_valid()
+	{
+		$orig_range = $_SERVER['HTTP_RANGE'] ?? null;
+		$_SERVER['HTTP_RANGE'] = 'bytes=100-499';
+
+		$response = new Response();
+		$method = new ReflectionMethod($response, '_parse_byte_range');
+		$method->setAccessible(true);
+		$result = $method->invoke($response);
+
+		$this->assertIsArray($result);
+		$this->assertSame('100', $result[1]);
+		$this->assertSame('499', $result[2]);
+
+		if ($orig_range !== null) {
+			$_SERVER['HTTP_RANGE'] = $orig_range;
+		} else {
+			unset($_SERVER['HTTP_RANGE']);
+		}
+	}
+
+	/**
+	 * Tests Response::_parse_byte_range() parses range without end
+	 *
+	 * @test
+	 */
+	public function test_parse_byte_range_open_ended()
+	{
+		$orig_range = $_SERVER['HTTP_RANGE'] ?? null;
+		$_SERVER['HTTP_RANGE'] = 'bytes=500-';
+
+		$response = new Response();
+		$method = new ReflectionMethod($response, '_parse_byte_range');
+		$method->setAccessible(true);
+		$result = $method->invoke($response);
+
+		$this->assertIsArray($result);
+		$this->assertSame('500-', $result[1]);
+		$this->assertArrayNotHasKey(2, $result);
+
+		if ($orig_range !== null) {
+			$_SERVER['HTTP_RANGE'] = $orig_range;
+		} else {
+			unset($_SERVER['HTTP_RANGE']);
+		}
+	}
+
+	/**
+	 * Tests Response::_parse_byte_range() parses negative range
+	 *
+	 * @test
+	 */
+	public function test_parse_byte_range_negative()
+	{
+		$orig_range = $_SERVER['HTTP_RANGE'] ?? null;
+		$_SERVER['HTTP_RANGE'] = 'bytes=-500';
+
+		$response = new Response();
+		$method = new ReflectionMethod($response, '_parse_byte_range');
+		$method->setAccessible(true);
+		$result = $method->invoke($response);
+
+		$this->assertIsArray($result);
+		$this->assertSame('-500', $result[1]);
+		$this->assertArrayNotHasKey(2, $result);
+
+		if ($orig_range !== null) {
+			$_SERVER['HTTP_RANGE'] = $orig_range;
+		} else {
+			unset($_SERVER['HTTP_RANGE']);
+		}
+	}
+
+	/**
+	 * Tests Response::_calculate_byte_range() returns full range by default
+	 *
+	 * @test
+	 */
+	public function test_calculate_byte_range_no_range()
+	{
+		$orig_range = $_SERVER['HTTP_RANGE'] ?? null;
+		unset($_SERVER['HTTP_RANGE']);
+
+		$response = new Response();
+		$method = new ReflectionMethod($response, '_calculate_byte_range');
+		$method->setAccessible(true);
+		list($start, $end) = $method->invoke($response, 1000);
+
+		$this->assertSame(0, $start);
+		$this->assertSame(999, $end);
+
+		if ($orig_range !== null) {
+			$_SERVER['HTTP_RANGE'] = $orig_range;
+		}
+	}
+
+	/**
+	 * Tests Response::_calculate_byte_range() with positive start range
+	 *
+	 * @test
+	 */
+	public function test_calculate_byte_range_positive_start()
+	{
+		$orig_range = $_SERVER['HTTP_RANGE'] ?? null;
+		$_SERVER['HTTP_RANGE'] = 'bytes=500-';
+
+		$response = new Response();
+		$method = new ReflectionMethod($response, '_calculate_byte_range');
+		$method->setAccessible(true);
+		list($start, $end) = $method->invoke($response, 1000);
+
+		$this->assertSame(500, $start);
+		$this->assertSame(999, $end);
+
+		if ($orig_range !== null) {
+			$_SERVER['HTTP_RANGE'] = $orig_range;
+		} else {
+			unset($_SERVER['HTTP_RANGE']);
+		}
+	}
+
+	/**
+	 * Tests Response::_calculate_byte_range() with negative start range
+	 *
+	 * @test
+	 */
+	public function test_calculate_byte_range_negative_start()
+	{
+		$orig_range = $_SERVER['HTTP_RANGE'] ?? null;
+		$_SERVER['HTTP_RANGE'] = 'bytes=-500';
+
+		$response = new Response();
+		$method = new ReflectionMethod($response, '_calculate_byte_range');
+		$method->setAccessible(true);
+		list($start, $end) = $method->invoke($response, 1000);
+
+		$this->assertSame(500, $start);
+		$this->assertSame(999, $end);
+
+		if ($orig_range !== null) {
+			$_SERVER['HTTP_RANGE'] = $orig_range;
+		} else {
+			unset($_SERVER['HTTP_RANGE']);
+		}
+	}
+
+	/**
+	 * Tests Response::_calculate_byte_range() with full range
+	 *
+	 * @test
+	 */
+	public function test_calculate_byte_range_full()
+	{
+		$orig_range = $_SERVER['HTTP_RANGE'] ?? null;
+		$_SERVER['HTTP_RANGE'] = 'bytes=0-499';
+
+		$response = new Response();
+		$method = new ReflectionMethod($response, '_calculate_byte_range');
+		$method->setAccessible(true);
+		list($start, $end) = $method->invoke($response, 1000);
+
+		$this->assertSame(0, $start);
+		$this->assertSame(499, $end);
+
+		if ($orig_range !== null) {
+			$_SERVER['HTTP_RANGE'] = $orig_range;
+		} else {
+			unset($_SERVER['HTTP_RANGE']);
+		}
+	}
+
+	/**
+	 * Tests Response::_calculate_byte_range() out of bounds end
+	 *
+	 * @test
+	 */
+	public function test_calculate_byte_range_out_of_bounds()
+	{
+		$orig_range = $_SERVER['HTTP_RANGE'] ?? null;
+		$_SERVER['HTTP_RANGE'] = 'bytes=0-9999';
+
+		$response = new Response();
+		$method = new ReflectionMethod($response, '_calculate_byte_range');
+		$method->setAccessible(true);
+		list($start, $end) = $method->invoke($response, 1000);
+
+		$this->assertSame(0, $start);
+		$this->assertSame(999, $end);
+
+		if ($orig_range !== null) {
+			$_SERVER['HTTP_RANGE'] = $orig_range;
+		} else {
+			unset($_SERVER['HTTP_RANGE']);
+		}
+	}
+
+	/**
+	 * Tests Response::_calculate_byte_range() when start exceeds end
+	 *
+	 * @test
+	 */
+	public function test_calculate_byte_range_inverted()
+	{
+		$orig_range = $_SERVER['HTTP_RANGE'] ?? null;
+		$_SERVER['HTTP_RANGE'] = 'bytes=800-500';
+
+		$response = new Response();
+		$method = new ReflectionMethod($response, '_calculate_byte_range');
+		$method->setAccessible(true);
+		list($start, $end) = $method->invoke($response, 1000);
+
+		$this->assertSame(0, $start);
+		$this->assertSame(500, $end);
+
+		if ($orig_range !== null) {
+			$_SERVER['HTTP_RANGE'] = $orig_range;
+		} else {
+			unset($_SERVER['HTTP_RANGE']);
+		}
+	}
+
+	/**
+	 * Tests Response::_calculate_byte_range() with start at zero
+	 *
+	 * @test
+	 */
+	public function test_calculate_byte_range_start_zero()
+	{
+		$orig_range = $_SERVER['HTTP_RANGE'] ?? null;
+		$_SERVER['HTTP_RANGE'] = 'bytes=0-0';
+
+		$response = new Response();
+		$method = new ReflectionMethod($response, '_calculate_byte_range');
+		$method->setAccessible(true);
+		list($start, $end) = $method->invoke($response, 1000);
+
+		$this->assertSame(0, $start);
+		$this->assertSame(0, $end);
+
+		if ($orig_range !== null) {
+			$_SERVER['HTTP_RANGE'] = $orig_range;
+		} else {
+			unset($_SERVER['HTTP_RANGE']);
+		}
+	}
 }

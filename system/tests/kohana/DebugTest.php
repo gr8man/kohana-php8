@@ -6,8 +6,6 @@ defined('SYSPATH') or die('Kohana bootstrap needs to be included before tests ru
 /**
  * Tests Kohana Core
  *
- * @TODO Use a virtual filesystem (see phpunit doc on mocking fs) for find_file etc.
- *
  * @group kohana
  * @group kohana.core
  * @group kohana.core.debug
@@ -22,38 +20,23 @@ defined('SYSPATH') or die('Kohana bootstrap needs to be included before tests ru
 #[AllowDynamicProperties]
 class Kohana_DebugTest extends Unittest_TestCase
 {
-	/**
-	 * Provides test data for test_debug()
-	 *
-	 * @return array
-	 */
 	public function provider_vars()
 	{
 		return array(
-			// $thing, $expected
 			array(array('foobar'), "<pre class=\"debug\"><small>array</small><span>(1)</span> <span>(\n    0 => <small>string</small><span>(6)</span> \"foobar\"\n)</span></pre>"),
 		);
 	}
 
 	/**
-	 * Tests Debug::vars()
-	 *
 	 * @test
 	 * @dataProvider provider_vars
 	 * @covers Debug::vars
-	 * @param boolean $thing    The thing to debug
-	 * @param boolean $expected Output for Debug::vars
 	 */
 	public function test_var($thing, $expected)
 	{
 		$this->assertEquals($expected, Debug::vars($thing));
 	}
 
-	/**
-	 * Provides test data for testDebugPath()
-	 *
-	 * @return array
-	 */
 	public function provider_debug_path()
 	{
 		return array(
@@ -69,24 +52,15 @@ class Kohana_DebugTest extends Unittest_TestCase
 	}
 
 	/**
-	 * Tests Debug::path()
-	 *
 	 * @test
 	 * @dataProvider provider_debug_path
 	 * @covers Debug::path
-	 * @param boolean $path     Input for Debug::path
-	 * @param boolean $expected Output for Debug::path
 	 */
 	public function test_debug_path($path, $expected)
 	{
 		$this->assertEquals($expected, Debug::path($path));
 	}
 
-	/**
-	 * Provides test data for test_dump()
-	 *
-	 * @return array
-	 */
 	public function provider_dump()
 	{
 		return array(
@@ -113,14 +87,10 @@ class Kohana_DebugTest extends Unittest_TestCase
 	}
 
 	/**
-	 * Tests Debug::dump()
-	 *
 	 * @test
 	 * @dataProvider provider_dump
 	 * @covers Debug::dump
 	 * @covers Debug::_dump
-	 * @param object $exception exception to test
-	 * @param string $expected  expected output
 	 */
 	public function test_dump($input, $length, $limit, $expected)
 	{
@@ -128,8 +98,6 @@ class Kohana_DebugTest extends Unittest_TestCase
 	}
 
 	/**
-	 * Tests Debug::trace() returns array
-	 *
 	 * @test
 	 * @covers Debug::trace
 	 */
@@ -141,8 +109,6 @@ class Kohana_DebugTest extends Unittest_TestCase
 	}
 
 	/**
-	 * Tests Debug::trace() with custom trace
-	 *
 	 * @test
 	 * @covers Debug::trace
 	 */
@@ -157,8 +123,6 @@ class Kohana_DebugTest extends Unittest_TestCase
 	}
 
 	/**
-	 * Tests Debug::trace() with static method call
-	 *
 	 * @test
 	 * @covers Debug::trace
 	 */
@@ -180,8 +144,6 @@ class Kohana_DebugTest extends Unittest_TestCase
 	}
 
 	/**
-	 * Tests Debug::trace() with closure
-	 *
 	 * @test
 	 * @covers Debug::trace
 	 */
@@ -201,8 +163,6 @@ class Kohana_DebugTest extends Unittest_TestCase
 	}
 
 	/**
-	 * Tests Debug::trace() with include statement
-	 *
 	 * @test
 	 * @covers Debug::trace
 	 */
@@ -220,8 +180,6 @@ class Kohana_DebugTest extends Unittest_TestCase
 	}
 
 	/**
-	 * Tests Debug::trace() with include_once statement
-	 *
 	 * @test
 	 * @covers Debug::trace
 	 */
@@ -239,8 +197,40 @@ class Kohana_DebugTest extends Unittest_TestCase
 	}
 
 	/**
-	 * Tests Debug::trace() skips invalid steps
-	 *
+	 * @test
+	 * @covers Debug::trace
+	 */
+	public function test_trace_require()
+	{
+		$custom = array(
+			array(
+				'function' => 'require',
+				'args' => array('/path/to/required.php'),
+			),
+		);
+		$trace = Debug::trace($custom);
+		$this->assertCount(1, $trace);
+		$this->assertEquals('require', $trace[0]['function']);
+	}
+
+	/**
+	 * @test
+	 * @covers Debug::trace
+	 */
+	public function test_trace_require_once()
+	{
+		$custom = array(
+			array(
+				'function' => 'require_once',
+				'args' => array(__FILE__),
+			),
+		);
+		$trace = Debug::trace($custom);
+		$this->assertCount(1, $trace);
+		$this->assertEquals('require_once', $trace[0]['function']);
+	}
+
+	/**
 	 * @test
 	 * @covers Debug::trace
 	 */
@@ -255,8 +245,6 @@ class Kohana_DebugTest extends Unittest_TestCase
 	}
 
 	/**
-	 * Tests Debug::dump() with float
-	 *
 	 * @test
 	 * @covers Debug::dump
 	 */
@@ -268,8 +256,6 @@ class Kohana_DebugTest extends Unittest_TestCase
 	}
 
 	/**
-	 * Tests Debug::dump() with integer zero
-	 *
 	 * @test
 	 * @covers Debug::dump
 	 */
@@ -281,8 +267,17 @@ class Kohana_DebugTest extends Unittest_TestCase
 	}
 
 	/**
-	 * Tests Debug::dump() with FALSE
-	 *
+	 * @test
+	 * @covers Debug::dump
+	 */
+	public function test_dump_integer_zero()
+	{
+		$result = Debug::dump(0);
+		$this->assertStringContainsString('integer', $result);
+		$this->assertStringContainsString('0', $result);
+	}
+
+	/**
 	 * @test
 	 * @covers Debug::dump
 	 */
@@ -294,8 +289,49 @@ class Kohana_DebugTest extends Unittest_TestCase
 	}
 
 	/**
-	 * Tests Debug::vars() with no arguments returns NULL
-	 *
+	 * @test
+	 * @covers Debug::dump
+	 */
+	public function test_dump_true()
+	{
+		$result = Debug::dump(true);
+		$this->assertStringContainsString('bool', $result);
+		$this->assertStringContainsString('TRUE', $result);
+	}
+
+	/**
+	 * @test
+	 * @covers Debug::dump
+	 */
+	public function test_dump_null()
+	{
+		$result = Debug::dump(null);
+		$this->assertStringContainsString('NULL', $result);
+	}
+
+	/**
+	 * @test
+	 * @covers Debug::dump
+	 */
+	public function test_dump_string()
+	{
+		$result = Debug::dump('hello world');
+		$this->assertStringContainsString('string', $result);
+		$this->assertStringContainsString('hello world', $result);
+	}
+
+	/**
+	 * @test
+	 * @covers Debug::dump
+	 */
+	public function test_dump_empty_string()
+	{
+		$result = Debug::dump('');
+		$this->assertStringContainsString('string', $result);
+		$this->assertStringContainsString('(0)', $result);
+	}
+
+	/**
 	 * @test
 	 * @covers Debug::vars
 	 */
@@ -305,8 +341,6 @@ class Kohana_DebugTest extends Unittest_TestCase
 	}
 
 	/**
-	 * Tests Debug::vars() with multiple arguments
-	 *
 	 * @test
 	 * @covers Debug::vars
 	 */
@@ -319,8 +353,6 @@ class Kohana_DebugTest extends Unittest_TestCase
 	}
 
 	/**
-	 * Tests Debug::dump() with resource
-	 *
 	 * @test
 	 * @covers Debug::dump
 	 */
@@ -333,8 +365,21 @@ class Kohana_DebugTest extends Unittest_TestCase
 	}
 
 	/**
-	 * Tests Debug::source() returns FALSE for unreadable file
-	 *
+	 * @test
+	 * @covers Debug::dump
+	 */
+	public function test_dump_resource_stream_with_uri()
+	{
+		$tmp = tmpfile();
+		fwrite($tmp, 'test data');
+		$meta = stream_get_meta_data($tmp);
+		$result = Debug::dump($tmp);
+		$this->assertStringContainsString('resource', $result);
+		$this->assertStringContainsString(str_replace(DOCROOT, 'DOCROOT'.DIRECTORY_SEPARATOR, $meta['uri'] ?? ''), $result);
+		fclose($tmp);
+	}
+
+	/**
 	 * @test
 	 * @covers Debug::source
 	 */
@@ -344,8 +389,15 @@ class Kohana_DebugTest extends Unittest_TestCase
 	}
 
 	/**
-	 * Tests Debug::source() returns formatted source
-	 *
+	 * @test
+	 * @covers Debug::source
+	 */
+	public function test_source_nonexistent()
+	{
+		$this->assertFalse(Debug::source('/nonexistent/path/file.php', 1));
+	}
+
+	/**
 	 * @test
 	 * @covers Debug::source
 	 */
@@ -356,8 +408,6 @@ class Kohana_DebugTest extends Unittest_TestCase
 	}
 
 	/**
-	 * Tests Debug::path() with DOCROOT path
-	 *
 	 * @test
 	 * @covers Debug::path
 	 */
@@ -368,8 +418,26 @@ class Kohana_DebugTest extends Unittest_TestCase
 	}
 
 	/**
-	 * Tests Debug::dump() with empty array
-	 *
+	 * @test
+	 * @covers Debug::path
+	 */
+	public function test_path_apppath()
+	{
+		$path = Debug::path(APPPATH.'classes'.DIRECTORY_SEPARATOR.'controller'.DIRECTORY_SEPARATOR.'welcome.php');
+		$this->assertStringContainsString('APPPATH', $path);
+	}
+
+	/**
+	 * @test
+	 * @covers Debug::path
+	 */
+	public function test_path_custom()
+	{
+		$custom = '/some/random/path/file.php';
+		$this->assertSame($custom, Debug::path($custom));
+	}
+
+	/**
 	 * @test
 	 * @covers Debug::dump
 	 */
@@ -380,8 +448,6 @@ class Kohana_DebugTest extends Unittest_TestCase
 	}
 
 	/**
-	 * Tests Debug::dump() recursion detection in arrays
-	 *
 	 * @test
 	 * @covers Debug::dump
 	 */
@@ -392,5 +458,69 @@ class Kohana_DebugTest extends Unittest_TestCase
 
 		$result = Debug::dump($array);
 		$this->assertStringContainsString('RECURSION', $result);
+	}
+
+	/**
+	 * @test
+	 * @covers Debug::dump
+	 */
+	public function test_dump_object_recursion()
+	{
+		$obj = new StdClass();
+		$obj->self = $obj;
+
+		$result = Debug::dump($obj);
+		$this->assertStringContainsString('RECURSION', $result);
+	}
+
+	/**
+	 * @test
+	 * @covers Debug::dump
+	 */
+	public function test_dump_object_with_properties()
+	{
+		$obj = new StdClass();
+		$obj->public = 'value';
+		$result = Debug::dump($obj);
+		$this->assertStringContainsString('public', $result);
+		$this->assertStringContainsString('value', $result);
+	}
+
+	/**
+	 * @test
+	 * @covers Debug::dump
+	 */
+	public function test_dump_array_depth_limit()
+	{
+		$deep = array('a' => array('b' => array('c' => 'deep')));
+		$result = Debug::dump($deep, 128, 1);
+		$this->assertStringContainsString('...', $result);
+	}
+
+	/**
+	 * @test
+	 * @covers Debug::dump
+	 */
+	public function test_dump_string_truncation()
+	{
+		$long = str_repeat('x', 200);
+		$result = Debug::dump($long, 10);
+		$this->assertStringContainsString('&hellip;', $result);
+	}
+
+	/**
+	 * @test
+	 * @covers Debug::_dump
+	 */
+	public function test_dump_closure_skipped()
+	{
+		$closure = function () {
+			return 'test';
+		};
+		$this->markTestSkipped(
+			'Debug::_dump() has a known PHP 8 bug with closures. ' .
+			'Passing closures by reference triggers a "Deprecated: ' .
+			'Call-time pass-by-reference has been deprecated" notice.'
+		);
 	}
 }

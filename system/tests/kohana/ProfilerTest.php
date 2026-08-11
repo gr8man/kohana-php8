@@ -153,4 +153,241 @@ class Kohana_ProfilerTest extends Unittest_TestCase
 		$this->assertArrayHasKey('multi_gs', $gstats);
 		$this->assertCount(2, $gstats['multi_gs']['total']);
 	}
+
+	/**
+	 * Test that groups() returns an empty array when no marks exist
+	 *
+	 * @test
+	 * @covers Profiler::groups
+	 */
+	public function test_groups_empty_when_no_marks(): void
+	{
+		$groups = Profiler::groups();
+		$this->assertSame(array(), $groups);
+	}
+
+	/**
+	 * Test that group names are stored in lowercase
+	 *
+	 * @test
+	 * @covers Profiler::start
+	 * @covers Profiler::groups
+	 */
+	public function test_group_names_are_lowercased(): void
+	{
+		$token = Profiler::start('UPPERCASE_GROUP', 'test_method');
+		Profiler::stop($token);
+
+		$groups = Profiler::groups();
+		$this->assertArrayHasKey('uppercase_group', $groups);
+		$this->assertArrayNotHasKey('UPPERCASE_GROUP', $groups);
+	}
+
+	/**
+	 * Test that stats with a single token yields min = max = total = average
+	 *
+	 * @test
+	 * @covers Profiler::stats
+	 */
+	public function test_stats_single_token_values(): void
+	{
+		$token = Profiler::start('solo', 'test');
+		Profiler::stop($token);
+
+		$stats = Profiler::stats(array($token));
+		$this->assertSame($stats['min']['time'], $stats['max']['time']);
+		$this->assertSame($stats['min']['time'], $stats['total']['time']);
+		$this->assertSame($stats['min']['memory'], $stats['max']['memory']);
+		$this->assertSame($stats['min']['memory'], $stats['total']['memory']);
+	}
+
+	/**
+	 * Test that stats works correctly with multiple tokens having different values
+	 *
+	 * @test
+	 * @covers Profiler::stats
+	 */
+	public function test_stats_multiple_tokens_edge_cases(): void
+	{
+		$t1 = Profiler::start('multi_edge', 'a');
+		Profiler::stop($t1);
+		$t2 = Profiler::start('multi_edge', 'b');
+		Profiler::stop($t2);
+
+		$stats = Profiler::stats(array($t1, $t2));
+		$this->assertIsFloat($stats['min']['time']);
+		$this->assertIsFloat($stats['max']['time']);
+		$this->assertIsFloat($stats['total']['time']);
+		$this->assertIsFloat($stats['average']['time']);
+		$this->assertIsInt($stats['min']['memory']);
+		$this->assertIsInt($stats['max']['memory']);
+		$this->assertIsInt($stats['total']['memory']);
+		$this->assertGreaterThanOrEqual($stats['min']['time'], $stats['max']['time']);
+		$this->assertGreaterThanOrEqual($stats['min']['memory'], $stats['max']['memory']);
+	}
+
+	/**
+	 * Test that total returns correct values for a stopped benchmark
+	 *
+	 * @test
+	 * @covers Profiler::total
+	 */
+	public function test_total_with_stopped_benchmark(): void
+	{
+		$token = Profiler::start('total_stopped', 'test');
+		Profiler::stop($token);
+
+		$result = Profiler::total($token);
+		$this->assertIsArray($result);
+		$this->assertCount(2, $result);
+		$this->assertIsFloat($result[0]);
+		$this->assertIsInt($result[1]);
+		$this->assertGreaterThanOrEqual(0, $result[0]);
+		$this->assertGreaterThanOrEqual(0, $result[1]);
+	}
+
+	/**
+	 * Test that delete actually removes the token from internal _marks via reflection
+	 *
+	 * @test
+	 * @covers Profiler::delete
+	 */
+	public function test_delete_removes_from_internal_marks(): void
+	{
+		$token = Profiler::start('internal_del', 'test');
+		Profiler::delete($token);
+
+		$ref = new ReflectionClass(Profiler::class);
+		$prop = $ref->getProperty('_marks');
+		$prop->setAccessible(true);
+		$marks = $prop->getValue();
+
+		$this->assertArrayNotHasKey($token, $marks);
+	}
+
+	/**
+	 * Test that application() returns the correct array structure
+	 *
+	 * @test
+	 * @covers Profiler::application
+	 */
+	public function test_application_returns_array_structure(): void
+	{
+		$result = Profiler::application();
+		$this->assertIsArray($result);
+		$this->assertArrayHasKey('min', $result);
+		$this->assertArrayHasKey('max', $result);
+		$this->assertArrayHasKey('total', $result);
+		$this->assertArrayHasKey('count', $result);
+		$this->assertArrayHasKey('average', $result);
+		$this->assertArrayHasKey('current', $result);
+		$this->assertArrayHasKey('time', $result['current']);
+		$this->assertArrayHasKey('memory', $result['current']);
+		$this->assertIsInt($result['count']);
+		$this->assertGreaterThanOrEqual(1, $result['count']);
+	}
+
+	/**
+	 * Test that application() resets stats when count exceeds rollover
+	 *
+	 * @test
+	 * @covers Profiler::application
+	 */
+	public function test_application_rollover_resets_stats(): void
+	{
+		$orig_rollover = Profiler::$rollover;
+		Profiler::$rollover = 0;
+
+		$result = Profiler::application();
+		$this->assertEquals(1, $result['count']);
+
+		Profiler::$rollover = $orig_rollover;
+	}
+
+	/**
+	 * Test that group_stats with null explicitly returns all groups
+	 *
+	 * @test
+	 * @covers Profiler::group_stats
+	 */
+	public function test_group_stats_null_explicitly(): void
+	{
+		$token = Profiler::start('null_gs', 'method');
+		Profiler::stop($token);
+
+		$gstats = Profiler::group_stats(null);
+		$this->assertArrayHasKey('null_gs', $gstats);
+	}
+
+	/**
+	 * Test that group_stats with a non-existent group returns an empty array
+	 *
+	 * @test
+	 * @covers Profiler::group_stats
+	 */
+	public function test_group_stats_non_existent_group(): void
+	{
+		$token = Profiler::start('real_gs', 'method');
+		Profiler::stop($token);
+
+		$gstats = Profiler::group_stats('nonexistent');
+		$this->assertSame(array(), $gstats);
+	}
+
+	/**
+	 * Test that group_stats aggregation produces correct structure with multiple subgroups
+	 *
+	 * @test
+	 * @covers Profiler::group_stats
+	 */
+	public function test_group_stats_aggregation_structure(): void
+	{
+		$t1 = Profiler::start('agg_gs', 'method_a');
+		Profiler::stop($t1);
+		$t2 = Profiler::start('agg_gs', 'method_b');
+		Profiler::stop($t2);
+
+		$gstats = Profiler::group_stats('agg_gs');
+		$this->assertArrayHasKey('agg_gs', $gstats);
+		$this->assertArrayHasKey('min', $gstats['agg_gs']);
+		$this->assertArrayHasKey('max', $gstats['agg_gs']);
+		$this->assertArrayHasKey('total', $gstats['agg_gs']);
+		$this->assertArrayHasKey('average', $gstats['agg_gs']);
+		$this->assertArrayHasKey('time', $gstats['agg_gs']['total']);
+		$this->assertArrayHasKey('memory', $gstats['agg_gs']['total']);
+		$this->assertIsFloat($gstats['agg_gs']['total']['time']);
+		$this->assertIsInt($gstats['agg_gs']['total']['memory']);
+		$this->assertIsFloat($gstats['agg_gs']['average']['time']);
+	}
+
+	/**
+	 * Test that group_stats with no marks returns an empty array
+	 *
+	 * @test
+	 * @covers Profiler::group_stats
+	 */
+	public function test_group_stats_no_marks(): void
+	{
+		$gstats = Profiler::group_stats();
+		$this->assertSame(array(), $gstats);
+	}
+
+	/**
+	 * Test that group_stats with multiple different groups returns stats for each
+	 *
+	 * @test
+	 * @covers Profiler::group_stats
+	 */
+	public function test_group_stats_multiple_different_groups(): void
+	{
+		$t1 = Profiler::start('group_one', 'method_a');
+		Profiler::stop($t1);
+		$t2 = Profiler::start('group_two', 'method_b');
+		Profiler::stop($t2);
+
+		$gstats = Profiler::group_stats(array('group_one', 'group_two'));
+		$this->assertArrayHasKey('group_one', $gstats);
+		$this->assertArrayHasKey('group_two', $gstats);
+		$this->assertCount(2, $gstats);
+	}
 }

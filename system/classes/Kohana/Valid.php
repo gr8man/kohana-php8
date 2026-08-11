@@ -427,7 +427,7 @@ class Kohana_Valid
 		[$decimal] = array_values(localeconv());
 
 		// A lookahead is used to make sure the string contains at least one digit (before or after the decimal point)
-		return (bool) preg_match('/^-?+(?=.*[0-9])[0-9]*+'.preg_quote((string) $decimal).'?+[0-9]*+$/D', (string) $str);
+		return (bool) preg_match('/^-?+(?=.*[0-9])[0-9]*+'.preg_quote($decimal).'?+[0-9]*+$/D', (string) $str);
 	}
 
 	/**
@@ -476,7 +476,7 @@ class Kohana_Valid
 		// Get the decimal point for the current locale
 		[$decimal] = array_values(localeconv());
 
-		return (bool) preg_match('/^[+-]?[0-9]'.$digits.preg_quote((string) $decimal).'[0-9]{'.((int) $places).'}$/D', (string) $str);
+		return (bool) preg_match('/^[+-]?[0-9]'.$digits.preg_quote($decimal).'[0-9]{'.((int) $places).'}$/D', (string) $str);
 	}
 
 	/**

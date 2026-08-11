@@ -630,7 +630,7 @@ class Kohana_Response implements HTTP_Response, \Stringable
 			if ($start[0] === '-') {
 				// A negative value means we start from the end, so -500 would be the
 				// last 500 bytes.
-				$start = $size - abs($start);
+				$start = $size - abs((int) $start);
 			}
 
 			if (isset($range[2])) {
