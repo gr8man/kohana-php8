@@ -8,6 +8,7 @@ on:
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  GIT_SSL_NO_VERIFY: "true"
 
 jobs:
   tests:
