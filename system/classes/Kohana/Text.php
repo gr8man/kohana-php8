@@ -198,7 +198,7 @@ class Kohana_Text
 		}
 
 		// Split the pool into an array of characters
-		$pool = ($utf8 === true) ? UTF8::str_split($pool, 1) : str_split($pool, 1);
+		$pool = ($utf8) ? UTF8::str_split($pool, 1) : str_split($pool, 1);
 
 		// Largest pool key
 		$max = count($pool) - 1;
@@ -431,7 +431,7 @@ class Kohana_Text
 		$str = preg_replace('~\n{2,}~', "</p>\n\n<p>", $str);
 
 		// The following regexes only need to be executed if the string contains html
-		if ($html_found !== false) {
+		if ($html_found) {
 			// Remove p tags around $no_p elements
 			$str = preg_replace('~<p>(?=</?'.$no_p.'[^>]*+>)~i', '', (string) $str);
 			$str = preg_replace('~(</?'.$no_p.'[^>]*+>)</p>~i', '$1', (string) $str);

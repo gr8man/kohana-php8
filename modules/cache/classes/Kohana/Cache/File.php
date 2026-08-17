@@ -327,7 +327,7 @@ class Kohana_Cache_File extends Cache implements Cache_GarbageCollect {
 					}
 
 					// If the delete flag is set delete file
-					if ($delete === TRUE)
+					if ($delete)
 						return unlink($file->getRealPath());
 					else
 						return FALSE;

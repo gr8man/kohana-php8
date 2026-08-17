@@ -149,7 +149,7 @@ class Kohana_Date
 		$hours = array();
 
 		// 24-hour time has 24 hours, instead of 12
-		$size = ($long === true) ? 23 : 12;
+		$size = ($long) ? 23 : 12;
 
 		for ($i = $start; $i <= $size; $i += $step) {
 			$hours[$i] = (string) $i;
