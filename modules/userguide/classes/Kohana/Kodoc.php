@@ -237,8 +237,12 @@ class Kohana_Kodoc
 	 */
 	public static function parse($comment, $html = true): array
 	{
+		if (empty($comment)) {
+			return array('', array());
+		}
+
 		// Normalize all new lines to \n
-		$comment = str_replace(array("\r\n", "\n"), "\n", $comment);
+		$comment = str_replace(array("\r\n", "\n"), "\n", (string) $comment);
 
 		// Split into lines while capturing without leading whitespace
 		preg_match_all('/^\s*\* ?(.*)\n/m', $comment, $lines);

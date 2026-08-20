@@ -18,7 +18,7 @@ class Kohana_Unittest_TestCaseTest extends Unittest_TestCase
 		$obj = new stdClass();
 		$obj->name = 'test';
 		$obj->count = 5;
-		$obj->items = ['apple', 'banana'];
+		$obj->items = array('apple', 'banana');
 
 		$this->assertAttributeSame('test', 'name', $obj);
 		$this->assertAttributeEquals(5, 'count', $obj);
@@ -36,18 +36,18 @@ class Kohana_Unittest_TestCaseTest extends Unittest_TestCase
 		$this->assertInternalType('int', 123);
 		$this->assertInternalType('float', 3.14);
 		$this->assertInternalType('bool', true);
-		$this->assertInternalType('array', [1, 2]);
+		$this->assertInternalType('array', array(1, 2));
 		$this->assertInternalType('object', new stdClass());
 		$this->assertInternalType('null', null);
-		$this->assertInternalType('callable', fn(): true => true);
-		$this->assertInternalType('iterable', [1, 2]);
+		$this->assertInternalType('callable', fn (): true => true);
+		$this->assertInternalType('iterable', array(1, 2));
 	}
 
 	public function test_environment_helpers(): void
 	{
-		$this->setEnvironment([
-			'_SERVER' => ['TEST_ENV_VAR' => 'test_val'],
-		]);
+		$this->setEnvironment(array(
+			'_SERVER' => array('TEST_ENV_VAR' => 'test_val'),
+		));
 		$this->assertSame('test_val', $_SERVER['TEST_ENV_VAR']);
 	}
 }

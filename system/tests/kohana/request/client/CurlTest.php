@@ -18,7 +18,7 @@ class Kohana_Request_Client_CurlTest extends Unittest_TestCase
 	{
 		$client = new Request_Client_Curl();
 		$request = Request::factory('http://example.com/')->method(Request::POST);
-		$options = $client->_set_curl_request_method($request, []);
+		$options = $client->_set_curl_request_method($request, array());
 		$this->assertArrayHasKey(CURLOPT_POST, $options);
 		$this->assertTrue($options[CURLOPT_POST]);
 	}
@@ -27,7 +27,7 @@ class Kohana_Request_Client_CurlTest extends Unittest_TestCase
 	{
 		$client = new Request_Client_Curl();
 		$request = Request::factory('http://example.com/')->method(Request::PUT);
-		$options = $client->_set_curl_request_method($request, []);
+		$options = $client->_set_curl_request_method($request, array());
 		$this->assertArrayHasKey(CURLOPT_CUSTOMREQUEST, $options);
 		$this->assertSame('PUT', $options[CURLOPT_CUSTOMREQUEST]);
 	}

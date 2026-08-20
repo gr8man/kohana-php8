@@ -31,10 +31,11 @@ class Kohana_KodocClassTest extends Unittest_TestCase
 
 	public function test_kodoc_method_reflection(): void
 	{
-		$kodoc_method = new Kodoc_Method(Kodoc::class, 'factory');
-		$this->assertSame('factory', $kodoc_method->method->getName());
+		$kodoc_method = new Kodoc_Method(Kodoc::class, 'source');
+		$this->assertSame('source', $kodoc_method->method->getName());
 		$this->assertIsArray($kodoc_method->params);
 		$this->assertNotEmpty($kodoc_method->source);
+		$this->assertNotEmpty($kodoc_method->params_short());
 	}
 
 	public function test_kodoc_property_reflection(): void
