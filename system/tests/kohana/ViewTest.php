@@ -367,10 +367,10 @@ class Kohana_ViewTest extends Unittest_TestCase
 	}
 
 	/**
-	 * Tests View::__clone
+	 * Tests View clone
 	 *
 	 * @test
-	 * @covers View::__clone
+	 * @covers Kohana_View
 	 */
 	public function test_magic_clone(): void
 	{

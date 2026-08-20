@@ -339,9 +339,8 @@ abstract class Kohana_Session implements \Stringable
 	 */
 	public function write()
 	{
-		if (headers_sent() or $this->_destroyed) {
-			// Session cannot be written when the headers are sent or when
-			// the session has been destroyed
+		if ($this->_destroyed) {
+			// Session cannot be written when the session has been destroyed
 			return false;
 		}
 

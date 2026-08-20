@@ -113,4 +113,36 @@ class Minion_CLITest extends Kohana_Unittest_TestCase
 		$this->assertArrayHasKey('force', $options);
 		$this->assertNull($options['force']);
 	}
+
+	public function test_color(): void
+	{
+		$colored = Minion_CLI::color('hello', 'green', 'black');
+		$this->assertStringContainsString('hello', $colored);
+		$this->assertStringContainsString("\033[0;32m", $colored);
+
+		$colored_no_bg = Minion_CLI::color('world', 'red');
+		$this->assertStringContainsString('world', $colored_no_bg);
+	}
+
+	public function test_color_invalid_foreground_throws_exception(): void
+	{
+		$this->expectException(Kohana_Exception::class);
+		Minion_CLI::color('test', 'invalid_color');
+	}
+
+	public function test_color_invalid_background_throws_exception(): void
+	{
+		$this->expectException(Kohana_Exception::class);
+		Minion_CLI::color('test', 'red', 'invalid_bg');
+	}
+
+	public function test_write_and_write_replace(): void
+	{
+		ob_start();
+		Minion_CLI::write('line 1');
+		Minion_CLI::write(array('line 2', 'line 3'));
+		Minion_CLI::write_replace('replacing...', true);
+		$out = ob_get_clean();
+		$this->assertIsString($out);
+	}
 }

@@ -41,7 +41,7 @@ class Bench_URLSite extends Codebench
 	public function bench_original($uri): string
 	{
 		// Get the path from the URI
-		$path = trim(parse_url((string) $uri, PHP_URL_PATH), '/');
+		$path = trim((string) parse_url((string) $uri, PHP_URL_PATH), '/');
 
 		if ($query = parse_url((string) $uri, PHP_URL_QUERY)) {
 			$query = '?'.$query;

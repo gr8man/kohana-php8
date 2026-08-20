@@ -122,7 +122,7 @@ class Kohana_Kodoc_Markdown extends MarkdownExtra_Parser
 	 * @param   array   Matches from regex call
 	 * @return  string  Generated html
 	 */
-	public function _doHeaders_callback_atx($matches)
+	public function _doHeaders_callback_atx($matches): string
 	{
 		$level = strlen((string) $matches[1]);
 		$attr  = $this->_doHeaders_attr($id = & $matches[3]);
@@ -147,7 +147,7 @@ class Kohana_Kodoc_Markdown extends MarkdownExtra_Parser
 	 * @param   string  The heading text
 	 * @return  string  ID for the heading
 	 */
-	public function make_heading_id($heading)
+	public function make_heading_id($heading): string
 	{
 		$id = url::title($heading, '-', true);
 
@@ -202,7 +202,7 @@ class Kohana_Kodoc_Markdown extends MarkdownExtra_Parser
 	 * @param   string  Span text
 	 * @return  string
 	 */
-	public function doBaseURL($text)
+	public function doBaseURL($text): ?string
 	{
 		// URLs containing "://" are left untouched
 		return preg_replace('~(?<!!)(\[.+?\]\()(?!\w++://)(?!#)(\S*(?:\s*+".+?")?\))~', '$1'.Kodoc_Markdown::$base_url.'$2', (string) $text);
@@ -216,7 +216,7 @@ class Kohana_Kodoc_Markdown extends MarkdownExtra_Parser
 	 * @param   string  Span text
 	 * @return  string
 	 */
-	public function doImageURL($text)
+	public function doImageURL($text): ?string
 	{
 		// URLs containing "://" are left untouched
 		return preg_replace('~(!\[.+?\]\()(?!\w++://)(\S*(?:\s*+".+?")?\))~', '$1'.Kodoc_Markdown::$image_url.'$2', (string) $text);
@@ -230,7 +230,7 @@ class Kohana_Kodoc_Markdown extends MarkdownExtra_Parser
 	 * @param   string  Span text
 	 * @return  string
 	 */
-	public function doAPI($text)
+	public function doAPI($text): ?string
 	{
 		return preg_replace_callback('/\['.Kodoc::$regex_class_member.'\]/i', Kodoc::link_class_member(...), (string) $text);
 	}

@@ -71,6 +71,7 @@ abstract class Kohana_Unittest_TestCase extends PHPUnit\Framework\TestCase
 			'scalar' => $this->assertIsScalar($actual, $message),
 			'callable' => $this->assertIsCallable($actual, $message),
 			'iterable' => $this->assertIsIterable($actual, $message),
+			'null' => $this->assertNull($actual, $message),
 			default => throw new Exception("Invalid type $type for assertInternalType"),
 		};
 	}
@@ -208,7 +209,9 @@ abstract class Kohana_Unittest_TestCase extends PHPUnit\Framework\TestCase
 	public function getMock(string $className, $methods = array(), array $arguments = array(), $mockClassName = '', $callOriginalConstructor = true, $callOriginalClone = true, $callAutoload = true, $cloneArguments = false, $callOriginalMethods = false)
 	{
 		$builder = $this->getMockBuilder($className);
-		if ($methods) {
+		if ($methods === null) {
+			$builder->setMethods();
+		} elseif (!empty($methods)) {
 			$builder->setMethods($methods);
 		}
 		if (! $callOriginalConstructor) {

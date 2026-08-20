@@ -269,4 +269,10 @@ class Kohana_UploadTest extends Unittest_TestCase
 		$this->assertFalse(Upload::image(array(), 100, 100));
 		$this->assertFalse(Upload::image(array(), 100, 100, true));
 	}
+
+	public function test_save_returns_false_for_invalid(): void
+	{
+		$this->assertFalse(Upload::save(array()));
+		$this->assertFalse(Upload::save(array('tmp_name' => '/non/existent/file.txt')));
+	}
 }

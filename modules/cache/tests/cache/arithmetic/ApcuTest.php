@@ -73,7 +73,7 @@ class Kohana_ApcuTest extends Kohana_CacheArithmeticMethodsTest {
      * @param   mixed    expected
      */
     #[\Override]
-    public function test_set_get(array $data, $expected): void
+    public function test_set_get(array $data, string|int|float|bool|\StdClass|array|null $expected): void
     {
         if ($data['wait'] !== FALSE)
         {

@@ -108,7 +108,7 @@ class Kohana_Cache_Sqlite extends Cache implements Cache_Tagging, Cache_GarbageC
 			$ER = error_reporting(~E_NOTICE);
 
 			// Return the valid cache data
-			$data = unserialize($result->cache, ['allowed_classes' => FALSE]);
+			$data = unserialize($result->cache, ['allowed_classes' => true]);
 
 			// Turn notices back on
 			error_reporting($ER);

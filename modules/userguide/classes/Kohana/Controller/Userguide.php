@@ -281,7 +281,7 @@ abstract class Kohana_Controller_Userguide extends Controller_Template
 			$this->template->translations = Kohana::message('userguide', 'translations');
 		}
 
-		return parent::after();
+		parent::after();
 	}
 
 	/**

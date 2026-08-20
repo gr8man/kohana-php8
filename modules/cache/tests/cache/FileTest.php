@@ -70,11 +70,9 @@ class Kohana_Cache_FileTest extends Kohana_CacheBasicMethodsTest {
 	}
 
 	/**
-	 * Provider for test_utf8
-	 *
-	 * @return  array
-	 */
-	public function provider_utf8()
+				 * Provider for test_utf8
+				 */
+				public function provider_utf8(): array
 	{
 		return [
 			[
@@ -97,7 +95,7 @@ class Kohana_Cache_FileTest extends Kohana_CacheBasicMethodsTest {
      *
      * @dataProvider provider_utf8
      */
-    public function test_utf8($input, $expected): void
+    public function test_utf8(string $input, string $expected): void
 	{
 		$cache = $this->cache();
 		$cache->set('utf8', $input);
@@ -136,7 +134,7 @@ class Kohana_Cache_FileTest extends Kohana_CacheBasicMethodsTest {
 	 * @param string $id cache id
 	 * @return boolean TRUE if file exists FALSE otherwise
 	 */
-	protected function is_file($id)
+	protected function is_file($id): bool
 	{
 		$cache = $this->cache();
 
