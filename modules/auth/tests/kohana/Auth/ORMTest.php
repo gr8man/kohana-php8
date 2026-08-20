@@ -21,6 +21,7 @@ class Kohana_Auth_ORMTest extends Unittest_TestCase
 		parent::setUpBeforeClass();
 
 		if (!class_exists('Mock_Database_For_Auth_ORM_Test', false)) {
+			/** @see Mock_Database_For_Auth_ORM_Test */
 			eval('
 			class Mock_Database_For_Auth_ORM_Test extends Database {
 				protected $_identifier = "`";
@@ -65,6 +66,7 @@ class Kohana_Auth_ORMTest extends Unittest_TestCase
 	{
 		parent::setUp();
 
+		/** @var Mock_Database_For_Auth_ORM_Test */
 		Database::$instances['default'] = new Mock_Database_For_Auth_ORM_Test('default', array('table_prefix' => ''));
 
 		Kohana::$config->load('auth')->set('hash_key', 'test_key_auth_orm');

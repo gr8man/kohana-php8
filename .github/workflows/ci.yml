@@ -14,6 +14,12 @@ jobs:
   tests:
     needs: [cs, phpstan, psalm, rector]
     runs-on: ubuntu-latest
+    services:
+      memcached:
+        image: memcached:alpine
+        ports:
+          - 11211:11211
+        options: --health-cmd="echo stats | nc localhost 11211" --health-interval=10s --health-timeout=5s --health-retries=5
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -43,6 +49,12 @@ jobs:
   integration:
     needs: [tests]
     runs-on: ubuntu-latest
+    services:
+      memcached:
+        image: memcached:alpine
+        ports:
+          - 11211:11211
+        options: --health-cmd="echo stats | nc localhost 11211" --health-interval=10s --health-timeout=5s --health-retries=5
     strategy:
       fail-fast: false
       matrix:
