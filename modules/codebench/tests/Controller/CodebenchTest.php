@@ -38,7 +38,7 @@ class Controller_CodebenchTest extends Unittest_TestCase
 			$this->fail('Expected HTTP_Exception not thrown');
 		} catch (HTTP_Exception $e) {
 			$this->assertSame(302, $e->getCode());
-			$this->assertStringContainsString('codebench/DummyClass', $e->headers('Location'));
+			$this->assertStringContainsString('codebench/DummyClass', $e->get_response()->headers('Location'));
 
 		}
 		unset($_POST['class']);

@@ -63,7 +63,7 @@ class Kohana_Session_NativeTest extends Unittest_TestCase
 	public function test_native_lifecycle_methods(): void
 	{
 		$id = $this->session->id();
-		$this->assertTrue(is_string($id) || $id === false);
+		$this->assertTrue(is_string($id) || $id === null);
 
 		$ref_regen = new ReflectionMethod($this->session, '_regenerate');
 		$ref_regen->setAccessible(true);

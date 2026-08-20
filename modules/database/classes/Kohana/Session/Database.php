@@ -80,7 +80,7 @@ class Kohana_Session_Database extends Session
 	}
 
 	#[\Override]
-	public function id()
+	public function id(): ?string
 	{
 		return $this->_session_id;
 	}

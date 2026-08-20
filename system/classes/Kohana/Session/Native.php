@@ -14,9 +14,10 @@ defined('SYSPATH') or die('No direct script access.');
 class Kohana_Session_Native extends Session
 {
 	#[\Override]
-	public function id(): string|false
+	public function id(): ?string
 	{
-		return session_id();
+		$id = session_id();
+		return $id !== '' ? $id : null;
 	}
 
 	/**

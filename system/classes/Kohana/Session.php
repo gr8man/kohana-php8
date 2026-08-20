@@ -53,7 +53,10 @@ abstract class Kohana_Session implements \Stringable
 			$class = 'Session_'.ucfirst($type);
 
 			// Create a new session instance
-			Session::$instances[$type] = $session = new $class($config, $id);
+			/** @var self $session */
+			$session = new $class($config, $id);
+
+			Session::$instances[$type] = $session;
 
 			// Write the session at shutdown
 			register_shutdown_function(array($session, 'write'));
@@ -139,7 +142,8 @@ abstract class Kohana_Session implements \Stringable
 
 		if ($this->_encrypted) {
 			// Encrypt the data using the default key
-			$data = Encrypt::instance($this->_encrypted)->encode($data);
+			$encrypt_instance = Encrypt::instance($this->_encrypted === true ? 'default' : $this->_encrypted);
+			$data = $encrypt_instance->encode($data);
 		} else {
 			// Encode the data
 			$data = $this->_encode($data);
@@ -166,16 +170,15 @@ abstract class Kohana_Session implements \Stringable
 	}
 
 	/**
-	 * Get the current session id, if the session supports it.
-	 *
-	 *     $id = $session->id();
-	 *
-	 * [!!] Not all session types have ids.
-	 *
-	 * @return  string
-	 * @since   3.0.8
-	 */
-	public function id()
+				 * Get the current session id, if the session supports it.
+				 *
+				 *     $id = $session->id();
+				 *
+				 * [!!] Not all session types have ids.
+				 *
+				 * @since   3.0.8
+				 */
+	public function id(): ?string
 	{
 		return null;
 	}
@@ -292,7 +295,8 @@ abstract class Kohana_Session implements \Stringable
 			if (is_string($data = $this->_read($id))) {
 				if ($this->_encrypted) {
 					// Decrypt the data using the default key
-					$data = Encrypt::instance($this->_encrypted)->decode($data);
+					$encrypt_instance = Encrypt::instance($this->_encrypted === true ? 'default' : $this->_encrypted);
+					$data = $encrypt_instance->decode($data);
 				} else {
 					// Decode the data
 					$data = $this->_decode($data);
