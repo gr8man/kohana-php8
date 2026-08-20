@@ -34,11 +34,11 @@ class Kohana_HTTP_Exception_305 extends HTTP_Exception_Expected
 	#[\Override]
 	public function check(): bool
 	{
-		if ($location = $this->headers('location') === null) {
+		if (($location = $this->headers('location')) === null) {
 			throw new Kohana_Exception('A \'location\' must be specified for a redirect');
 		}
 
-		if (!str_contains($location, '://')) {
+		if (!str_contains((string) $location, '://')) {
 			throw new Kohana_Exception('An absolute URI to the proxy server must be specified');
 		}
 

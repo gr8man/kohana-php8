@@ -447,7 +447,7 @@ class Kohana_Core
 
 		if ($path = Kohana::find_file($directory, $file)) {
 			// Load the class file
-			require $path;
+			require_once $path;
 
 			// Class has been found
 			return true;

@@ -65,6 +65,11 @@ class Kohana_Auth_ORMTest extends Unittest_TestCase
 	{
 		parent::setUp();
 
+		Database::$instances['default'] = new Mock_Database_For_Auth_ORM_Test('default', array('table_prefix' => ''));
+
+		Kohana::$config->load('auth')->set('hash_key', 'test_key_auth_orm');
+		Kohana::$config->load('auth')->set('hash_method', 'sha256');
+
 		$this->_auth_config = array(
 			'driver'       => 'ORM',
 			'hash_method'  => 'sha256',
@@ -126,5 +131,81 @@ class Kohana_Auth_ORMTest extends Unittest_TestCase
 		$rules = $role->rules();
 		$this->assertIsArray($rules);
 		$this->assertArrayHasKey('name', $rules);
+	}
+
+	public function test_check_password(): void
+	{
+		$auth = new Auth_ORM($this->_auth_config);
+		$user = new Model_Auth_User();
+		$password = 'mypassword123';
+		$hashed = $auth->hash_password($password);
+		$user->password = $hashed;
+		$auth->force_login($user);
+		$this->assertTrue($auth->check_password($password, $hashed));
+		$this->assertFalse($auth->check_password('wrongpass', $hashed));
+	}
+
+	public function test_force_login_and_logout(): void
+	{
+		$auth = new Auth_ORM($this->_auth_config);
+		$user = new Model_Auth_User();
+		$user->password = 'some_hashed_val';
+		$auth->force_login($user, true);
+
+		$this->assertSame($user->password, $auth->password($user));
+		$this->assertSame($user, $auth->get_user());
+		$this->assertTrue($auth->logout(true, true));
+		$this->assertFalse($auth->logged_in());
+	}
+
+	public function test_model_auth_user_helper_methods(): void
+	{
+		$user = new Model_Auth_User();
+		$labels = $user->labels();
+		$this->assertIsArray($labels);
+		$this->assertArrayHasKey('username', $labels);
+
+		$validation = Model_Auth_User::get_password_validation(array('password' => 'secret123', 'password_confirm' => 'secret123'));
+		$this->assertInstanceOf(Validation::class, $validation);
+
+		$this->assertSame('username', $user->unique_key('john_doe'));
+		$this->assertSame('email', $user->unique_key('john@example.com'));
+
+		$user->complete_login();
+		$this->assertTrue(true);
+	}
+
+	public function test_auth_orm_logged_in_and_password(): void
+	{
+		Database::$instances['default'] = new Mock_Database_For_Auth_ORM_Test('default', array('table_prefix' => ''));
+		$auth = new Auth_ORM($this->_auth_config);
+		$user = new Model_User();
+		$ref_loaded = new ReflectionProperty($user, '_loaded');
+		$ref_loaded->setValue($user, true);
+		$ref_pk = new ReflectionProperty($user, '_primary_key_value');
+		$ref_pk->setValue($user, 1);
+		$password = 'mypassword123';
+		$hashed = $auth->hash($password);
+		$ref_object = new ReflectionProperty($user, '_object');
+		$ref_object->setValue($user, array(
+			'id' => 1,
+			'username' => 'testuser',
+			'email' => 'test@example.com',
+			'password' => $hashed,
+			'logins' => 0,
+			'last_login' => 0,
+		));
+
+		$auth->force_login($user);
+		$this->assertTrue($auth->logged_in());
+		$this->assertTrue($auth->check_password($password));
+
+		$this->assertSame($hashed, $auth->password($user));
+
+		$this->assertFalse($auth->auto_login());
+
+		Cookie::set('authautologin', 'dummy_token_val', 3600);
+		$this->assertFalse($auth->auto_login());
+		$auth->logout(true, true);
 	}
 }

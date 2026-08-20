@@ -285,7 +285,7 @@ class Kohana_Auth_ORM extends Auth
 			$hash = $user->password;
 		}
 
-		return Auth::check_password($password, $hash);
+		return parent::check_password($password, $hash);
 	}
 
 } // End Auth ORM

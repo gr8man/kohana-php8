@@ -88,4 +88,25 @@ class Kohana_Session_DatabaseTest extends Unittest_TestCase
 		// Test destroy
 		$this->assertTrue($session2->destroy());
 	}
+
+	public function test_session_database_restart_and_gc(): void
+	{
+		$config = array(
+			'group' => 'session_db',
+			'table' => 'sessions',
+			'name'  => 'test_sess2',
+		);
+
+		$session = new Session_Database($config);
+		$session->set('data_key', 'data_val');
+		$session->write();
+
+		$old_id = $session->id();
+		$this->assertTrue($session->restart());
+		$this->assertNotSame($old_id, $session->id());
+
+		$ref = new ReflectionMethod($session, '_gc');
+		$ref->invoke($session);
+		$this->assertTrue(true);
+	}
 }

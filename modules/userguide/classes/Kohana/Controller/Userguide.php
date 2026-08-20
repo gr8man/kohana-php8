@@ -39,7 +39,9 @@ abstract class Kohana_Controller_Userguide extends Controller_Template
 		}
 
 		// Default show_comments to config value
-		$this->template->show_comments = Kohana::$config->load('userguide.show_comments');
+		if ($this->template instanceof View) {
+			$this->template->show_comments = Kohana::$config->load('userguide.show_comments');
+		}
 	}
 
 	// List all modules that have userguides
@@ -78,7 +80,7 @@ abstract class Kohana_Controller_Userguide extends Controller_Template
 			);
 		}
 		// If we are in the api browser, show the menu and show the api browser in the breadcrumbs
-		elseif (Route::name($this->request->route()) == 'docs/api') {
+		elseif ($this->request->route() and Route::name($this->request->route()) == 'docs/api') {
 			$this->template->menu = Kodoc::menu();
 
 			// Bind the breadcrumb
@@ -90,8 +92,9 @@ abstract class Kohana_Controller_Userguide extends Controller_Template
 		}
 		// Otherwise, show the userguide module menu on the side
 		else {
+			$route_uri = $this->request->route() ? $this->request->route()->uri() : 'guide';
 			$this->template->menu = View::factory('userguide/menu', array('modules' => $this->_modules()));
-			$this->template->breadcrumb = array($this->request->route()->uri() => 'User Guide','Error');
+			$this->template->breadcrumb = array($route_uri => 'User Guide', 'Error');
 		}
 	}
 
@@ -220,7 +223,8 @@ abstract class Kohana_Controller_Userguide extends Controller_Template
 		// Add the breadcrumb
 		$breadcrumb = array();
 		$breadcrumb[$this->guide->uri(array('page' => null))] = 'User Guide';
-		$breadcrumb[$this->request->route()->uri()] = 'API Browser';
+		$route_uri = $this->request->route() ? $this->request->route()->uri() : 'guide-api';
+		$breadcrumb[$route_uri] = 'API Browser';
 		$breadcrumb[] = $this->template->title;
 	}
 

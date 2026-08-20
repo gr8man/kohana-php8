@@ -135,4 +135,25 @@ class Minion_TaskBaseTest extends Kohana_Unittest_TestCase
 		$this->assertInstanceOf(Minion_Task::class, $task);
 		$this->assertSame('help', (string) $task);
 	}
+
+	public function test_build_validation_and_errors_file(): void
+	{
+		$task = $this->createTaskMock();
+		$validation = new Validation(array('foo' => 'bar'));
+		$res = $task->build_validation($validation);
+		$this->assertInstanceOf(Validation::class, $res);
+
+		$ref = new ReflectionMethod($task, 'get_errors_file');
+		$file = $ref->invoke($task);
+		$this->assertIsString($file);
+	}
+
+	public function test_task_execute_and_help(): void
+	{
+		$task = Minion_Task::factory(array('task' => 'help', 'help' => null));
+		ob_start();
+		$task->execute();
+		$out = ob_get_clean();
+		$this->assertIsString($out);
+	}
 }

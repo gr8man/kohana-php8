@@ -121,4 +121,21 @@ class Kohana_ControllerTest extends Unittest_TestCase
 		$controller->after();
 		$this->assertTrue(true);
 	}
+
+	public function test_template_controller(): void
+	{
+		$request = new Request('test');
+		$request->action('index');
+		$response = new Response();
+		$controller = new class ($request, $response) extends Controller_Template {
+			public $auto_render = false;
+			public function action_index(): void
+			{
+				$this->response->body('template output');
+			}
+		};
+
+		$res = $controller->execute();
+		$this->assertSame('template output', $res->body());
+	}
 }

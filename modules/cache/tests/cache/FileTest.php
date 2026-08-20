@@ -151,4 +151,19 @@ class Kohana_Cache_FileTest extends Kohana_CacheBasicMethodsTest {
 		//var_dump($cache->_is_expired($file));
 		return $file->isFile();
 	}
-} // End Kohana_SqliteTest
+
+	public function test_cache_file_helpers_and_corrupted(): void
+	{
+		$cache = $this->cache();
+
+		$ref_make_dir = new ReflectionMethod($cache, '_make_directory');
+		$temp_dir = APPPATH.'cache/temp_test_dir_'.uniqid();
+		$spl_dir = $ref_make_dir->invoke($cache, $temp_dir, 0777, true);
+		$this->assertInstanceOf(SplFileInfo::class, $spl_dir);
+		$this->assertTrue($spl_dir->isDir());
+
+		$ref_delete = new ReflectionMethod($cache, '_delete_file');
+		$deleted = $ref_delete->invoke($cache, $spl_dir, false, true, false);
+		$this->assertTrue($deleted);
+	}
+} // End Kohana_FileTest

@@ -190,7 +190,7 @@ class Kohana_Database_Query implements \Stringable
 	 * @return  mixed    the insert id for INSERT queries
 	 * @return  integer  number of affected rows for all other queries
 	 */
-	public function execute(Database|null $db = null, $as_object = null, $object_params = null)
+	public function execute(Database|string|null $db = null, $as_object = null, $object_params = null)
 	{
 		if (! is_object($db)) {
 			// Get the database instance

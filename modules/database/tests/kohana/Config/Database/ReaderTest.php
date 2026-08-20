@@ -51,4 +51,35 @@ class Kohana_Config_Database_ReaderTest extends Unittest_TestCase
 		$reader = new Config_Database_Reader();
 		$this->assertInstanceOf(Config_Database_Reader::class, $reader);
 	}
+
+	public function test_load_sqlite(): void
+	{
+		$config = array(
+			'type' => 'PDO',
+			'connection' => array(
+				'dsn' => 'sqlite::memory:',
+			),
+			'table_prefix' => '',
+			'charset' => 'utf8',
+		);
+		$db = new Database_PDO('reader_config_db', $config);
+		Database::$instances['reader_config_db'] = $db;
+
+		$db->query(Database::UPDATE, 'CREATE TABLE config (group_name VARCHAR(128), config_key VARCHAR(128), config_value TEXT, PRIMARY KEY (group_name, config_key))');
+		$db->query(Database::INSERT, "INSERT INTO config (group_name, config_key, config_value) VALUES ('app_config', 'site_name', '" . serialize('My Site') . "')");
+
+		$reader = new Config_Database_Reader(array(
+			'instance' => 'reader_config_db',
+			'table_name' => 'config',
+		));
+
+		$this->assertFalse($reader->load('database'));
+		$loaded = $reader->load('app_config');
+		$this->assertIsArray($loaded);
+		$this->assertSame('My Site', $loaded['site_name']);
+
+		$this->assertFalse($reader->load('non_existent_group'));
+
+		unset(Database::$instances['reader_config_db']);
+	}
 }

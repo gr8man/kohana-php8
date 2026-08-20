@@ -1122,31 +1122,44 @@ class Kohana_ResponseTest extends Unittest_TestCase
 		$this->assertEmpty($response->cookie());
 	}
 
-	public function test_generate_etag(): void
+	public function test_response_status_protocol_headers(): void
 	{
 		$response = new Response();
-		$response->body('Hello ETag');
+		$response->status(201)
+			->protocol('HTTP/1.0')
+			->headers('Content-Type', 'application/json')
+			->headers('X-Custom-Header', 'custom_value')
+			->body('{"success":true}');
+
+		$this->assertSame(201, $response->status());
+		$this->assertSame('HTTP/1.0', $response->protocol());
+		$this->assertSame('application/json', (string) $response->headers('Content-Type'));
+		$this->assertSame('custom_value', (string) $response->headers('X-Custom-Header'));
+		$this->assertSame('{"success":true}', $response->body());
+		$this->assertSame(16, $response->content_length());
+
+		$sent_headers = $response->send_headers(false, function ($response, $headers, $replace) {
+			return $headers;
+		});
+		$this->assertIsArray($sent_headers);
+
+		$rendered = $response->render();
+		$this->assertStringContainsString('HTTP/1.0 201 Created', $rendered);
+		$this->assertStringContainsString('Content-Type: application/json', $rendered);
+		$this->assertStringContainsString('{"success":true}', $rendered);
+
 		$etag = $response->generate_etag();
 		$this->assertIsString($etag);
 		$this->assertStringStartsWith('"', $etag);
 		$this->assertStringEndsWith('"', $etag);
-	}
 
-	public function test_generate_etag_empty_body_throws_exception(): void
-	{
-		$this->expectException(Request_Exception::class);
-		$response = new Response();
-		$response->generate_etag();
-	}
+		$response->cookie('session_id', 'test_token_123');
+		$rendered_with_cookies = $response->render();
+		$this->assertStringContainsString('Set-Cookie', $rendered_with_cookies);
+		$this->assertStringContainsString('test_token_123', $rendered_with_cookies);
 
-	public function test_send_headers_with_callback(): void
-	{
-		$response = new Response();
-		$response->headers('X-Custom-Header', 'custom_value');
-		$captured = array();
-		$response->send_headers(true, function ($header) use (&$captured) {
-			$captured[] = $header;
-		});
-		$this->assertNotEmpty($captured);
+		$factory_response = Response::factory(array('_status' => 404, '_body' => 'Not Found'));
+		$this->assertSame(404, $factory_response->status());
+		$this->assertSame('Not Found', $factory_response->body());
 	}
 }

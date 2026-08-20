@@ -804,6 +804,48 @@ class Kohana_RequestTest extends Unittest_TestCase
 		$this->assertEquals(strlen($request->body()), $headers['content-length']);
 	}
 
+	public function test_request_getters_and_setters(): void
+	{
+		$request = Request::factory('test/route');
+		$request->directory('admin')
+			->controller('users')
+			->action('list')
+			->method(HTTP_Request::POST)
+			->secure(true)
+			->body('{"test":1}')
+			->query('page', '2')
+			->post('name', 'Alice');
+
+		$this->assertSame('admin', $request->directory());
+		$this->assertSame('users', $request->controller());
+		$this->assertSame('list', $request->action());
+		$this->assertSame(HTTP_Request::POST, $request->method());
+		$this->assertTrue($request->secure());
+		$this->assertSame('{"test":1}', $request->body());
+		$this->assertSame('2', $request->query('page'));
+		$this->assertSame('Alice', $request->post('name'));
+		$this->assertSame($request->render(), (string) $request);
+	}
+
+	public function test_request_process_and_helpers(): void
+	{
+		$route = new Route('api(/<action>)');
+		$route->defaults(array('controller' => 'api', 'action' => 'index'));
+		$routes = array('api_route' => $route);
+
+		$request = Request::factory('api/status');
+		$matched = Request::process($request, $routes);
+		$this->assertIsArray($matched);
+		$this->assertArrayHasKey('params', $matched);
+		$this->assertSame('status', $matched['params']['action']);
+
+		$unmatched_req = Request::factory('unknown/path');
+		$this->assertNull(Request::process($unmatched_req, $routes));
+
+		$this->assertFalse(Request::post_max_size_exceeded());
+		$this->assertSame(Request::$current, Request::current());
+		$this->assertSame(Request::$initial, Request::initial());
+	}
 } // End Kohana_RequestTest
 
 /**

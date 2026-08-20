@@ -44,7 +44,7 @@ class Kohana_Database_Result_Cached extends Database_Result
 	#[\Override]
 	public function current(): mixed
 	{
-		return $this->_result[$this->_current_row];
+		return $this->_result[$this->_current_row] ?? null;
 	}
 
 } // End Database_Result_Cached

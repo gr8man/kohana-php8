@@ -122,4 +122,18 @@ class Kohana_Database_PDOTest extends Unittest_TestCase
 		$this->expectException(Kohana_Exception::class);
 		$this->db->list_columns('users');
 	}
+
+	public function test_create_function_and_aggregate(): void
+	{
+		$this->assertTrue($this->db->create_function('custom_upper', 'strtoupper'));
+		$res = $this->db->query(Database::SELECT, "SELECT custom_upper('hello') AS res", false);
+		$this->assertSame('HELLO', $res->get('res'));
+
+		$step = function (&$context, $row, $value): float|int|array {
+			$context += $value;
+			return $context;
+		};
+		$final = (fn (&$context, $row) => $context);
+		$this->assertTrue($this->db->create_aggregate('custom_sum', $step, $final));
+	}
 }

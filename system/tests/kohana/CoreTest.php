@@ -628,4 +628,54 @@ class Kohana_CoreTest extends Unittest_TestCase
 		$this->assertTrue($result);
 		error_reporting($error_level);
 	}
+
+	public function test_message_and_list_files(): void
+	{
+		$this->assertIsArray(Kohana::message('tests'));
+		$this->assertSame('default_val', Kohana::message('nonexistent_msg_file', 'nonexistent_key', 'default_val'));
+
+		$files = Kohana::list_files('classes');
+		$this->assertIsArray($files);
+		$this->assertNotEmpty($files);
+
+		$paths = Kohana::include_paths();
+		$this->assertIsArray($paths);
+		$this->assertContains(SYSPATH, $paths);
+	}
+
+	public function test_cache_set_and_get(): void
+	{
+		$key = 'test_core_cache_key_'.uniqid();
+		$data = array('foo' => 'bar', 'time' => time());
+		$this->assertNull(Kohana::cache($key));
+
+		$this->assertTrue(Kohana::cache($key, $data, 300));
+		$this->assertSame($data, Kohana::cache($key));
+
+		// Clean up
+		Kohana::cache($key, null, -100);
+	}
+
+	public function test_version_globals_and_autoload(): void
+	{
+		$this->assertStringContainsString('Kohana Framework', Kohana::version());
+
+		Kohana::globals();
+		$this->assertTrue(true);
+
+		$this->assertTrue(Kohana::auto_load('Kohana_Core'));
+		$this->assertFalse(Kohana::auto_load('NonExistent_Class_XYZ'));
+
+		$this->assertFalse(Kohana::auto_load_lowercase('NonExistent_Class_XYZ'));
+
+		$config_files = Kohana::find_file('config', 'cookie', null, true);
+		$this->assertIsArray($config_files);
+		$this->assertNotEmpty($config_files);
+	}
+
+	public function test_error_handler_throws_exception_when_not_suppressed(): void
+	{
+		$this->expectException(ErrorException::class);
+		Kohana::error_handler(E_USER_ERROR, 'test user error', 'file.php', 10);
+	}
 }

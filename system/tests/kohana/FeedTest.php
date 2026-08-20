@@ -138,4 +138,18 @@ class Kohana_FeedTest extends Unittest_TestCase
 			$this->assertTag($matcher_image, Feed::create($info, $items), '', false);
 		}
 	}
+
+	public function test_parse_raw_xml_string(): void
+	{
+		$xml = '<?xml version="1.0" encoding="utf-8"?><rss version="2.0"><channel><title>Test Feed</title><item><title>Test Item 1</title><link>http://example.com/1</link></item></channel></rss>';
+		$parsed = Feed::parse($xml);
+		$this->assertCount(1, $parsed);
+		$this->assertSame('Test Item 1', $parsed[0]['title']);
+	}
+
+	public function test_parse_invalid_returns_empty(): void
+	{
+		$parsed = Feed::parse('not valid xml content at all');
+		$this->assertSame(array(), $parsed);
+	}
 }

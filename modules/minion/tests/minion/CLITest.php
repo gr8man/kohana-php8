@@ -142,6 +142,7 @@ class Minion_CLITest extends Kohana_Unittest_TestCase
 		Minion_CLI::write('line 1');
 		Minion_CLI::write(array('line 2', 'line 3'));
 		Minion_CLI::write_replace('replacing...', true);
+		Minion_CLI::wait(0, true);
 		$out = ob_get_clean();
 		$this->assertIsString($out);
 	}

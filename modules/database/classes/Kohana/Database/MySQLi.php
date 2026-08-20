@@ -100,7 +100,7 @@ class Kohana_Database_MySQLi extends Database
 			// Database is assumed disconnected
 			$status = true;
 
-			if (is_resource($this->_connection)) {
+			if ($this->_connection instanceof mysqli || is_resource($this->_connection)) {
 				if ($status = $this->_connection->close()) {
 					// Clear the connection
 					$this->_connection = null;
@@ -111,7 +111,7 @@ class Kohana_Database_MySQLi extends Database
 			}
 		} catch (Exception) {
 			// Database is probably not disconnected
-			$status = ! is_resource($this->_connection);
+			$status = ! ($this->_connection instanceof mysqli || is_resource($this->_connection));
 		}
 
 		return $status;

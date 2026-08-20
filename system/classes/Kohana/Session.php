@@ -237,6 +237,7 @@ abstract class Kohana_Session implements \Stringable
 	public function set($key, $value)
 	{
 		$this->_data[$key] = $value;
+		$this->_destroyed = false;
 
 		return $this;
 	}

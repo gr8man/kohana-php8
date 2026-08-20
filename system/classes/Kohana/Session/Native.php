@@ -83,8 +83,10 @@ class Kohana_Session_Native extends Session
 	#[\Override]
 	protected function _regenerate(): string|false
 	{
-		// Regenerate the session id
-		session_regenerate_id();
+		if (session_status() === PHP_SESSION_ACTIVE) {
+			// Regenerate the session id
+			session_regenerate_id();
+		}
 
 		return session_id();
 	}
@@ -92,8 +94,10 @@ class Kohana_Session_Native extends Session
 	#[\Override]
 	protected function _write(): bool
 	{
-		// Write and close the session
-		session_write_close();
+		if (session_status() === PHP_SESSION_ACTIVE) {
+			// Write and close the session
+			session_write_close();
+		}
 
 		return true;
 	}
@@ -117,24 +121,23 @@ class Kohana_Session_Native extends Session
 		return $status;
 	}
 
-	/**
-	 * @return  bool
-	 */
 	#[\Override]
-	protected function _destroy()
+	protected function _destroy(): bool
 	{
-		// Destroy the current session
-		session_destroy();
-
-		// Did destruction work?
-		$status = ! session_id();
-
-		if ($status) {
-			// Make sure the session cannot be restarted
-			Cookie::delete($this->_name);
+		if (session_status() === PHP_SESSION_ACTIVE) {
+			// Destroy the current session
+			session_destroy();
 		}
 
-		return $status;
+		$this->_data = array();
+		if (isset($_SESSION)) {
+			$_SESSION = array();
+		}
+
+		// Make sure the session cannot be restarted
+		Cookie::delete($this->_name);
+
+		return true;
 	}
 
 }

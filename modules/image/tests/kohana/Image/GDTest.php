@@ -65,6 +65,21 @@ class Kohana_Image_GDTest extends Unittest_TestCase
 		$image->resize(50, 50, Image::NONE);
 		$this->assertSame(50, $image->width);
 		$this->assertSame(50, $image->height);
+
+		$image2 = new Image_GD($this->test_image);
+		$image2->resize(40);
+		$this->assertSame(40, $image2->width);
+
+		$image3 = new Image_GD($this->test_image);
+		$image3->resize(null, 40);
+		$this->assertSame(40, $image3->height);
+
+		$image4 = new Image_GD($this->test_image);
+		$image4->resize(60, 60, Image::INVERSE);
+		$this->assertGreaterThanOrEqual(60, $image4->width);
+
+		$str = (string) $image;
+		$this->assertNotEmpty($str);
 	}
 
 	public function test_crop(): void
@@ -89,6 +104,14 @@ class Kohana_Image_GDTest extends Unittest_TestCase
 		$image->rotate(180);
 		$this->assertSame($height, $image->width);
 		$this->assertSame($width, $image->height);
+
+		$image->rotate(270);
+		$this->assertSame($width, $image->width);
+		$this->assertSame($height, $image->height);
+
+		$image2 = new Image_GD($this->test_image);
+		$image2->rotate(45);
+		$this->assertGreaterThan(0, $image2->width);
 	}
 
 	public function test_flip(): void

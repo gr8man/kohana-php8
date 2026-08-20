@@ -10,11 +10,10 @@ return array(
 		 * The following options must be set:
 		 *
 		 * string   key     secret passphrase
-		 * integer  mode    encryption mode, one of MCRYPT_MODE_*
-		 * integer  cipher  encryption cipher, one of the Mcrpyt cipher constants
+		 * string   method  openssl cipher method (e.g. aes-256-cbc)
 		 */
-		'cipher' => MCRYPT_RIJNDAEL_128,
-		'mode'   => MCRYPT_MODE_NOFB,
+		'key'    => 'default_secret_key_change_me_in_production!',
+		'method' => 'aes-256-cbc',
 	),
 
 );
