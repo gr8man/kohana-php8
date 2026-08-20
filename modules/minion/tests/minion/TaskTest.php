@@ -68,19 +68,19 @@ class Minion_TaskTest extends Kohana_Unittest_TestCase
 
 	public function test_factory_creates_task_help(): void
 	{
-		$task = Minion_Task::factory(['task' => 'help']);
+		$task = Minion_Task::factory(array('task' => 'help'));
 		$this->assertInstanceOf(Task_Help::class, $task);
 	}
 
 	public function test_factory_invalid_task_throws_exception(): void
 	{
 		$this->expectException(Minion_Exception_InvalidTask::class);
-		Minion_Task::factory(['task' => 'nonexistent:task:xyz']);
+		Minion_Task::factory(array('task' => 'nonexistent:task:xyz'));
 	}
 
 	public function test_execute_task_help(): void
 	{
-		$task = Minion_Task::factory(['task' => 'help']);
+		$task = Minion_Task::factory(array('task' => 'help'));
 		ob_start();
 		$task->execute();
 		$output = ob_get_clean();

@@ -706,6 +706,29 @@ class Kohana_ORMTest extends Unittest_TestCase
 		$this->assertSame(array(), $model->load_with());
 	}
 
+	public function test_orm_metadata_and_helpers(): void
+	{
+		$model = ORM::factory('TestUser');
+		$this->assertSame('testuser', $model->object_name());
+		$this->assertSame('testusers', $model->table_name());
+		$this->assertSame('id', $model->primary_key());
+		$this->assertNull($model->pk());
+
+		$arr = $model->as_array();
+		$this->assertIsArray($arr);
+		$this->assertArrayHasKey('id', $arr);
+		$this->assertArrayHasKey('username', $arr);
+
+		$this->assertIsArray($model->has_many());
+		$this->assertIsArray($model->belongs_to());
+		$this->assertIsArray($model->has_one());
+
+		$this->assertIsArray($model->rules());
+		$this->assertIsArray($model->filters());
+		$this->assertIsArray($model->labels());
+		$this->assertIsArray($model->table_columns());
+	}
+
 	public static function tearDownAfterClass(): void
 	{
 		unset(Database::$instances['default']);

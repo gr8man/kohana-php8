@@ -1104,4 +1104,49 @@ class Kohana_ResponseTest extends Unittest_TestCase
 			unset($_SERVER['HTTP_RANGE']);
 		}
 	}
+
+	public function test_cookies_manipulation(): void
+	{
+		$response = new Response();
+		$response->cookie('test_name', 'test_value');
+		$this->assertIsArray($response->cookie());
+		$this->assertSame('test_value', $response->cookie('test_name')['value']);
+
+		$response->delete_cookie('test_name');
+		$this->assertNull($response->cookie('test_name'));
+
+		$response->cookie(array('c1' => 'v1', 'c2' => 'v2'));
+		$this->assertCount(2, $response->cookie());
+
+		$response->delete_cookies();
+		$this->assertEmpty($response->cookie());
+	}
+
+	public function test_generate_etag(): void
+	{
+		$response = new Response();
+		$response->body('Hello ETag');
+		$etag = $response->generate_etag();
+		$this->assertIsString($etag);
+		$this->assertStringStartsWith('"', $etag);
+		$this->assertStringEndsWith('"', $etag);
+	}
+
+	public function test_generate_etag_empty_body_throws_exception(): void
+	{
+		$this->expectException(Request_Exception::class);
+		$response = new Response();
+		$response->generate_etag();
+	}
+
+	public function test_send_headers_with_callback(): void
+	{
+		$response = new Response();
+		$response->headers('X-Custom-Header', 'custom_value');
+		$captured = array();
+		$response->send_headers(true, function ($header) use (&$captured) {
+			$captured[] = $header;
+		});
+		$this->assertNotEmpty($captured);
+	}
 }

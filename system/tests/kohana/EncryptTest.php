@@ -75,4 +75,17 @@ class Kohana_EncryptTest extends Unittest_TestCase
 		$decoded_with_wrong = $encrypt1->decode($encoded2);
 		$this->assertFalse($decoded_with_wrong);
 	}
+
+	public function test_encrypt_instance(): void
+	{
+		Encrypt::$instances['test_inst'] = new Encrypt('key-inst-16-bytes', 'aes-128-cbc');
+		$instance = Encrypt::instance('test_inst');
+		$this->assertInstanceOf(Encrypt::class, $instance);
+	}
+
+	public function test_instance_missing_key_throws_exception(): void
+	{
+		$this->expectException(Kohana_Exception::class);
+		Encrypt::instance('nonexistent_encrypt_group_xyz');
+	}
 }
