@@ -11,6 +11,17 @@ defined('SYSPATH') or die('No direct script access.');
  * @copyright  (c) 2008-2013 Kohana Team
  * @license    http://kohanaframework.org/license
  */
+
+if (! class_exists('MarkdownExtra_Parser', false)) {
+	$markdown = Kohana::find_file('vendor', 'markdown/markdown');
+	if (! $markdown) {
+		$markdown = __DIR__.'/../../vendor/markdown/markdown.php';
+	}
+	if ($markdown && is_file($markdown)) {
+		require_once $markdown;
+	}
+}
+
 class Kohana_Kodoc_Markdown extends MarkdownExtra_Parser
 {
 	/**

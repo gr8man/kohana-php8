@@ -330,7 +330,7 @@ class Kohana_Cache_Memcache extends Cache implements Cache_Arithmetic {
      * @param   int       step value to increment by
      */
     #[\Override]
-    public function increment($id, $step = 1): int
+    public function increment($id, $step = 1): int|false
 	{
 		return $this->_memcache->increment($id, $step);
 	}
@@ -344,7 +344,7 @@ class Kohana_Cache_Memcache extends Cache implements Cache_Arithmetic {
      * @param   int       step value to decrement by
      */
     #[\Override]
-    public function decrement($id, $step = 1): int
+    public function decrement($id, $step = 1): int|false
 	{
 		return $this->_memcache->decrement($id, $step);
 	}
