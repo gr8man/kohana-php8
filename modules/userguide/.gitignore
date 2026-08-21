@@ -6,5 +6,7 @@ Icon?
 *.swp
 composer.lock
 vendor/*
+!vendor/markdown/
+!vendor/markdown/markdown.php
 koharness_bootstrap.php
 
