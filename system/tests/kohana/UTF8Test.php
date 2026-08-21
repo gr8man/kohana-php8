@@ -1053,4 +1053,14 @@ class Kohana_UTF8Test extends Unittest_TestCase
 		$result = UTF8::strip_non_ascii('I ♥ cocoñùт');
 		$this->assertSame('I  coco', $result);
 	}
+
+	public function test_multibyte_string_helpers(): void
+	{
+		$this->assertSame(0, UTF8::strcasecmp('żółć', 'ŻÓŁĆ'));
+		$this->assertSame('Żółć', UTF8::ucwords('żółć'));
+		$this->assertSame('Żółć', UTF8::ucfirst('żółć'));
+		$this->assertSame('bar', UTF8::stristr('foobar', 'BAR'));
+		$this->assertSame('foo_BAR_baz', UTF8::str_ireplace('test', 'BAR', 'foo_TEST_baz'));
+		$this->assertSame('żółć  ', UTF8::str_pad('żółć', 6));
+	}
 }

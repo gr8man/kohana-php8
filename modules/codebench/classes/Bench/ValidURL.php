@@ -48,7 +48,7 @@ class Bench_ValidURL extends Codebench
 
 	public function bench_filter_var($url): bool
 	{
-		return (bool) filter_var($url, FILTER_VALIDATE_URL, FILTER_FLAG_HOST_REQUIRED);
+		return (bool) filter_var($url, FILTER_VALIDATE_URL);
 	}
 
 	public function bench_regex($url): bool

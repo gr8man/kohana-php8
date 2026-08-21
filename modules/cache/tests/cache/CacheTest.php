@@ -11,17 +11,15 @@ declare(strict_types=1);
  * @copyright  (c) 2009-2012 Kohana Team
  * @license    http://kohanaphp.com/license
  */
-class Kohana_CacheTest extends PHPUnit_Framework_TestCase {
+class Kohana_CacheTest extends Unittest_TestCase {
 
 	const BAD_GROUP_DEFINITION  = 1010;
 	const EXPECT_SELF           = 1001;
 
 	/**
-	 * Data provider for test_instance
-	 *
-	 * @return  array
-	 */
-	public function provider_instance()
+				 * Data provider for test_instance
+				 */
+				public function provider_instance(): array
 	{
 		realpath(sys_get_temp_dir());
 
@@ -84,22 +82,18 @@ class Kohana_CacheTest extends PHPUnit_Framework_TestCase {
 
 	/**
      * Tests that `clone($cache)` will be prevented to maintain singleton
-     *
-     * @expectedException Cache_Exception
      */
     public function test_cloning_fails(): void
     {
-        $this->getMockBuilder('Cache')
-			->disableOriginalConstructor()
-			->getMockForAbstractClass();
+        $this->expectException(Cache_Exception::class);
+        $cache = Cache::instance('file');
+        clone $cache;
     }
 
 	/**
-	 * Data provider for test_config
-	 *
-	 * @return  array
-	 */
-	public function provider_config()
+				 * Data provider for test_config
+				 */
+				public function provider_config(): array
 	{
 		return [
 			[
@@ -149,7 +143,7 @@ class Kohana_CacheTest extends PHPUnit_Framework_TestCase {
      * @param   mixed    expected result from [Cache::config()]
      * @param   array    expected config within cache
      */
-    public function test_config($key, $value, $expected_result, array $expected_config): void
+    public function test_config(string|array|null $key, ?string $value, int|array|null $expected_result, array $expected_config): void
 	{
 		$cache = $this->getMock('Cache_File', NULL, [], '', FALSE);
 
@@ -163,11 +157,9 @@ class Kohana_CacheTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * Data provider for test_sanitize_id
-	 *
-	 * @return  array
-	 */
-	public function provider_sanitize_id()
+				 * Data provider for test_sanitize_id
+				 */
+				public function provider_sanitize_id(): array
 	{
 		return [
 			[
@@ -207,7 +199,7 @@ class Kohana_CacheTest extends PHPUnit_Framework_TestCase {
      * @param   string    id
      * @param   string    expected
      */
-    public function test_sanitize_id($id, $expected): void
+    public function test_sanitize_id(string $id, string $expected): void
 	{
 		$cache = $this->getMock('Cache', [
 			'get',

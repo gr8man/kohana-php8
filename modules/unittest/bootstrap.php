@@ -123,17 +123,13 @@ if (($ob_len = ob_get_length()) !== false) {
 	}
 }
 
-// Enable the unittest module if it is not already loaded - use the absolute path
+// Enable all available modules during testing
+$module_names = array('unittest', 'auth', 'cache', 'codebench', 'database', 'image', 'minion', 'orm', 'userguide');
 $modules = Kohana::modules();
-$unittest_path = realpath(__DIR__).DIRECTORY_SEPARATOR;
-if (! in_array($unittest_path, $modules)) {
-	$modules['unittest'] = $unittest_path;
+foreach ($module_names as $mod) {
+	$mod_path = DOCROOT.'modules'.DIRECTORY_SEPARATOR.$mod.DIRECTORY_SEPARATOR;
+	if (! in_array($mod_path, $modules, true) && is_dir($mod_path)) {
+		$modules[$mod] = $mod_path;
+	}
 }
-
-// Enable auth module for Auth tests
-$auth_path = DOCROOT.'modules'.DIRECTORY_SEPARATOR.'auth'.DIRECTORY_SEPARATOR;
-if (! in_array($auth_path, $modules) and is_dir($auth_path)) {
-	$modules['auth'] = $auth_path;
-}
-
 Kohana::modules($modules);

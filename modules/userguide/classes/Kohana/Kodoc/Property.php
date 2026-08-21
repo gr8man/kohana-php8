@@ -62,13 +62,14 @@ class Kohana_Kodoc_Property extends Kodoc
 
 		$this->property = $property;
 
-		// Show the value of static properties, but only if they are public or we are php 5.3 or higher and can force them to be accessible
-		if ($property->isStatic() and ($property->isPublic() or version_compare(PHP_VERSION, '5.3', '>='))) {
+		// Show the value of static properties
+		if ($property->isStatic()) {
+			$prop_val = $property->getValue();
 			// Don't debug the entire object, just say what kind of object it is
-			if (is_object($property->getValue($class))) {
-				$this->value = '<pre>object '.$property->getValue($class)::class.'()</pre>';
+			if (is_object($prop_val)) {
+				$this->value = '<pre>object '.$prop_val::class.'()</pre>';
 			} else {
-				$this->value = Debug::vars($property->getValue($class));
+				$this->value = Debug::vars($prop_val);
 			}
 		}
 

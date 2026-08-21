@@ -50,4 +50,29 @@ class Kohana_SqliteTest extends Kohana_CacheBasicMethodsTest {
 		$this->cache(Cache::instance('sqlite'));
 	}
 
+	public function test_tagging_and_find(): void
+	{
+		$cache = $this->cache();
+		$this->assertTrue($cache->set_with_tags('tag_test_1', 'value1', 3600, ['tag_a', 'tag_b']));
+		$this->assertTrue($cache->set_with_tags('tag_test_2', 'value2', 3600, ['tag_b', 'tag_c']));
+
+		$found_b = $cache->find('tag_b');
+		$this->assertArrayHasKey('tag_test_1', $found_b);
+		$this->assertArrayHasKey('tag_test_2', $found_b);
+
+		$found_a = $cache->find('tag_a');
+		$this->assertArrayHasKey('tag_test_1', $found_a);
+		$this->assertArrayNotHasKey('tag_test_2', $found_a);
+
+		$this->assertTrue($cache->delete_tag('tag_a'));
+		$this->assertNull($cache->get('tag_test_1'));
+	}
+
+	public function test_garbage_collect(): void
+	{
+		$cache = $this->cache();
+		$cache->set('expired_key', 'expired_val', -100);
+		$cache->garbage_collect();
+		$this->assertNull($cache->get('expired_key'));
+	}
 } // End Kohana_SqliteTest

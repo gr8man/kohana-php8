@@ -523,4 +523,16 @@ class Kohana_DebugTest extends Unittest_TestCase
 			'Call-time pass-by-reference has been deprecated" notice.'
 		);
 	}
+
+	public function test_source_and_trace(): void
+	{
+		$source = Debug::source(__FILE__, 10, 2);
+		$this->assertIsString($source);
+		$this->assertStringContainsString('class="line highlight"', $source);
+
+		$trace = Debug::trace();
+		$this->assertIsArray($trace);
+		$this->assertNotEmpty($trace);
+		$this->assertArrayHasKey('function', $trace[0]);
+	}
 }

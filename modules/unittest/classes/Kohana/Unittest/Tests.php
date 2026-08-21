@@ -55,11 +55,11 @@ class Kohana_Unittest_Tests
 	 *
 	 * @return Unittest_TestSuite
 	 */
-	public static function suite(): \PHPUnit_Framework_TestSuite|\Unittest_TestSuite
+	public static function suite(): \PHPUnit\Framework\TestSuite|\Unittest_TestSuite
 	{
 		static $suite = null;
 
-		if ($suite instanceof PHPUnit_Framework_TestSuite) {
+		if ($suite instanceof \PHPUnit\Framework\TestSuite) {
 			return $suite;
 		}
 

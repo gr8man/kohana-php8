@@ -215,4 +215,10 @@ class Kohana_NumTest extends Unittest_TestCase
 			$this->assertSame($expected[$i], Num::round($input, $precision, $mode, false));
 		}
 	}
+
+	public function test_round_native(): void
+	{
+		$this->assertSame(5.0, Num::round(4.5, 0, Num::ROUND_HALF_UP, true));
+		$this->assertSame(4.0, Num::round(4.4, 0, Num::ROUND_HALF_UP, true));
+	}
 }

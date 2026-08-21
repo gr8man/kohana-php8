@@ -80,7 +80,7 @@ class Kohana_Session_Database extends Session
 	}
 
 	#[\Override]
-	public function id()
+	public function id(): ?string
 	{
 		return $this->_session_id;
 	}
@@ -155,7 +155,7 @@ class Kohana_Session_Database extends Session
 		$query
 			->param(':new_id', $this->_session_id)
 			->param(':old_id', $this->_update_id)
-			->param(':active', $this->_data['last_active'])
+			->param(':active', $this->_data['last_active'] ?? time())
 			->param(':contents', $this->__toString());
 
 		// Execute the query

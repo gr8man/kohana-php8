@@ -11,9 +11,9 @@ declare(strict_types=1);
  * @copyright  (c) 2008-2013 Kohana Team
  * @license    http://kohanaframework.org/license
  */
-class Kohana_KodocTest extends PHPUnit_Framework_TestCase
+class Kohana_KodocTest extends Unittest_TestCase
 {
-	public function provider_parse_basic()
+	public function provider_parse_basic(): array
 	{
 		return array(
 			array(
@@ -133,12 +133,12 @@ COMMENT
 	 * @param   string  $comment    Argument to the method
 	 * @param   array   $expected   Expected result
 	 */
-	public function test_parse_basic($comment, $expected): void
+	public function test_parse_basic(string $comment, array $expected): void
 	{
 		$this->assertSame($expected, Kodoc::parse($comment));
 	}
 
-	public function provider_parse_tags()
+	public function provider_parse_tags(): array
 	{
 		$route_api = Route::get('docs/api');
 
@@ -326,16 +326,15 @@ COMMENT
 	 * @param   string  $comment    Argument to the method
 	 * @param   array   $expected   Expected result
 	 */
-	public function test_parse_tags($comment, $expected): void
+	public function test_parse_tags(string $comment, array $expected): void
 	{
 		$this->assertSame($expected, Kodoc::parse($comment));
 	}
 
 	/**
-	 * Provides test data for test_transparent_classes
-	 * @return array
-	 */
-	public function provider_transparent_classes()
+				 * Provides test data for test_transparent_classes
+				 */
+	public function provider_transparent_classes(): array
 	{
 		return array(
 			// Kohana_Core is a special case
@@ -352,17 +351,15 @@ COMMENT
 	}
 
 	/**
-	 * Tests Kodoc::is_transparent
-	 *
-	 * Checks that a selection of transparent and non-transparent classes give expected results
-	 *
-	 * @group kohana.userguide.3529-configurable-transparent-classes
-	 * @dataProvider provider_transparent_classes
-	 * @param mixed $expected
-	 * @param string $class
-	 * @param array $classes
-	 */
-	public function test_transparent_classes($expected, $class, $classes): void
+				 * Tests Kodoc::is_transparent
+				 *
+				 * Checks that a selection of transparent and non-transparent classes give expected results
+				 *
+				 * @group kohana.userguide.3529-configurable-transparent-classes
+				 * @dataProvider provider_transparent_classes
+				 * @param array $classes
+				 */
+	public function test_transparent_classes(string|bool $expected, string $class, ?array $classes): void
 	{
 		$result = Kodoc::is_transparent($class, $classes);
 		$this->assertSame($expected, $result);

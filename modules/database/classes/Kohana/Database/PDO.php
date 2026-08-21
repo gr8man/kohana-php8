@@ -134,8 +134,10 @@ class Kohana_Database_PDO extends Database
 		// Make sure the database is connected
 		$this->_connection or $this->connect();
 
-		// This SQL-92 syntax is not supported by all drivers
-		$this->_connection->exec('SET NAMES '.$this->quote($charset));
+		// This SQL-92 syntax is not supported by all drivers (e.g. SQLite)
+		if ($this->_connection->getAttribute(PDO::ATTR_DRIVER_NAME) !== 'sqlite') {
+			$this->_connection->exec('SET NAMES '.$this->quote($charset));
+		}
 	}
 
 	#[\Override]

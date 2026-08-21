@@ -132,7 +132,7 @@ class Kohana_Image_GD extends Image
 	 */
 	protected function _load_image()
 	{
-		if (! is_resource($this->_image)) {
+		if (! is_resource($this->_image) && ! ($this->_image instanceof \GdImage)) {
 			// Gets create function
 			$create = $this->_create_function;
 
@@ -176,7 +176,7 @@ class Kohana_Image_GD extends Image
 			// Create the temporary image to copy to
 			$image = $this->_create($pre_width, $pre_height);
 
-			if (imagecopyresized($image, $this->_image, 0, 0, 0, 0, $pre_width, $pre_height, $this->width, $this->height)) {
+			if (imagecopyresized($image, $this->_image, 0, 0, 0, 0, (int) $pre_width, (int) $pre_height, (int) $this->width, (int) $this->height)) {
 				// Swap the new image for the old one
 				imagedestroy($this->_image);
 				$this->_image = $image;
@@ -187,7 +187,7 @@ class Kohana_Image_GD extends Image
 		$image = $this->_create($width, $height);
 
 		// Execute the resize
-		if (imagecopyresampled($image, $this->_image, 0, 0, 0, 0, $width, $height, $pre_width, $pre_height)) {
+		if (imagecopyresampled($image, $this->_image, 0, 0, 0, 0, (int) $width, (int) $height, (int) $pre_width, (int) $pre_height)) {
 			// Swap the new image for the old one
 			imagedestroy($this->_image);
 			$this->_image = $image;
@@ -217,7 +217,7 @@ class Kohana_Image_GD extends Image
 		$this->_load_image();
 
 		// Execute the crop
-		if (imagecopyresampled($image, $this->_image, 0, 0, $offset_x, $offset_y, $width, $height, $width, $height)) {
+		if (imagecopyresampled($image, $this->_image, 0, 0, (int) $offset_x, (int) $offset_y, (int) $width, (int) $height, (int) $width, (int) $height)) {
 			// Swap the new image for the old one
 			imagedestroy($this->_image);
 			$this->_image = $image;
@@ -404,7 +404,7 @@ class Kohana_Image_GD extends Image
 			imagecopy($line, $this->_image, 0, 0, 0, $src_y, $this->width, 1);
 
 			// Colorize the line to add the correct alpha level
-			imagefilter($line, IMG_FILTER_COLORIZE, 0, 0, 0, $dst_opacity);
+			imagefilter($line, IMG_FILTER_COLORIZE, 0, 0, 0, (int) $dst_opacity);
 
 			// Copy a the line into the reflection
 			imagecopy($reflection, $line, 0, $dst_y, 0, 0, $this->width, 1);
@@ -455,7 +455,7 @@ class Kohana_Image_GD extends Image
 			$opacity = round(abs(($opacity * 127 / 100) - 127));
 
 			// Allocate transparent gray
-			$color = imagecolorallocatealpha($overlay, 127, 127, 127, $opacity);
+			$color = imagecolorallocatealpha($overlay, 127, 127, 127, (int) $opacity);
 
 			// The transparent image will overlay the watermark
 			imagelayereffect($overlay, IMG_EFFECT_OVERLAY);
@@ -467,7 +467,7 @@ class Kohana_Image_GD extends Image
 		// Alpha blending must be enabled on the background!
 		imagealphablending($this->_image, true);
 
-		if (imagecopy($this->_image, $overlay, $offset_x, $offset_y, 0, 0, $width, $height)) {
+		if (imagecopy($this->_image, $overlay, (int) $offset_x, (int) $offset_y, 0, 0, $width, $height)) {
 			// Destroy the overlay image
 			imagedestroy($overlay);
 		}
@@ -495,7 +495,7 @@ class Kohana_Image_GD extends Image
 		$background = $this->_create($this->width, $this->height);
 
 		// Allocate the color
-		$color = imagecolorallocatealpha($background, $r, $g, $b, $opacity);
+		$color = imagecolorallocatealpha($background, (int) $r, (int) $g, (int) $b, (int) $opacity);
 
 		// Fill the image with white
 		imagefilledrectangle($background, 0, 0, $this->width, $this->height, $color);
@@ -630,7 +630,7 @@ class Kohana_Image_GD extends Image
 	protected function _create($width, $height): GdImage|false
 	{
 		// Create an empty image
-		$image = imagecreatetruecolor($width, $height);
+		$image = imagecreatetruecolor((int) $width, (int) $height);
 
 		// Do not apply alpha blending
 		imagealphablending($image, false);

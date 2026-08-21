@@ -1104,4 +1104,62 @@ class Kohana_ResponseTest extends Unittest_TestCase
 			unset($_SERVER['HTTP_RANGE']);
 		}
 	}
+
+	public function test_cookies_manipulation(): void
+	{
+		$response = new Response();
+		$response->cookie('test_name', 'test_value');
+		$this->assertIsArray($response->cookie());
+		$this->assertSame('test_value', $response->cookie('test_name')['value']);
+
+		$response->delete_cookie('test_name');
+		$this->assertNull($response->cookie('test_name'));
+
+		$response->cookie(array('c1' => 'v1', 'c2' => 'v2'));
+		$this->assertCount(2, $response->cookie());
+
+		$response->delete_cookies();
+		$this->assertEmpty($response->cookie());
+	}
+
+	public function test_response_status_protocol_headers(): void
+	{
+		$response = new Response();
+		$response->status(201)
+			->protocol('HTTP/1.0')
+			->headers('Content-Type', 'application/json')
+			->headers('X-Custom-Header', 'custom_value')
+			->body('{"success":true}');
+
+		$this->assertSame(201, $response->status());
+		$this->assertSame('HTTP/1.0', $response->protocol());
+		$this->assertSame('application/json', (string) $response->headers('Content-Type'));
+		$this->assertSame('custom_value', (string) $response->headers('X-Custom-Header'));
+		$this->assertSame('{"success":true}', $response->body());
+		$this->assertSame(16, $response->content_length());
+
+		$sent_headers = $response->send_headers(false, function ($response, $headers, $replace) {
+			return $headers;
+		});
+		$this->assertIsArray($sent_headers);
+
+		$rendered = $response->render();
+		$this->assertStringContainsString('HTTP/1.0 201 Created', $rendered);
+		$this->assertStringContainsString('Content-Type: application/json', $rendered);
+		$this->assertStringContainsString('{"success":true}', $rendered);
+
+		$etag = $response->generate_etag();
+		$this->assertIsString($etag);
+		$this->assertStringStartsWith('"', $etag);
+		$this->assertStringEndsWith('"', $etag);
+
+		$response->cookie('session_id', 'test_token_123');
+		$rendered_with_cookies = $response->render();
+		$this->assertStringContainsString('Set-Cookie', $rendered_with_cookies);
+		$this->assertStringContainsString('test_token_123', $rendered_with_cookies);
+
+		$factory_response = Response::factory(array('_status' => 404, '_body' => 'Not Found'));
+		$this->assertSame(404, $factory_response->status());
+		$this->assertSame('Not Found', $factory_response->body());
+	}
 }

@@ -35,8 +35,13 @@ class Userguide_ControllerTest extends Unittest_TestCase
 	 */
 	public function test_file_finds_markdown_files(string $page, string|bool $expected_file): void
 	{
-		$controller = $this->getMock('Controller_Userguide', array('__construct'), array(), '', false);
+		$controller = new Controller_Userguide(new Request('guide'), new Response());
 		$path = $controller->file($page);
+
+		if ($expected_file === false) {
+			$this->assertFalse($path);
+			return;
+		}
 
 		// Only verify trailing segments to avoid problems if file overwritten in CFS
 		$expected_len = strlen($expected_file);

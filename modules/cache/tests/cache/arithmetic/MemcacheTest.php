@@ -60,20 +60,25 @@ class Kohana_CacheArithmeticMemcacheTest extends Kohana_CacheArithmeticMethodsTe
 		}
 
 		$memcache = new Memcache;
-		if ( ! $memcache->connect($config['servers']['local']['host'], 
-			$config['servers']['local']['port']))
-		{
-			$this->markTestSkipped('Unable to connect to memcache server @ '.
-				$config['servers']['local']['host'].':'.
+		try {
+			$connected = @$memcache->connect($config['servers']['local']['host'], 
 				$config['servers']['local']['port']);
-		}
+			if ( ! $connected)
+			{
+				$this->markTestSkipped('Unable to connect to memcache server @ '.
+					$config['servers']['local']['host'].':'.
+					$config['servers']['local']['port']);
+			}
 
-		if ($memcache->getVersion() === FALSE)
-		{
-			$this->markTestSkipped('Memcache server @ '.
-				$config['servers']['local']['host'].':'.
-				$config['servers']['local']['port'].
-				' not responding!');
+			if ($memcache->getVersion() === FALSE)
+			{
+				$this->markTestSkipped('Memcache server @ '.
+					$config['servers']['local']['host'].':'.
+					$config['servers']['local']['port'].
+					' not responding!');
+			}
+		} catch (ErrorException $e) {
+			$this->markTestSkipped('Memcache connection failed: ' . $e->getMessage());
 		}
 
 		unset($memcache);

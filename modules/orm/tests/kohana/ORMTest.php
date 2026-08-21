@@ -32,7 +32,16 @@ class Kohana_ORMTest extends Unittest_TestCase
 				public function connect() {}
 				public function disconnect() { return true; }
 				public function set_charset($charset) {}
-				public function query(int $type, string $sql, bool $as_object = false, array $params = null) {
+				public function query(int $type, string $sql, $as_object = false, array $params = null) {
+					if ($type === Database::INSERT) {
+						return array(1, 1);
+					}
+					if ($type === Database::UPDATE || $type === Database::DELETE) {
+						return 1;
+					}
+					if (str_contains($sql, "COUNT")) {
+						return new Database_Result_Cached(array(array("records" => 0, "records_found" => 0)), $sql, $as_object);
+					}
 					return new Database_Result_Cached(array(), $sql, $as_object);
 				}
 				public function begin($mode = null) { return true; }
@@ -704,6 +713,164 @@ class Kohana_ORMTest extends Unittest_TestCase
 	{
 		$model = ORM::factory('TestUser');
 		$this->assertSame(array(), $model->load_with());
+	}
+
+	public function test_orm_metadata_and_helpers(): void
+	{
+		$model = ORM::factory('TestUser');
+		$this->assertSame('testuser', $model->object_name());
+		$this->assertSame('testusers', $model->table_name());
+		$this->assertSame('id', $model->primary_key());
+		$this->assertNull($model->pk());
+
+		$arr = $model->as_array();
+		$this->assertIsArray($arr);
+		$this->assertArrayHasKey('id', $arr);
+		$this->assertArrayHasKey('username', $arr);
+
+		$this->assertIsArray($model->has_many());
+		$this->assertIsArray($model->belongs_to());
+		$this->assertIsArray($model->has_one());
+
+		$this->assertIsArray($model->rules());
+		$this->assertIsArray($model->filters());
+		$this->assertIsArray($model->labels());
+		$this->assertIsArray($model->table_columns());
+	}
+
+	public function test_orm_values_and_changed(): void
+	{
+		$model = ORM::factory('TestUser');
+		$model->values(array(
+			'username' => 'john_doe',
+			'email'    => 'john@example.com',
+		));
+
+		$this->assertSame('john_doe', $model->username);
+		$this->assertSame('john@example.com', $model->email);
+		$this->assertTrue((bool) $model->changed('username'));
+		$this->assertNotEmpty($model->changed());
+		$this->assertFalse($model->loaded());
+		$this->assertFalse($model->saved());
+
+		$checked = $model->check();
+		$this->assertSame($model, $checked);
+		$this->assertEmpty($model->validation()->errors());
+	}
+
+	public function test_orm_validation_errors(): void
+	{
+		$model = ORM::factory('TestUser');
+		$model->values(array(
+			'username' => '',
+			'email'    => 'invalid-email',
+		));
+
+		$this->expectException(ORM_Validation_Exception::class);
+		$model->check();
+	}
+
+	public function test_orm_magic_properties_and_helpers(): void
+	{
+		$model = ORM::factory('TestUser');
+		$model->username = 'jane_doe';
+		$this->assertTrue(isset($model->username));
+		$this->assertSame('jane_doe', $model->username);
+
+		$cols = $model->list_columns();
+		$this->assertIsArray($cols);
+
+		$arr_subset = $model->as_array();
+		$this->assertIsArray($arr_subset);
+		$this->assertArrayHasKey('username', $arr_subset);
+
+		$this->assertSame(0, $model->count_all());
+
+		$this->assertSame('testuser', $model->object_name());
+		$this->assertSame('id', $model->primary_key());
+		$this->assertIsString($model->table_name());
+		$this->assertIsArray($model->table_columns());
+
+		$model->reset();
+		$this->assertFalse($model->loaded());
+		$this->assertFalse($model->saved());
+
+		$found = $model->find();
+		$this->assertSame($model, $found);
+
+		$all = $model->find_all();
+		$this->assertInstanceOf(Database_Result::class, $all);
+
+		$serialized = serialize($model);
+		$this->assertIsString($serialized);
+		$unserialized = unserialize($serialized);
+		$this->assertInstanceOf(Model_TestUser::class, $unserialized);
+	}
+
+	public function test_orm_save_update_delete_lifecycle(): void
+	{
+		$model = ORM::factory('TestUser');
+		$model->username = 'new_user';
+		$model->email = 'new_user@example.com';
+		$model->save();
+
+		$this->assertTrue($model->loaded());
+		$this->assertTrue($model->saved());
+		$this->assertSame(1, $model->pk());
+
+		$model->username = 'updated_user';
+		$model->save();
+		$this->assertTrue($model->saved());
+
+		$model->delete();
+		$this->assertFalse($model->loaded());
+	}
+
+	public function test_orm_query_builder_chaining_and_getters(): void
+	{
+		$model = ORM::factory('TestUser');
+
+		$model->where('id', '=', 1)
+			->and_where('username', '!=', 'admin')
+			->or_where('status', '=', 'active')
+			->where_open()
+			->and_where_open()
+			->or_where_open()
+			->where_close()
+			->and_where_close()
+			->or_where_close()
+			->having('id', '>', 0)
+			->and_having('id', '<', 100)
+			->or_having('username', '=', 'alice')
+			->having_open()
+			->and_having_open()
+			->or_having_open()
+			->having_close()
+			->and_having_close()
+			->or_having_close()
+			->distinct(true)
+			->select('id', 'username')
+			->from('users')
+			->join('roles', 'LEFT')
+			->on('roles.id', '=', 'users.role_id')
+			->group_by('users.id')
+			->order_by('users.id', 'ASC')
+			->limit(10)
+			->offset(5);
+
+		$this->assertSame(0, $model->count_all());
+
+		$this->assertIsArray($model->has_one());
+		$this->assertIsArray($model->belongs_to());
+		$this->assertIsArray($model->has_many());
+		$this->assertIsArray($model->load_with());
+		$this->assertIsArray($model->original_values());
+		$this->assertIsArray($model->object());
+		$this->assertNull($model->created_column());
+		$this->assertNull($model->updated_column());
+		$this->assertSame('testuser', $model->errors_filename());
+		$this->assertInstanceOf(Validation::class, $model->validation());
+		$this->assertNull($model->last_query());
 	}
 
 	public static function tearDownAfterClass(): void

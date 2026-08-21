@@ -159,7 +159,7 @@ class Kohana_Cache_File extends Cache implements Cache_GarbageCollect {
 					$cache .= $data->fgets();
 				}
 
-				return unserialize($cache, ['allowed_classes' => FALSE]);
+				return unserialize($cache, ['allowed_classes' => true]);
 			}
 
 		}

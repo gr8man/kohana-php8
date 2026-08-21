@@ -11,27 +11,12 @@ declare(strict_types=1);
  * @copyright  (c) 2009-2012 Kohana Team
  * @license    http://kohanaphp.com/license
  */
-abstract class Kohana_CacheBasicMethodsTest extends PHPUnit_Framework_TestCase {
+abstract class Kohana_CacheBasicMethodsTest extends Unittest_TestCase {
 
 	/**
 	 * @var     Cache driver for this test
 	 */
 	protected $_cache_driver;
-
-	/**
-     * This method MUST be implemented by each driver to setup the `Cache`
-     * instance for each test.
-     *
-     * This method should do the following tasks for each driver test:
-     *
-     *  - Test the Cache instance driver is available, skip test otherwise
-     *  - Setup the Cache instance
-     *  - Call the parent setup method, `parent::setUp()`
-     */
-    public function setUp(): void
-	{
-		parent::setUp();
-	}
 
 	/**
 	 * Accessor method to `$_cache_driver`. 
@@ -246,7 +231,7 @@ TESTTEXT;
      * @param   array    data
      * @param   mixed    expected
      */
-    public function test_set_get(array $data, $expected): void
+    public function test_set_get(array $data, string|int|float|bool|\StdClass|array|null $expected): void
 	{
 		$cache = $this->cache();
 		extract($data);

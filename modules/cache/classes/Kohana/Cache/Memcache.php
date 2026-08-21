@@ -94,10 +94,8 @@ class Kohana_Cache_Memcache extends Cache implements Cache_Arithmetic {
 
 	/**
 	 * Flags to use when storing values
-	 *
-	 * @var string
 	 */
-	protected $_flags;
+	protected int $_flags = 0;
 
 	/**
 	 * The default configuration for the memcached server
@@ -160,7 +158,7 @@ class Kohana_Cache_Memcache extends Cache implements Cache_Arithmetic {
 		}
 
 		// Setup the flags
-		$this->_flags = Arr::get($this->_config, 'compression', FALSE) ? MEMCACHE_COMPRESSED : FALSE;
+		$this->_flags = Arr::get($this->_config, 'compression', FALSE) ? (defined('MEMCACHE_COMPRESSED') ? MEMCACHE_COMPRESSED : 2) : 0;
 	}
 
 	/**
@@ -332,7 +330,7 @@ class Kohana_Cache_Memcache extends Cache implements Cache_Arithmetic {
      * @param   int       step value to increment by
      */
     #[\Override]
-    public function increment($id, $step = 1): int
+    public function increment($id, $step = 1): int|false
 	{
 		return $this->_memcache->increment($id, $step);
 	}
@@ -346,7 +344,7 @@ class Kohana_Cache_Memcache extends Cache implements Cache_Arithmetic {
      * @param   int       step value to decrement by
      */
     #[\Override]
-    public function decrement($id, $step = 1): int
+    public function decrement($id, $step = 1): int|false
 	{
 		return $this->_memcache->decrement($id, $step);
 	}

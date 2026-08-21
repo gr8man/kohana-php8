@@ -57,4 +57,37 @@ class Kohana_Config_Database_WriterTest extends Unittest_TestCase
 		));
 		$this->assertInstanceOf(Kohana_Config_Writer::class, $writer);
 	}
+
+	public function test_load_and_write_sqlite(): void
+	{
+		$config = array(
+			'type' => 'PDO',
+			'connection' => array(
+				'dsn' => 'sqlite::memory:',
+			),
+			'table_prefix' => '',
+			'charset' => 'utf8',
+		);
+		$db = new Database_PDO('config_db', $config);
+		Database::$instances['config_db'] = $db;
+
+		$db->query(Database::UPDATE, 'CREATE TABLE config (group_name VARCHAR(128), config_key VARCHAR(128), config_value TEXT, PRIMARY KEY (group_name, config_key))');
+
+		$writer = new Config_Database_Writer(array(
+			'instance' => 'config_db',
+			'table_name' => 'config',
+		));
+
+		$this->assertTrue($writer->write('test_group', 'foo', 'bar'));
+		$loaded = $writer->load('test_group');
+		$this->assertIsArray($loaded);
+		$this->assertSame('bar', $loaded['foo']);
+
+		// Update existing
+		$this->assertTrue($writer->write('test_group', 'foo', 'baz'));
+		$loaded_updated = $writer->load('test_group');
+		$this->assertSame('baz', $loaded_updated['foo']);
+
+		unset(Database::$instances['config_db']);
+	}
 }

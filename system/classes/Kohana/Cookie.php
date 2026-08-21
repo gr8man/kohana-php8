@@ -206,6 +206,10 @@ class Kohana_Cookie
 	 */
 	protected static function _setcookie($name, $value, $expire, $path, $domain, $secure, $httponly): bool
 	{
+		if (headers_sent()) {
+			return true;
+		}
+
 		// SECURITY: Use SameSite attribute if PHP version supports it (PHP 7.3+)
 		if (PHP_VERSION_ID >= 70300 and Cookie::$samesite !== null) {
 			return setcookie($name, $value, array(

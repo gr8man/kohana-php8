@@ -963,4 +963,16 @@ class Kohana_RouteTest extends Unittest_TestCase
 		return $request;
 	}
 
+	public function test_route_url_all_name(): void
+	{
+		$_SERVER['HTTP_HOST'] = 'kohanaframework.org';
+		$route = Route::set('custom_test_route', 'custom/<action>')
+			->defaults(array('controller' => 'welcome', 'action' => 'index'));
+
+		$this->assertSame('custom_test_route', Route::name($route));
+		$this->assertArrayHasKey('custom_test_route', Route::all());
+
+		$url = Route::url('custom_test_route', array('action' => 'hello'), 'http');
+		$this->assertStringContainsString('custom/hello', $url);
+	}
 }

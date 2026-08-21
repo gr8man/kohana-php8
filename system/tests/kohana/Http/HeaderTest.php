@@ -1485,4 +1485,21 @@ class Kohana_HTTP_HeaderTest extends Unittest_TestCase
 	{
 		return $headers;
 	}
+
+	public function test_cache_control_create_and_parse(): void
+	{
+		$directives = array(
+			'max-age' => 3600,
+			'must-revalidate',
+			'public',
+		);
+		$header = HTTP_Header::create_cache_control($directives);
+		$this->assertSame('max-age=3600, must-revalidate, public', $header);
+
+		$parsed = HTTP_Header::parse_cache_control($header);
+		$this->assertIsArray($parsed);
+		$this->assertEquals(3600, $parsed['max-age']);
+		$this->assertTrue(in_array('must-revalidate', $parsed));
+		$this->assertTrue(in_array('public', $parsed));
+	}
 } // End Kohana_HTTP_HeaderTest

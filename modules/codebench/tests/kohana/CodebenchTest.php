@@ -191,4 +191,37 @@ class Kohana_CodebenchTest extends Unittest_TestCase
 		$bench = $this->getMockForAbstractClass(Kohana_Codebench::class);
 		$this->assertNotNull($bench);
 	}
+
+	public function test_run_benchmarks(): void
+	{
+		$classes = array(
+			'Bench_ArrCallback',
+			'Bench_AutoLinkEmails',
+			'Bench_DateSpan',
+			'Bench_ExplodeLimit',
+			'Bench_GruberURL',
+			'Bench_LtrimDigits',
+			'Bench_MDDoBaseURL',
+			'Bench_MDDoImageURL',
+			'Bench_MDDoIncludeViews',
+			'Bench_StripNullBytes',
+			'Bench_Transliterate',
+			'Bench_URLSite',
+			'Bench_UserFuncArray',
+			'Bench_ValidColor',
+			'Bench_ValidURL',
+		);
+
+		foreach ($classes as $class) {
+			if (class_exists($class)) {
+				$bench = new $class();
+				$bench->loops = 1;
+				$result = $bench->run();
+				$this->assertIsArray($result);
+				$this->assertArrayHasKey('class', $result);
+				$this->assertArrayHasKey('loops', $result);
+				$this->assertArrayHasKey('benchmarks', $result);
+			}
+		}
+	}
 }

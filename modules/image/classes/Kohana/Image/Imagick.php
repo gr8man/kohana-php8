@@ -68,7 +68,7 @@ class Kohana_Image_Imagick extends Image
 	#[\Override]
 	protected function _do_resize($width, $height): bool
 	{
-		if ($this->im->scaleImage($width, $height)) {
+		if ($this->im->scaleImage((int) $width, (int) $height)) {
 			// Reset the width and height
 			$this->width = $this->im->getImageWidth();
 			$this->height = $this->im->getImageHeight();
@@ -82,7 +82,7 @@ class Kohana_Image_Imagick extends Image
 	#[\Override]
 	protected function _do_crop($width, $height, $offset_x, $offset_y): bool
 	{
-		if ($this->im->cropImage($width, $height, $offset_x, $offset_y)) {
+		if ($this->im->cropImage((int) $width, (int) $height, (int) $offset_x, (int) $offset_y)) {
 			// Reset the width and height
 			$this->width = $this->im->getImageWidth();
 			$this->height = $this->im->getImageHeight();
@@ -143,8 +143,8 @@ class Kohana_Image_Imagick extends Image
 		$reflection->flipImage();
 
 		// Crop the reflection to the selected height
-		$reflection->cropImage($this->width, $height, 0, 0);
-		$reflection->setImagePage($this->width, $height, 0, 0);
+		$reflection->cropImage((int) $this->width, (int) $height, 0, 0);
+		$reflection->setImagePage((int) $this->width, (int) $height, 0, 0);
 
 		// Select the fade direction
 		$direction = array('transparent', 'black');
@@ -166,7 +166,7 @@ class Kohana_Image_Imagick extends Image
 
 		// Create a new container to hold the image and reflection
 		$image = new Imagick();
-		$image->newImage($this->width, $this->height + $height, new ImagickPixel());
+		$image->newImage((int) $this->width, (int) ($this->height + $height), new ImagickPixel());
 
 		// Force the image to have an alpha channel
 		$image->setImageAlphaChannel(Imagick::ALPHACHANNEL_SET);
@@ -179,7 +179,7 @@ class Kohana_Image_Imagick extends Image
 
 		// Place the image and reflection into the container
 		if ($image->compositeImage($this->im, Imagick::COMPOSITE_SRC, 0, 0)
-		and $image->compositeImage($reflection, Imagick::COMPOSITE_OVER, 0, $this->height)) {
+		and $image->compositeImage($reflection, Imagick::COMPOSITE_OVER, 0, (int) $this->height)) {
 			// Replace the current image with the reflected image
 			$this->im = $image;
 
@@ -214,7 +214,7 @@ class Kohana_Image_Imagick extends Image
 		// $watermark->setColorspace($this->im->getColorspace());
 
 		// Apply the watermark to the image
-		return $this->im->compositeImage($watermark, Imagick::COMPOSITE_DISSOLVE, $offset_x, $offset_y);
+		return $this->im->compositeImage($watermark, Imagick::COMPOSITE_DISSOLVE, (int) $offset_x, (int) $offset_y);
 	}
 
 	#[\Override]
@@ -225,7 +225,7 @@ class Kohana_Image_Imagick extends Image
 
 		// Create a new image for the background
 		$background = new Imagick();
-		$background->newImage($this->width, $this->height, new ImagickPixel($color));
+		$background->newImage((int) $this->width, (int) $this->height, new ImagickPixel($color));
 
 		if (! $background->getImageAlphaChannel()) {
 			// Force the image to have an alpha channel
@@ -255,13 +255,13 @@ class Kohana_Image_Imagick extends Image
 	protected function _do_save($file, $quality): bool
 	{
 		// Get the image format and type
-		[$format, $type] = str_split($this->_get_imagetype(pathinfo($file, PATHINFO_EXTENSION)));
+		[$format, $type] = $this->_get_imagetype(pathinfo((string) $file, PATHINFO_EXTENSION));
 
 		// Set the output image type
 		$this->im->setFormat($format);
 
 		// Set the output quality
-		$this->im->setImageCompressionQuality($quality);
+		$this->im->setImageCompressionQuality((int) $quality);
 
 		if ($this->im->writeImage($file)) {
 			// Reset the image type and mime type
@@ -278,7 +278,7 @@ class Kohana_Image_Imagick extends Image
 	protected function _do_render($type, $quality): string
 	{
 		// Get the image format and type
-		[$format, $type] = str_split($this->_get_imagetype($type));
+		[$format, $type] = $this->_get_imagetype($type);
 
 		// Set the output image type
 		$this->im->setFormat($format);

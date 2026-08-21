@@ -70,11 +70,9 @@ class Kohana_Cache_FileTest extends Kohana_CacheBasicMethodsTest {
 	}
 
 	/**
-	 * Provider for test_utf8
-	 *
-	 * @return  array
-	 */
-	public function provider_utf8()
+				 * Provider for test_utf8
+				 */
+				public function provider_utf8(): array
 	{
 		return [
 			[
@@ -97,7 +95,7 @@ class Kohana_Cache_FileTest extends Kohana_CacheBasicMethodsTest {
      *
      * @dataProvider provider_utf8
      */
-    public function test_utf8($input, $expected): void
+    public function test_utf8(string $input, string $expected): void
 	{
 		$cache = $this->cache();
 		$cache->set('utf8', $input);
@@ -136,7 +134,7 @@ class Kohana_Cache_FileTest extends Kohana_CacheBasicMethodsTest {
 	 * @param string $id cache id
 	 * @return boolean TRUE if file exists FALSE otherwise
 	 */
-	protected function is_file($id)
+	protected function is_file($id): bool
 	{
 		$cache = $this->cache();
 
@@ -153,4 +151,19 @@ class Kohana_Cache_FileTest extends Kohana_CacheBasicMethodsTest {
 		//var_dump($cache->_is_expired($file));
 		return $file->isFile();
 	}
-} // End Kohana_SqliteTest
+
+	public function test_cache_file_helpers_and_corrupted(): void
+	{
+		$cache = $this->cache();
+
+		$ref_make_dir = new ReflectionMethod($cache, '_make_directory');
+		$temp_dir = APPPATH.'cache/temp_test_dir_'.uniqid();
+		$spl_dir = $ref_make_dir->invoke($cache, $temp_dir, 0777, true);
+		$this->assertInstanceOf(SplFileInfo::class, $spl_dir);
+		$this->assertTrue($spl_dir->isDir());
+
+		$ref_delete = new ReflectionMethod($cache, '_delete_file');
+		$deleted = $ref_delete->invoke($cache, $spl_dir, false, true, false);
+		$this->assertTrue($deleted);
+	}
+} // End Kohana_FileTest
