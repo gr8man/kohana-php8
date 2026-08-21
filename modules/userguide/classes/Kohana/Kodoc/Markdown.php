@@ -15,7 +15,7 @@ defined('SYSPATH') or die('No direct script access.');
 if (! class_exists('MarkdownExtra_Parser', false)) {
 	$markdown = Kohana::find_file('vendor', 'markdown/markdown');
 	if (! $markdown) {
-		$markdown = __DIR__.'/../../vendor/markdown/markdown.php';
+		$markdown = dirname(__DIR__, 3).'/vendor/markdown/markdown.php';
 	}
 	if ($markdown && is_file($markdown)) {
 		require_once $markdown;
