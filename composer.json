@@ -12,6 +12,11 @@
 		"rector/rector": "^2.5",
 		"vimeo/psalm": "^6.16"
 	},
+	"autoload": {
+		"classmap": [
+			"modules/userguide/vendor/markdown/markdown.php"
+		]
+	},
 	"scripts": {
 		"rector": "php vendor/bin/rector process --no-ansi --no-progress-bar",
 		"cs-fix": "php-cs-fixer fix",
