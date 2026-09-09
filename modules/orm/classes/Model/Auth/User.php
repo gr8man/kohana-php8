@@ -106,10 +106,7 @@ class Model_Auth_User extends ORM
 	 */
 	public function unique_key_exists($value, $field = null): bool
 	{
-		if ($field === null) {
-			// Automatically determine field by looking at the value
-			$field = $this->unique_key($value);
-		}
+		$field ??= $this->unique_key($value);
 
 		return (bool) DB::select(array(DB::expr('COUNT(*)'), 'total_count'))
 			->from($this->_table_name)

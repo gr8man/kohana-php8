@@ -198,11 +198,7 @@ class Kohana_Cache_File extends Cache implements Cache_GarbageCollect {
 		$directory = $this->_resolve_directory($filename);
 
 		// If lifetime is NULL
-		if ($lifetime === NULL)
-		{
-			// Set to the default expiry
-			$lifetime = Arr::get($this->_config, 'default_expire', Cache::DEFAULT_EXPIRE);
-		}
+		$lifetime ??= Arr::get($this->_config, 'default_expire', Cache::DEFAULT_EXPIRE);
 
 		// Open directory
 		$dir = new SplFileInfo($directory);

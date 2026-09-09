@@ -41,10 +41,7 @@ class Kohana_Encrypt
 	 */
 	public static function instance($name = null)
 	{
-		if ($name === null) {
-			// Use the default instance name
-			$name = Encrypt::$default;
-		}
+		$name ??= Encrypt::$default;
 
 		if (! isset(Encrypt::$instances[$name])) {
 			// Load the configuration data
@@ -58,10 +55,7 @@ class Kohana_Encrypt
 				);
 			}
 
-			if (! isset($config['method'])) {
-				// Use aes-256-cbc by default as it's modern and secure
-				$config['method'] = 'aes-256-cbc';
-			}
+			$config['method'] ??= 'aes-256-cbc';
 
 			// Create a new instance
 			Encrypt::$instances[$name] = new Encrypt($config['key'], $config['method']);

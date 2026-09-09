@@ -92,9 +92,7 @@ class Kohana_Auth_File extends Auth
 			return false;
 		}
 
-		if ($hash === null) {
-			$hash = $this->password($username);
-		}
+		$hash ??= $this->password($username);
 
 		// Check if it's bcrypt hash
 		if (preg_match('/^\$2[aby]?\$/', $hash)) {

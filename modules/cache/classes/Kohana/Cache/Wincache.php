@@ -102,10 +102,7 @@ class Kohana_Cache_Wincache extends Cache {
     #[\Override]
     public function set($id, $data, $lifetime = NULL): bool
 	{
-		if ($lifetime === NULL)
-		{
-			$lifetime = Arr::get($this->_config, 'default_expire', Cache::DEFAULT_EXPIRE);
-		}
+		$lifetime ??= Arr::get($this->_config, 'default_expire', Cache::DEFAULT_EXPIRE);
 
 		return wincache_ucache_set($this->_sanitize_id($id), $data, $lifetime);
 	}

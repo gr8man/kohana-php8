@@ -54,10 +54,7 @@ abstract class Kohana_Database implements \Stringable
 	 */
 	public static function instance($name = null, array $config = null)
 	{
-		if ($name === null) {
-			// Use the default instance name
-			$name = Database::$default;
-		}
+		$name ??= Database::$default;
 
 		if (! isset(Database::$instances[$name])) {
 			if ($config === null) {

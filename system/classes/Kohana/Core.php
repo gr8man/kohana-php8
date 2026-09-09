@@ -664,10 +664,7 @@ class Kohana_Core
 			$directory .= DIRECTORY_SEPARATOR;
 		}
 
-		if ($paths === null) {
-			// Use the default paths
-			$paths = Kohana::$_paths;
-		}
+		$paths ??= Kohana::$_paths;
 
 		// Create an array for the files
 		$found = array();
@@ -700,10 +697,7 @@ class Kohana_Core
 							}
 						}
 					} else {
-						if (! isset($found[$key])) {
-							// Add new files to the list
-							$found[$key] = realpath($file->getPathName());
-						}
+						$found[$key] ??= realpath($file->getPathName());
 					}
 				}
 			}
@@ -767,10 +761,7 @@ class Kohana_Core
 		// Cache directories are split by keys to prevent filesystem overload
 		$dir = Kohana::$cache_dir.DIRECTORY_SEPARATOR.$file[0].$file[1].DIRECTORY_SEPARATOR;
 
-		if ($lifetime === null) {
-			// Use the default lifetime
-			$lifetime = Kohana::$cache_life;
-		}
+		$lifetime ??= Kohana::$cache_life;
 
 		if ($data === null) {
 			if (is_file($dir.$file)) {

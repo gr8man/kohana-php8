@@ -65,9 +65,7 @@ class Kohana_Kodoc_Markdown extends MarkdownExtra_Parser
 	{
 		static $instance;
 
-		if ($instance === null) {
-			$instance = new Kodoc_Markdown();
-		}
+		$instance ??= new Kodoc_Markdown();
 
 		return $instance->transform($text);
 	}

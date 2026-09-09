@@ -47,10 +47,7 @@ class Kohana_Session_Database extends Session
 
 	public function __construct(array $config = null, $id = null)
 	{
-		if (! isset($config['group'])) {
-			// Use the default group
-			$config['group'] = Database::$default;
-		}
+		$config['group'] ??= Database::$default;
 
 		// Load the database
 		$this->_db = Database::instance($config['group']);

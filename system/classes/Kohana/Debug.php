@@ -115,10 +115,7 @@ class Kohana_Debug
 
 			static $marker;
 
-			if ($marker === null) {
-				// Make a unique marker - force it to be alphanumeric so that it is always treated as a string array key
-				$marker = uniqid("\x00")."x";
-			}
+			$marker ??= uniqid("\x00")."x";
 
 			if (empty($var)) {
 				// Do nothing
@@ -296,10 +293,7 @@ class Kohana_Debug
 	 */
 	public static function trace(array $trace = null): array
 	{
-		if ($trace === null) {
-			// Start a new trace
-			$trace = debug_backtrace();
-		}
+		$trace ??= debug_backtrace();
 
 		// Non-standard function calls
 		$statements = array('include', 'include_once', 'require', 'require_once');

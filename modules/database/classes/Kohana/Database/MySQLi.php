@@ -32,11 +32,7 @@ class Kohana_Database_MySQLi extends Database
 			return;
 		}
 
-		if (Database_MySQLi::$_set_names === null) {
-			// Determine if we can use mysqli_set_charset(), which is only
-			// available on PHP 5.2.3+ when compiled against MySQL 5.0+
-			Database_MySQLi::$_set_names = ! function_exists('mysqli_set_charset');
-		}
+		Database_MySQLi::$_set_names ??= ! function_exists('mysqli_set_charset');
 
 		// Extract the connection parameters, adding required variabels
 		extract($this->_config['connection'] + array(

@@ -40,10 +40,7 @@ abstract class Kohana_Session implements \Stringable
 	 */
 	public static function instance($type = null, $id = null)
 	{
-		if ($type === null) {
-			// Use the default type
-			$type = Session::$default;
-		}
+		$type ??= Session::$default;
 
 		if (! isset(Session::$instances[$type])) {
 			// Load the configuration for this type

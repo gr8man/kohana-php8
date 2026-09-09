@@ -60,20 +60,14 @@ class Kohana_Upload
 			return false;
 		}
 
-		if ($filename === null) {
-			// Use the default filename, with a timestamp pre-pended
-			$filename = uniqid().$file['name'];
-		}
+		$filename ??= uniqid().$file['name'];
 
 		if (Upload::$remove_spaces === true) {
 			// Remove spaces from the filename
 			$filename = preg_replace('/\s+/u', '_', $filename);
 		}
 
-		if ($directory === null) {
-			// Use the pre-configured upload directory
-			$directory = Upload::$default_directory;
-		}
+		$directory ??= Upload::$default_directory;
 
 		if (! is_dir($directory) or ! is_writable(realpath($directory))) {
 			throw new Kohana_Exception(
