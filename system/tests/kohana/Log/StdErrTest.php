@@ -21,7 +21,8 @@ class Kohana_Log_StdErrTest extends Unittest_TestCase
 {
 	public function test_write_outputs_to_stderr(): void
 	{
-		$writer = new Log_StdErr();
+		$handle = fopen('php://memory', 'w+');
+		$writer = new Log_StdErr($handle);
 		$writer->write(array(
 			array(
 				'time'  => time(),
@@ -31,12 +32,19 @@ class Kohana_Log_StdErrTest extends Unittest_TestCase
 				'line'  => 10,
 			),
 		));
-		$this->assertTrue(true);
+		rewind($handle);
+		$output = stream_get_contents($handle);
+		fclose($handle);
+
+		$this->assertStringContainsString('stderr test', $output);
+		$this->assertStringContainsString('CRITICAL', $output);
+		$this->assertStringContainsString('test.php:10', $output);
 	}
 
 	public function test_write_multiple_messages(): void
 	{
-		$writer = new Log_StdErr();
+		$handle = fopen('php://memory', 'w+');
+		$writer = new Log_StdErr($handle);
 		$writer->write(array(
 			array(
 				'time'  => time(),
@@ -53,6 +61,15 @@ class Kohana_Log_StdErrTest extends Unittest_TestCase
 				'line'  => 2,
 			),
 		));
-		$this->assertTrue(true);
+		rewind($handle);
+		$output = stream_get_contents($handle);
+		fclose($handle);
+
+		$this->assertStringContainsString('alert msg', $output);
+		$this->assertStringContainsString('emerg msg', $output);
+		$this->assertStringContainsString('ALERT', $output);
+		$this->assertStringContainsString('EMERGENCY', $output);
+		$this->assertStringContainsString('a.php:1', $output);
+		$this->assertStringContainsString('b.php:2', $output);
 	}
 }

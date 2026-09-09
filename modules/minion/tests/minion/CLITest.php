@@ -29,6 +29,8 @@ class Minion_CLITest extends Kohana_Unittest_TestCase
 	{
 		$_SERVER['argv'] = $this->original_argv;
 		$_SERVER['argc'] = count($this->original_argv);
+		Minion_CLI::$stdout = null;
+		Minion_CLI::$stdin = null;
 		parent::tearDown();
 	}
 
@@ -138,12 +140,24 @@ class Minion_CLITest extends Kohana_Unittest_TestCase
 
 	public function test_write_and_write_replace(): void
 	{
-		ob_start();
+		$handle = fopen('php://memory', 'w+');
+		$prev = Minion_CLI::$stdout;
+		Minion_CLI::$stdout = $handle;
+
 		Minion_CLI::write('line 1');
 		Minion_CLI::write(array('line 2', 'line 3'));
 		Minion_CLI::write_replace('replacing...', true);
 		Minion_CLI::wait(0, true);
-		$out = ob_get_clean();
+
+		rewind($handle);
+		$out = stream_get_contents($handle);
+		fclose($handle);
+		Minion_CLI::$stdout = $prev;
+
 		$this->assertIsString($out);
+		$this->assertStringContainsString('line 1', $out);
+		$this->assertStringContainsString('line 2', $out);
+		$this->assertStringContainsString('line 3', $out);
+		$this->assertStringContainsString('replacing...', $out);
 	}
 }

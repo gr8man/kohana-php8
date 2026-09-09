@@ -7,6 +7,40 @@ class Kohana_Minion_CLI
 {
 	public static $wait_msg = 'Press any key to continue...';
 
+	/**
+	 * @var resource|null Custom output handle for testing (defaults to STDOUT)
+	 */
+	public static $stdout;
+
+	/**
+	 * @var resource|null Custom input handle for testing (defaults to STDIN)
+	 */
+	public static $stdin;
+
+	/**
+	 * Get output handle (allows injection for tests to prevent console pollution)
+	 * @return resource
+	 */
+	protected static function stdout_handle()
+	{
+		if (static::$stdout !== null) {
+			return static::$stdout;
+		}
+		return defined('STDOUT') ? STDOUT : fopen('php://stdout', 'w');
+	}
+
+	/**
+	 * Get input handle
+	 * @return resource
+	 */
+	protected static function stdin_handle()
+	{
+		if (static::$stdin !== null) {
+			return static::$stdin;
+		}
+		return defined('STDIN') ? STDIN : fopen('php://stdin', 'r');
+	}
+
 	protected static $foreground_colors = array(
 		'black'        => '0;30',
 		'dark_gray'    => '1;30',
@@ -126,10 +160,10 @@ class Kohana_Minion_CLI
 			$options_output = ' [ '.implode(', ', $options).' ]';
 		}
 
-		fwrite(STDOUT, $text.$options_output.': ');
+		fwrite(static::stdout_handle(), $text.$options_output.': ');
 
 		// Read the input from keyboard.
-		$input = trim(fgets(STDIN));
+		$input = trim(fgets(static::stdin_handle()));
 
 		// If options are provided and the choice is not in the array, tell them to try again
 		if (! empty($options) && ! in_array($input, $options)) {
@@ -189,7 +223,7 @@ class Kohana_Minion_CLI
 				Minion_CLI::write($line);
 			}
 		} else {
-			fwrite(STDOUT, $text.PHP_EOL);
+			fwrite(static::stdout_handle(), $text.PHP_EOL);
 		}
 	}
 
@@ -213,7 +247,7 @@ class Kohana_Minion_CLI
 	{
 		// Append a newline if $end_line is TRUE
 		$text = $end_line ? $text.PHP_EOL : $text;
-		fwrite(STDOUT, "\r\033[K".$text);
+		fwrite(static::stdout_handle(), "\r\033[K".$text);
 	}
 
 	/**
@@ -233,7 +267,7 @@ class Kohana_Minion_CLI
 			$time = $seconds;
 
 			while ($time > 0) {
-				fwrite(STDOUT, $time.'... ');
+				fwrite(static::stdout_handle(), $time.'... ');
 				sleep(1);
 				$time--;
 			}
