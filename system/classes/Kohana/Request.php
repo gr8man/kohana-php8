@@ -306,10 +306,7 @@ class Kohana_Request implements HTTP_Request, \Stringable
 	{
 		static $accepts;
 
-		if ($accepts === null) {
-			// Parse the HTTP_ACCEPT header
-			$accepts = Request::_parse_accept($_SERVER['HTTP_ACCEPT'], array('*/*' => 1.0));
-		}
+		$accepts ??= Request::_parse_accept($_SERVER['HTTP_ACCEPT'], array('*/*' => 1.0));
 
 		if (isset($type)) {
 			// Return the quality setting for this type
@@ -337,10 +334,7 @@ class Kohana_Request implements HTTP_Request, \Stringable
 	{
 		static $accepts;
 
-		if ($accepts === null) {
-			// Parse the HTTP_ACCEPT_LANGUAGE header
-			$accepts = Request::_parse_accept($_SERVER['HTTP_ACCEPT_LANGUAGE']);
-		}
+		$accepts ??= Request::_parse_accept($_SERVER['HTTP_ACCEPT_LANGUAGE']);
 
 		if (isset($lang)) {
 			// Return the quality setting for this lang
@@ -368,10 +362,7 @@ class Kohana_Request implements HTTP_Request, \Stringable
 	{
 		static $accepts;
 
-		if ($accepts === null) {
-			// Parse the HTTP_ACCEPT_LANGUAGE header
-			$accepts = Request::_parse_accept($_SERVER['HTTP_ACCEPT_ENCODING']);
-		}
+		$accepts ??= Request::_parse_accept($_SERVER['HTTP_ACCEPT_ENCODING']);
 
 		if (isset($type)) {
 			// Return the quality setting for this type

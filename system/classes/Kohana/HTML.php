@@ -105,10 +105,7 @@ class Kohana_HTML
 	 */
 	public static function anchor($uri, $title = null, array $attributes = null, $protocol = null, $index = true): string
 	{
-		if ($title === null) {
-			// Use the URI as the title
-			$title = $uri;
-		}
+		$title ??= $uri;
 
 		if ($uri === '') {
 			// Only use the base URL
@@ -147,10 +144,7 @@ class Kohana_HTML
 	 */
 	public static function file_anchor($file, $title = null, array $attributes = null, $protocol = null, $index = false): string
 	{
-		if ($title === null) {
-			// Use the file name as the title
-			$title = basename($file);
-		}
+		$title ??= basename($file);
 
 		// Add the file link to the attributes
 		$attributes['href'] = URL::site($file, $protocol, $index);
@@ -171,10 +165,7 @@ class Kohana_HTML
 	 */
 	public static function mailto(string $email, $title = null, array $attributes = null): string
 	{
-		if ($title === null) {
-			// Use the email address as the title
-			$title = $email;
-		}
+		$title ??= $email;
 
 		return '<a href="&#109;&#097;&#105;&#108;&#116;&#111;&#058;'.$email.'"'.HTML::attributes($attributes).'>'.$title.'</a>';
 	}

@@ -31,9 +31,7 @@ abstract class Kohana_Unittest_TestSuite extends PHPUnit\Framework\TestSuite
 	#[\Override]
 	public function run(?\PHPUnit\Framework\TestResult $result = null): \PHPUnit\Framework\TestResult
 	{
-		if ($result === null) {
-			$result = $this->createResult();
-		}
+		$result ??= $this->createResult();
 
 		$coverage = $result->getCodeCoverage();
 

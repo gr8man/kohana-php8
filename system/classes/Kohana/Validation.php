@@ -202,10 +202,7 @@ class Kohana_Validation implements ArrayAccess
 				 */
 	public function rule($field, $rule, array $params = null): static
 	{
-		if ($params === null) {
-			// Default to array(':value')
-			$params = array(':value');
-		}
+		$params ??= array(':value');
 
 		if ($field !== true and ! isset($this->_labels[$field])) {
 			// Set the field label to the field name
@@ -289,10 +286,7 @@ class Kohana_Validation implements ArrayAccess
 			$data[$field] = Arr::get($this, $field);
 
 			if (isset($rules[true])) {
-				if (! isset($rules[$field])) {
-					// Initialize the rules for this field
-					$rules[$field] = array();
-				}
+				$rules[$field] ??= array();
 
 				// Append the rules
 				$rules[$field] = array_merge($rules[$field], $rules[true]);

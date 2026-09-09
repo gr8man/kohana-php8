@@ -206,9 +206,7 @@ class Kohana_Kohana_Exception extends Exception
 						 * XDebug pre 2.1.1 doesn't currently set the call type key
 						 * http://bugs.xdebug.org/view.php?id=695
 						 */
-						if (! isset($frame['type'])) {
-							$frame['type'] = '??';
-						}
+						$frame['type'] ??= '??';
 
 						// Xdebug returns the words 'dynamic' and 'static' instead of using '->' and '::' symbols
 						if ('dynamic' === $frame['type']) {

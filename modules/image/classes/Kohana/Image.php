@@ -552,10 +552,7 @@ abstract class Kohana_Image implements \Stringable
 	 */
 	public function save($file = null, $quality = 100)
 	{
-		if ($file === null) {
-			// Overwrite the file
-			$file = $this->file;
-		}
+		$file ??= $this->file;
 
 		if (is_file($file)) {
 			if (! is_writable($file)) {
@@ -598,10 +595,7 @@ abstract class Kohana_Image implements \Stringable
 	 */
 	public function render($type = null, $quality = 100)
 	{
-		if ($type === null) {
-			// Use the current image type
-			$type = image_type_to_extension($this->type, false);
-		}
+		$type ??= image_type_to_extension($this->type, false);
 
 		return $this->_do_render($type, $quality);
 	}

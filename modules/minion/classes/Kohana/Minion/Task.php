@@ -140,9 +140,7 @@ abstract class Kohana_Minion_Task implements \Stringable
 	{
 		static $task_name = null;
 
-		if ($task_name === null) {
-			$task_name = Minion_Task::convert_class_to_task($this);
-		}
+		$task_name ??= Minion_Task::convert_class_to_task($this);
 
 		return (string) $task_name;
 	}

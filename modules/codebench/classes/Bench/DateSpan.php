@@ -42,10 +42,7 @@ class Bench_DateSpan extends Codebench
 		// Make the output values into keys
 		extract(array_flip($output), EXTR_SKIP);
 
-		if ($local === null) {
-			// Calculate the span from the current time
-			$local = time();
-		}
+		$local ??= time();
 
 		// Calculate timespan (seconds)
 		$timespan = abs($remote - $local);
@@ -125,10 +122,7 @@ class Bench_DateSpan extends Codebench
 		// Make the output values into keys
 		extract(array_flip($output), EXTR_SKIP);
 
-		if ($local === null) {
-			// Calculate the span from the current time
-			$local = time();
-		}
+		$local ??= time();
 
 		// Calculate timespan (seconds)
 		$timespan = abs($remote - $local);

@@ -114,11 +114,7 @@ abstract class Kohana_Cache {
 	public static function instance($group = NULL)
 	{
 		// If there is no group supplied
-		if ($group === NULL)
-		{
-			// Use the default setting
-			$group = Cache::$default;
-		}
+		$group ??= Cache::$default;
 
 		if (isset(Cache::$instances[$group]))
 		{

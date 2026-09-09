@@ -55,10 +55,7 @@ class Kohana_Date
 	 */
 	public static function offset($remote, $local = null, $now = null): int|float
 	{
-		if ($local === null) {
-			// Use the default timezone
-			$local = date_default_timezone_get();
-		}
+		$local ??= date_default_timezone_get();
 
 		if (is_int($now)) {
 			// Convert the timestamp into a string
@@ -142,9 +139,7 @@ class Kohana_Date
 		$hours = array();
 
 		// Set the default start if none was specified.
-		if ($start === null) {
-			$start = ($long === false) ? 1 : 0;
-		}
+		$start ??= ($long === false) ? 1 : 0;
 
 		$hours = array();
 
@@ -341,10 +336,7 @@ class Kohana_Date
 		// Convert the list of outputs to an associative array
 		$output = array_combine($output, array_fill(0, count($output), 0));
 
-		if ($local === null) {
-			// Calculate the span from the current time
-			$local = time();
-		}
+		$local ??= time();
 
 		// Calculate timespan (seconds)
 		$timespan = abs($remote - $local);

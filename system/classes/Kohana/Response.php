@@ -381,10 +381,7 @@ class Kohana_Response implements HTTP_Response, \Stringable
 			// Temporary files will automatically be deleted
 			$options['delete'] = false;
 
-			if (! isset($mime)) {
-				// Guess the mime using the file extension
-				$mime = File::mime_by_ext(strtolower(pathinfo($download, PATHINFO_EXTENSION)));
-			}
+			$mime ??= File::mime_by_ext(strtolower(pathinfo($download, PATHINFO_EXTENSION)));
 
 			// Force the data to be rendered if
 			$file_data = (string) $this->_body;
@@ -412,10 +409,7 @@ class Kohana_Response implements HTTP_Response, \Stringable
 			// Get the file size
 			$size = filesize($filename);
 
-			if (! isset($mime)) {
-				// Get the mime type from the extension of the download file
-				$mime = File::mime_by_ext(pathinfo($download, PATHINFO_EXTENSION));
-			}
+			$mime ??= File::mime_by_ext(pathinfo($download, PATHINFO_EXTENSION));
 
 			// Open the file for reading
 			$file = fopen($filename, 'rb');

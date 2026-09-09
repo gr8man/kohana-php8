@@ -133,10 +133,7 @@ class Kohana_Cookie
 	 */
 	public static function set($name, $value, $lifetime = null): bool
 	{
-		if ($lifetime === null) {
-			// Use the default expiration
-			$lifetime = Cookie::$expiration;
-		}
+		$lifetime ??= Cookie::$expiration;
 
 		if ($lifetime !== 0) {
 			// The expiration is expected to be a UNIX timestamp

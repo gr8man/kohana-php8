@@ -71,10 +71,7 @@ class Kohana_Database_Query implements \Stringable
 				 */
 	public function cached($lifetime = null, $force = false): static
 	{
-		if ($lifetime === null) {
-			// Use the global setting
-			$lifetime = Kohana::$cache_life;
-		}
+		$lifetime ??= Kohana::$cache_life;
 
 		$this->_force_execute = $force;
 		$this->_lifetime = $lifetime;
@@ -190,20 +187,16 @@ class Kohana_Database_Query implements \Stringable
 	 * @return  mixed    the insert id for INSERT queries
 	 * @return  integer  number of affected rows for all other queries
 	 */
-	public function execute(Database|string|null $db = null, $as_object = null, $object_params = null)
+	public function execute(Database|string|null $db = null, ?bool $as_object = null, ?array $object_params = null)
 	{
 		if (! is_object($db)) {
 			// Get the database instance
 			$db = Database::instance($db);
 		}
 
-		if ($as_object === null) {
-			$as_object = $this->_as_object;
-		}
+		$as_object ??= $this->_as_object;
 
-		if ($object_params === null) {
-			$object_params = $this->_object_params;
-		}
+		$object_params ??= $this->_object_params;
 
 		// Compile the SQL query
 		$sql = $this->compile($db);

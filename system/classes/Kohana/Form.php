@@ -56,10 +56,7 @@ class Kohana_Form
 		// Only accept the default character set
 		$attributes['accept-charset'] = Kohana::$charset;
 
-		if (! isset($attributes['method'])) {
-			// Use POST method
-			$attributes['method'] = 'post';
-		}
+		$attributes['method'] ??= 'post';
 
 		return '<form'.HTML::attributes($attributes).'>';
 	}
@@ -93,10 +90,7 @@ class Kohana_Form
 		// Set the input value
 		$attributes['value'] = $value;
 
-		if (! isset($attributes['type'])) {
-			// Default type is text
-			$attributes['type'] = 'text';
-		}
+		$attributes['type'] ??= 'text';
 
 		return '<input'.HTML::attributes($attributes).' />';
 	}
@@ -383,10 +377,7 @@ class Kohana_Form
 	 */
 	public static function label($input, $text = null, array $attributes = null): string
 	{
-		if ($text === null) {
-			// Use the input name as the text
-			$text = ucwords((string) preg_replace('/[\W_]+/', ' ', $input));
-		}
+		$text ??= ucwords((string) preg_replace('/[\W_]+/', ' ', $input));
 
 		// Set the label target
 		$attributes['for'] = $input;

@@ -107,9 +107,7 @@ class Kohana_Kodoc
 	 */
 	public static function classes(array $list = null): array
 	{
-		if ($list === null) {
-			$list = Kohana::list_files('classes');
-		}
+		$list ??= Kohana::list_files('classes');
 
 		$classes = array();
 

@@ -97,10 +97,7 @@ class Kohana_Cache_Apcu extends Cache implements Cache_Arithmetic {
     #[\Override]
     public function set($id, $data, $lifetime = NULL): bool
 	{
-		if ($lifetime === NULL)
-		{
-			$lifetime = Arr::get($this->_config, 'default_expire', Cache::DEFAULT_EXPIRE);
-		}
+		$lifetime ??= Arr::get($this->_config, 'default_expire', Cache::DEFAULT_EXPIRE);
 
 		return apcu_store($this->_sanitize_id($id), $data, $lifetime);
 	}

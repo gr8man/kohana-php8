@@ -175,10 +175,7 @@ class Kohana_Text
 	 */
 	public static function random($type = null, $length = 8): string
 	{
-		if ($type === null) {
-			// Default is to generate an alphanumeric string
-			$type = 'alnum';
-		}
+		$type ??= 'alnum';
 
 		$utf8 = false;
 
