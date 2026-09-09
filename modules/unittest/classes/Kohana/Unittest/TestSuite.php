@@ -22,33 +22,11 @@ abstract class Kohana_Unittest_TestSuite extends PHPUnit\Framework\TestSuite
 
 	/**
 	 * Runs the tests and collects their result in a TestResult.
-	 *
-	 * @param  mixed                        $filter
-	 * @param  boolean                      $processIsolation
-	 * @return PHPUnit_Framework_TestResult
-	 * @throws InvalidArgumentException
 	 */
 	#[\Override]
-	public function run(?\PHPUnit\Framework\TestResult $result = null): \PHPUnit\Framework\TestResult
+	public function run(): void
 	{
-		$result ??= $this->createResult();
-
-		$coverage = $result->getCodeCoverage();
-
-		if ($coverage) {
-			$coverage_filter = $coverage->filter();
-
-			// Apply the white and blacklisting
-			foreach ($this->_filter_calls as $method => $args) {
-				if (method_exists($coverage_filter, $method)) {
-					foreach ($args as $arg) {
-						$coverage_filter->$method($arg);
-					}
-				}
-			}
-		}
-
-		return parent::run($result);
+		parent::run();
 	}
 
 	/**

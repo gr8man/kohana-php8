@@ -113,7 +113,12 @@ abstract class Kohana_Unittest_TestCase extends PHPUnit\Framework\TestCase
 	{
 		$reflection = new ReflectionObject($actual);
 		$property = $reflection->getProperty($attributeName);
-		$this->assertContains($expected, $property->getValue($actual), $message);
+		$value = $property->getValue($actual);
+		if (is_string($value)) {
+			$this->assertStringContainsString((string) $expected, $value, $message);
+		} else {
+			$this->assertContains($expected, $value, $message);
+		}
 	}
 
 	/**
@@ -123,34 +128,15 @@ abstract class Kohana_Unittest_TestCase extends PHPUnit\Framework\TestCase
 	{
 		$reflection = new ReflectionObject($actual);
 		$property = $reflection->getProperty($attributeName);
-		$this->assertNotContains($expected, $property->getValue($actual), $message);
-	}
-
-	/**
-	 * Overwrite assertContains to support strings in PHPUnit 9+
-	 */
-	#[\Override]
-	public static function assertContains($needle, iterable|string $haystack, string $message = ''): void
-	{
-		if (is_string($haystack)) {
-			self::assertStringContainsString($needle, $haystack, $message);
+		$value = $property->getValue($actual);
+		if (is_string($value)) {
+			$this->assertStringNotContainsString((string) $expected, $value, $message);
 		} else {
-			parent::assertContains($needle, $haystack, $message);
+			$this->assertNotContains($expected, $value, $message);
 		}
 	}
 
-	/**
-	 * Overwrite assertNotContains to support strings in PHPUnit 9+
-	 */
-	#[\Override]
-	public static function assertNotContains($needle, iterable|string $haystack, string $message = ''): void
-	{
-		if (is_string($haystack)) {
-			self::assertStringNotContainsString($needle, $haystack, $message);
-		} else {
-			parent::assertNotContains($needle, $haystack, $message);
-		}
-	}
+
 
 	/**
 	 * Compatibility for removed assertTag
@@ -204,15 +190,49 @@ abstract class Kohana_Unittest_TestCase extends PHPUnit\Framework\TestCase
 	}
 
 	/**
-	 * Compatibility for removed getMock
+	 * Compatibility for removed getMock (PHPUnit 9 -> 10)
 	 */
 	public function getMock(string $className, $methods = array(), array $arguments = array(), $mockClassName = '', $callOriginalConstructor = true, $callOriginalClone = true, $callAutoload = true, $cloneArguments = false, $callOriginalMethods = false)
 	{
 		$builder = $this->getMockBuilder($className);
-		if ($methods === null) {
-			$builder->setMethods();
-		} elseif (!empty($methods)) {
-			$builder->setMethods($methods);
+		// PHPUnit 10 uses onlyMethods/addMethods instead of setMethods
+		if (method_exists($builder, 'onlyMethods')) {
+			if ($methods === null) {
+				$builder->onlyMethods(array());
+			} elseif (!empty($methods)) {
+				$existing = array();
+				$nonExisting = array();
+				foreach ($methods as $m) {
+					// Check via reflection if method exists (including parent)
+					$exists = false;
+					try {
+						$ref = new ReflectionClass($className);
+						$exists = $ref->hasMethod($m);
+					} catch (Throwable) {
+						$exists = method_exists($className, $m);
+					}
+					if ($exists) {
+						$existing[] = $m;
+					} else {
+						$nonExisting[] = $m;
+					}
+				}
+				if (!empty($existing)) {
+					$builder->onlyMethods($existing);
+				}
+				if (!empty($nonExisting)) {
+					$builder->addMethods($nonExisting);
+				}
+				if (empty($existing) && empty($nonExisting) && $methods === array()) {
+					$builder->onlyMethods(array());
+				}
+			}
+		} else {
+			if ($methods === null) {
+				$builder->setMethods();
+			} elseif (!empty($methods)) {
+				$builder->setMethods($methods);
+			}
 		}
 		if (! $callOriginalConstructor) {
 			$builder->disableOriginalConstructor();
@@ -221,7 +241,11 @@ abstract class Kohana_Unittest_TestCase extends PHPUnit\Framework\TestCase
 			$builder->disableOriginalClone();
 		}
 		if (! $callAutoload) {
-			$builder->disableAutoload();
+			if (method_exists($builder, 'disableAutoload')) {
+				$builder->disableAutoload();
+			} elseif (method_exists($builder, 'enableAutoLoad')) {
+				// PHPUnit 10 renamed, keep compatibility
+			}
 		}
 		if ($arguments) {
 			$builder->setConstructorArgs($arguments);

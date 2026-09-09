@@ -15,7 +15,9 @@ class Kohana_Unittest_TestSuiteTest extends Unittest_TestCase
 {
 	public function test_filter_queues(): void
 	{
-		$suite = new Unittest_TestSuite('test_suite');
+		$suite = method_exists(\PHPUnit\Framework\TestSuite::class, 'empty')
+			? \Unittest_TestSuite::empty('test_suite')
+			: new \Unittest_TestSuite('test_suite');
 		$suite->addFileToBlacklist('some/file.php');
 		$suite->addDirectoryToBlacklist('some/dir/');
 		$suite->addFileToWhitelist('some/other/file.php');

@@ -65,7 +65,9 @@ class Kohana_Unittest_Tests
 
 		Unittest_Tests::configure_environment();
 
-		$suite = new Unittest_TestSuite();
+		$suite = method_exists(\PHPUnit\Framework\TestSuite::class, 'empty')
+			? \Unittest_TestSuite::empty('kohana')
+			: new \Unittest_TestSuite();
 
 		// Load the whitelist and blacklist for code coverage
 		$config = Kohana::$config->load('unittest');

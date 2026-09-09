@@ -27,7 +27,9 @@ class Kohana_Unittest_TestsTest extends Unittest_TestCase
 
 	public function test_blacklist_and_whitelist(): void
 	{
-		$suite = new Unittest_TestSuite('suite_test');
+		$suite = method_exists(\PHPUnit\Framework\TestSuite::class, 'empty')
+			? \Unittest_TestSuite::empty('suite_test')
+			: new \Unittest_TestSuite('suite_test');
 		Unittest_Tests::blacklist(array(APPPATH.'classes', APPPATH.'bootstrap.php'), $suite);
 		Unittest_Tests::whitelist(array(APPPATH.'classes'), $suite);
 		$this->assertTrue(true);
@@ -35,7 +37,9 @@ class Kohana_Unittest_TestsTest extends Unittest_TestCase
 
 	public function test_add_tests(): void
 	{
-		$suite = new Unittest_TestSuite('suite_add_tests');
+		$suite = method_exists(\PHPUnit\Framework\TestSuite::class, 'empty')
+			? \Unittest_TestSuite::empty('suite_add_tests')
+			: new \Unittest_TestSuite('suite_add_tests');
 		$files = array(
 			'test_sub' => array(
 				'test1' => APPPATH.'classes'.DIRECTORY_SEPARATOR.'test.php',
