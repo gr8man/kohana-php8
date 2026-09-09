@@ -21,7 +21,8 @@ class Kohana_Log_StdOutTest extends Unittest_TestCase
 {
 	public function test_write_outputs_to_stdout(): void
 	{
-		$writer = new Log_StdOut();
+		$handle = fopen('php://memory', 'w+');
+		$writer = new Log_StdOut($handle);
 		$writer->write(array(
 			array(
 				'time'  => time(),
@@ -31,12 +32,19 @@ class Kohana_Log_StdOutTest extends Unittest_TestCase
 				'line'  => 5,
 			),
 		));
-		$this->assertTrue(true);
+		rewind($handle);
+		$output = stream_get_contents($handle);
+		fclose($handle);
+
+		$this->assertStringContainsString('stdout test', $output);
+		$this->assertStringContainsString('NOTICE', $output);
+		$this->assertStringContainsString('test.php:5', $output);
 	}
 
 	public function test_write_multiple_messages(): void
 	{
-		$writer = new Log_StdOut();
+		$handle = fopen('php://memory', 'w+');
+		$writer = new Log_StdOut($handle);
 		$writer->write(array(
 			array(
 				'time'  => time(),
@@ -53,6 +61,15 @@ class Kohana_Log_StdOutTest extends Unittest_TestCase
 				'line'  => 2,
 			),
 		));
-		$this->assertTrue(true);
+		rewind($handle);
+		$output = stream_get_contents($handle);
+		fclose($handle);
+
+		$this->assertStringContainsString('first', $output);
+		$this->assertStringContainsString('second', $output);
+		$this->assertStringContainsString('INFO', $output);
+		$this->assertStringContainsString('WARNING', $output);
+		$this->assertStringContainsString('a.php:1', $output);
+		$this->assertStringContainsString('b.php:2', $output);
 	}
 }

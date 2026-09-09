@@ -61,7 +61,8 @@ class Kohana_FragmentTest extends Unittest_TestCase
 		Fragment::delete('test_nonexistent');
 		$result = Fragment::load('test_nonexistent');
 		$this->assertFalse($result);
-		while (ob_get_level() > 1) {
+		// Clean the buffer started by Fragment::load() on cache miss
+		if (ob_get_level() > 0) {
 			ob_end_clean();
 		}
 	}
@@ -89,6 +90,8 @@ class Kohana_FragmentTest extends Unittest_TestCase
 		$name = 'test_cycle_' . uniqid();
 		Fragment::delete($name);
 
+		// Capture the flushed output of Fragment::save() to prevent console pollution
+		ob_start();
 		$result = Fragment::load($name);
 		$this->assertFalse($result);
 
@@ -96,10 +99,7 @@ class Kohana_FragmentTest extends Unittest_TestCase
 		echo $content;
 
 		Fragment::save();
-
-		while (ob_get_level() > 1) {
-			ob_end_clean();
-		}
+		ob_end_clean();
 
 		ob_start();
 		$cached = Fragment::load($name);
@@ -115,16 +115,19 @@ class Kohana_FragmentTest extends Unittest_TestCase
 		$name = 'test_delete_' . uniqid();
 
 		Fragment::delete($name);
+		ob_start();
 		$result = Fragment::load($name);
 		$this->assertFalse($result);
 		echo 'to delete';
 		Fragment::save();
+		ob_end_clean();
 
 		Fragment::delete($name);
 
 		$result2 = Fragment::load($name);
 		$this->assertFalse($result2);
-		while (ob_get_level() > 1) {
+		// Clean buffer started by second miss
+		if (ob_get_level() > 0) {
 			ob_end_clean();
 		}
 	}
@@ -134,17 +137,17 @@ class Kohana_FragmentTest extends Unittest_TestCase
 		$name = 'test_lifetime_' . uniqid();
 		Fragment::delete($name);
 
+		ob_start();
 		$result = Fragment::load($name, 60);
 		$this->assertFalse($result);
 		echo 'lifetime test';
 		Fragment::save();
+		ob_end_clean();
 
-		while (ob_get_level() > 1) {
-			ob_end_clean();
-		}
-
+		ob_start();
 		$result2 = Fragment::load($name, 60);
 		$this->assertTrue($result2);
+		ob_end_clean();
 
 		Fragment::delete($name);
 	}
@@ -154,17 +157,17 @@ class Kohana_FragmentTest extends Unittest_TestCase
 		$name = 'test_i18n_' . uniqid();
 		Fragment::delete($name);
 
+		ob_start();
 		$result = Fragment::load($name, null, true);
 		$this->assertFalse($result);
 		echo 'i18n content';
 		Fragment::save();
+		ob_end_clean();
 
-		while (ob_get_level() > 1) {
-			ob_end_clean();
-		}
-
+		ob_start();
 		$result2 = Fragment::load($name, null, true);
 		$this->assertTrue($result2);
+		ob_end_clean();
 
 		Fragment::delete($name);
 	}
@@ -175,17 +178,17 @@ class Kohana_FragmentTest extends Unittest_TestCase
 		$name = 'test_i18n_false_' . uniqid();
 		Fragment::delete($name);
 
+		ob_start();
 		$result = Fragment::load($name, null, false);
 		$this->assertFalse($result);
 		echo 'no i18n';
 		Fragment::save();
+		ob_end_clean();
 
-		while (ob_get_level() > 1) {
-			ob_end_clean();
-		}
-
+		ob_start();
 		$result2 = Fragment::load($name, null, false);
 		$this->assertTrue($result2);
+		ob_end_clean();
 
 		Fragment::delete($name);
 		Fragment::$i18n = false;

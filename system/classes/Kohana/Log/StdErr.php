@@ -14,6 +14,25 @@ defined('SYSPATH') or die('No direct script access.');
 class Kohana_Log_StdErr extends Log_Writer
 {
 	/**
+	 * @var resource Stream handle to write to (defaults to STDERR)
+	 */
+	protected mixed $_handle;
+
+	/**
+	 * Create STDERR writer with optional custom stream (useful for testing).
+	 *
+	 * @param resource|null $handle Stream resource, defaults to STDERR
+	 */
+	public function __construct(mixed $handle = null)
+	{
+		if ($handle === null) {
+			$this->_handle = defined('STDERR') ? STDERR : fopen('php://stderr', 'w');
+		} else {
+			$this->_handle = $handle;
+		}
+	}
+
+	/**
 	 * Writes each of the messages to STDERR.
 	 *
 	 *     $writer->write($messages);
@@ -23,7 +42,7 @@ class Kohana_Log_StdErr extends Log_Writer
 	{
 		foreach ($messages as $message) {
 			// Writes out each message
-			fwrite(STDERR, $this->format_message($message).PHP_EOL);
+			fwrite($this->_handle, $this->format_message($message).PHP_EOL);
 		}
 	}
 
