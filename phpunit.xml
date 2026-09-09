@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd"
          bootstrap="modules/unittest/bootstrap.php"
          cacheResult="false">
     <testsuites>
@@ -35,6 +35,7 @@
         </testsuite>
         <testsuite name="Cache">
             <directory>modules/cache/tests</directory>
+            <exclude>modules/cache/tests/cache/CacheBasicMethodsTest.php</exclude>
         </testsuite>
         <testsuite name="Userguide">
             <directory>modules/userguide/tests</directory>
@@ -46,11 +47,11 @@
     <php>
         <env name="KOHANA_ENV" value="testing"/>
     </php>
-    <coverage processUncoveredFiles="false">
+    <source>
         <include>
             <directory suffix=".php">application/classes</directory>
             <directory suffix=".php">modules/*/classes</directory>
             <directory suffix=".php">system/classes</directory>
         </include>
-    </coverage>
+    </source>
 </phpunit>

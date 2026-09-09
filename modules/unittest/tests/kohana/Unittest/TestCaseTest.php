@@ -26,8 +26,8 @@ class Kohana_Unittest_TestCaseTest extends Unittest_TestCase
 		$this->assertAttributeContains('apple', 'items', $obj);
 		$this->assertAttributeNotContains('orange', 'items', $obj);
 
-		$this->assertContains('test', 'a test string');
-		$this->assertNotContains('foo', 'a test string');
+		$this->assertStringContainsString('test', 'a test string');
+		$this->assertStringNotContainsString('foo', 'a test string');
 	}
 
 	public function test_assert_internal_type(): void

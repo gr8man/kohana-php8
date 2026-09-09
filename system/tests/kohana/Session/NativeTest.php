@@ -19,6 +19,16 @@ class Kohana_Session_NativeTest extends Unittest_TestCase
 	public function setUp(): void
 	{
 		parent::setUp();
+		// Ensure clean session state - previous tests may have left session open
+		if (session_status() === PHP_SESSION_ACTIVE) {
+			session_write_close();
+		}
+		// Clear any existing session data and id
+		$_SESSION = array();
+		if (session_id() !== '') {
+			session_id('');
+		}
+		// Start output buffering to prevent headers_sent() issues in CLI
 		$this->session = new Session_Native(array('name' => 'test_session'));
 	}
 
@@ -81,5 +91,24 @@ class Kohana_Session_NativeTest extends Unittest_TestCase
 		$ref_destroy = new ReflectionMethod($this->session, '_destroy');
 		$ref_destroy->setAccessible(true);
 		$this->assertTrue($ref_destroy->invoke($this->session));
+	}
+
+	public function tearDown(): void
+	{
+		// Clean up session to prevent pollution of subsequent tests
+		try {
+			if (isset($this->session)) {
+				$ref = new ReflectionMethod($this->session, '_destroy');
+				$ref->setAccessible(true);
+				$ref->invoke($this->session);
+			}
+		} catch (Throwable) {
+			// Ignore cleanup errors
+		}
+		if (session_status() === PHP_SESSION_ACTIVE) {
+			@session_write_close();
+		}
+		$_SESSION = array();
+		parent::tearDown();
 	}
 }
