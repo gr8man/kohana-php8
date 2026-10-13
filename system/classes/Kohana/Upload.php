@@ -126,15 +126,14 @@ class Kohana_Upload
 	}
 
 	/**
-	 * Test if an uploaded file is an allowed file type, by extension.
-	 *
-	 *     $array->rule('file', 'Upload::type', array(':value', array('jpg', 'png', 'gif')));
-	 *
-	 * @param   array   $file       $_FILES item
-	 * @param   array   $allowed    allowed file extensions
-	 * @return  bool
-	 */
-	public static function type(array $file, array $allowed)
+				 * Test if an uploaded file is an allowed file type, by extension.
+				 *
+				 *     $array->rule('file', 'Upload::type', array(':value', array('jpg', 'png', 'gif')));
+				 *
+				 * @param   array   $file       $_FILES item
+				 * @param   array   $allowed    allowed file extensions
+				 */
+	public static function type(array $file, array $allowed): bool
 	{
 		if ($file['error'] !== UPLOAD_ERR_OK) {
 			return true;
@@ -146,19 +145,18 @@ class Kohana_Upload
 	}
 
 	/**
-	 * Validation rule to test if an uploaded file is allowed by file size.
-	 * File sizes are defined as: SB, where S is the size (1, 8.5, 300, etc.)
-	 * and B is the byte unit (K, MiB, GB, etc.). All valid byte units are
-	 * defined in Num::$byte_units
-	 *
-	 *     $array->rule('file', 'Upload::size', array(':value', '1M'))
-	 *     $array->rule('file', 'Upload::size', array(':value', '2.5KiB'))
-	 *
-	 * @param   array   $file   $_FILES item
-	 * @param   string  $size   maximum file size allowed
-	 * @return  bool
-	 */
-	public static function size(array $file, $size)
+				 * Validation rule to test if an uploaded file is allowed by file size.
+				 * File sizes are defined as: SB, where S is the size (1, 8.5, 300, etc.)
+				 * and B is the byte unit (K, MiB, GB, etc.). All valid byte units are
+				 * defined in Num::$byte_units
+				 *
+				 *     $array->rule('file', 'Upload::size', array(':value', '1M'))
+				 *     $array->rule('file', 'Upload::size', array(':value', '2.5KiB'))
+				 *
+				 * @param   array   $file   $_FILES item
+				 * @param   string  $size   maximum file size allowed
+				 */
+	public static function size(array $file, $size): bool
 	{
 		if ($file['error'] === UPLOAD_ERR_INI_SIZE) {
 			// Upload is larger than PHP allowed size (upload_max_filesize)
@@ -178,25 +176,24 @@ class Kohana_Upload
 	}
 
 	/**
-	 * Validation rule to test if an upload is an image and, optionally, is the correct size.
-	 *
-	 *     // The "image" file must be an image
-	 *     $array->rule('image', 'Upload::image')
-	 *
-	 *     // The "photo" file has a maximum size of 640x480 pixels
-	 *     $array->rule('photo', 'Upload::image', array(':value', 640, 480));
-	 *
-	 *     // The "image" file must be exactly 100x100 pixels
-	 *     $array->rule('image', 'Upload::image', array(':value', 100, 100, TRUE));
-	 *
-	 *
-	 * @param   array   $file       $_FILES item
-	 * @param   integer $max_width  maximum width of image
-	 * @param   integer $max_height maximum height of image
-	 * @param   boolean $exact      match width and height exactly?
-	 * @return  boolean
-	 */
-	public static function image(array $file, $max_width = null, $max_height = null, $exact = false)
+				 * Validation rule to test if an upload is an image and, optionally, is the correct size.
+				 *
+				 *     // The "image" file must be an image
+				 *     $array->rule('image', 'Upload::image')
+				 *
+				 *     // The "photo" file has a maximum size of 640x480 pixels
+				 *     $array->rule('photo', 'Upload::image', array(':value', 640, 480));
+				 *
+				 *     // The "image" file must be exactly 100x100 pixels
+				 *     $array->rule('image', 'Upload::image', array(':value', 100, 100, TRUE));
+				 *
+				 *
+				 * @param   array   $file       $_FILES item
+				 * @param   integer $max_width  maximum width of image
+				 * @param   integer $max_height maximum height of image
+				 * @param   boolean $exact      match width and height exactly?
+				 */
+	public static function image(array $file, $max_width = null, $max_height = null, $exact = false): bool
 	{
 		if (Upload::not_empty($file)) {
 			try {

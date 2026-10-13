@@ -77,14 +77,13 @@ class Kohana_Auth_File extends Auth
 	}
 
 	/**
-	 * Compare password with original (plain text). Works for current (logged in) user
-	 *
-	 * @param   string   $password  Password
-	 * @param   string   $hash      Stored password hash (optional for File driver)
-	 * @return  boolean
-	 */
+				 * Compare password with original (plain text). Works for current (logged in) user
+				 *
+				 * @param   string   $password  Password
+				 * @param   string   $hash      Stored password hash (optional for File driver)
+				 */
 	#[\Override]
-	public function check_password($password, $hash = null)
+	public function check_password($password, $hash = null): bool
 	{
 		$username = $this->get_user();
 

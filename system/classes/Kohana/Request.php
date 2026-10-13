@@ -373,15 +373,14 @@ class Kohana_Request implements HTTP_Request, \Stringable
 	}
 
 	/**
-	 * Determines if a file larger than the post_max_size has been uploaded. PHP
-	 * does not handle this situation gracefully on its own, so this method
-	 * helps to solve that problem.
-	 *
-	 * @return  boolean
-	 * @uses    Num::bytes
-	 * @uses    Arr::get
-	 */
-	public static function post_max_size_exceeded()
+				 * Determines if a file larger than the post_max_size has been uploaded. PHP
+				 * does not handle this situation gracefully on its own, so this method
+				 * helps to solve that problem.
+				 *
+				 * @uses    Num::bytes
+				 * @uses    Arr::get
+				 */
+	public static function post_max_size_exceeded(): bool
 	{
 		// Make sure the request method is POST
 		if (Request::$initial->method() !== HTTP_Request::POST) {

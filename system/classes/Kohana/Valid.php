@@ -88,16 +88,15 @@ class Kohana_Valid
 	}
 
 	/**
-	 * Check an email address for correct format.
-	 *
-	 * @link  http://www.iamcal.com/publish/articles/php/parsing_email/
-	 * @link  http://www.w3.org/Protocols/rfc822/
-	 *
-	 * @param   string  $email  email address
-	 * @param   boolean $strict strict RFC compatibility
-	 * @return  boolean
-	 */
-	public static function email($email, $strict = false)
+				 * Check an email address for correct format.
+				 *
+				 * @link  http://www.iamcal.com/publish/articles/php/parsing_email/
+				 * @link  http://www.w3.org/Protocols/rfc822/
+				 *
+				 * @param   string  $email  email address
+				 * @param   boolean $strict strict RFC compatibility
+				 */
+	public static function email($email, $strict = false): bool
 	{
 		if (UTF8::strlen((string) $email) > 254) {
 			return false;
@@ -125,15 +124,14 @@ class Kohana_Valid
 	}
 
 	/**
-	 * Validate the domain of an email address by checking if the domain has a
-	 * valid MX record.
-	 *
-	 * @link  http://php.net/checkdnsrr  not added to Windows until PHP 5.3.0
-	 *
-	 * @param   string  $email  email address
-	 * @return  boolean
-	 */
-	public static function email_domain($email)
+				 * Validate the domain of an email address by checking if the domain has a
+				 * valid MX record.
+				 *
+				 * @link  http://php.net/checkdnsrr  not added to Windows until PHP 5.3.0
+				 *
+				 * @param   string  $email  email address
+				 */
+	public static function email_domain($email): bool
 	{
 		if (! Valid::not_empty($email)) {
 			return false;
@@ -144,12 +142,11 @@ class Kohana_Valid
 	}
 
 	/**
-	 * Validate a URL.
-	 *
-	 * @param   string  $url    URL
-	 * @return  boolean
-	 */
-	public static function url($url)
+				 * Validate a URL.
+				 *
+				 * @param   string  $url    URL
+				 */
+	public static function url($url): bool
 	{
 		// Based on http://www.apps.ietf.org/rfc/rfc1738.html#sec-5
 		if (! preg_match(
@@ -232,10 +229,9 @@ class Kohana_Valid
 	 *
 	 * @param   integer         $number credit card number
 	 * @param   string|array    $type   card type, or an array of card types
-	 * @return  boolean
 	 * @uses    Valid::luhn
 	 */
-	public static function credit_card($number, $type = null)
+	public static function credit_card($number, $type = null): bool
 	{
 		// Remove all non-digit characters from the number
 		if (($number = preg_replace('/\D+/', '', (string) $number)) === '') {
@@ -246,7 +242,7 @@ class Kohana_Valid
 			// Use the default type
 			$type = 'default';
 		} elseif (is_array($type)) {
-			return array_any($type, fn ($t) => Valid::credit_card($number, $t));
+			return array_any($type, fn ($t): bool => Valid::credit_card($number, $t));
 		}
 
 		$cards = Kohana::$config->load('credit_cards');
@@ -280,13 +276,12 @@ class Kohana_Valid
 	}
 
 	/**
-	 * Validate a number against the [Luhn](http://en.wikipedia.org/wiki/Luhn_algorithm)
-	 * (mod10) formula.
-	 *
-	 * @param   string  $number number to check
-	 * @return  boolean
-	 */
-	public static function luhn($number)
+				 * Validate a number against the [Luhn](http://en.wikipedia.org/wiki/Luhn_algorithm)
+				 * (mod10) formula.
+				 *
+				 * @param   string  $number number to check
+				 */
+	public static function luhn($number): bool
 	{
 		// Force the value to be a string as this method uses string functions.
 		// Converting to an integer may pass PHP_INT_MAX and result in an error!
@@ -431,15 +426,14 @@ class Kohana_Valid
 	}
 
 	/**
-	 * Tests if a number is within a range.
-	 *
-	 * @param   string  $number number to check
-	 * @param   integer $min    minimum value
-	 * @param   integer $max    maximum value
-	 * @param   integer $step   increment size
-	 * @return  boolean
-	 */
-	public static function range($number, $min, $max, $step = null)
+				 * Tests if a number is within a range.
+				 *
+				 * @param   string  $number number to check
+				 * @param   integer $min    minimum value
+				 * @param   integer $max    maximum value
+				 * @param   integer $step   increment size
+				 */
+	public static function range($number, $min, $max, $step = null): bool
 	{
 		if ($number < $min or $number > $max) {
 			// Number is outside of range
