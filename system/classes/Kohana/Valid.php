@@ -229,10 +229,9 @@ class Kohana_Valid
 	 *
 	 * @param   integer         $number credit card number
 	 * @param   string|array    $type   card type, or an array of card types
-	 * @return  boolean
 	 * @uses    Valid::luhn
 	 */
-	public static function credit_card($number, $type = null)
+	public static function credit_card($number, $type = null): bool
 	{
 		// Remove all non-digit characters from the number
 		if (($number = preg_replace('/\D+/', '', (string) $number)) === '') {
@@ -243,7 +242,7 @@ class Kohana_Valid
 			// Use the default type
 			$type = 'default';
 		} elseif (is_array($type)) {
-			return array_any($type, fn ($t) => Valid::credit_card($number, $t));
+			return array_any($type, fn ($t): bool => Valid::credit_card($number, $t));
 		}
 
 		$cards = Kohana::$config->load('credit_cards');
