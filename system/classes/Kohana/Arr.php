@@ -99,10 +99,8 @@ class Kohana_Arr
 				return $array[$path];
 			}
 
-			if ($delimiter === null) {
-				// Use the default delimiter
-				$delimiter = Arr::$delimiter;
-			}
+			// Use the default delimiter
+			$delimiter ??= Arr::$delimiter;
 
 			// Remove starting delimiters and spaces
 			$path = ltrim((string) $path, "{$delimiter} ");

@@ -57,10 +57,8 @@ abstract class Kohana_Database implements \Stringable
 		$name ??= Database::$default;
 
 		if (! isset(Database::$instances[$name])) {
-			if ($config === null) {
-				// Load the configuration for this database
-				$config = Kohana::$config->load('database')->$name;
-			}
+			// Load the configuration for this database
+			$config ??= Kohana::$config->load('database')->$name;
 
 			if (! isset($config['type'])) {
 				throw new Kohana_Exception(
