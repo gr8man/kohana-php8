@@ -41,7 +41,7 @@ class Kohana_SqliteTest extends Kohana_CacheBasicMethodsTest {
 					[
 						'driver'             => 'sqlite',
 						'default_expire'     => 3600,
-						'database'           => 'memory',
+						'database'           => ':memory:',
 						'schema'             => 'CREATE TABLE caches(id VARCHAR(127) PRIMARY KEY, tags VARCHAR(255), expiration INTEGER, cache TEXT)',
 					]
 				);

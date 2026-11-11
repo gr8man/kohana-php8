@@ -20,6 +20,25 @@ defined('SYSPATH') or die('Kohana bootstrap needs to be included before tests ru
 class Kohana_Request_Client_ExternalTest extends Unittest_TestCase
 {
 	/**
+	 * Default external client
+	 *
+	 * @var string
+	 */
+	protected $_default_external_client;
+
+	public function setUp(): void
+	{
+		parent::setUp();
+		$this->_default_external_client = Request_Client_External::$client;
+	}
+
+	public function tearDown(): void
+	{
+		Request_Client_External::$client = 'Request_Client_Curl';
+		parent::tearDown();
+	}
+
+	/**
 	 * Provider for test_factory()
 	 *
 	 * @return  array
@@ -76,7 +95,32 @@ class Kohana_Request_Client_ExternalTest extends Unittest_TestCase
 			$this->markTestSkipped('HTTP extension is not available.');
 		}
 
+		if ($client === null) {
+			Request_Client_External::$client = 'Request_Client_Stream';
+		}
+
 		$this->assertInstanceOf($expected, Request_Client_External::factory($params, $client));
+	}
+
+	/**
+	 * Tests Request_Client_External::factory() with explicit null client
+	 *
+	 * @return void
+	 */
+	public function test_factory_with_explicit_null_client()
+	{
+		$previous_client = Request_Client_External::$client;
+		try {
+			Request_Client_External::$client = 'Request_Client_Stream';
+			$client = Request_Client_External::factory(array(), null);
+			$this->assertInstanceOf('Request_Client_Stream', $client);
+
+			// Calling without second argument should behave identically
+			$client_default = Request_Client_External::factory(array());
+			$this->assertInstanceOf('Request_Client_Stream', $client_default);
+		} finally {
+			Request_Client_External::$client = $previous_client;
+		}
 	}
 
 	/**
