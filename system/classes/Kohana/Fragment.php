@@ -50,10 +50,8 @@ class Kohana_Fragment
 	 */
 	protected static function _cache_key(string $name, $i18n = null): string
 	{
-		if ($i18n === null) {
-			// Use the default setting
-			$i18n = Fragment::$i18n;
-		}
+		// Use the default setting
+		$i18n ??= Fragment::$i18n;
 
 		// Language prefix for cache key
 		$i18n = ($i18n === true) ? I18n::lang() : '';

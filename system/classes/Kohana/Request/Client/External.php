@@ -58,9 +58,7 @@ abstract class Kohana_Request_Client_External extends Request_Client
 	 */
 	public static function factory(array $params = array(), $client = null)
 	{
-		if ($client === null) {
-			$client = Request_Client_External::$client;
-		}
+		$client ??= Request_Client_External::$client;
 
 		$client = new $client($params);
 
