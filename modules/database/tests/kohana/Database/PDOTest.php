@@ -42,6 +42,25 @@ class Kohana_Database_PDOTest extends Unittest_TestCase
 	public function tearDown(): void
 	{
 		$this->db->disconnect();
+		if (isset(Database::$instances['test_instance_pdo'])) {
+			Database::$instances['test_instance_pdo']->disconnect();
+			unset(Database::$instances['test_instance_pdo']);
+		}
+		if (isset(Database::$instances['test_null_cfg'])) {
+			Database::$instances['test_null_cfg']->disconnect();
+			unset(Database::$instances['test_null_cfg']);
+		}
+		if (isset(Database::$instances['test_missing_type'])) {
+			Database::$instances['test_missing_type']->disconnect();
+			unset(Database::$instances['test_missing_type']);
+		}
+		$db_config = Kohana::$config->load('database');
+		if (isset($db_config['test_null_cfg'])) {
+			unset($db_config['test_null_cfg']);
+		}
+		if (isset($db_config['test_missing_type'])) {
+			unset($db_config['test_missing_type']);
+		}
 		parent::tearDown();
 	}
 
@@ -135,5 +154,56 @@ class Kohana_Database_PDOTest extends Unittest_TestCase
 		};
 		$final = (fn (&$context, $row) => $context);
 		$this->assertTrue($this->db->create_aggregate('custom_sum', $step, $final));
+	}
+
+	public function test_instance_with_explicit_config(): void
+	{
+		$config = array(
+			'type'       => 'PDO',
+			'connection' => array(
+				'dsn'        => 'sqlite::memory:',
+				'persistent' => false,
+			),
+			'table_prefix' => '',
+			'charset'      => null,
+			'caching'      => false,
+		);
+
+		$instance = Database::instance('test_instance_pdo', $config);
+		$this->assertInstanceOf(Database_PDO::class, $instance);
+		$this->assertSame($instance, Database::instance('test_instance_pdo'));
+	}
+
+	public function test_instance_with_null_config_loads_from_kohana_config(): void
+	{
+		Kohana::$config->load('database')->set('test_null_cfg', array(
+			'type'       => 'PDO',
+			'connection' => array(
+				'dsn'        => 'sqlite::memory:',
+				'persistent' => false,
+			),
+			'table_prefix' => '',
+			'charset'      => null,
+			'caching'      => false,
+		));
+
+		// Both omitting config and passing null config should trigger loading from Kohana::$config
+		$config = null;
+		$instance = Database::instance('test_null_cfg', $config);
+		$this->assertInstanceOf(Database_PDO::class, $instance);
+		$this->assertSame($instance, Database::instance('test_null_cfg'));
+	}
+
+	public function test_instance_with_null_config_throws_exception_when_type_not_defined(): void
+	{
+		Kohana::$config->load('database')->set('test_missing_type', array(
+			'table_prefix' => '',
+		));
+
+		$this->expectException(Kohana_Exception::class);
+		$this->expectExceptionMessage('Database type not defined in test_missing_type configuration');
+
+		$config = null;
+		Database::instance('test_missing_type', $config);
 	}
 }

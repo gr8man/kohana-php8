@@ -28,6 +28,13 @@ class Kohana_FragmentTest extends Unittest_TestCase
 
 	public function tearDown(): void
 	{
+		Fragment::$lifetime = 30;
+		Fragment::$i18n = false;
+
+		$ref = new ReflectionProperty(Fragment::class, '_caches');
+		$ref->setAccessible(true);
+		$ref->setValue(null, array());
+
 		parent::tearDown();
 	}
 
@@ -48,6 +55,20 @@ class Kohana_FragmentTest extends Unittest_TestCase
 		$key = $ref->invoke(null, 'footer', true);
 		$this->assertStringContainsString('footer', $key);
 		$this->assertStringContainsString('Fragment::cache(', $key);
+	}
+
+	public function test_cache_key_explicit_null_i18n_uses_default(): void
+	{
+		$ref = new ReflectionMethod(Fragment::class, '_cache_key');
+		$ref->setAccessible(true);
+
+		Fragment::$i18n = false;
+		$key_false = $ref->invoke(null, 'header', null);
+		$this->assertSame('Fragment::cache(+header)', $key_false);
+
+		Fragment::$i18n = true;
+		$key_true = $ref->invoke(null, 'header', null);
+		$this->assertSame('Fragment::cache('.I18n::lang().'+header)', $key_true);
 	}
 
 	public function test_delete_calls_kohana_cache(): void
@@ -192,5 +213,25 @@ class Kohana_FragmentTest extends Unittest_TestCase
 
 		Fragment::delete($name);
 		Fragment::$i18n = false;
+	}
+
+	public function test_load_with_explicit_null_i18n(): void
+	{
+		$name = 'test_i18n_null_' . uniqid();
+		Fragment::delete($name);
+
+		ob_start();
+		$result = Fragment::load($name, null, null);
+		$this->assertFalse($result);
+		echo 'null i18n content';
+		Fragment::save();
+		ob_end_clean();
+
+		ob_start();
+		$result2 = Fragment::load($name, null, null);
+		$this->assertTrue($result2);
+		ob_end_clean();
+
+		Fragment::delete($name);
 	}
 }

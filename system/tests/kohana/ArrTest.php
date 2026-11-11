@@ -847,6 +847,31 @@ class Kohana_ArrTest extends Unittest_TestCase
 	}
 
 	/**
+	 * Tests Arr::path() with explicit null delimiter uses Arr::$delimiter
+	 *
+	 * @test
+	 * @covers Arr::path
+	 */
+	public function test_path_explicit_null_delimiter()
+	{
+		$array = array(
+			'foo' => array(
+				'bar' => 'baz',
+			),
+		);
+
+		$this->assertSame('baz', Arr::path($array, 'foo.bar', null, null));
+
+		$previous_delimiter = Arr::$delimiter;
+		try {
+			Arr::$delimiter = '/';
+			$this->assertSame('baz', Arr::path($array, 'foo/bar', null, null));
+		} finally {
+			Arr::$delimiter = $previous_delimiter;
+		}
+	}
+
+	/**
 	 * Tests Arr::overwrite() with single extra array
 	 *
 	 * @test
