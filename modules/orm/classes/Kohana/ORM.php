@@ -37,17 +37,17 @@ class Kohana_ORM extends Model implements \Stringable
 	 *    $model = ORM::factory('User_Token');
 	 *
 	 * @chainable
-	 * @param   string  $model  Model name
+	 * @param   string  $name   Model name
 	 * @param   mixed   $id     Parameter for find()
 	 * @return  ORM
 	 */
 	#[\Override]
-	public static function factory($model, $id = null)
+	public static function factory($name, $id = null)
 	{
 		// Set class name
-		$model = 'Model_'.$model;
+		$class = 'Model_'.$name;
 
-		return new $model($id);
+		return new $class($id);
 	}
 
 	/**
@@ -76,7 +76,7 @@ class Kohana_ORM extends Model implements \Stringable
 
 	/**
 	 * Validation object created before saving/updating
-	 * @var Validation
+	 * @var Validation|null
 	 */
 	protected $_validation;
 
@@ -129,13 +129,13 @@ class Kohana_ORM extends Model implements \Stringable
 
 	/**
 	 * Model name
-	 * @var string
+	 * @var string|null
 	 */
 	protected $_object_name;
 
 	/**
 	 * Plural model name
-	 * @var string
+	 * @var string|null
 	 */
 	protected $_object_plural;
 
@@ -153,13 +153,13 @@ class Kohana_ORM extends Model implements \Stringable
 
 	/**
 	 * Auto-update columns for updates
-	 * @var string
+	 * @var array{column: string, format: bool|string}|false|null
 	 */
 	protected $_updated_column;
 
 	/**
 	 * Auto-update columns for creation
-	 * @var string
+	 * @var array{column: string, format: bool|string}|false|null
 	 */
 	protected $_created_column;
 
@@ -225,7 +225,7 @@ class Kohana_ORM extends Model implements \Stringable
 
 	/**
 	 * Database query builder
-	 * @var Database_Query_Builder_Select
+	 * @var Database_Query_Builder_Select|Database_Query_Builder_Update|Database_Query_Builder_Delete
 	 */
 	protected $_db_builder;
 
@@ -457,9 +457,9 @@ class Kohana_ORM extends Model implements \Stringable
 	 * Reloads the current object from the database.
 	 *
 	 * @chainable
-	 * @return ORM
+	 * @return Database_Result|static
 	 */
-	public function reload()
+	public function reload(): \Database_Result|static
 	{
 		$primary_key = $this->pk();
 
@@ -528,7 +528,7 @@ class Kohana_ORM extends Model implements \Stringable
 	 * If $field is specified, checks whether that field was modified.
 	 *
 	 * @param string  $field  field to check for changes
-	 * @return  bool  Whether or not the field has changed
+	 * @return  mixed  list of changed fields, or whether the given field has changed
 	 */
 	public function changed($field = null)
 	{
@@ -656,14 +656,13 @@ class Kohana_ORM extends Model implements \Stringable
 	}
 
 	/**
-	 * Handles setting of columns
-	 * Override this method to add custom set behavior
-	 *
-	 * @param  string $column Column name
-	 * @param  mixed  $value  Column value
-	 * @throws Kohana_Exception
-	 * @return ORM
-	 */
+				 * Handles setting of columns
+				 * Override this method to add custom set behavior
+				 *
+				 * @param  string $column Column name
+				 * @param  mixed  $value  Column value
+				 * @throws Kohana_Exception
+				 */
 	public function set($column, $value): static
 	{
 		if (! isset($this->_object_name)) {
@@ -712,13 +711,12 @@ class Kohana_ORM extends Model implements \Stringable
 	}
 
 	/**
-	 * Set values from an array with support for one-one relationships.  This method should be used
-	 * for loading in post data, etc.
-	 *
-	 * @param  array $values   Array of column => val
-	 * @param  array $expected Array of keys to take from $values
-	 * @return ORM
-	 */
+				 * Set values from an array with support for one-one relationships.  This method should be used
+				 * for loading in post data, etc.
+				 *
+				 * @param  array $values   Array of column => val
+				 * @param  array $expected Array of keys to take from $values
+				 */
 	public function values(array $values, array $expected = null): static
 	{
 		// Default to expecting everything except the primary key
@@ -883,9 +881,9 @@ class Kohana_ORM extends Model implements \Stringable
 	 *
 	 * @chainable
 	 * @throws Kohana_Exception
-	 * @return ORM
+	 * @return Database_Result|static
 	 */
-	public function find()
+	public function find(): \Database_Result|static
 	{
 		if ($this->_loaded) {
 			throw new Kohana_Exception('Method find() cannot be called on loaded objects');
@@ -905,9 +903,9 @@ class Kohana_ORM extends Model implements \Stringable
 	 * Finds multiple database rows and returns an iterator of the rows found.
 	 *
 	 * @throws Kohana_Exception
-	 * @return Database_Result
+	 * @return Database_Result|static
 	 */
-	public function find_all()
+	public function find_all(): \Database_Result|static
 	{
 		if ($this->_loaded) {
 			throw new Kohana_Exception('Method find_all() cannot be called on loaded objects');
@@ -946,9 +944,9 @@ class Kohana_ORM extends Model implements \Stringable
 	 *
 	 * @chainable
 	 * @param  bool $multiple Return an iterator or load a single row
-	 * @return ORM|Database_Result
+	 * @return Database_Result|static
 	 */
-	protected function _load_result($multiple = false)
+	protected function _load_result($multiple = false): \Database_Result|static
 	{
 		$this->_db_builder->from(array($this->_table_name, $this->_object_name));
 
@@ -977,6 +975,10 @@ class Kohana_ORM extends Model implements \Stringable
 
 			$this->reset();
 
+			if (! $result instanceof Database_Result) {
+				throw new Kohana_Exception('Expected a database result set, got :type', array(':type' => get_debug_type($result)));
+			}
+
 			return $result;
 		} else {
 			// Load the result as an associative array
@@ -984,7 +986,7 @@ class Kohana_ORM extends Model implements \Stringable
 
 			$this->reset();
 
-			if ($result->count() === 1) {
+			if ($result instanceof Database_Result and $result->count() === 1) {
 				// Load object values
 				$this->_load_values($result->current());
 			} else {
@@ -1134,12 +1136,11 @@ class Kohana_ORM extends Model implements \Stringable
 	}
 
 	/**
-	 * Validates the current model's data
-	 *
-	 * @param  Validation $extra_validation Validation object
-	 * @throws ORM_Validation_Exception
-	 * @return ORM
-	 */
+				 * Validates the current model's data
+				 *
+				 * @param  Validation $extra_validation Validation object
+				 * @throws ORM_Validation_Exception
+				 */
 	public function check(Validation $extra_validation = null): static
 	{
 		// Determine if any external validation failed
@@ -1164,11 +1165,10 @@ class Kohana_ORM extends Model implements \Stringable
 	}
 
 	/**
-	 * Insert a new object to the database
-	 * @param  Validation $validation Validation object
-	 * @throws Kohana_Exception
-	 * @return ORM
-	 */
+				 * Insert a new object to the database
+				 * @param  Validation $validation Validation object
+				 * @throws Kohana_Exception
+				 */
 	public function create(Validation $validation = null): static
 	{
 		if ($this->_loaded) {
@@ -1217,13 +1217,12 @@ class Kohana_ORM extends Model implements \Stringable
 	}
 
 	/**
-	 * Updates a single record or multiple records
-	 *
-	 * @chainable
-	 * @param  Validation $validation Validation object
-	 * @throws Kohana_Exception
-	 * @return ORM
-	 */
+				 * Updates a single record or multiple records
+				 *
+				 * @chainable
+				 * @param  Validation $validation Validation object
+				 * @throws Kohana_Exception
+				 */
 	public function update(Validation $validation = null): static
 	{
 		if (! $this->_loaded) {
@@ -1279,24 +1278,22 @@ class Kohana_ORM extends Model implements \Stringable
 	}
 
 	/**
-	 * Updates or Creates the record depending on loaded()
-	 *
-	 * @chainable
-	 * @param  Validation $validation Validation object
-	 * @return ORM
-	 */
+				 * Updates or Creates the record depending on loaded()
+				 *
+				 * @chainable
+				 * @param  Validation $validation Validation object
+				 */
 	public function save(Validation $validation = null): static
 	{
 		return $this->loaded() ? $this->update($validation) : $this->create($validation);
 	}
 
 	/**
-	 * Deletes a single record while ignoring relationships.
-	 *
-	 * @chainable
-	 * @throws Kohana_Exception
-	 * @return ORM
-	 */
+				 * Deletes a single record while ignoring relationships.
+				 *
+				 * @chainable
+				 * @throws Kohana_Exception
+				 */
 	public function delete(): static
 	{
 		if (! $this->_loaded) {
@@ -1384,10 +1381,12 @@ class Kohana_ORM extends Model implements \Stringable
 	public function count_relations($alias, $far_keys = null): int
 	{
 		if ($far_keys === null) {
-			return (int) DB::select(array(DB::expr('COUNT(*)'), 'records_found'))
+			$result = DB::select(array(DB::expr('COUNT(*)'), 'records_found'))
 				->from($this->_has_many[$alias]['through'])
 				->where($this->_has_many[$alias]['foreign_key'], '=', $this->pk())
-				->execute($this->_db)->get('records_found');
+				->execute($this->_db);
+
+			return $result instanceof Database_Result ? (int) $result->get('records_found') : 0;
 		}
 
 		$far_keys = ($far_keys instanceof ORM) ? $far_keys->pk() : $far_keys;
@@ -1401,27 +1400,28 @@ class Kohana_ORM extends Model implements \Stringable
 		}
 
 		// Rows found need to match the rows searched
-		return (int) DB::select(array(DB::expr('COUNT(*)'), 'records_found'))
+		$result = DB::select(array(DB::expr('COUNT(*)'), 'records_found'))
 			->from($this->_has_many[$alias]['through'])
 			->where($this->_has_many[$alias]['foreign_key'], '=', $this->pk())
 			->where($this->_has_many[$alias]['far_key'], 'IN', $far_keys)
-			->execute($this->_db)->get('records_found');
+			->execute($this->_db);
+
+		return $result instanceof Database_Result ? (int) $result->get('records_found') : 0;
 	}
 
 	/**
-	 * Adds a new relationship to between this model and another.
-	 *
-	 *     // Add the login role using a model instance
-	 *     $model->add('roles', ORM::factory('role', array('name' => 'login')));
-	 *     // Add the login role if you know the roles.id is 5
-	 *     $model->add('roles', 5);
-	 *     // Add multiple roles (for example, from checkboxes on a form)
-	 *     $model->add('roles', array(1, 2, 3, 4));
-	 *
-	 * @param  string  $alias    Alias of the has_many "through" relationship
-	 * @param  mixed   $far_keys Related model, primary key, or an array of primary keys
-	 * @return ORM
-	 */
+				 * Adds a new relationship to between this model and another.
+				 *
+				 *     // Add the login role using a model instance
+				 *     $model->add('roles', ORM::factory('role', array('name' => 'login')));
+				 *     // Add the login role if you know the roles.id is 5
+				 *     $model->add('roles', 5);
+				 *     // Add multiple roles (for example, from checkboxes on a form)
+				 *     $model->add('roles', array(1, 2, 3, 4));
+				 *
+				 * @param  string  $alias    Alias of the has_many "through" relationship
+				 * @param  mixed   $far_keys Related model, primary key, or an array of primary keys
+				 */
 	public function add($alias, $far_keys): static
 	{
 		$far_keys = ($far_keys instanceof ORM) ? $far_keys->pk() : $far_keys;
@@ -1441,21 +1441,20 @@ class Kohana_ORM extends Model implements \Stringable
 	}
 
 	/**
-	 * Removes a relationship between this model and another.
-	 *
-	 *     // Remove a role using a model instance
-	 *     $model->remove('roles', ORM::factory('role', array('name' => 'login')));
-	 *     // Remove the role knowing the primary key
-	 *     $model->remove('roles', 5);
-	 *     // Remove multiple roles (for example, from checkboxes on a form)
-	 *     $model->remove('roles', array(1, 2, 3, 4));
-	 *     // Remove all related roles
-	 *     $model->remove('roles');
-	 *
-	 * @param  string $alias    Alias of the has_many "through" relationship
-	 * @param  mixed  $far_keys Related model, primary key, or an array of primary keys
-	 * @return ORM
-	 */
+				 * Removes a relationship between this model and another.
+				 *
+				 *     // Remove a role using a model instance
+				 *     $model->remove('roles', ORM::factory('role', array('name' => 'login')));
+				 *     // Remove the role knowing the primary key
+				 *     $model->remove('roles', 5);
+				 *     // Remove multiple roles (for example, from checkboxes on a form)
+				 *     $model->remove('roles', array(1, 2, 3, 4));
+				 *     // Remove all related roles
+				 *     $model->remove('roles');
+				 *
+				 * @param  string $alias    Alias of the has_many "through" relationship
+				 * @param  mixed  $far_keys Related model, primary key, or an array of primary keys
+				 */
 	public function remove($alias, $far_keys = null): static
 	{
 		$far_keys = ($far_keys instanceof ORM) ? $far_keys->pk() : $far_keys;
@@ -1495,10 +1494,11 @@ class Kohana_ORM extends Model implements \Stringable
 
 		$this->_build(Database::SELECT);
 
-		$records = $this->_db_builder->from(array($this->_table_name, $this->_object_name))
+		$result = $this->_db_builder->from(array($this->_table_name, $this->_object_name))
 			->select(array(DB::expr('COUNT('.$this->_db->quote_column($this->_object_name.'.'.$this->_primary_key).')'), 'records_found'))
-			->execute($this->_db)
-			->get('records_found');
+			->execute($this->_db);
+
+		$records = $result instanceof Database_Result ? $result->get('records_found') : 0;
 
 		// Add back in selected columns
 		$this->_db_pending += $selects;
@@ -1524,7 +1524,7 @@ class Kohana_ORM extends Model implements \Stringable
 	 * Returns an ORM model for the given one-one related alias
 	 *
 	 * @param  string $alias Alias name
-	 * @return ORM
+	 * @return static|false  related model, FALSE when the alias is not defined
 	 */
 	protected function _related($alias)
 	{
@@ -1859,7 +1859,6 @@ class Kohana_ORM extends Model implements \Stringable
 				 * Choose the columns to select from.
 				 *
 				 * @param   mixed  $columns  column name or array($column, $alias) or object
-				 * @param   ...
 				 */
 	public function select($columns = null): static
 	{
@@ -1878,7 +1877,6 @@ class Kohana_ORM extends Model implements \Stringable
 				 * Choose the tables to select "FROM ..."
 				 *
 				 * @param   mixed  $tables  table name or array($table, $alias) or object
-				 * @param   ...
 				 */
 	public function from($tables): static
 	{
@@ -1932,7 +1930,6 @@ class Kohana_ORM extends Model implements \Stringable
 				 * Creates a "GROUP BY ..." filter.
 				 *
 				 * @param   mixed   $columns  column name or array($column, $alias) or object
-				 * @param   ...
 				 */
 	public function group_by($columns): static
 	{

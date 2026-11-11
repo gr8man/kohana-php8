@@ -38,7 +38,7 @@ class Kohana_Database_Query_Builder_SelectTest extends Unittest_TestCase
 				public function connect() {}
 				public function disconnect() { return true; }
 				public function set_charset($charset) {}
-				public function query(int $type, string $sql, bool $as_object = false, array $params = null) {
+				public function query(int $type, string $sql, string|bool $as_object = false, array $params = null) {
 					throw new RuntimeException("Unexpected query call: $sql");
 				}
 				public function begin($mode = null) { return true; }

@@ -130,7 +130,6 @@ class Kohana_Text
 	 * Note that using multiple iterations of different strings may produce
 	 * unexpected results.
 	 *
-	 * @param   string  $str,...    strings to alternate between
 	 * @return  string
 	 */
 	public static function alternate()
@@ -505,6 +504,8 @@ class Kohana_Text
 		$last_item = '';
 
 		foreach (Text::$units as $unit => $name) {
+			$unit = (int) $unit;
+
 			if ($number / $unit >= 1) {
 				// $value = the number of times the number is divisible by unit
 				$number -= $unit * ($value = (int) floor($number / $unit));

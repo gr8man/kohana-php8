@@ -678,4 +678,12 @@ class Kohana_CoreTest extends Unittest_TestCase
 		$this->expectException(ErrorException::class);
 		Kohana::error_handler(E_USER_ERROR, 'test user error', 'file.php', 10);
 	}
+
+	/**
+	 * Tests that magic_quotes property does not exist in Kohana
+	 */
+	public function test_magic_quotes_property_does_not_exist(): void
+	{
+		$this->assertFalse(property_exists(Kohana::class, 'magic_quotes'));
+	}
 }

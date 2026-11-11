@@ -24,7 +24,7 @@ class Kohana_Database_MySQL_Result extends Database_Result
 	}
 
 	#[\Override]
-	public function seek(int $offset): void
+	public function seek(int $position): void
 	{
 	}
 

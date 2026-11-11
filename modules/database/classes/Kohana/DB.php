@@ -82,7 +82,7 @@ class Kohana_DB
 	 *     // INSERT INTO users (id, username)
 	 *     $query = DB::insert('users', array('id', 'username'));
 	 *
-	 * @param   string  $table    table to insert into
+	 * @param   string|array  $table  table to insert into
 	 * @param   array   $columns  list of column names or array($column, $alias) or object
 	 */
 	public static function insert($table = null, array $columns = null): \Database_Query_Builder_Insert
@@ -96,7 +96,7 @@ class Kohana_DB
 	 *     // UPDATE users
 	 *     $query = DB::update('users');
 	 *
-	 * @param   string  $table  table to update
+	 * @param   string|array  $table  table to update
 	 */
 	public static function update($table = null): \Database_Query_Builder_Update
 	{
@@ -109,7 +109,7 @@ class Kohana_DB
 	 *     // DELETE FROM users
 	 *     $query = DB::delete('users');
 	 *
-	 * @param   string  $table  table to delete from
+	 * @param   string|array  $table  table to delete from
 	 */
 	public static function delete($table = null): \Database_Query_Builder_Delete
 	{
@@ -125,7 +125,7 @@ class Kohana_DB
 	 *     $users = ORM::factory('user')->where(DB::expr("BINARY `hash`"), '=', $hash)->find();
 	 *
 	 * @param   string  $string  expression
-	 * @param   array   parameters
+	 * @param   array $parameters parameters
 	 */
 	public static function expr($string, $parameters = array()): \Database_Expression
 	{

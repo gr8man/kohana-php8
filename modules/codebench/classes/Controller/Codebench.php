@@ -18,6 +18,8 @@ class Controller_Codebench extends Kohana_Controller_Template
 
 	public function action_index(): void
 	{
+		assert($this->template instanceof View);
+
 		$class = $this->request->param('class');
 
 		// Convert submitted class name to URI segment

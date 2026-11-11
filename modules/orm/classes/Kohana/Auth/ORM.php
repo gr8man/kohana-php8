@@ -71,14 +71,14 @@ class Kohana_Auth_ORM extends Auth
 	 * @param   boolean  $remember  enable autologin
 	 */
 	#[\Override]
-	protected function _login($user, $password, $remember): bool
+	protected function _login($username, $password, $remember): bool
 	{
-		if (! is_object($user)) {
-			$username = $user;
-
+		if (! is_object($username)) {
 			// Load the user
 			$user = ORM::factory('User');
 			$user->where($user->unique_key($username), '=', $username)->find();
+		} else {
+			$user = $username;
 		}
 
 		// SECURITY: Use check_password for timing-safe comparison
@@ -233,18 +233,18 @@ class Kohana_Auth_ORM extends Auth
 	/**
 	 * Get the stored password for a username.
 	 *
-	 * @param   mixed   $user  username string, or user ORM object
+	 * @param   mixed   $username  username string, or user ORM object
 	 * @return  string
 	 */
 	#[\Override]
-	public function password($user)
+	public function password($username)
 	{
-		if (! is_object($user)) {
-			$username = $user;
-
+		if (! is_object($username)) {
 			// Load the user
 			$user = ORM::factory('User');
 			$user->where($user->unique_key($username), '=', $username)->find();
+		} else {
+			$user = $username;
 		}
 
 		return $user->password;
@@ -254,13 +254,15 @@ class Kohana_Auth_ORM extends Auth
 	 * Complete the login for a user by incrementing the logins and setting
 	 * session data: user_id, username, roles.
 	 *
-	 * @param   object  $user  user ORM object
-	 * @return  void
+	 * @param   object|string  $user  user ORM object
+	 * @return  bool
 	 */
 	#[\Override]
 	protected function complete_login(string|object $user)
 	{
-		$user->complete_login();
+		if (is_object($user) and method_exists($user, 'complete_login')) {
+			$user->complete_login();
+		}
 
 		return parent::complete_login($user);
 	}

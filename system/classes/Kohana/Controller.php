@@ -63,11 +63,14 @@ abstract class Kohana_Controller
 
 		// If the action doesn't exist, it's a 404
 		if (! method_exists($this, $action)) {
-			throw HTTP_Exception::factory(
+			$exception = HTTP_Exception::factory(
 				404,
 				'The requested URL :uri was not found on this server.',
 				array(':uri' => $this->request->uri())
-			)->request($this->request);
+			);
+			$exception->request($this->request);
+
+			throw $exception;
 		}
 
 		// Execute the action itself

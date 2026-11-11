@@ -96,7 +96,7 @@ class Kohana_Cache_Wincache extends Cache {
      *     Cache::instance('wincache')->set('foo', $data, 30);
      *
      * @param   string   $id        id of cache entry
-     * @param   string   $data      data to set to cache
+     * @param   mixed   $data      data to set to cache
      * @param   integer  $lifetime  lifetime in seconds
      */
     #[\Override]

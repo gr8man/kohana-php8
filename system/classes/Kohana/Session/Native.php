@@ -17,7 +17,7 @@ class Kohana_Session_Native extends Session
 	public function id(): ?string
 	{
 		$id = session_id();
-		return $id !== '' ? $id : null;
+		return (is_string($id) and $id !== '') ? $id : null;
 	}
 
 	/**
@@ -40,7 +40,7 @@ class Kohana_Session_Native extends Session
 		 * set to Cookie::$domain if available, otherwise default to ini setting
 		 */
 		$session_cookie_domain = empty(Cookie::$domain)
-			? ini_get('session.cookie_domain')
+			? (ini_get('session.cookie_domain') ?: null)
 			: Cookie::$domain;
 
 		if (! headers_sent()) {

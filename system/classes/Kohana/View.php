@@ -34,17 +34,16 @@ class Kohana_View implements \Stringable
 	}
 
 	/**
-	 * Captures the output that is generated when a view is included.
-	 * The view data will be extracted to make local variables. This method
-	 * is static to prevent object scope resolution.
-	 *
-	 *     $output = View::capture($file, $data);
-	 *
-	 * @param   string  $kohana_view_filename   filename
-	 * @param   array   $kohana_view_data       variables
-	 * @return  string
-	 * @throws  Exception
-	 */
+				 * Captures the output that is generated when a view is included.
+				 * The view data will be extracted to make local variables. This method
+				 * is static to prevent object scope resolution.
+				 *
+				 *     $output = View::capture($file, $data);
+				 *
+				 * @param   string  $kohana_view_filename   filename
+				 * @param   array   $kohana_view_data       variables
+				 * @throws  Exception
+				 */
 	protected static function capture($kohana_view_filename, array $kohana_view_data): string|false
 	{
 		// Import the view variables to local namespace
@@ -304,19 +303,18 @@ class Kohana_View implements \Stringable
 	}
 
 	/**
-	 * Renders the view object to a string. Global and local data are merged
-	 * and extracted to create local variables within the view file.
-	 *
-	 *     $output = $view->render();
-	 *
-	 * [!!] Global variables with the same key name as local variables will be
-	 * overwritten by the local variable.
-	 *
-	 * @param   string  $file   view filename
-	 * @return  string
-	 * @throws  View_Exception
-	 * @uses    View::capture
-	 */
+				 * Renders the view object to a string. Global and local data are merged
+				 * and extracted to create local variables within the view file.
+				 *
+				 *     $output = $view->render();
+				 *
+				 * [!!] Global variables with the same key name as local variables will be
+				 * overwritten by the local variable.
+				 *
+				 * @param   string  $file   view filename
+				 * @throws  View_Exception
+				 * @uses    View::capture
+				 */
 	public function render($file = null): string|false
 	{
 		if ($file !== null) {

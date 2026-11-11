@@ -322,7 +322,7 @@ class Kohana_Cache_Sqlite extends Cache implements Cache_Tagging, Cache_GarbageC
 		{
 			$statement->execute([':id' => $this->_sanitize_id($id)]);
 		}
-		catch (PDOExeption $e)
+		catch (PDOException $e)
 		{
 			throw new Cache_Exception('There was a problem querying the local SQLite3 cache. :error', [':error' => $e->getMessage()]);
 		}

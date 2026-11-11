@@ -38,7 +38,7 @@ class Kohana_Database_Query_Builder_InsertTest extends Unittest_TestCase
 				public function connect() {}
 				public function disconnect() { return true; }
 				public function set_charset($charset) {}
-				public function query(int $type, string $sql, bool $as_object = false, array $params = null) {}
+				public function query(int $type, string $sql, string|bool $as_object = false, array $params = null) {}
 				public function begin($mode = null) { return true; }
 				public function commit() { return true; }
 				public function rollback() { return true; }

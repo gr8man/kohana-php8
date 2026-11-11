@@ -83,7 +83,7 @@ class Kohana_Cookie
 	 *
 	 * @param   string  $key        cookie name
 	 * @param   mixed   $default    default value to return
-	 * @return  string
+	 * @return  mixed  cookie value, or the default value when the cookie is not set
 	 */
 	public static function get($key, $default = null)
 	{
@@ -100,7 +100,7 @@ class Kohana_Cookie
 
 		if (isset($cookie[$split]) and $cookie[$split] === '~') {
 			// Separate the salt and the value
-			[$hash, $value] = explode('~', (string) $cookie, 2);
+			[$hash, $value] = explode('~', $cookie, 2);
 
 			if (Security::slow_equals(Cookie::salt($key, $value), $hash)) {
 				// Cookie signature is valid
@@ -169,7 +169,7 @@ class Kohana_Cookie
 	 *     $salt = Cookie::salt('theme', 'red');
 	 *
 	 * @param   string $name name of cookie
-	 * @param   string $value value of cookie
+	 * @param   mixed  $value value of cookie
 	 *
 	 * @throws Kohana_Exception if Cookie::$salt is not configured
 	 */
@@ -181,7 +181,7 @@ class Kohana_Cookie
 		}
 
 		// Determine the user agent
-		$agent = isset($_SERVER['HTTP_USER_AGENT']) ? strtolower((string) $_SERVER['HTTP_USER_AGENT']) : 'unknown';
+		$agent = isset($_SERVER['HTTP_USER_AGENT']) ? strtolower($_SERVER['HTTP_USER_AGENT']) : 'unknown';
 
 		// SECURITY: Use sha256 instead of sha1 for better security
 		return hash_hmac('sha256', $agent.$name.$value.Cookie::$salt, Cookie::$salt);

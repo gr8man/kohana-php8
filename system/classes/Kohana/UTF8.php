@@ -187,8 +187,7 @@ class Kohana_UTF8
 	 * @param   string  $str    haystack
 	 * @param   string  $search needle
 	 * @param   integer $offset offset from which character in haystack to start searching
-	 * @return  integer position of needle
-	 * @return  boolean FALSE if the needle is not found
+	 * @return  int|false position of needle, FALSE if the needle is not found
 	 * @uses    UTF8::$server_utf8
 	 * @uses    Kohana::$charset
 	 */
@@ -218,8 +217,7 @@ class Kohana_UTF8
 	 * @param   string  $str    haystack
 	 * @param   string  $search needle
 	 * @param   integer $offset offset from which character in haystack to start searching
-	 * @return  integer position of needle
-	 * @return  boolean FALSE if the needle is not found
+	 * @return  int|false position of needle, FALSE if the needle is not found
 	 * @uses    UTF8::$server_utf8
 	 */
 	public static function strrpos($str, $search, $offset = 0)
@@ -401,9 +399,8 @@ class Kohana_UTF8
 	 * @author  Harry Fuecks <hfuecks@gmail.com>
 	 * @param   string  $str1   string to compare
 	 * @param   string  $str2   string to compare
-	 * @return  integer less than 0 if str1 is less than str2
-	 * @return  integer greater than 0 if str1 is greater than str2
-	 * @return  integer 0 if they are equal
+	 * @return  int  less than 0 if str1 is less than str2, greater than 0 if str1 is greater than str2,
+	 *               0 if they are equal
 	 */
 	public static function strcasecmp($str1, $str2)
 	{
@@ -430,8 +427,7 @@ class Kohana_UTF8
 	 * @param   string|array    $replace    replacement text
 	 * @param   string|array    $str        subject text
 	 * @param   integer         $count      number of matched and replaced needles will be returned via this parameter which is passed by reference
-	 * @return  string  if the input was a string
-	 * @return  array   if the input was an array
+	 * @return  string|array  replacement result, matching the type of the input
 	 */
 	public static function str_ireplace($search, $replace, $str, & $count = null)
 	{
@@ -455,8 +451,7 @@ class Kohana_UTF8
 	 * @author  Harry Fuecks <hfuecks@gmail.com>
 	 * @param   string  $str    input string
 	 * @param   string  $search needle
-	 * @return  string  matched substring if found
-	 * @return  FALSE   if the substring was not found
+	 * @return  string|false  matched substring if found, FALSE if the substring was not found
 	 */
 	public static function stristr($str, $search)
 	{
@@ -527,10 +522,10 @@ class Kohana_UTF8
 	 *     $str = UTF8::str_pad($str, $length);
 	 *
 	 * @author  Harry Fuecks <hfuecks@gmail.com>
-	 * @param   string  $str                input string
+	 * @param   string  $str  input string
 	 * @param   integer $final_str_length   desired string length after padding
 	 * @param   string  $pad_str            string to use as padding
-	 * @param   string  $pad_type           padding type: STR_PAD_RIGHT, STR_PAD_LEFT, or STR_PAD_BOTH
+	 * @param   integer $pad_type           padding type: STR_PAD_RIGHT, STR_PAD_LEFT, or STR_PAD_BOTH
 	 * @return  string
 	 */
 	public static function str_pad($str, $final_str_length, $pad_str = ' ', $pad_type = STR_PAD_RIGHT)
@@ -694,8 +689,7 @@ class Kohana_UTF8
 	 * Slight modifications to fit with phputf8 library by Harry Fuecks <hfuecks@gmail.com>
 	 *
 	 * @param   string  $str    UTF-8 encoded string
-	 * @return  array   unicode code points
-	 * @return  FALSE   if the string is invalid
+	 * @return  array|false  unicode code points, FALSE if the string is invalid
 	 */
 	public static function to_unicode($str)
 	{
@@ -722,9 +716,8 @@ class Kohana_UTF8
 	 * Ported to PHP by Henri Sivonen <hsivonen@iki.fi>, see http://hsivonen.iki.fi/php-utf8/
 	 * Slight modifications to fit with phputf8 library by Harry Fuecks <hfuecks@gmail.com>.
 	 *
-	 * @param   array   $str    unicode code points representing a string
-	 * @return  string  utf8 string of characters
-	 * @return  boolean FALSE if a code point cannot be found
+	 * @param   array   $arr    unicode code points representing a string
+	 * @return  string|false  utf8 string of characters, FALSE if a code point cannot be found
 	 */
 	public static function from_unicode($arr)
 	{

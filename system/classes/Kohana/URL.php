@@ -82,7 +82,7 @@ class Kohana_URL
 				$host = $_SERVER['HTTP_HOST'] ?? $_SERVER['SERVER_NAME'];
 
 				// make $host lowercase
-				$host = strtolower((string) $host);
+				$host = strtolower($host);
 
 				// check that host does not contain forbidden characters (see RFC 952 and RFC 2181)
 				// use preg_replace() instead of preg_match() to prevent DoS attacks with long host names

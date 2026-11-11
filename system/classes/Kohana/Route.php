@@ -137,11 +137,13 @@ class Kohana_Route
 	 *
 	 * @param Route   $route  instance
 	 *
-	 * @return false
+	 * @return string|false  route name, FALSE when the route is not registered
 	 */
 	public static function name(Route $route): string|false
 	{
-		return array_search($route, Route::$_routes);
+		$name = array_search($route, Route::$_routes);
+
+		return $name === false ? false : (string) $name;
 	}
 
 	/**
@@ -175,10 +177,12 @@ class Kohana_Route
 					), 0, $e);
 			}
 		} else {
-			if ($routes = Kohana::cache('Route::cache()', null, null, array('Route'))) {
+			$routes = Kohana::cache('Route::cache()', null, null, array('Route'));
+
+			if (is_array($routes)) {
 				if ($append) {
 					// Append cached routes
-					Route::$_routes += $routes;
+					Route::$_routes = Route::$_routes + $routes;
 				} else {
 					// Replace existing routes
 					Route::$_routes = $routes;
@@ -201,7 +205,7 @@ class Kohana_Route
 	 * @param   string  $name       route name
 	 * @param   array   $params     URI parameters
 	 * @param   mixed   $protocol   protocol string or boolean, adds protocol and domain
-	 * @return  string
+	 * @return  string|null
 	 * @since   3.0.7
 	 * @uses    URL::site
 	 */
@@ -395,8 +399,7 @@ class Kohana_Route
 	 *     }
 	 *
 	 * @param   Request $request  Request object to match
-	 * @return  array             on success
-	 * @return  FALSE             on failure
+	 * @return  array|false       parameters on success, FALSE on failure
 	 */
 	public function matches(Request $request): false|array
 	{

@@ -97,8 +97,7 @@ class Kohana_Database_Query_Builder_Select extends Database_Query_Builder_Where
 	/**
 				 * Choose the tables to select "FROM ..."
 				 *
-				 * @param mixed  $table  table name or array($table, $alias) or object
-				 * @param string|string[] $tables
+				 * @param mixed  $tables  table name or array($table, $alias) or object
 				 *
 				 *
 				 * @psalm-param list{string, string}|string $tables

@@ -770,6 +770,109 @@ class Kohana_ArrTest extends Unittest_TestCase
 	}
 
 	/**
+	 * Tests Arr::get() with an object implementing ArrayAccess
+	 *
+	 * @test
+	 * @covers Arr::get
+	 */
+	public function test_get_with_array_access(): void
+	{
+		// Arrange
+		$data = array(
+			'title' => 'Kohana Testing',
+			'author' => 'Kohana Team',
+		);
+		$arrayAccess = new class ($data) implements ArrayAccess {
+			public function __construct(private array $items)
+			{
+			}
+
+			public function offsetExists(mixed $offset): bool
+			{
+				return array_key_exists($offset, $this->items);
+			}
+
+			public function offsetGet(mixed $offset): mixed
+			{
+				return $this->items[$offset] ?? null;
+			}
+
+			public function offsetSet(mixed $offset, mixed $value): void
+			{
+				$this->items[$offset] = $value;
+			}
+
+			public function offsetUnset(mixed $offset): void
+			{
+				unset($this->items[$offset]);
+			}
+		};
+
+		// Act & Assert
+		$this->assertSame('Kohana Testing', Arr::get($arrayAccess, 'title'));
+		$this->assertSame('Kohana Team', Arr::get($arrayAccess, 'author'));
+		$this->assertNull(Arr::get($arrayAccess, 'nonexistent'));
+		$this->assertSame('default_val', Arr::get($arrayAccess, 'nonexistent', 'default_val'));
+	}
+
+	/**
+	 * Tests Arr::get() with null as key
+	 *
+	 * @test
+	 * @covers Arr::get
+	 */
+	public function test_get_with_null_key(): void
+	{
+		// Arrange
+		$array = array('a' => 1, 'b' => 2);
+
+		// Act & Assert - null key absent
+		$this->assertNull(Arr::get($array, null));
+		$this->assertSame('fallback', Arr::get($array, null, 'fallback'));
+
+		// Arrange - array with empty string key (PHP casts null key to empty string in arrays)
+		$arrayWithEmptyKey = array('' => 'empty_key_value');
+
+		// Act & Assert
+		$this->assertSame('empty_key_value', Arr::get($arrayWithEmptyKey, null));
+	}
+
+	/**
+	 * Tests Arr::get() with ArrayAccess object and null key
+	 *
+	 * @test
+	 * @covers Arr::get
+	 */
+	public function test_get_with_array_access_null_key(): void
+	{
+		// Arrange
+		$arrayAccess = new class () implements ArrayAccess {
+			public function offsetExists(mixed $offset): bool
+			{
+				return $offset === null;
+			}
+
+			public function offsetGet(mixed $offset): mixed
+			{
+				return $offset === null ? 'null_hit' : null;
+			}
+
+			public function offsetSet(mixed $offset, mixed $value): void
+			{
+			}
+
+			public function offsetUnset(mixed $offset): void
+			{
+			}
+		};
+
+		// Act & Assert
+		$this->assertSame('null_hit', Arr::get($arrayAccess, null));
+		$this->assertNull(Arr::get($arrayAccess, 'other_key'));
+		$this->assertSame('default_value', Arr::get($arrayAccess, 'other_key', 'default_value'));
+	}
+
+	/**
 	 * Tests Arr::is_assoc() with mixed array
 	 *
 	 * @test
@@ -953,5 +1056,95 @@ class Kohana_ArrTest extends Unittest_TestCase
 		);
 		$result = Arr::pluck($data, 'id');
 		$this->assertSame(array(1, 3), $result);
+	}
+
+	/**
+	 * Tests Arr::path() with empty array path
+	 *
+	 * @test
+	 * @covers Arr::path
+	 */
+	public function test_path_empty_array_path(): void
+	{
+		// Arrange
+		$array = array('foo' => 'bar');
+
+		// Act & Assert
+		$this->assertNull(Arr::path($array, array()));
+		$this->assertSame('default', Arr::path($array, array(), 'default'));
+	}
+
+	/**
+	 * Tests Arr::path() with path array containing null
+	 *
+	 * @test
+	 * @covers Arr::path
+	 */
+	public function test_path_with_null_key(): void
+	{
+		// Arrange
+		$array = array('foo' => array('bar' => 'baz'));
+
+		// Act & Assert - single null key
+		$this->assertNull(Arr::path($array, array(null)));
+		$this->assertSame('default', Arr::path($array, array(null), 'default'));
+
+		// Act & Assert - nested null key
+		$this->assertNull(Arr::path($array, array('foo', null, 'bar')));
+		$this->assertSame('default', Arr::path($array, array('foo', null, 'bar'), 'default'));
+	}
+
+	/**
+	 * Tests Arr::set_path() with empty array path
+	 *
+	 * @test
+	 * @covers Arr::set_path
+	 */
+	public function test_set_path_empty_array_path(): void
+	{
+		// Arrange
+		$array = array('foo' => 'bar');
+
+		// Act
+		Arr::set_path($array, array(), 'val');
+
+		// Assert - array remains untouched
+		$this->assertSame(array('foo' => 'bar'), $array);
+	}
+
+	/**
+	 * Tests Arr::set_path() with path array containing null
+	 *
+	 * @test
+	 * @covers Arr::set_path
+	 */
+	public function test_set_path_with_null_key(): void
+	{
+		// Arrange
+		$array = array('foo' => 'bar');
+
+		// Act - single null key in path
+		Arr::set_path($array, array(null), 'val');
+
+		// Assert - array remains untouched
+		$this->assertSame(array('foo' => 'bar'), $array);
+
+		// Arrange - nested path ending with null
+		$nested = array('foo' => array('bar' => 'baz'));
+
+		// Act
+		Arr::set_path($nested, array('foo', null), 'val');
+
+		// Assert - no null key added under 'foo'
+		$this->assertSame(array('foo' => array('bar' => 'baz')), $nested);
+
+		// Arrange - nested path ending with null on newly created sub-array
+		$newNested = array();
+
+		// Act
+		Arr::set_path($newNested, array('nested', null), 'val');
+
+		// Assert - sub-array created but no null key assigned
+		$this->assertSame(array('nested' => array()), $newNested);
 	}
 }

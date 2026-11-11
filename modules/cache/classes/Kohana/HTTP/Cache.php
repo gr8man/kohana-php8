@@ -78,7 +78,7 @@ class Kohana_HTTP_Cache {
 	protected $_cache;
 
 	/**
-	 * @var    callback  Cache key generator callback
+	 * @var    callable|null  Cache key generator callback
 	 */
 	protected $_cache_key_callback;
 
@@ -127,7 +127,8 @@ class Kohana_HTTP_Cache {
 	 *
 	 * @param   Request_Client  $client     client to execute with Cache-Control
 	 * @param   Request         $request    request to execute with client
-	 * @return  [Response]
+	 * @param   Response        $response   response object
+	 * @return  Response
 	 */
 	public function execute(Request_Client $client, Request $request, Response $response)
 	{
@@ -198,7 +199,7 @@ class Kohana_HTTP_Cache {
 				 * Getter and setter for the internal caching engine,
 				 * used to cache responses if available and valid.
 				 *
-				 * @param Kohana_Cache  $cache    engine to use for caching
+				 * @param Cache|null  $cache    engine to use for caching
 				 */
 				public function cache(Cache $cache = NULL): static|Cache
 	{
@@ -249,7 +250,7 @@ class Kohana_HTTP_Cache {
 	 *            return sha1($request->render());
 	 *      });
 	 *
-	 * @param   callback    $callback
+	 * @param   callable|null    $callback
 	 * @return  mixed
 	 * @throws  HTTP_Exception
 	 */
@@ -273,7 +274,7 @@ class Kohana_HTTP_Cache {
 	 * by setting [HTTP_Cache::cache_key_callback()].
 	 *
 	 * @param   Request     $request    request to create key for
-	 * @param   callback    $callback   optional callback to use instead of built-in method
+	 * @param   callable|false $callback   optional callback to use instead of built-in method
 	 * @return  string
 	 */
 	public function create_cache_key(Request $request, $callback = FALSE)

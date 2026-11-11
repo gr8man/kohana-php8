@@ -113,7 +113,7 @@ class Kohana_Log
 	 * ':user' => $username,
 	 * ));
 	 *
-	 * @param string  $level       level of message
+	 * @param int     $level       level of message
 	 * @param string  $message     message body
 	 * @param array   $values      values to replace in the message
 	 * @param array   $additional  additional custom parameters to supply to the log writer
@@ -134,7 +134,7 @@ class Kohana_Log
 				$trace = array_map(function (array $item): array {
 					unset($item['args']);
 					return $item;
-				}, array_slice(debug_backtrace(false), 1));
+				}, array_slice(debug_backtrace(0), 1));
 			} else {
 				$trace = array_slice(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS), 1);
 			}

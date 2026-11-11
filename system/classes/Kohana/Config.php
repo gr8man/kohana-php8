@@ -84,6 +84,9 @@ class Kohana_Config
 	 * @return  Kohana_Config_Group
 	 * @throws  Kohana_Exception
 	 */
+	/**
+	 * @param   mixed  $group  config group name
+	 */
 	public function load($group)
 	{
 		if (! count($this->_sources)) {

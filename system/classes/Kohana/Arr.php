@@ -115,6 +115,11 @@ class Kohana_Arr
 		do {
 			$key = array_shift($keys);
 
+			if ($key === null) {
+				// Unable to dig deeper
+				break;
+			}
+
 			if (ctype_digit((string) $key)) {
 				// Make the key an integer
 				$key = (int) $key;
@@ -198,7 +203,11 @@ class Kohana_Arr
 		}
 
 		// Set key on inner-most array
-		$array[array_shift($keys)] = $value;
+		$key = array_shift($keys);
+
+		if ($key !== null) {
+			$array[$key] = $value;
+		}
 	}
 
 	/**
@@ -234,8 +243,8 @@ class Kohana_Arr
 	 *     // Get the value "sorting" from $_GET, if it exists
 	 *     $sorting = Arr::get($_GET, 'sorting');
 	 *
-	 * @param   array   $array      array to extract from
-	 * @param   string  $key        key name
+	 * @param   array|ArrayAccess   $array      array or array-like object to extract from
+	 * @param   string|int  $key    key name
 	 * @param   mixed   $default    default value
 	 * @return  mixed
 	 */

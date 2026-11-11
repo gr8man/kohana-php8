@@ -21,7 +21,7 @@ defined('SYSPATH') or die('No direct script access.');
 abstract class Kohana_HTTP
 {
 	/**
-	 * @var  The default protocol to use if it cannot be detected
+	 * @var  string  default protocol to use if it cannot be detected
 	 */
 	public static $protocol = 'HTTP/1.1';
 
@@ -175,12 +175,12 @@ abstract class Kohana_HTTP
 
 		foreach ($_SERVER as $key => $value) {
 			// If there is no HTTP header here, skip
-			if (!str_starts_with((string) $key, 'HTTP_')) {
+			if (!str_starts_with($key, 'HTTP_')) {
 				continue;
 			}
 
 			// This is a dirty hack to ensure HTTP_X_FOO_BAR becomes X-FOO-BAR
-			$headers[strtolower(str_replace('_', '-', substr((string) $key, 5)))] = $value;
+			$headers[strtolower(str_replace('_', '-', substr($key, 5)))] = $value;
 		}
 
 		return new HTTP_Header($headers);

@@ -50,7 +50,7 @@ class Kohana_Request_Client_HTTP extends Request_Client_External
 	 * the response.
 	 *
 	 * @param   Request   $request  request to send
-	 * @param   Response  $request  response to send
+	 * @param   Response  $response  response to send
 	 */
 	#[\Override]
 	public function _send_message(Request $request, Response $response): Response
@@ -95,7 +95,6 @@ class Kohana_Request_Client_HTTP extends Request_Client_External
 		} catch (HTTPRequestException|HTTPMalformedHeaderException|HTTPEncodingException $e) {
 			throw new Request_Exception($e->getMessage());
 		}
-
 		// Build the response
 		$response->status($http_request->getResponseCode())
 			->headers($http_request->getResponseHeader())

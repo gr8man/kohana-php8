@@ -26,17 +26,17 @@ class Kohana_Database_MySQLi_Result extends Database_Result
 	#[\Override]
 	public function __destruct()
 	{
-		if (is_resource($this->_result)) {
+		if ($this->_result instanceof mysqli_result) {
 			$this->_result->free();
 		}
 	}
 
 	#[\Override]
-	public function seek(int $offset): void
+	public function seek(int $position): void
 	{
-		if ($this->offsetExists($offset) and $this->_result->data_seek($offset)) {
+		if ($this->offsetExists($position) and $this->_result->data_seek($position)) {
 			// Set the current row to the offset
-			$this->_current_row = $this->_internal_row = $offset;
+			$this->_current_row = $this->_internal_row = $position;
 		}
 	}
 

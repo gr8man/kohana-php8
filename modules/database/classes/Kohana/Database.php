@@ -182,16 +182,15 @@ abstract class Kohana_Database implements \Stringable
 	 *
 	 * @param integer  $type       Database::SELECT, Database::INSERT, etc
 	 * @param string   $sql        SQL query
-	 * @param false $as_object result object class string, TRUE for stdClass, FALSE for assoc array
+	 * @param string|bool $as_object result object class string, TRUE for stdClass, FALSE for assoc array
 	 * @param array    $params     object construct parameters for result class
 	 *
-	 * @return object   Database_Result for SELECT queries
-	 * @return array    list (insert id, row count) for INSERT queries
-	 * @return integer  number of affected rows for all other queries
+	 * @return Database_Result|int|array  Result for SELECT queries, list (insert id, row count)
+	 *                                    for INSERT queries, number of affected rows otherwise
 	 *
 	 * @psalm-param 1 $type
 	 */
-	abstract public function query(int $type, string $sql, bool $as_object = false, array $params = null);
+	abstract public function query(int $type, string $sql, string|bool $as_object = false, array $params = null);
 
 	/**
 	 * Start a SQL transaction
@@ -250,8 +249,9 @@ abstract class Kohana_Database implements \Stringable
 		// Quote the table name
 		$table = $this->quote_table($table);
 
-		return $this->query(Database::SELECT, 'SELECT COUNT(*) AS total_row_count FROM '.$table, false)
-			->get('total_row_count');
+		$result = $this->query(Database::SELECT, 'SELECT COUNT(*) AS total_row_count FROM '.$table, false);
+
+		return $result instanceof Database_Result ? $result->get('total_row_count') : 0;
 	}
 
 	/**
@@ -427,10 +427,12 @@ abstract class Kohana_Database implements \Stringable
 			} elseif ($value instanceof Database_Expression) {
 				// Compile the expression
 				return $value->compile($this);
-			} else {
+			} elseif ($value instanceof Stringable) {
 				// Convert the object to a string
 				return $this->quote((string) $value);
 			}
+
+			throw new Database_Exception('Unable to quote an object of class :class', array(':class' => $value::class));
 		} elseif (is_array($value)) {
 			return '('.implode(', ', array_map(array($this, __FUNCTION__), $value)).')';
 		} elseif (is_int($value)) {
@@ -491,7 +493,7 @@ abstract class Kohana_Database implements \Stringable
 
 				if ($prefix = $this->table_prefix()) {
 					// Get the offset of the table name, 2nd-to-last part
-					$offset = count($parts) - 2;
+					$offset = max(0, count($parts) - 2);
 
 					// Add the table prefix to the table name
 					$parts[$offset] = $prefix.$parts[$offset];

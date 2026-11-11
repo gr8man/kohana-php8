@@ -93,7 +93,7 @@ class Kohana_Session_Database extends Session
 				->param(':id', $id)
 				->execute($this->_db);
 
-			if ($result->count()) {
+			if ($result instanceof Database_Result and $result->count()) {
 				// Set the current session id
 				$this->_session_id = $this->_update_id = $id;
 
@@ -124,7 +124,7 @@ class Kohana_Session_Database extends Session
 
 			// Get the the id from the database
 			$result = $query->execute($this->_db);
-		} while ($result->count());
+		} while ($result instanceof Database_Result and $result->count());
 
 		return $this->_session_id = $id;
 	}

@@ -20,7 +20,7 @@ class Kohana_Request_Client_Curl extends Request_Client_External
 	 * the response.
 	 *
 	 * @param   Request   $request  request to send
-	 * @param   Response  $request  response to send
+	 * @param   Response  $response  response to send
 	 */
 	#[\Override]
 	public function _send_message(Request $request, Response $response): Response

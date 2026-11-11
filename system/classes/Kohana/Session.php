@@ -75,6 +75,9 @@ abstract class Kohana_Session implements \Stringable
 	/**
 	 * @var  bool  encrypt session data?
 	 */
+	/**
+	 * @var  bool|string  encryption key, TRUE to use the default key
+	 */
 	protected $_encrypted = false;
 
 	/**
@@ -320,7 +323,7 @@ abstract class Kohana_Session implements \Stringable
 	 *
 	 *     $id = $session->regenerate();
 	 *
-	 * @return  string
+	 * @return  string|false
 	 */
 	public function regenerate()
 	{
@@ -447,14 +450,14 @@ abstract class Kohana_Session implements \Stringable
 	 * Loads the raw session data string and returns it.
 	 *
 	 * @param   string  $id session id
-	 * @return  string
+	 * @return  string|null
 	 */
 	abstract protected function _read($id = null);
 
 	/**
 	 * Generate a new session id and return it.
 	 *
-	 * @return  string
+	 * @return  string|false
 	 */
 	abstract protected function _regenerate();
 

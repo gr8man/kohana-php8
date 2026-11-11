@@ -189,7 +189,7 @@ abstract class Kohana_Auth
 	}
 
 	/**
-				 * @return true
+				 * @return bool
 				 */
 	protected function complete_login(string|object $user)
 	{

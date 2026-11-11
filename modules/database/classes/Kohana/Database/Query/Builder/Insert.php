@@ -41,7 +41,7 @@ class Kohana_Database_Query_Builder_Insert extends Database_Query_Builder
 		}
 
 		// Start the query with no SQL
-		return parent::__construct(Database::INSERT, '');
+		parent::__construct(Database::INSERT, '');
 	}
 
 	/**
@@ -76,7 +76,6 @@ class Kohana_Database_Query_Builder_Insert extends Database_Query_Builder
 				 * Adds or overwrites values. Multiple value sets can be added.
 				 *
 				 * @param   array   $values  values list
-				 * @param   ...
 				 */
 	public function values(array $values): static
 	{

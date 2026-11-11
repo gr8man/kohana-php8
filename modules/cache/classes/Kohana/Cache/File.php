@@ -57,7 +57,7 @@ class Kohana_Cache_File extends Cache implements Cache_GarbageCollect {
 	}
 
 	/**
-	 * @var  string   the caching directory
+	 * @var  SplFileInfo   the caching directory
 	 */
 	protected $_cache_dir;
 
@@ -73,9 +73,10 @@ class Kohana_Cache_File extends Cache implements Cache_GarbageCollect {
 		// Setup parent
 		parent::__construct($config);
 
+		$directory = Arr::get($this->_config, 'cache_dir', Kohana::$cache_dir);
+
 		try
 		{
-			$directory = Arr::get($this->_config, 'cache_dir', Kohana::$cache_dir);
 			$this->_cache_dir = new SplFileInfo($directory);
 		}
 		// PHP >= 5.3 exception handle
@@ -188,7 +189,7 @@ class Kohana_Cache_File extends Cache implements Cache_GarbageCollect {
      *     Cache::instance('file')->set('foo', $data, 30);
      *
      * @param   string   $id        id of cache entry
-     * @param   string   $data      data to set to cache
+     * @param   mixed   $data      data to set to cache
      * @param   integer  $lifetime  lifetime in seconds
      */
     #[\Override]
@@ -234,39 +235,36 @@ class Kohana_Cache_File extends Cache implements Cache_GarbageCollect {
 	}
 
 	/**
-	 * Delete a cache entry based on id
-	 *
-	 *     // Delete 'foo' entry from the file group
-	 *     Cache::instance('file')->delete('foo');
-	 *
-	 * @param   string   $id  id to remove from cache
-	 * @return  boolean
-	 */
-	#[\Override]
-	public function delete($id)
+				 * Delete a cache entry based on id
+				 *
+				 *     // Delete 'foo' entry from the file group
+				 *     Cache::instance('file')->delete('foo');
+				 *
+				 * @param   string   $id  id to remove from cache
+				 */
+				#[\Override]
+	public function delete($id): bool
 	{
 		$filename = Cache_File::filename($this->_sanitize_id($id));
 		$directory = $this->_resolve_directory($filename);
 
-		return $this->_delete_file(new SplFileInfo($directory.$filename), FALSE, TRUE);
+		return (bool) $this->_delete_file(new SplFileInfo($directory.$filename), FALSE, TRUE);
 	}
 
 	/**
-	 * Delete all cache entries.
-	 *
-	 * Beware of using this method when
-	 * using shared memory cache systems, as it will wipe every
-	 * entry within the system for all clients.
-	 *
-	 *     // Delete all cache entries in the file group
-	 *     Cache::instance('file')->delete_all();
-	 *
-	 * @return  boolean
-	 */
-	#[\Override]
-	public function delete_all()
+				 * Delete all cache entries.
+				 *
+				 * Beware of using this method when
+				 * using shared memory cache systems, as it will wipe every
+				 * entry within the system for all clients.
+				 *
+				 *     // Delete all cache entries in the file group
+				 *     Cache::instance('file')->delete_all();
+				 */
+				#[\Override]
+	public function delete_all(): bool
 	{
-		return $this->_delete_file($this->_cache_dir, TRUE);
+		return (bool) $this->_delete_file($this->_cache_dir, TRUE);
 	}
 
 	/**

@@ -23,9 +23,9 @@ class Kohana_Config_Group extends ArrayObject implements \Stringable
 	 * Constructs the group object.  Kohana_Config passes the config group
 	 * and its config items to the object here.
 	 *
-	 * @param Kohana_Config  $instance "Owning" instance of Kohana_Config
-	 * @param string         $group    The group name
-	 * @param array          $config   Group's config
+	 * @param Kohana_Config  $_parent_instance "Owning" instance of Kohana_Config
+	 * @param string         $_group_name    The group name
+	 * @param array          $config         Group's config
 	 */
 	public function __construct(
 		protected Kohana_Config $_parent_instance,

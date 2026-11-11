@@ -19,10 +19,9 @@ interface Kohana_Cache_Arithmetic {
 	 * Useful for shared counters and other persistent integer based
 	 * tracking.
 	 *
-	 * @param   string    id of cache entry to increment
-	 * @param   int       step value to increment by
-	 * @return  integer
-	 * @return  boolean
+	 * @param   string $id id of cache entry to increment
+	 * @param   int $step step value to increment by
+	 * @return  int|false  new value on success, FALSE on failure
 	 */
 	public function increment($id, $step = 1);
 
@@ -31,10 +30,9 @@ interface Kohana_Cache_Arithmetic {
 	 * Useful for shared counters and other persistent integer based
 	 * tracking.
 	 *
-	 * @param   string    id of cache entry to decrement
-	 * @param   int       step value to decrement by
-	 * @return  integer
-	 * @return  boolean
+	 * @param   string $id id of cache entry to decrement
+	 * @param   int $step step value to decrement by
+	 * @return  int|false  new value on success, FALSE on failure
 	 */
 	public function decrement($id, $step = 1);
 

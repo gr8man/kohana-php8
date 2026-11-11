@@ -82,7 +82,7 @@ class Kohana_Config_Database_Writer extends Config_Database_Reader implements Ko
 	 *
 	 * @param string      $group  The config group
 	 * @param string      $key    The config key to write to
-	 * @param array       $config The serialized configuration to write
+	 * @param string      $config The serialized configuration to write
 	 */
 	protected function _insert($group, $key, $config): static
 	{
@@ -98,7 +98,7 @@ class Kohana_Config_Database_Writer extends Config_Database_Reader implements Ko
 	 *
 	 * @param string      $group  The config group
 	 * @param string      $key    The config key to write to
-	 * @param array       $config The serialized configuration to write
+	 * @param string      $config The serialized configuration to write
 	 */
 	protected function _update($group, $key, $config): static
 	{

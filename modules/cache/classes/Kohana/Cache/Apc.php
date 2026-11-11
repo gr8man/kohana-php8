@@ -91,7 +91,7 @@ class Kohana_Cache_Apc extends Cache implements Cache_Arithmetic {
      *     Cache::instance('apc')->set('foo', $data, 30);
      *
      * @param   string   $id        id of cache entry
-     * @param   string   $data      data to set to cache
+     * @param   mixed   $data      data to set to cache
      * @param   integer  $lifetime  lifetime in seconds
      */
     #[\Override]
@@ -137,8 +137,8 @@ class Kohana_Cache_Apc extends Cache implements Cache_Arithmetic {
 				 * Useful for shared counters and other persistent integer based
 				 * tracking.
 				 *
-				 * @param string    id of cache entry to increment
-				 * @param int       step value to increment by
+				 * @param string $id id of cache entry to increment
+				 * @param int $step step value to increment by
 				 */
 				#[\Override]
     public function increment($id, $step = 1): int|false
@@ -151,8 +151,8 @@ class Kohana_Cache_Apc extends Cache implements Cache_Arithmetic {
 				 * Useful for shared counters and other persistent integer based
 				 * tracking.
 				 *
-				 * @param string    id of cache entry to decrement
-				 * @param int       step value to decrement by
+				 * @param string $id id of cache entry to decrement
+				 * @param int $step step value to decrement by
 				 */
 				#[\Override]
     public function decrement($id, $step = 1): int|false

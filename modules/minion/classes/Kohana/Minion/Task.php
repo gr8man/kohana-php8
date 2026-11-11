@@ -22,7 +22,7 @@ abstract class Kohana_Minion_Task implements \Stringable
 	/**
 	 * Converts a task (e.g. db:migrate to a class name)
 	 *
-	 * @param string  Task name
+	 * @param string $task Task name
 	 * @return string Class name
 	 */
 	public static function convert_task_to_class_name($task)
@@ -39,8 +39,7 @@ abstract class Kohana_Minion_Task implements \Stringable
 	/**
 	 * Gets the task name of a task class / task object
 	 *
-	 * @param string|Minion_Task The task class / object
-	 * @param static $class
+	 * @param string|Minion_Task $class The task class / object
 	 *
 	 * @return string             The task name
 	 */
@@ -56,7 +55,7 @@ abstract class Kohana_Minion_Task implements \Stringable
 	/**
 	 * Factory for loading minion tasks
 	 *
-	 * @param  array An array of command line options. It should contain the 'task' key
+	 * @param  array $options An array of command line options. It should contain the 'task' key
 	 * @throws Minion_Exception_InvalidTask
 	 * @return Minion_Task The Minion task
 	 */
@@ -140,7 +139,7 @@ abstract class Kohana_Minion_Task implements \Stringable
 	{
 		static $task_name = null;
 
-		$task_name ??= Minion_Task::convert_class_to_task($this);
+		$task_name ??= Minion_Task::convert_class_to_task(static::class);
 
 		return (string) $task_name;
 	}
@@ -188,7 +187,7 @@ abstract class Kohana_Minion_Task implements \Stringable
 	 *             ->rule('paramname', 'not_empty'); // Require this param
 	 *     }
 	 *
-	 * @param  Validation   the validation object to add rules to
+	 * @param  Validation $validation the validation object to add rules to
 	 *
 	 * @return Validation
 	 */
@@ -223,7 +222,7 @@ abstract class Kohana_Minion_Task implements \Stringable
 
 		if ($this->_method != '_help' and ! $validation->check()) {
 			echo View::factory('minion/error/validation')
-				->set('task', Minion_Task::convert_class_to_task($this))
+				->set('task', Minion_Task::convert_class_to_task(static::class))
 				->set('errors', $validation->errors($this->get_errors_file()));
 		} else {
 			// Finally, run the task
@@ -248,7 +247,7 @@ abstract class Kohana_Minion_Task implements \Stringable
 		$view = View::factory('minion/help/task')
 			->set('description', $description)
 			->set('tags', (array) $tags)
-			->set('task', Minion_Task::convert_class_to_task($this));
+			->set('task', Minion_Task::convert_class_to_task(static::class));
 
 		echo $view;
 	}
@@ -266,7 +265,7 @@ abstract class Kohana_Minion_Task implements \Stringable
 				 *
 				 * Based on the code in Kodoc::parse()
 				 *
-				 * @param string The comment to parse
+				 * @param string $comment The comment to parse
 				 *
 				 * @return array First element is the comment, second is an array of tags
 				 */
@@ -307,8 +306,8 @@ abstract class Kohana_Minion_Task implements \Stringable
 	/**
 	 * Compiles a list of available tasks from a directory structure
 	 *
-	 * @param  array Directory structure of tasks
-	 * @param  string prefix
+	 * @param  array $files Directory structure of tasks
+	 * @param  string $prefix prefix
 	 * @return array Compiled tasks
 	 */
 	protected function _compile_task_list(array $files, string $prefix = '')

@@ -13,7 +13,9 @@ defined('SYSPATH') or die('No direct script access.');
  */
 class Kohana_Database_Query_Builder_Join extends Database_Query_Builder
 {
-	// Type of JOIN
+	/**
+	 * @var  string  type of JOIN
+	 */
 	protected $_type;
 
 	// ON ...
@@ -87,7 +89,7 @@ class Kohana_Database_Query_Builder_Join extends Database_Query_Builder
 		}
 
 		if ($this->_type) {
-			$sql = strtoupper((string) $this->_type).' JOIN';
+			$sql = strtoupper($this->_type).' JOIN';
 		} else {
 			$sql = 'JOIN';
 		}
