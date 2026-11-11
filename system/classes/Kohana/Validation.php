@@ -42,7 +42,7 @@ class Kohana_Validation implements ArrayAccess
 	 * Sets the unique "any field" key and creates an ArrayObject from the
 	 * passed array.
 	 *
-	 * @param   array   $array  array to validate
+	 * @param   array   $_data  array to validate
 	 */
 	public function __construct(protected array $_data)
 	{
@@ -197,7 +197,7 @@ class Kohana_Validation implements ArrayAccess
 				 * [!!] Errors must be added manually when using closures!
 				 *
 				 * @param   string      $field  field name
-				 * @param   callback    $rule   valid PHP callback or closure
+				 * @param   callable    $rule   valid PHP callback or closure
 				 * @param   array       $params extra parameters for the rule
 				 */
 	public function rule($field, $rule, array $params = null): static
@@ -237,7 +237,7 @@ class Kohana_Validation implements ArrayAccess
 				 *     $validation->bind(':model', $model)
 				 *         ->rule('status', 'valid_status', array(':model'));
 				 *
-				 * @param   string  $key    variable name or an array of variables
+				 * @param   string|array  $key    variable name or an array of variables
 				 * @param   mixed   $value  value
 				 */
 	public function bind($key, $value = null): static

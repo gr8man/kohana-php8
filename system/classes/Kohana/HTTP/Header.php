@@ -209,15 +209,11 @@ class Kohana_HTTP_Header extends ArrayObject implements \Stringable
 	 *          $maxage = $cache_control['max-age'];
 	 *     }
 	 *
-	 * @param   array   $cache_control Array of headers
+	 * @param   string  $cache_control Cache-Control header value
 	 */
 	public static function parse_cache_control($cache_control): false|array
 	{
 		$directives = explode(',', strtolower($cache_control));
-
-		if ($directives === false) {
-			return false;
-		}
 
 		$output = array();
 
@@ -260,7 +256,7 @@ class Kohana_HTTP_Header extends ArrayObject implements \Stringable
 	 *
 	 *     $header_object = new HTTP_Header(array('x-powered-by' => 'Kohana 3.1.x', 'expires' => '...'));
 	 *
-	 * @param   mixed   $input          Input array
+	 * @param   array   $input          Input array
 	 * @param   int     $flags          Flags
 	 * @param   string  $iterator_class The iterator class to use
 	 */
@@ -760,7 +756,7 @@ class Kohana_HTTP_Header extends ArrayObject implements \Stringable
 	 *
 	 * @param   HTTP_Response   $response   header to send
 	 * @param   boolean         $replace    replace existing value
-	 * @param   callback        $callback   optional callback to replace PHP header function
+	 * @param   callable|null   $callback   optional callback to replace PHP header function
 	 * @return  mixed
 	 * @since   3.2.0
 	 */

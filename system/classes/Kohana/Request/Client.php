@@ -17,7 +17,7 @@ defined('SYSPATH') or die('No direct script access.');
 abstract class Kohana_Request_Client
 {
 	/**
-	 * @var    Cache  Caching library for request caching
+	 * @var    Cache|HTTP_Cache  Caching library for request caching
 	 */
 	protected $_cache;
 
@@ -74,26 +74,25 @@ abstract class Kohana_Request_Client
 	}
 
 	/**
-	 * Processes the request, executing the controller action that handles this
-	 * request, determined by the [Route].
-	 *
-	 * 1. Before the controller action is called, the [Controller::before] method
-	 * will be called.
-	 * 2. Next the controller action will be called.
-	 * 3. After the controller action is called, the [Controller::after] method
-	 * will be called.
-	 *
-	 * By default, the output from the controller is captured and returned, and
-	 * no headers are sent.
-	 *
-	 *     $request->execute();
-	 *
-	 * @param   Response  $response
-	 * @return  Response
-	 * @throws  Kohana_Exception
-	 * @uses    [Kohana::$profiling]
-	 * @uses    [Profiler]
-	 */
+				 * Processes the request, executing the controller action that handles this
+				 * request, determined by the [Route].
+				 *
+				 * 1. Before the controller action is called, the [Controller::before] method
+				 * will be called.
+				 * 2. Next the controller action will be called.
+				 * 3. After the controller action is called, the [Controller::after] method
+				 * will be called.
+				 *
+				 * By default, the output from the controller is captured and returned, and
+				 * no headers are sent.
+				 *
+				 *     $request->execute();
+				 *
+				 * @return  Response
+				 * @throws  Kohana_Exception
+				 * @uses    [Kohana::$profiling]
+				 * @uses    [Profiler]
+				 */
 	public function execute(Request $request)
 	{
 		// Prevent too much recursion of header callback requests

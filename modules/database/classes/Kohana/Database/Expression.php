@@ -95,7 +95,7 @@ class Kohana_Database_Expression implements \Stringable
 	 * Compile the SQL expression and return it. Replaces any parameters with
 	 * their given values.
 	 *
-	 * @param   mixed    Database instance or name of instance
+	 * @param   Kohana_Database|null $db Database instance
 	 */
 	public function compile(Kohana_Database|null $db = null): string
 	{

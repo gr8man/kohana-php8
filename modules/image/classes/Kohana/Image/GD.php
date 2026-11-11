@@ -119,7 +119,7 @@ class Kohana_Image_GD extends Image
 	 */
 	public function __destruct()
 	{
-		if (is_resource($this->_image)) {
+		if ($this->_image instanceof \GdImage) {
 			// Free all resources
 			imagedestroy($this->_image);
 		}
@@ -429,7 +429,7 @@ class Kohana_Image_GD extends Image
 	 * @return  void
 	 */
 	#[\Override]
-	protected function _do_watermark(Image $watermark, $offset_x, $offset_y, $opacity)
+	protected function _do_watermark(Image $image, $offset_x, $offset_y, $opacity)
 	{
 		if (empty(Image_GD::$_available_functions[Image_GD::IMAGELAYEREFFECT])) {
 			throw new Kohana_Exception(
@@ -442,7 +442,7 @@ class Kohana_Image_GD extends Image
 		$this->_load_image();
 
 		// Create the watermark image resource
-		$overlay = imagecreatefromstring($watermark->render());
+		$overlay = imagecreatefromstring($image->render());
 
 		imagesavealpha($overlay, true);
 
@@ -530,7 +530,7 @@ class Kohana_Image_GD extends Image
 		[$save, $type] = $this->_save_function($extension, $quality);
 
 		// Save the image to a file
-		$status = isset($quality) ? $save($this->_image, $file, $quality) : $save($this->_image, $file);
+		$status = $quality === null ? $save($this->_image, $file) : $save($this->_image, $file, $quality);
 
 		if ($status === true and $type !== $this->type) {
 			// Reset the image type and mime type
@@ -560,7 +560,7 @@ class Kohana_Image_GD extends Image
 		ob_start();
 
 		// Render the image
-		$status = isset($quality) ? $save($this->_image, null, $quality) : $save($this->_image, null);
+		$status = $quality === null ? $save($this->_image, null) : $save($this->_image, null, $quality);
 
 		if ($status === true and $type !== $this->type) {
 			// Reset the image type and mime type

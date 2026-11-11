@@ -204,8 +204,8 @@ class Kohana_Date
 	 *
 	 *     Date::days(4, 2010); // 1, 2, 3, ..., 28, 29, 30
 	 *
-	 * @param   integer $month  number of month
-	 * @param   integer $year   number of year to check month, defaults to the current year
+	 * @param   integer|false $month  number of month
+	 * @param   integer|false $year   number of year to check month, defaults to the current year
 	 * @return  array   A mirrored (foo => foo) array of the days.
 	 */
 	public static function days($month, $year = false)
@@ -282,12 +282,12 @@ class Kohana_Date
 	 *
 	 * $years = Date::years(2000, 2010); // 2000, 2001, ..., 2009, 2010
 	 *
-	 * @param integer $start  starting year (default is current year - 5)
-	 * @param integer $end    ending year (default is current year + 5)
+	 * @param integer|false $start  starting year (default is current year - 5)
+	 * @param integer|false $end    ending year (default is current year + 5)
 	 *
 	 * @return numeric-string[]
 	 *
-	 * @psalm-return array<float|int, numeric-string>
+	 * @psalm-return array<int, numeric-string>
 	 */
 	public static function years($start = false, $end = false): array
 	{
@@ -297,7 +297,7 @@ class Kohana_Date
 
 		$years = array();
 
-		for ($i = $start; $i <= $end; $i++) {
+		for ($i = (int) $start; $i <= (int) $end; $i++) {
 			$years[$i] = (string) $i;
 		}
 
@@ -458,7 +458,7 @@ class Kohana_Date
 	 *
 	 *     $dos = Date::unix2dos($unix);
 	 *
-	 * @param   integer $timestamp  UNIX timestamp
+	 * @param   integer|false $timestamp  UNIX timestamp
 	 */
 	public static function unix2dos($timestamp = false): int
 	{
@@ -484,7 +484,7 @@ class Kohana_Date
 	 *
 	 *     $unix = Date::dos2unix($dos);
 	 *
-	 * @param   integer $timestamp  DOS timestamp
+	 * @param   integer|false $timestamp  DOS timestamp
 	 * @return  integer
 	 */
 	public static function dos2unix($timestamp = false): int|false

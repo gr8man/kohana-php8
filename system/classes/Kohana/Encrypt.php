@@ -67,8 +67,8 @@ class Kohana_Encrypt
 	/**
 	 * Creates a new OpenSSL wrapper.
 	 *
-	 * @param   string  $key    encryption key
-	 * @param   string  $method openssl method
+	 * @param   string  $_key    encryption key
+	 * @param   string  $_method openssl method
 	 */
 	public function __construct(
 		protected string $_key,
@@ -107,8 +107,7 @@ class Kohana_Encrypt
 	 *     $data = $encrypt->decode($data);
 	 *
 	 * @param   string  $data   encoded string to be decrypted
-	 * @return  FALSE   if decryption fails
-	 * @return  string
+	 * @return  string|false  decrypted string, FALSE if decryption fails
 	 */
 	public function decode(string $data): false|string
 	{

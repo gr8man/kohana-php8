@@ -47,7 +47,7 @@ class Kohana_Form
 			$action = '';
 		} elseif (!str_contains((string) $action, '://')) {
 			// Make the URI absolute
-			$action = URL::site($action);
+			$action = URL::site((string) $action);
 		}
 
 		// Add the form action to the attributes

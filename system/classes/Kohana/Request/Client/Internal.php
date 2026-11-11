@@ -68,11 +68,14 @@ class Kohana_Request_Client_Internal extends Request_Client
 
 		try {
 			if (! class_exists($prefix.$controller)) {
-				throw HTTP_Exception::factory(
+				$exception = HTTP_Exception::factory(
 					404,
 					'The requested URL :uri was not found on this server.',
 					array(':uri' => $request->uri())
-				)->request($request);
+				);
+				$exception->request($request);
+
+				throw $exception;
 			}
 
 			// Load the controller using reflection

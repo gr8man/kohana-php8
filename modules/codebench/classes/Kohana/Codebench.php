@@ -175,7 +175,7 @@ abstract class Kohana_Codebench
 	 * Callback for array_filter().
 	 * Filters out all methods not to benchmark.
 	 *
-	 * @param   string   method name
+	 * @param   string $method method name
 	 * @return  boolean
 	 */
 	protected function _method_filter($method)
@@ -187,7 +187,7 @@ abstract class Kohana_Codebench
 	/**
 	 * Returns the applicable grade letter for a score.
 	 *
-	 * @param   integer|double  score
+	 * @param   integer|double $score score
 	 * @return  string  grade letter
 	 */
 	protected function _grade($score)

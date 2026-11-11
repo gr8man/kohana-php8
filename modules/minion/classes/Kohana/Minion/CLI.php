@@ -19,7 +19,7 @@ class Kohana_Minion_CLI
 
 	/**
 	 * Get output handle (allows injection for tests to prevent console pollution)
-	 * @return resource
+	 * @return resource|false
 	 */
 	protected static function stdout_handle()
 	{
@@ -31,7 +31,7 @@ class Kohana_Minion_CLI
 
 	/**
 	 * Get input handle
-	 * @return resource
+	 * @return resource|false
 	 */
 	protected static function stdin_handle()
 	{
@@ -103,14 +103,14 @@ class Kohana_Minion_CLI
 			// Get the option
 			$opt = $_SERVER['argv'][$i];
 
-			if (!str_starts_with((string) $opt, '--')) {
+			if (!str_starts_with($opt, '--')) {
 				// This is a positional argument
 				$values[] = $opt;
 				continue;
 			}
 
 			// Remove the "--" prefix
-			$opt = substr((string) $opt, 2);
+			$opt = substr($opt, 2);
 
 			if (strpos($opt, '=')) {
 				// Separate the name and value
@@ -185,6 +185,7 @@ class Kohana_Minion_CLI
 	 *
 	 * $password = Minion_CLI::password('Enter your password');
 	 *
+	 * @psalm-suppress ForbiddenCode shell_exec() is required for the platform password prompt.
 	 * @author Mathew Davies.
 	 */
 	public static function password(string $text = ''): string

@@ -258,11 +258,54 @@ class Kohana_ORM_Validation_ExceptionTest extends Unittest_TestCase
 
 		$exception = new ORM_Validation_Exception('test', $invalid);
 
-		try {
-			$errors = $exception->errors();
-			$this->assertIsArray($errors);
-		} catch (TypeError $e) {
-			$this->markTestSkipped('errors() requires a directory parameter in PHP 8: ' . $e->getMessage());
-		}
+		$errors = $exception->errors();
+		$this->assertIsArray($errors);
+	}
+
+	public function test_errors_with_explicit_null_directory_returns_raw_errors(): void
+	{
+		// Arrange
+		$invalid = Validation::factory(array('username' => ''))
+			->rules('username', array(array('not_empty')));
+		$invalid->check();
+
+		$exception = new ORM_Validation_Exception('user', $invalid);
+
+		// Act
+		$errors = $exception->errors();
+
+		// Assert
+		$this->assertIsArray($errors);
+		$this->assertArrayHasKey('username', $errors);
+		$this->assertSame(array('not_empty', array('')), $errors['username']);
+	}
+
+	public function test_generate_errors_with_null_directory_on_nested_objects(): void
+	{
+		// Arrange
+		$mainValidation = Validation::factory(array('username' => ''))
+			->rules('username', array(array('not_empty')));
+		$mainValidation->check();
+
+		$profileValidation = Validation::factory(array('bio' => ''))
+			->rules('bio', array(array('not_empty')));
+		$profileValidation->check();
+
+		$exception = new ORM_Validation_Exception('user', $mainValidation);
+		$exception->add_object('profile', $profileValidation);
+
+		$generateErrors = new ReflectionMethod(ORM_Validation_Exception::class, 'generate_errors');
+
+		// Act
+		$errors = $generateErrors->invoke($exception, 'user', $exception->objects(), null, false);
+
+		// Assert
+		$this->assertIsArray($errors);
+		$this->assertArrayHasKey('username', $errors);
+		$this->assertSame(array('not_empty', array('')), $errors['username']);
+		$this->assertArrayHasKey('profile', $errors);
+		$this->assertIsArray($errors['profile']);
+		$this->assertArrayHasKey('bio', $errors['profile']);
+		$this->assertSame(array('not_empty', array('')), $errors['profile']['bio']);
 	}
 }

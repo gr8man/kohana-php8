@@ -35,7 +35,7 @@ class Kohana_Core
 	public const FILE_CACHE = ":header \n\n// :name\n\n:data\n";
 
 	/**
-	 * @var  string  Current environment name
+	 * @var  int|string  Current environment name
 	 */
 	public static $environment = Kohana::DEVELOPMENT;
 
@@ -147,7 +147,7 @@ class Kohana_Core
 	/**
 	 * Initializes the environment:
 	 *
-	 * - Disables register_globals and magic_quotes_gpc
+	 * - Disables register_globals
 	 * - Determines the current environment
 	 * - Set global settings
 	 * - Sanitizes GET, POST, and COOKIE variables
@@ -384,7 +384,6 @@ class Kohana_Core
 	/**
 	 * Recursively sanitizes an input variable:
 	 *
-	 * - Strips slashes if magic quotes are enabled
 	 * - Normalizes all newlines to LF
 	 *
 	 * @param   mixed   $value  any variable
@@ -573,8 +572,7 @@ class Kohana_Core
 	 * @param   string  $file   filename with subdirectory
 	 * @param   string  $ext    extension to search for
 	 * @param   boolean $array  return an array of files?
-	 * @return  array   a list of files when $array is TRUE
-	 * @return  string  single file path
+	 * @return  array|string|false  a list of files when $array is TRUE, single file path otherwise, FALSE if not found
 	 */
 	public static function find_file(string $dir, mixed $file, $ext = null, bool $array = false)
 	{
@@ -746,10 +744,9 @@ class Kohana_Core
 	 * @param integer $lifetime   number of seconds the cache is valid for
 	 * @param false|string[] $allowed_classes
 	 *
-	 * @return mixed    for getting
-	 * @return boolean  for setting
+	 * @return mixed    value for getting, boolean for setting
 	 *
-	 * @psalm-param array{min: array{time: mixed, memory: mixed}, max: array{time: mixed, memory: mixed}, total: array{time: mixed, memory: mixed}, count: 1, average: array{time: mixed, memory: mixed}}|false|null|string $data
+	 * @psalm-param array|false|null|string $data
 	 * @psalm-param -3600|86400|null $lifetime
 	 * @psalm-param false|list{'Route'} $allowed_classes
 	 */
@@ -820,8 +817,7 @@ class Kohana_Core
 	 * @param null|string $path key path to get
 	 * @param mixed   $default    default value if the path does not exist
 	 *
-	 * @return string  message string for the given path
-	 * @return array   complete message list, when no path is specified
+	 * @return string|array  message string for the given path, complete message list when no path is specified
 	 *
 	 * @uses Arr::merge
 	 * @uses Arr::path

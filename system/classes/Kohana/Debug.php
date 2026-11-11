@@ -21,8 +21,6 @@ class Kohana_Debug
 	 * // Displays the type and value of each variable
 	 * echo Debug::vars($foo, $bar, $baz);
 	 *
-	 * @param mixed   $var,...    variable to debug
-	 *
 	 * @return null|string
 	 */
 	public static function vars()
@@ -50,7 +48,7 @@ class Kohana_Debug
 	 * @param   mixed   $value              variable to dump
 	 * @param   integer $length             maximum length of strings
 	 * @param   integer $level_recursion    recursion limit
-	 * @return  string
+	 * @return  string|null
 	 */
 	public static function dump($value, $length = 128, $level_recursion = 10)
 	{
@@ -158,21 +156,19 @@ class Kohana_Debug
 			// Objects that are being dumped
 			static $objects = array();
 
-			if (empty($var)) {
-				// Do nothing
-			} elseif (isset($objects[$hash])) {
+			if (isset($objects[$hash])) {
 				$output[] = "{\n$space$s*RECURSION*\n$space}";
 			} elseif ($level < $limit) {
 				$output[] = "<code>{";
 
 				$objects[$hash] = true;
 				foreach ($array as $key => & $val) {
-					if ($key[0] === "\x00") {
+					if (is_string($key) and $key[0] === "\x00") {
 						// Determine if the access is protected or protected
 						$access = '<small>'.(($key[1] === '*') ? 'protected' : 'private').'</small>';
 
 						// Remove the access level from the variable name
-						$key = substr((string) $key, strrpos((string) $key, "\x00") + 1);
+						$key = substr($key, strrpos($key, "\x00") + 1);
 					} else {
 						$access = '<small>public</small>';
 					}
@@ -229,8 +225,7 @@ class Kohana_Debug
 	 * @param   string  $file           file to open
 	 * @param   integer $line_number    line number to highlight
 	 * @param   integer $padding        number of padding lines
-	 * @return  string   source of file
-	 * @return  FALSE    file is unreadable
+	 * @return  string|false   source of file, FALSE if the file is unreadable
 	 */
 	public static function source($file, $line_number, $padding = 5): false|string
 	{

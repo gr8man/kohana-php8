@@ -1,5 +1,5 @@
 parameters:
-  level: 0
+  level: 2
   paths:
     - system/classes
     - modules
@@ -13,6 +13,7 @@ parameters:
     - 'application/classes/Kohana/Tests/**'
   reportUnmatchedIgnoredErrors: false
   ignoreErrors:
+    # Dynamic framework behaviour that cannot be expressed with static types.
     - '#is implicitly nullable via default value null.#'
     - '#Function _.* not found.#'
     - '#Method .* should return .* but return statement is missing.#'
@@ -24,3 +25,5 @@ parameters:
     - '#Call to an undefined method.#'
     - '#Static call to instance method.#'
     - '#Result of method .* \(void\) is used.#'
+    # Classes provided by the (optional) PECL http extension.
+    - '#unknown class HTTP(MalformedHeader|Request|Encoding)Exception#'

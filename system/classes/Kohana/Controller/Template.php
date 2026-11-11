@@ -14,7 +14,7 @@ defined('SYSPATH') or die('No direct script access.');
 abstract class Kohana_Controller_Template extends Controller
 {
 	/**
-	 * @var  View  page template
+	 * @var  View|string  page template
 	 */
 	public $template = 'template';
 
@@ -33,7 +33,7 @@ abstract class Kohana_Controller_Template extends Controller
 
 		if ($this->auto_render === true) {
 			// Load the template
-			$this->template = View::factory($this->template);
+			$this->template = View::factory((string) $this->template);
 		}
 	}
 

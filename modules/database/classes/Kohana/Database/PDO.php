@@ -33,13 +33,18 @@ class Kohana_Database_PDO extends Database
 			return;
 		}
 
-		// Extract the connection parameters, adding required variabels
-		extract($this->_config['connection'] + array(
+		// Connection parameters, with the required defaults
+		$params = $this->_config['connection'] + array(
 			'dsn'        => '',
 			'username'   => null,
 			'password'   => null,
 			'persistent' => false,
-		));
+		);
+
+		$dsn        = $params['dsn'];
+		$username   = $params['username'];
+		$password   = $params['password'];
+		$persistent = $params['persistent'];
 
 		// Clear the connection parameters for security
 		unset($this->_config['connection']);
@@ -77,8 +82,8 @@ class Kohana_Database_PDO extends Database
 	 * @link http://php.net/manual/function.pdo-sqlitecreateaggregate
 	 *
 	 * @param   string      $name       Name of the SQL function to be created or redefined
-	 * @param   callback    $step       Called for each row of a result set
-	 * @param   callback    $final      Called after all rows of a result set have been processed
+	 * @param   callable    $step       Called for each row of a result set
+	 * @param   callable    $final      Called after all rows of a result set have been processed
 	 * @param   integer     $arguments  Number of arguments that the SQL function takes
 	 *
 	 * @return  boolean
@@ -103,7 +108,7 @@ class Kohana_Database_PDO extends Database
 	 * @link http://php.net/manual/function.pdo-sqlitecreatefunction
 	 *
 	 * @param   string      $name       Name of the SQL function to be created or redefined
-	 * @param   callback    $callback   Callback which implements the SQL function
+	 * @param   callable    $callback   Callback which implements the SQL function
 	 * @param   integer     $arguments  Number of arguments that the SQL function takes
 	 *
 	 * @return  boolean
@@ -141,6 +146,9 @@ class Kohana_Database_PDO extends Database
 	}
 
 	#[\Override]
+	/**
+	 * @return Database_Result|int|array
+	 */
 	public function query($type, $sql, $as_object = false, array $params = null)
 	{
 		// Make sure the database is connected

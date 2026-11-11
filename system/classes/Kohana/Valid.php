@@ -227,7 +227,7 @@ class Kohana_Valid
 	/**
 	 * Validates a credit card number, with a Luhn check if possible.
 	 *
-	 * @param   integer         $number credit card number
+	 * @param   string|int     $number credit card number
 	 * @param   string|array    $type   card type, or an array of card types
 	 * @uses    Valid::luhn
 	 */
@@ -300,12 +300,12 @@ class Kohana_Valid
 
 		for ($i = $length - 1; $i >= 0; $i -= 2) {
 			// Add up every 2nd digit, starting from the right
-			$checksum += substr($number, $i, 1);
+			$checksum += (int) substr($number, $i, 1);
 		}
 
 		for ($i = $length - 2; $i >= 0; $i -= 2) {
 			// Add up every 2nd digit doubled, starting from the right
-			$double = substr($number, $i, 1) * 2;
+			$double = (int) substr($number, $i, 1) * 2;
 
 			// Subtract 9 from the double where value is greater than 10
 			$checksum += ($double >= 10) ? ($double - 9) : $double;
@@ -396,7 +396,7 @@ class Kohana_Valid
 	/**
 	 * Checks whether a string consists of digits only (no dots or dashes).
 	 *
-	 * @param   string  $str    input string
+	 * @param   string|int  $str    input string
 	 * @param   boolean $utf8   trigger UTF-8 compatibility
 	 */
 	public static function digit($str, $utf8 = false): bool
@@ -428,10 +428,10 @@ class Kohana_Valid
 	/**
 				 * Tests if a number is within a range.
 				 *
-				 * @param   string  $number number to check
-				 * @param   integer $min    minimum value
-				 * @param   integer $max    maximum value
-				 * @param   integer $step   increment size
+				 * @param   string|int|float  $number number to check
+				 * @param   integer|float $min    minimum value
+				 * @param   integer|float $max    maximum value
+				 * @param   integer|float|null $step   increment size
 				 */
 	public static function range($number, $min, $max, $step = null): bool
 	{

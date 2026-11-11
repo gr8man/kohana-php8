@@ -13,9 +13,9 @@ defined('SYSPATH') or die('No direct script access.');
  */
 class Kohana_Database_Result_Cached extends Database_Result
 {
-	public function __construct(array $result, $sql, $as_object = null)
+	public function __construct(array $result, $sql, $as_object = null, ?array $params = null)
 	{
-		parent::__construct($result, $sql, $as_object);
+		parent::__construct($result, $sql, $as_object, $params);
 
 		// Find the number of rows in the result
 		$this->_total_rows = count($result);
@@ -33,6 +33,14 @@ class Kohana_Database_Result_Cached extends Database_Result
 		return $this;
 	}
 
+	/**
+	 * The parameter is named $offset to match PHP's native
+	 * SeekableIterator::seek(int $offset): void, which keeps named-argument
+	 * calls working. Psalm's bundled stub still declares $position, hence the
+	 * local suppression instead of renaming the real parameter.
+	 *
+	 * @psalm-suppress ParamNameMismatch
+	 */
 	#[\Override]
 	public function seek(int $offset): void
 	{

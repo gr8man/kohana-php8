@@ -34,8 +34,8 @@ class Kohana_Database_MySQLi extends Database
 
 		Database_MySQLi::$_set_names ??= ! function_exists('mysqli_set_charset');
 
-		// Extract the connection parameters, adding required variabels
-		extract($this->_config['connection'] + array(
+		// Connection parameters, with the required defaults
+		$params = $this->_config['connection'] + array(
 			'database' => '',
 			'hostname' => '',
 			'username' => '',
@@ -43,7 +43,15 @@ class Kohana_Database_MySQLi extends Database
 			'socket'   => '',
 			'port'     => 3306,
 			'ssl'      => null,
-		));
+		);
+
+		$database = $params['database'];
+		$hostname = $params['hostname'];
+		$username = $params['username'];
+		$password = $params['password'];
+		$socket   = $params['socket'];
+		$port     = $params['port'];
+		$ssl      = $params['ssl'];
 
 		// Prevent this information from showing up in traces
 		unset($this->_config['connection']['username'], $this->_config['connection']['password']);
@@ -97,13 +105,13 @@ class Kohana_Database_MySQLi extends Database
 			$status = true;
 
 			if ($this->_connection instanceof mysqli || is_resource($this->_connection)) {
-				if ($status = $this->_connection->close()) {
-					// Clear the connection
-					$this->_connection = null;
+				$this->_connection->close();
 
-					// Clear the instance
-					parent::disconnect();
-				}
+				// Clear the connection
+				$this->_connection = null;
+
+				// Clear the instance
+				parent::disconnect();
 			}
 		} catch (Exception) {
 			// Database is probably not disconnected
@@ -134,11 +142,13 @@ class Kohana_Database_MySQLi extends Database
 
 	#[\Override]
 	/**
-	 * @param false $as_object
+	 * @param string|bool $as_object
+	 *
+	 * @return Database_Result|int|array
 	 *
 	 * @psalm-param 1 $type
 	 */
-	public function query(int $type, string $sql, bool $as_object = false, array $params = null)
+	public function query(int $type, string $sql, string|bool $as_object = false, array $params = null)
 	{
 		// Make sure the database is connected
 		$this->_connection or $this->connect();

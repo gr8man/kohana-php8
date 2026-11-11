@@ -91,7 +91,7 @@ class Kohana_Cache_Apcu extends Cache implements Cache_Arithmetic {
      *     Cache::instance('apcu')->set('foo', $data, 30);
      *
      * @param   string   $id        id of cache entry
-     * @param   string   $data      data to set to cache
+     * @param   mixed   $data      data to set to cache
      * @param   integer  $lifetime  lifetime in seconds
      */
     #[\Override]
@@ -133,16 +133,14 @@ class Kohana_Cache_Apcu extends Cache implements Cache_Arithmetic {
 	}
 
 	/**
-	 * Increments a given value by the step value supplied.
-	 * Useful for shared counters and other persistent integer based
-	 * tracking.
-	 *
-	 * @param   string    id of cache entry to increment
-	 * @param   int       step value to increment by
-	 * @return  integer
-	 * @return  boolean
-	 */
-	#[\Override]
+				 * Increments a given value by the step value supplied.
+				 * Useful for shared counters and other persistent integer based
+				 * tracking.
+				 *
+				 * @param   string $id id of cache entry to increment
+				 * @param   int $step step value to increment by
+				 */
+				#[\Override]
 	public function increment($id, $step = 1): int|false
 	{
 		if (apcu_exists($id)) {
@@ -153,16 +151,14 @@ class Kohana_Cache_Apcu extends Cache implements Cache_Arithmetic {
 	}
 
 	/**
-	 * Decrements a given value by the step value supplied.
-	 * Useful for shared counters and other persistent integer based
-	 * tracking.
-	 *
-	 * @param   string    id of cache entry to decrement
-	 * @param   int       step value to decrement by
-	 * @return  integer
-	 * @return  boolean
-	 */
-	#[\Override]
+				 * Decrements a given value by the step value supplied.
+				 * Useful for shared counters and other persistent integer based
+				 * tracking.
+				 *
+				 * @param   string $id id of cache entry to decrement
+				 * @param   int $step step value to decrement by
+				 */
+				#[\Override]
 	public function decrement($id, $step = 1): int|false
 	{
 		if (apcu_exists($id)) {

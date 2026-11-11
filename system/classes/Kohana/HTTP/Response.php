@@ -31,4 +31,13 @@ interface Kohana_HTTP_Response extends HTTP_Message
 	 */
 	public function status($code = null);
 
+	/**
+	 * Sets and gets the cookies on this response.
+	 *
+	 * @param   array-key|null  $key    cookie name, or array of cookie values
+	 * @param   string          $value  value to set to cookie
+	 * @return  mixed
+	 */
+	public function cookie($key = null, $value = null);
+
 }

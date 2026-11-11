@@ -26,7 +26,7 @@ class Kohana_Request_Client_Stream extends Request_Client_External
 	 * the response.
 	 *
 	 * @param   Request   $request  request to send
-	 * @param   Response  $request  response to send
+	 * @param   Response  $response  response to send
 	 * @uses    [PHP cURL](http://php.net/manual/en/book.curl.php)
 	 */
 	#[\Override]

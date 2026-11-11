@@ -66,7 +66,7 @@ class Kohana_Database_Query implements \Stringable
 				 * Enables the query to be cached for a specified amount of time.
 				 *
 				 * @param   integer  $lifetime  number of seconds to cache, 0 deletes it from the cache
-				 * @param   boolean  whether or not to execute the query during a cache hit
+				 * @param   boolean $force whether or not to execute the query during a cache hit
 				 * @uses    Kohana::$cache_life
 				 */
 	public function cached($lifetime = null, $force = false): static
@@ -94,7 +94,7 @@ class Kohana_Database_Query implements \Stringable
 	/**
 				 * Returns results as objects
 				 *
-				 * @param   string  $class  classname or TRUE for stdClass
+				 * @param   string|bool  $class  classname or TRUE for stdClass
 				 */
 	public function as_object($class = true, array $params = null): static
 	{
@@ -180,12 +180,11 @@ class Kohana_Database_Query implements \Stringable
 	/**
 	 * Execute the current query on the given database.
 	 *
-	 * @param   mixed    $db  Database instance or name of instance
-	 * @param   string   result object classname, TRUE for stdClass or FALSE for array
-	 * @param   array    result object constructor arguments
-	 * @return  object   Database_Result for SELECT queries
-	 * @return  mixed    the insert id for INSERT queries
-	 * @return  integer  number of affected rows for all other queries
+	 * @param   Database|string|null  $db  Database instance or name of instance
+	 * @param   bool|null $as_object result object classname, TRUE for stdClass or FALSE for array
+	 * @param   array|null $object_params result object constructor arguments
+	 * @return  Database_Result|int|array  Result for SELECT queries, the insert id for INSERT queries,
+	 *                                     number of affected rows for all other queries
 	 */
 	public function execute(Database|string|null $db = null, ?bool $as_object = null, ?array $object_params = null)
 	{
@@ -216,7 +215,7 @@ class Kohana_Database_Query implements \Stringable
 		// Execute the query
 		$result = $db->query($this->_type, $sql, $as_object, $object_params);
 
-		if (isset($cache_key) and $this->_lifetime > 0) {
+		if (isset($cache_key) and $this->_lifetime > 0 and $result instanceof Database_Result) {
 			// Cache the result array
 			Kohana::cache($cache_key, $result->as_array(), $this->_lifetime);
 		}

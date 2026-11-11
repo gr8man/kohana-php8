@@ -26,7 +26,7 @@ class Kohana_Request implements HTTP_Request, \Stringable
 	public static $client_ip = '0.0.0.0';
 
 	/**
-	 * @var  string  trusted proxy server IPs
+	 * @var  string[]  trusted proxy server IPs
 	 */
 	public static $trusted_proxies = array('127.0.0.1', 'localhost', 'localhost.localdomain');
 
@@ -49,7 +49,7 @@ class Kohana_Request implements HTTP_Request, \Stringable
 	 * If $cache parameter is set, the response for the request will attempt to
 	 * be retrieved from the cache.
 	 *
-	 * @param   string  $uri              URI of the request
+	 * @param   string|bool  $uri              URI of the request
 	 * @param   array   $client_params    An array of params to pass to the request client
 	 * @param   bool    $allow_external   Allow external requests? (deprecated in 3.3)
 	 * @param   array   $injected_routes  An array of routes to use, for testing
@@ -101,7 +101,7 @@ class Kohana_Request implements HTTP_Request, \Stringable
 				// Use the forwarded IP address, typically set when the
 				// client is using a proxy server.
 				// Format: "X-Forwarded-For: client1, proxy1, proxy2"
-				$client_ips = explode(',', (string) $_SERVER['HTTP_X_FORWARDED_FOR']);
+				$client_ips = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
 
 				Request::$client_ip = array_shift($client_ips);
 
@@ -111,7 +111,7 @@ class Kohana_Request implements HTTP_Request, \Stringable
 					and in_array($_SERVER['REMOTE_ADDR'], Request::$trusted_proxies)) {
 				// Use the forwarded IP address, typically set when the
 				// client is using a proxy server.
-				$client_ips = explode(',', (string) $_SERVER['HTTP_CLIENT_IP']);
+				$client_ips = explode(',', $_SERVER['HTTP_CLIENT_IP']);
 
 				Request::$client_ip = array_shift($client_ips);
 
@@ -208,13 +208,13 @@ class Kohana_Request implements HTTP_Request, \Stringable
 				 */
 				$uri = $_SERVER['REQUEST_URI'];
 
-				if ($request_uri = parse_url((string) $_SERVER['REQUEST_URI'], PHP_URL_PATH)) {
+				if ($request_uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH)) {
 					// Valid URL path found, set it.
 					$uri = $request_uri;
 				}
 
 				// Decode the request URI
-				$uri = rawurldecode((string) $uri);
+				$uri = rawurldecode($uri);
 			} elseif (isset($_SERVER['PHP_SELF'])) {
 				$uri = $_SERVER['PHP_SELF'];
 			} elseif (isset($_SERVER['REDIRECT_URL'])) {
@@ -228,9 +228,9 @@ class Kohana_Request implements HTTP_Request, \Stringable
 			// Get the path from the base URL, including the index file
 			$base_url = (string) parse_url(Kohana::$base_url, PHP_URL_PATH);
 
-			if ($base_url !== '' && str_starts_with((string) $uri, $base_url)) {
+			if ($base_url !== '' && str_starts_with($uri, $base_url)) {
 				// Remove the base URL from the URI
-				$uri = substr((string) $uri, strlen($base_url));
+				$uri = substr($uri, strlen($base_url));
 			}
 
 			if (Kohana::$index_file and str_starts_with((string) $uri, Kohana::$index_file)) {
@@ -512,7 +512,7 @@ class Kohana_Request implements HTTP_Request, \Stringable
 	protected ?\Route $_route = null;
 
 	/**
-	 * @var  Kohana_HTTP_Header  headers to sent as part of the request
+	 * @var  HTTP_Header  headers to sent as part of the request
 	 */
 	protected \HTTP_Header $_header;
 
@@ -677,11 +677,11 @@ class Kohana_Request implements HTTP_Request, \Stringable
 	{
 		if ($this->is_external()) {
 			// If it's an external request return the URI
-			return $this->uri();
+			return (string) $this->uri();
 		}
 
 		// Create a URI with the current route, convert to a URL and returns
-		return URL::site($this->uri(), $protocol);
+		return URL::site((string) $this->uri(), $protocol);
 	}
 
 	/**
@@ -1043,15 +1043,14 @@ class Kohana_Request implements HTTP_Request, \Stringable
 	/**
 	 * Set and get cookies values for this request.
 	 *
-	 * @param null|string[] $key Cookie name, or array of cookie values
+	 * @param string|array|null $key Cookie name, or array of cookie values
 	 * @param string   $value  Value to set to cookie
 	 *
-	 * @return string
-	 * @return mixed
+	 * @return string|array|static|null  cookie value(s) when reading, this object when writing
 	 *
-	 * @psalm-param array<string, string>|null $key
+	 * @psalm-param array<string, string>|string|null $key
 	 */
-	public function cookie(array|null $key = null, $value = null)
+	public function cookie(array|string|null $key = null, $value = null)
 	{
 		if (is_array($key)) {
 			// Act as a setter, replace all cookies
@@ -1076,7 +1075,7 @@ class Kohana_Request implements HTTP_Request, \Stringable
 	 * included after the header, separated by a single empty new line.
 	 *
 	 * @param   string  $content Content to set to the object
-	 * @return  mixed
+	 * @return  string|static
 	 */
 	#[\Override]
 	public function body($content = null)

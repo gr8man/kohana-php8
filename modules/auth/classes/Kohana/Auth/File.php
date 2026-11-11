@@ -55,7 +55,7 @@ class Kohana_Auth_File extends Auth
 	/**
 	 * Forces a user to be logged in, without specifying a password.
 	 *
-	 * @param   mixed    $username  Username
+	 * @param   string|object $username  Username
 	 * @return  boolean
 	 */
 	public function force_login(string|object $username)

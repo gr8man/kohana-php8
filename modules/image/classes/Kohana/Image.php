@@ -130,7 +130,9 @@ abstract class Kohana_Image implements \Stringable
 	{
 		try {
 			// Render the current image
-			return $this->render();
+			$render = $this->render();
+
+			return is_string($render) ? $render : '';
 		} catch (Exception $e) {
 			if (is_object(Kohana::$log)) {
 				// Get the text of the exception
@@ -590,7 +592,7 @@ abstract class Kohana_Image implements \Stringable
 	 *
 	 * @param   string   $type     image type to return: png, jpg, gif, etc
 	 * @param   integer  $quality  quality of image: 1-100
-	 * @return  string
+	 * @return  string|false
 	 * @uses    Image::_do_render
 	 */
 	public function render($type = null, $quality = 100)
@@ -690,7 +692,7 @@ abstract class Kohana_Image implements \Stringable
 	 *
 	 * @param   string    $type     image type: png, jpg, gif, etc
 	 * @param   integer   $quality  quality
-	 * @return  string
+	 * @return  string|false
 	 */
 	abstract protected function _do_render($type, $quality);
 

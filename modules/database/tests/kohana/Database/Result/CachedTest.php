@@ -77,6 +77,49 @@ class Kohana_Database_Result_CachedTest extends Unittest_TestCase
 	/**
 	 * @test
 	 * @covers Kohana_Database_Result_Cached::__construct
+	 */
+	public function test_constructor_preserves_object_params(): void
+	{
+		// Arrange
+		$data = array(
+			array('id' => 1, 'name' => 'John'),
+		);
+		$sql = 'SELECT * FROM test';
+		$as_object = stdClass::class;
+		$params = array('param1', 123, true);
+
+		// Act
+		$result = new Database_Result_Cached($data, $sql, $as_object, $params);
+
+		// Assert
+		$property = new ReflectionProperty(Database_Result::class, '_object_params');
+		$this->assertTrue($property->isInitialized($result));
+		$this->assertSame($params, $property->getValue($result));
+	}
+
+	/**
+	 * @test
+	 * @covers Kohana_Database_Result_Cached::__construct
+	 */
+	public function test_constructor_with_null_params_leaves_object_params_uninitialized(): void
+	{
+		// Arrange
+		$data = array(
+			array('id' => 1, 'name' => 'John'),
+		);
+		$sql = 'SELECT * FROM test';
+
+		// Act
+		$result = new Database_Result_Cached($data, $sql, true);
+
+		// Assert
+		$property = new ReflectionProperty(Database_Result::class, '_object_params');
+		$this->assertFalse($property->isInitialized($result));
+	}
+
+	/**
+	 * @test
+	 * @covers Kohana_Database_Result_Cached::__construct
 	 * @covers Database_Result::count
 	 * @covers Database_Result::count
 	 */

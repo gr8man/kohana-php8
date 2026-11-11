@@ -163,8 +163,7 @@ abstract class Kohana_Request_Client_External extends Request_Client
 	 *
 	 * @param   mixed    $key    Option name, or array of options
 	 * @param   mixed    $value  Option value
-	 * @return  mixed
-	 * @return  Request_Client_External
+	 * @return  mixed|Request_Client_External  option value when reading, this object when writing
 	 */
 	public function options($key = null, $value = null)
 	{

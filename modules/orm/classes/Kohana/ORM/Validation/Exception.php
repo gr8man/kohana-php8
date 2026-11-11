@@ -128,10 +128,10 @@ class Kohana_ORM_Validation_Exception extends Kohana_Exception
 	 *
 	 * @param  string $alias     Alias to use for messages file
 	 * @param  array  $array     Array of Validation objects to get errors from
-	 * @param  string $directory Directory to load error messages from
+	 * @param  string|null $directory Directory to load error messages from
 	 * @param  mixed  $translate Translate the message
 	 */
-	protected function generate_errors(string $alias, array $array, string $directory, $translate): array
+	protected function generate_errors(string $alias, array $array, ?string $directory = null, $translate = false): array
 	{
 		$errors = array();
 

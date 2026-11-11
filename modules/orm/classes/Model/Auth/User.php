@@ -101,25 +101,26 @@ class Model_Auth_User extends ORM
 	/**
 	 * Tests if a unique key value exists in the database.
 	 *
-	 * @param   mixed    the value to test
-	 * @param   string   field name
+	 * @param   mixed $value the value to test
+	 * @param   string $field field name
 	 */
 	public function unique_key_exists($value, $field = null): bool
 	{
 		$field ??= $this->unique_key($value);
 
-		return (bool) DB::select(array(DB::expr('COUNT(*)'), 'total_count'))
+		$result = DB::select(array(DB::expr('COUNT(*)'), 'total_count'))
 			->from($this->_table_name)
 			->where($field, '=', $value)
 			->where($this->_primary_key, '!=', $this->pk())
-			->execute($this->_db)
-			->get('total_count');
+			->execute($this->_db);
+
+		return (bool) ($result instanceof Database_Result ? $result->get('total_count') : 0);
 	}
 
 	/**
 	 * Allows a model use both email and username as unique identifiers for login
 	 *
-	 * @param   string  unique value
+	 * @param   string $value unique value
 	 * @return  string  field name
 	 */
 	public function unique_key($value): string

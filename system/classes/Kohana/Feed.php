@@ -57,7 +57,7 @@ class Kohana_Feed
 		$namespaces = $feed->getNamespaces(true);
 
 		// Detect the feed type. RSS 1.0/2.0 and Atom 1.0 are supported.
-		$feed = isset($feed->channel) ? $feed->xpath('//item') : $feed->entry;
+		$feed = ($feed->getName() === 'rss') ? $feed->xpath('//item') : $feed->entry;
 
 		$i = 0;
 		$items = array();
@@ -91,6 +91,10 @@ class Kohana_Feed
 
 		$feed = '<?xml version="1.0" encoding="'.$encoding.'"?><rss version="2.0"><channel></channel></rss>';
 		$feed = simplexml_load_string($feed);
+
+		if (! $feed instanceof SimpleXMLElement) {
+			throw new Kohana_Exception('Unable to create the feed XML');
+		}
 
 		foreach ($info as $name => $value) {
 			if ($name === 'image') {

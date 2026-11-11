@@ -90,7 +90,7 @@ abstract class Kohana_Cache {
 	public static $default = 'file';
 
 	/**
-	 * @var   Kohana_Cache instances
+	 * @var   Kohana_Cache[]  instances
 	 */
 	public static $instances = [];
 
@@ -143,7 +143,7 @@ abstract class Kohana_Cache {
 	}
 
 	/**
-	 * @var  Config
+	 * @var  Config|array  configuration
 	 */
 	protected $_config = [];
 
@@ -174,8 +174,8 @@ abstract class Kohana_Cache {
 				 * // Get a configuration setting
 				 * $servers = $cache->config('servers);
 				 *
-				 * @param mixed    key to set to array, either array or config path
-				 * @param mixed    value to associate with key
+				 * @param mixed $key key to set to array, either array or config path
+				 * @param mixed $value value to associate with key
 				 *
 				 * @return mixed
 				 * @psalm-param 'ignore_on_delete'|array|null $key
@@ -248,7 +248,7 @@ abstract class Kohana_Cache {
 	 *     }
 	 *
 	 * @param   string   $id        id of cache entry
-	 * @param   string   $data      data to set to cache
+	 * @param   mixed    $data      data to set to cache
 	 * @param   integer  $lifetime  lifetime in seconds
 	 * @return  boolean
 	 */

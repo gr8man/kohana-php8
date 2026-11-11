@@ -145,7 +145,7 @@ class Kohana_Response implements HTTP_Response, \Stringable
 	/**
 				 * Gets or sets the body of the response
 				 *
-				 * @return mixed
+				 * @return string|static
 				 */
 	#[\Override]
 	public function body(mixed $content = null)
@@ -190,19 +190,19 @@ class Kohana_Response implements HTTP_Response, \Stringable
 	 *      // Get the current status
 	 *      $status = $response->status();
 	 *
-	 * @param   integer  $status Status to set to this response
+	 * @param   integer  $code   Status to set to this response
 	 * @return  mixed
 	 */
 	#[\Override]
-	public function status($status = null)
+	public function status($code = null)
 	{
-		if ($status === null) {
+		if ($code === null) {
 			return $this->_status;
-		} elseif (array_key_exists($status, Response::$messages)) {
-			$this->_status = (int) $status;
+		} elseif (array_key_exists($code, Response::$messages)) {
+			$this->_status = (int) $code;
 			return $this;
 		} else {
-			throw new Kohana_Exception(__METHOD__.' unknown status value : :value', array(':value' => $status));
+			throw new Kohana_Exception(__METHOD__.' unknown status value : :value', array(':value' => $code));
 		}
 	}
 
@@ -267,12 +267,11 @@ class Kohana_Response implements HTTP_Response, \Stringable
 	 * @param (int|string)|null $key cookie name, or array of cookie values
 	 * @param string  $value  value to set to cookie
 	 *
-	 * @return string
-	 * @return void
-	 * @return [Response]
+	 * @return array|string|Response  cookie value(s) when reading, this object when writing
 	 *
 	 * @psalm-param array-key|null $key
 	 */
+	#[\Override]
 	public function cookie($key = null, $value = null)
 	{
 		// Handle the get cookie calls
@@ -327,7 +326,7 @@ class Kohana_Response implements HTTP_Response, \Stringable
 	 * Sends the response status and all set headers.
 	 *
 	 * @param   boolean     $replace    replace existing headers
-	 * @param   callback    $callback   function to handle header output
+	 * @param   callable|null $callback   function to handle header output
 	 * @return  mixed
 	 */
 	public function send_headers($replace = false, $callback = null)
@@ -600,7 +599,7 @@ class Kohana_Response implements HTTP_Response, \Stringable
 		}
 
 		// TODO, speed this up with the use of string functions.
-		preg_match_all('/(-?[0-9]++(?:-(?![0-9]++))?)(?:-?([0-9]++))?/', (string) $_SERVER['HTTP_RANGE'], $matches, PREG_SET_ORDER);
+		preg_match_all('/(-?[0-9]++(?:-(?![0-9]++))?)(?:-?([0-9]++))?/', $_SERVER['HTTP_RANGE'], $matches, PREG_SET_ORDER);
 
 		return $matches[0];
 	}

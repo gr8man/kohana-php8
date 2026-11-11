@@ -50,8 +50,7 @@ class Kohana_Upload
 	 * @param   string  $filename   new filename
 	 * @param   string  $directory  new directory
 	 * @param   integer $chmod      chmod mask
-	 * @return  string  on success, full path to new file
-	 * @return  FALSE   on failure
+	 * @return  string|false  on success, full path to new file
 	 */
 	public static function save(array $file, $filename = null, $directory = null, $chmod = 0644): false|string
 	{

@@ -22,8 +22,7 @@ class Kohana_File
 	 *     $mime = File::mime($file);
 	 *
 	 * @param   string  $filename   file name or path
-	 * @return  string  mime type on success
-	 * @return  FALSE   on failure
+	 * @return  string|false  mime type on success, FALSE on failure
 	 */
 	public static function mime($filename)
 	{
@@ -43,9 +42,9 @@ class Kohana_File
 		}
 
 		if (class_exists('finfo', false)) {
-			if ($info = new finfo(defined('FILEINFO_MIME_TYPE') ? FILEINFO_MIME_TYPE : FILEINFO_MIME)) {
-				return $info->file($filename);
-			}
+			$info = new finfo(defined('FILEINFO_MIME_TYPE') ? FILEINFO_MIME_TYPE : FILEINFO_MIME);
+
+			return $info->file($filename);
 		}
 
 		if (ini_get('mime_magic.magicfile') and function_exists('mime_content_type')) {
@@ -67,8 +66,7 @@ class Kohana_File
 	 *     $mime = File::mime_by_ext('png'); // "image/png"
 	 *
 	 * @param   string  $extension  php, pdf, txt, etc
-	 * @return  string  mime type on success
-	 * @return  FALSE   on failure
+	 * @return  string|false  mime type on success, FALSE on failure
 	 */
 	public static function mime_by_ext(string $extension)
 	{
@@ -97,7 +95,7 @@ class Kohana_File
 	 * Lookup file extensions by MIME type
 	 *
 	 * @param   string  $type File MIME type
-	 * @return  array   File extensions matching MIME type
+	 * @return  array|false   File extensions matching MIME type, FALSE if unknown
 	 */
 	public static function exts_by_mime($type)
 	{

@@ -41,7 +41,7 @@ class Kohana_Model_DatabaseTest extends Unittest_TestCase
 				public function connect() {}
 				public function disconnect() { return true; }
 				public function set_charset($charset) {}
-				public function query(int $type, string $sql, bool $as_object = false, array $params = null) {
+				public function query(int $type, string $sql, string|bool $as_object = false, array $params = null) {
 					return new Database_Result_Cached(array(), $sql, $as_object);
 				}
 				public function begin($mode = null) { return true; }
